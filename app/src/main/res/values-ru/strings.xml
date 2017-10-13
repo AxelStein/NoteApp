@@ -1,0 +1,116 @@
+<resources>
+    <string name="app_name">NoteApp</string>
+
+    <!--Actions-->
+    <string name="action_settings">Настройки</string>
+    <string name="action_restore">Восстановить</string>
+    <string name="action_trash">Корзина</string>
+    <string name="action_empty_trash">Очистить корзину</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_delete_label">Удалить метку</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_move_to_trash">Переместить в корзину</string>
+    <string name="action_select_all">Выделить все</string>
+    <string name="action_rename">Переименовать</string>
+    <string name="action_rename_label">Переименовать метку</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_add">Добавить</string>
+    <string name="action_add_label">Добавить метку</string>
+    <string name="action_ok">ОК</string>
+    <string name="action_labels">Метки</string>
+    <string name="action_notebooks">Блокноты</string>
+    <string name="action_add_notebook">Добавить блокнот</string>
+    <string name="action_rename_notebook">Переименовать блокнот</string>
+    <string name="action_delete_notebook">Удалить блокнот</string>
+    <string name="action_add_note">Добавить заметку</string>
+    <string name="action_share">Поделиться</string>
+    <string name="action_info">Инфо</string>
+    <string name="action_notebook">Блокнот</string>
+    <string name="action_discard">Сбросить</string>
+    <string name="action_check_labels">Выделить метки</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_menu">Меню</string>
+    <string name="action_sort_by">Сортировать по</string>
+    <string name="action_sort_title">Названию</string>
+    <string name="action_sort_relevance">Частоте использования</string>
+    <string name="action_sort_created_newest_first">Создание (сначала новые)</string>
+    <string name="action_sort_created_oldest_first">Создание (сначала старые)</string>
+    <string name="action_sort_updated_newest_first">Обновление (сначала новые)</string>
+    <string name="action_sort_updated_oldest_first">Обновление (сначала старые)</string>
+
+    <!--Pref-->
+    <string name="pref_show_fab">Показать FAB</string>
+    <string name="pref_data">Данные</string>
+    <string name="pref_export">Экспорт</string>
+    <string name="pref_import">Импорт</string>
+    <string name="pref_enable_counters">Включить счетчики</string>
+
+    <!--Errors-->
+    <string name="error">Ошибка</string>
+    <string name="error_title_required">Название обязательно</string>
+    <string name="error_title_exists">Название уже существует</string>
+
+    <!--Hints-->
+    <string name="hint_label">Название</string>
+    <string name="hint_content">Заметка</string>
+    <string name="hint_title">Название</string>
+    <string name="hint_notebook">Название</string>
+
+    <!--Content description-->
+    <string name="content_clear">Очистить</string>
+    <string name="content_night_mode">Ночной режим</string>
+    <string name="content_settings">Настройки</string>
+    <string name="content_trash">Корзина</string>
+
+    <!--Empty msg-->
+    <string name="empty_notebook">Блокнот пуст</string>
+    <string name="empty_label">Нет заметок с этой меткой</string>
+    <string name="empty_search">Заметки не найдены</string>
+    <string name="empty_trash">Нет заметок в корзине</string>
+
+    <!--Dialog titles-->
+    <string name="title_empty_trash">Очистить корзину?</string>
+    <string name="title_add_label">Добавить метку</string>
+    <string name="title_rename_label">Переименовать метку</string>
+    <string name="title_delete_label">Удалить метку \'%1$s\'?</string>
+    <string name="title_import">Импорт…</string>
+    <string name="title_check_labels">Выберите метки</string>
+    <string name="title_rename_notebook">Переименовать блокнот</string>
+    <string name="title_delete_notebook">Удалить блокнот \'%1$s\'?</string>
+    <string name="title_add_notebook">Добавить блокнот</string>
+    <string name="title_delete_note">Удалить заметку?</string>
+    <string name="title_select_notebook">Выберите блокнот</string>
+    <string name="title_save">Сохранить изменения?</string>
+
+    <!--Messages-->
+    <string name="msg_wait">Пожалуйста, подождите</string>
+    <string name="msg_label_deleted">Метка удалена</string>
+    <string name="msg_label_renamed">Метка переименована</string>
+    <string name="msg_label_added">Метка добавлена</string>
+    <string name="msg_trash_empty">Корзина пуста</string>
+    <string name="msg_import_success">Импорт завершен</string>
+    <string name="msg_notebook_added">Блокнот добавлен</string>
+    <string name="msg_notebook_renamed">Блокнот переименован</string>
+    <string name="msg_note_updated">Заметка обновлена</string>
+    <string name="msg_notes_updated">Заметки обновлены</string>
+    <string name="msg_note_restored">Заметка восстановлена</string>
+    <string name="msg_notes_restored">Заметки восстановлены</string>
+    <string name="msg_note_trashed">Заметка добавлена в корзину</string>
+    <string name="msg_notes_trashed">Заметки добавлены в корзину</string>
+    <string name="msg_note_deleted">Заметка удалена</string>
+    <string name="msg_notes_deleted">Заметки удалены</string>
+    <string name="msg_delete_label">Метка будет удалена из всех заметок. Заметки не будут удалены.</string>
+    <string name="msg_delete_notebook">Блокнот и заметки будут удалены навсегда.</string>
+    <string name="msg_empty_trash">Все заметки в корзине будут удалены навсегда.</string>
+    <string name="msg_delete_note">Заметка будет удалена навсегда.</string>
+    <string name="msg_note_empty">Заметка пуста</string>
+    <string name="msg_create_notebook">Создайте сначала блокнот</string>
+    <string name="msg_label_empty">Нет меток для выделения</string>
+
+    <string name="default_notebook">Заметки</string>
+    <string name="note_info">Создание: %1$s\nОбновление: %2$s</string>
+    <string name="action_done">Готово</string>
+    <string name="action_keep_editing">Продолжить редактирование</string>
+    <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
+
+</resources>

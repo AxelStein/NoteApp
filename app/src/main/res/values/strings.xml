@@ -1,0 +1,116 @@
+<resources>
+    <string name="app_name">Notes</string>
+
+    <!--Actions-->
+    <string name="action_settings">Settings</string>
+    <string name="action_restore">Restore</string>
+    <string name="action_trash">Trash</string>
+    <string name="action_empty_trash">Empty trash</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_delete_label">Delete label</string>
+    <string name="action_search">Search</string>
+    <string name="action_move_to_trash">Move to trash</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_rename_label">Rename label</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_add">Add</string>
+    <string name="action_add_label">Add label</string>
+    <string name="action_ok">OK</string>
+    <string name="action_labels">Labels</string>
+    <string name="action_notebooks">Notebooks</string>
+    <string name="action_add_notebook">Add notebook</string>
+    <string name="action_rename_notebook">Rename notebook</string>
+    <string name="action_delete_notebook">Delete notebook</string>
+    <string name="action_add_note">Add note</string>
+    <string name="action_share">Share</string>
+    <string name="action_info">Info</string>
+    <string name="action_notebook">Notebook</string>
+    <string name="action_discard">Discard</string>
+    <string name="action_check_labels">Check labels</string>
+    <string name="action_save">Save</string>
+    <string name="action_sort_by">Sort by</string>
+    <string name="action_sort_title">Title</string>
+    <string name="action_sort_relevance">Frequency of use</string>
+    <string name="action_sort_created_newest_first">Created (newest first)</string>
+    <string name="action_sort_created_oldest_first">Created (oldest first)</string>
+    <string name="action_sort_updated_newest_first">Updated (newest first)</string>
+    <string name="action_sort_updated_oldest_first">Updated (oldest first)</string>
+    <string name="action_menu">Menu</string>
+    <string name="action_done">Done</string>
+
+    <!--Pref-->
+    <string name="pref_show_fab">Show FAB</string>
+    <string name="pref_data">Data</string>
+    <string name="pref_export">Export</string>
+    <string name="pref_import">Import</string>
+    <string name="pref_enable_counters">Enable counters</string>
+
+    <!--Errors-->
+    <string name="error">Error</string>
+    <string name="error_title_required">Title is required</string>
+    <string name="error_title_exists">Title already exists</string>
+
+    <!--Hints-->
+    <string name="hint_label">Title</string>
+    <string name="hint_content">Note</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_notebook">Title</string>
+
+    <!--Content description-->
+    <string name="content_clear">Clear</string>
+    <string name="content_settings">Settings</string>
+    <string name="content_trash">Trash</string>
+    <string name="content_night_mode">Night mode</string>
+
+    <!--Empty msg-->
+    <string name="empty_notebook">Notebook is empty</string>
+    <string name="empty_label">No notes with this label yet</string>
+    <string name="empty_search">No matching notes</string>
+    <string name="empty_trash">No notes in trash</string>
+
+    <!--Dialog titles-->
+    <string name="title_empty_trash">Empty trash?</string>
+    <string name="title_add_label">Add label</string>
+    <string name="title_rename_label">Rename label</string>
+    <string name="title_delete_label">Delete label \'%1$s\'?</string>
+    <string name="title_import">Importing…</string>
+    <string name="title_check_labels">Check labels</string>
+    <string name="title_rename_notebook">Rename notebook</string>
+    <string name="title_delete_notebook">Delete notebook \'%1$s\'?</string>
+    <string name="title_add_notebook">Add notebook</string>
+    <string name="title_delete_note">Delete note?</string>
+    <string name="title_select_notebook">Select notebook</string>
+    <string name="title_save">Save changes?</string>
+
+    <!--Messages-->
+    <string name="msg_wait">Please wait</string>
+    <string name="msg_label_deleted">Label deleted</string>
+    <string name="msg_label_renamed">Label renamed</string>
+    <string name="msg_label_added">Label added</string>
+    <string name="msg_trash_empty">Trash is empty</string>
+    <string name="msg_import_success">Import completed</string>
+    <string name="msg_notebook_added">Notebook added</string>
+    <string name="msg_notebook_renamed">Notebook renamed</string>
+    <string name="msg_note_updated">Note updated</string>
+    <string name="msg_notes_updated">Notes updated</string>
+    <string name="msg_note_restored">Note restored</string>
+    <string name="msg_notes_restored">Notes restored</string>
+    <string name="msg_note_trashed">Note trashed</string>
+    <string name="msg_notes_trashed">Note trashed</string>
+    <string name="msg_note_deleted">Note deleted</string>
+    <string name="msg_notes_deleted">Notes deleted</string>
+    <string name="msg_delete_label">Label will be deleted from all of your notes. Your notes won`t be deleted.</string>
+    <string name="msg_delete_notebook">Notebook and notes will be permanently deleted.</string>
+    <string name="msg_empty_trash">All notes in trash will be permanently deleted.</string>
+    <string name="msg_delete_note">Note will be permanently deleted.</string>
+    <string name="msg_create_notebook">Create notebook first</string>
+    <string name="msg_label_empty">There are no labels to check</string>
+    <string name="msg_note_empty">Note is empty</string>
+
+    <string name="default_notebook">Notes</string>
+    <string name="note_info">Created: %1$s\nUpdated: %2$s</string>
+    <string name="title_discard">Are you sure you want to discard changes?</string>
+    <string name="action_keep_editing">Keep editing</string>
+
+</resources>

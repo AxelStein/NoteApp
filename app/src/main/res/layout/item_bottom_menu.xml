@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.axel_stein.noteapp.views.IconTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/TextAppearance.AppCompat.Body2"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:drawablePadding="32dp"
+    android:ellipsize="end"
+    android:gravity="center_vertical"
+    android:maxLines="1"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    app:iconLeft="@drawable/ic_book_white_24dp"
+    app:iconLeftTint="?attr/menuItemTintColor"
+    tools:ignore="RtlHardcoded"
+    tools:text="Notebook  ‣  Med"/>

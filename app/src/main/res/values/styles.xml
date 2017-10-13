@@ -1,0 +1,80 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">?attr/colorPrimary</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_clear_black_24dp</item>
+        <item name="menuItemTintColor">@color/text_color_secondary_light</item>
+        <item name="nightModeButtonTintColor">@color/text_color_secondary_light</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.Fix</item>
+        <item name="checkBoxTint">@color/checkbox_tint_light</item>
+
+        <!-- MaterialDrawer specific values -->
+        <item name="material_drawer_background">@color/material_drawer_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_selected</item>
+        <item name="material_drawer_selected_text">?attr/colorAccent</item>
+        <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
+    </style>
+
+    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/color_accent_dark</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionModeBackground">?attr/colorPrimary</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_clear_white_24dp</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="menuItemTintColor">@color/text_color_primary_dark</item>
+        <item name="nightModeButtonTintColor">@color/color_accent_dark</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.Fix</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogDark</item>
+        <item name="checkBoxTint">@color/checkbox_tint_dark</item>
+
+        <!-- MaterialDrawer specific values -->
+        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_text</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text
+        </item>
+        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_dark_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
+        <item name="material_drawer_selected_text">?attr/colorAccent</item>
+        <item name="material_drawer_header_selection_text">@color/material_drawer_dark_header_selection_text</item>
+    </style>
+
+    <style name="BottomSheetDialogDark" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetModalDark</item>
+    </style>
+
+    <style name="BottomSheetModalDark" parent="android:Widget">
+        <item name="android:background">#ff424242</item>
+    </style>
+
+    <style name="CheckBoxTintLight" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/text_color_secondary_light</item>
+        <item name="colorControlActivated">@color/color_accent</item>
+    </style>
+
+    <style name="CheckBoxTintDark" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/text_color_primary_dark</item>
+        <item name="colorControlActivated">@color/color_accent</item>
+    </style>
+
+    <!--
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    -->
+
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="menuItemTintColor" format="color|reference"/>
+    <attr name="nightModeButtonTintColor" format="color|reference"/>
+    <attr name="checkBoxTint" format="color|reference"/>
+
+    <declare-styleable name="IconTextView">
+        <attr name="iconLeft" format="reference"/>
+        <attr name="iconLeftTint" format="reference|color"/>
+        <attr name="iconRight" format="reference"/>
+        <attr name="iconRightTint" format="reference|color"/>
+        <attr name="showIcons" format="boolean"/>
+        <attr name="showIconLeft" format="boolean"/>
+        <attr name="showIconRight" format="boolean"/>
+
+        <attr name="foregroundGravity" format="integer"/>
+        <attr name="foreground" format="reference"/>
+        <attr name="foregroundInsidePadding" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomCheckedTextView">
+        <attr name="drawableLeftTint" format="reference|color"/>
+    </declare-styleable>
+
+</resources>

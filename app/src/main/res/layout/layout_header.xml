@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                tools:ignore="RtlHardcoded">
+
+    <ImageButton
+        android:id="@+id/action_settings"
+        style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:contentDescription="@string/content_settings"
+        android:src="@drawable/ic_settings_white_24dp"
+        android:tint="?attr/menuItemTintColor"/>
+
+    <ImageButton
+        android:id="@+id/action_trash"
+        style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_toRightOf="@+id/action_settings"
+        android:contentDescription="@string/content_trash"
+        android:src="@drawable/ic_delete_white_24dp"
+        android:tint="?attr/menuItemTintColor"/>
+
+    <ImageButton
+        android:id="@+id/action_night_mode"
+        style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@string/content_night_mode"
+        android:rotation="180"
+        android:src="@drawable/ic_brightness_2_white_24dp"
+        android:tint="?attr/nightModeButtonTintColor"/>
+
+</RelativeLayout>

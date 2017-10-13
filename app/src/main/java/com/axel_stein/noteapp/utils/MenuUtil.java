@@ -1,0 +1,188 @@
+package com.axel_stein.noteapp.utils;
+
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.AttrRes;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.MenuRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import java.util.ArrayList;
+
+public class MenuUtil {
+
+    private MenuUtil() {
+    }
+
+    public static void tintMenuIconsColor(@Nullable Context context, @Nullable Menu menu, @ColorInt int color) {
+        if (context != null) {
+            tintMenuIcons(menu, color);
+        }
+    }
+
+    public static void tintMenuIconsColorRes(@Nullable Context context, @Nullable Menu menu, @ColorRes int colorRes) {
+        if (context != null) {
+            tintMenuIcons(menu, ContextCompat.getColor(context, colorRes));
+        }
+    }
+
+    public static void tintMenuIconsAttr(@Nullable Context context, @Nullable Menu menu, @AttrRes int colorAttr) {
+        tintMenuIcons(menu, ColorUtil.getColorAttr(context, colorAttr));
+    }
+
+    private static void tintMenuIcons(@Nullable Menu menu, int color) {
+        if (menu == null) {
+            return;
+        }
+
+        for (int i = 0, count = menu.size(); i < count; i++) {
+            MenuItem item = menu.getItem(i);
+            if (item != null) {
+                Drawable icon = item.getIcon();
+                if (icon != null) {
+                    icon.mutate().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                }
+            }
+        }
+    }
+
+    public static void inflateMenuFromArray(@NonNull Menu menu, @NonNull String[] array) {
+        for (int i = 0; i < array.length; i++) {
+            menu.add(0, i, 0, array[i]);
+        }
+    }
+
+    @NonNull
+    public static Menu inflateMenuFromResource(@NonNull View view, @MenuRes int menuRes) {
+        PopupMenu popup = new PopupMenu(view.getContext(), view);
+        popup.inflate(menuRes);
+        return popup.getMenu();
+    }
+
+    @NonNull
+    public static ArrayList<MenuItem> getVisibleMenuItems(@NonNull Menu menu) {
+        ArrayList<MenuItem> items = new ArrayList<>();
+
+        for (int i = 0, count = menu.size(); i < count; i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.isVisible()) {
+                items.add(item);
+            }
+        }
+
+        return items;
+    }
+
+    public static void enableMenuItem(@Nullable Menu menu, @IdRes int itemId, boolean enable) {
+        if (menu == null) {
+            return;
+        }
+        MenuItem item = menu.findItem(itemId);
+        if (item != null) {
+            item.setEnabled(enable);
+            Drawable icon = item.getIcon();
+            if (icon != null) {
+                icon.mutate().setAlpha(enable ? 255 : 124);
+            }
+        }
+    }
+
+    public static void showMenuItem(@Nullable Menu menu, boolean show, int... itemIds) {
+        if (menu == null || itemIds == null) {
+            return;
+        }
+        for (int id : itemIds) {
+            showMenuItem(menu.findItem(id), show);
+        }
+    }
+
+    public static void showMenuItem(@Nullable MenuItem item, boolean show) {
+        if (item != null) {
+            item.setVisible(show);
+        }
+    }
+
+    public static void checkMenuItem(@Nullable Menu menu, @IdRes int itemId, boolean checked) {
+        if (menu == null) {
+            return;
+        }
+        MenuItem item = menu.findItem(itemId);
+        if (item != null) {
+            item.setChecked(checked);
+        }
+    }
+
+    public static void showMenuItems(@Nullable Menu menu, boolean show) {
+        if (menu != null) {
+            ArrayList<MenuItem> items = getVisibleMenuItems(menu);
+            for (MenuItem item : items) {
+                showMenuItem(item, show);
+            }
+        }
+    }
+
+    public static void removeMenuItems(@Nullable Menu menu) {
+        if (menu != null) {
+            for (int count = menu.size(), i = count - 1; i >= 0; i--) {
+                MenuItem item = menu.getItem(i);
+                if (item != null) {
+                    menu.removeItem(item.getItemId());
+                }
+            }
+        }
+    }
+
+    public static void removeGroupMenuItems(@Nullable Menu menu, int groupId) {
+        if (menu != null) {
+            for (int count = menu.size(), i = count - 1; i >= 0; i--) {
+                MenuItem item = menu.getItem(i);
+                if (item != null && item.getGroupId() == groupId) {
+                    menu.removeItem(item.getItemId());
+                }
+            }
+        }
+    }
+
+    public static void showGroup(Menu menu, int groupId, boolean show) {
+        if (menu != null) {
+            menu.setGroupVisible(groupId, show);
+        }
+    }
+
+    @NonNull
+    public static ArrayList<MenuItem> getGroupMenuItems(Menu menu, int group) {
+        ArrayList<MenuItem> res = new ArrayList<>();
+        if (menu != null) {
+            ArrayList<MenuItem> items = getVisibleMenuItems(menu);
+            for (MenuItem item : items) {
+                if (item.getGroupId() == group) {
+                    res.add(item);
+                }
+            }
+        }
+        return res;
+    }
+
+    @Nullable
+    public static MenuItem findGroupMenuItem(Menu menu, String title, int group) {
+        ArrayList<MenuItem> items = getGroupMenuItems(menu, group);
+        for (MenuItem item : items) {
+            if (TextUtils.equals(item.getTitle(), title)) {
+                return item;
+            }
+        }
+        return null;
+    }
+}
+
+

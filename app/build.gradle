@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        applicationId "com.axel_stein.noteapp"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 7
+        versionName "1.0.6"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+}
+
+ext {
+    supportLibraryVersion = '26.1.0'
+    materialDrawerVersion = '5.9.5'
+    junitVersion = '4.12'
+    espressoVersion = '2.2.2'
+    daggerVersion = '2.11'
+    rxjavaVersion = '2.0.1'
+    butterknifeVersion = '8.8.1'
+    eventBusVersion = '3.0.0'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // appcompat
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:design:$supportLibraryVersion"
+    compile "com.android.support:preference-v7:$supportLibraryVersion"
+    compile "com.android.support:preference-v14:$supportLibraryVersion"
+    compile 'com.takisoft.fix:preference-v7:26.1.0.2'
+
+    // test
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
+        exclude group: "com.android.support", module: "support-annotations"
+        exclude group: 'com.google.code.findbugs'
+    })
+    testCompile "junit:junit:$junitVersion"
+
+    // dagger
+    compile "com.google.dagger:dagger-android:$daggerVersion"
+    compile "com.google.dagger:dagger-android-support:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // custom views
+    compile "com.mikepenz:materialdrawer:$materialDrawerVersion"
+
+    compile "io.reactivex.rxjava2:rxandroid:$rxjavaVersion"
+
+    compile "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+
+    // eventbus
+    compile "org.greenrobot:eventbus:$eventBusVersion"
+
+    compile project(path: ':domain')
+    compile project(path: ':data')
+}

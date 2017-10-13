@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="show_fab"
+        android:title="@string/pref_show_fab"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="enable_counters"
+        android:title="@string/pref_enable_counters"/>
+    -->
+
+    <Preference
+        android:key="export"
+        android:title="@string/pref_export"/>
+
+    <Preference
+        android:key="import"
+        android:title="@string/pref_import"/>
+
+</PreferenceScreen>
