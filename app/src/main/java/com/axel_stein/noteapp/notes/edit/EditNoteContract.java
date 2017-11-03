@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.noteapp.notes.edit.check_list.CheckItem;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ public interface EditNoteContract {
         void showConfirmDeleteNoteView();
 
         void callFinish();
+
+        void showCheckList(List<CheckItem> items);
 
     }
 
@@ -73,9 +76,11 @@ public interface EditNoteContract {
 
         void addOnNoteChangedListener(OnNoteChangedListener l);
 
+        void convertCheckList();
+
     }
 
-    public interface OnNoteChangedListener {
+    interface OnNoteChangedListener {
         void onNoteChanged(boolean changed);
     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NoteApp</string>
+    <string name="app_name">Заметки</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -26,17 +26,17 @@
     <string name="action_share">Поделиться</string>
     <string name="action_info">Инфо</string>
     <string name="action_notebook">Блокнот</string>
-    <string name="action_discard">Сбросить</string>
+    <string name="action_discard">Отклонить</string>
     <string name="action_check_labels">Выделить метки</string>
     <string name="action_save">Сохранить</string>
     <string name="action_menu">Меню</string>
     <string name="action_sort_by">Сортировать по</string>
     <string name="action_sort_title">Названию</string>
     <string name="action_sort_relevance">Частоте использования</string>
-    <string name="action_sort_created_newest_first">Создание (сначала новые)</string>
-    <string name="action_sort_created_oldest_first">Создание (сначала старые)</string>
-    <string name="action_sort_updated_newest_first">Обновление (сначала новые)</string>
-    <string name="action_sort_updated_oldest_first">Обновление (сначала старые)</string>
+    <string name="action_sort_created_newest_first">Дате создания (сначала новые)</string>
+    <string name="action_sort_created_oldest_first">Дате создания (сначала старые)</string>
+    <string name="action_sort_updated_newest_first">Дате обновления (сначала новые)</string>
+    <string name="action_sort_updated_oldest_first">Дате обновления (сначала старые)</string>
 
     <!--Pref-->
     <string name="pref_show_fab">Показать FAB</string>
@@ -112,5 +112,6 @@
     <string name="action_done">Готово</string>
     <string name="action_keep_editing">Продолжить редактирование</string>
     <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
+    <string name="action_fullscreen">Полноэкранный режим</string>
 
 </resources>

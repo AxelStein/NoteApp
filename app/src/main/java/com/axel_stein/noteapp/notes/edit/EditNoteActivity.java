@@ -18,6 +18,7 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.utils.ViewUtil;
 
 import javax.inject.Inject;
 
@@ -25,8 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-
-import static android.support.v4.util.Preconditions.checkNotNull;
 
 public class EditNoteActivity extends BaseActivity {
 
@@ -60,8 +59,6 @@ public class EditNoteActivity extends BaseActivity {
     }
 
     public static void launch(Context context, @NonNull Note note) {
-        checkNotNull(note);
-
         Intent intent = new Intent(context, EditNoteActivity.class);
         intent.putExtra(EXTRA_NOTE_ID, note.getId());
         context.startActivity(intent);
@@ -144,18 +141,43 @@ public class EditNoteActivity extends BaseActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("fullscreen", !ViewUtil.isShown(mToolbar));
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        boolean fullscreen = savedInstanceState.getBoolean("fullscreen");
+
+        ViewUtil.show(!fullscreen, mToolbar);
+        ViewUtil.show(!fullscreen, findViewById(R.id.bottom));
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mPresenter.close();
                 return true;
+
+            case R.id.menu_fullscreen:
+                ViewUtil.hide(mToolbar);
+                ViewUtil.hide(findViewById(R.id.bottom));
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        if (mPresenter.close()) {
+        if (!ViewUtil.isShown(mToolbar)) {
+            ViewUtil.show(mToolbar);
+            ViewUtil.show(findViewById(R.id.bottom));
+        } else if (mPresenter.close()) {
             super.onBackPressed();
         }
     }

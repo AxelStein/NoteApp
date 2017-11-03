@@ -17,6 +17,7 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.OnNoteChangedListener;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.View;
+import com.axel_stein.noteapp.notes.edit.check_list.CheckItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,10 +63,41 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
 
     @Override
     public void addOnNoteChangedListener(OnNoteChangedListener l) {
+        if (l == null) {
+            return;
+        }
         if (mOnNoteChangedListeners == null) {
             mOnNoteChangedListeners = new ArrayList<>();
         }
         mOnNoteChangedListeners.add(l);
+
+        boolean notChanged = isEmptyNote() || mSrcNote.equals(mNote);
+        l.onNoteChanged(!notChanged);
+    }
+
+    @Override
+    public void convertCheckList() {
+        if (mView == null) {
+            return;
+        }
+
+        String content = mNote.getContent();
+        if (content == null) {
+            content = "";
+        }
+
+        List<CheckItem> items = new ArrayList<>();
+
+        String[] array = content.split("\n");
+        for (String s : array) {
+            if (!isEmpty(s)) {
+                CheckItem item = new CheckItem();
+                item.setTitle(s);
+                items.add(item);
+            }
+        }
+
+        mView.showCheckList(items);
     }
 
     private void notifyChanged() {

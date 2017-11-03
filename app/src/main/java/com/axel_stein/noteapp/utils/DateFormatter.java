@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.format.DateUtils;
 
+import static android.text.format.DateUtils.FORMAT_ABBREV_MONTH;
 import static android.text.format.DateUtils.FORMAT_ABBREV_TIME;
 import static android.text.format.DateUtils.FORMAT_ABBREV_WEEKDAY;
 import static android.text.format.DateUtils.FORMAT_NO_MONTH_DAY;
@@ -42,7 +43,8 @@ public class DateFormatter {
         if (context == null) {
             return "";
         }
-        return DateUtils.formatDateTime(context, time, FORMAT_SHOW_DATE | FORMAT_SHOW_TIME | FORMAT_ABBREV_TIME).toLowerCase();
+        return DateUtils.formatDateTime(context, time, FORMAT_SHOW_DATE | FORMAT_SHOW_TIME
+                | FORMAT_ABBREV_TIME | FORMAT_ABBREV_MONTH).toLowerCase();
     }
 
 

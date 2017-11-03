@@ -26,6 +26,15 @@
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
     </style>
 
+    <style name="AppThemeDark.Grey">
+        <item name="material_drawer_background">@color/grey_color_background</item>
+        <item name="android:windowBackground">@color/grey_color_background</item>
+        <item name="colorPrimary">@color/grey_color_primary</item>
+        <item name="colorPrimaryDark">@color/grey_color_primary_dark</item>
+        <item name="colorAccent">@color/grey_color_accent</item>
+        <item name="material_drawer_selected">#3f525b</item>
+    </style>
+
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/color_accent_dark</item>

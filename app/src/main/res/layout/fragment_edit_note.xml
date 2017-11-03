@@ -17,7 +17,7 @@
             android:paddingTop="16dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/edit_title"
@@ -74,12 +74,34 @@
 
     </android.support.v4.widget.NestedScrollView>
 
+    <!--
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:visibility="gone"
+        android:background="@android:color/white"
+        android:layout_above="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    -->
+
     <RelativeLayout
         android:id="@+id/bottom"
         android:background="?attr/colorPrimary"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="48dp">
+
+        <!--
+        <ImageButton
+            android:id="@+id/button_list"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+            android:contentDescription="@string/content_clear"
+            android:src="@drawable/ic_list_white_24dp"
+            android:tint="?attr/menuItemTintColor"/>
+        -->
 
         <TextView
             android:id="@+id/text_update"

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include layout="@layout/item_check_list"/>
+
+    <include layout="@layout/item_check_list"/>
+
+    <include layout="@layout/item_check_list"/>
+
+    <CheckBox
+        tools:text="Item"
+        android:checked="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="16dp"
+        android:paddingLeft="28dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="16sp"/>
+
+    <CheckBox
+        tools:text="Item"
+        android:checked="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="16dp"
+        android:paddingLeft="28dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:ellipsize="end"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="16sp"/>
+
+</LinearLayout>

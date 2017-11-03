@@ -6,4 +6,9 @@
     <color name="text_color_secondary_light">#8a000000</color>
 
     <color name="text_color_primary_dark">#ffffff</color>
+
+    <color name="grey_color_background">#323e45</color>
+    <color name="grey_color_primary">#3f525b</color>
+    <color name="grey_color_primary_dark">#37474F</color>
+    <color name="grey_color_accent">#00796b</color>
 </resources>

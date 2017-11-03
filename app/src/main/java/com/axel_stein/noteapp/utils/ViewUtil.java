@@ -24,11 +24,29 @@ public class ViewUtil {
         }
     }
 
+    public static void show(View... views) {
+        show(true, views);
+    }
+
+    public static void hide(View... views) {
+        show(false, views);
+    }
+
     public static void show(boolean show, View... views) {
         if (views != null) {
             for (View v : views) {
                 if (v != null) {
                     v.setVisibility(show ? VISIBLE : GONE);
+                }
+            }
+        }
+    }
+
+    public static void invisible(boolean show, View... views) {
+        if (views != null) {
+            for (View v : views) {
+                if (v != null) {
+                    v.setVisibility(show ? VISIBLE : View.INVISIBLE);
                 }
             }
         }
@@ -46,6 +64,10 @@ public class ViewUtil {
 
     public static boolean isShown(View view) {
         return view != null && view.getVisibility() == VISIBLE;
+    }
+
+    public static void toggleShow(View view) {
+        show(!isShown(view), view);
     }
 
 }

@@ -7,8 +7,8 @@ android {
         applicationId "com.axel_stein.noteapp"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 10
+        versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,6 +40,7 @@ dependencies {
     // appcompat
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
     compile "com.android.support:design:$supportLibraryVersion"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile "com.android.support:preference-v7:$supportLibraryVersion"
     compile "com.android.support:preference-v14:$supportLibraryVersion"
     compile 'com.takisoft.fix:preference-v7:26.1.0.2'

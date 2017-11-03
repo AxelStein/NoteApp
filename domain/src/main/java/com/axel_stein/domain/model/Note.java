@@ -32,6 +32,9 @@ public class Note implements Cloneable {
 
     private long update;
 
+    // todo
+    private boolean checkList;
+
     @Nullable
     private HashMap<Long, Boolean> labels;
 
@@ -189,6 +192,14 @@ public class Note implements Cloneable {
 
     public void setUpdate(long update) {
         this.update = update;
+    }
+
+    public boolean isCheckList() {
+        return checkList;
+    }
+
+    public void setCheckList(boolean checkList) {
+        this.checkList = checkList;
     }
 
     public boolean hasLabels() {
