@@ -209,7 +209,11 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         String content = note.getContent();
 
         mEditTitle.setText(title);
+        mEditTitle.setSelection(mEditTitle.length());
+
         mEditContent.setText(content);
+        mEditContent.setSelection(mEditContent.length());
+
         if (isEmpty(title) && isEmpty(content)) {
             KeyboardUtil.show(mEditTitle);
         }

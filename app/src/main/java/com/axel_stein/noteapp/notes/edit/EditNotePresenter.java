@@ -175,6 +175,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 setEditableImpl(true);
 
                 if (mView != null) {
+                    mView.setNote(mNote);
                     notifyChanged();
                     mView.showMessage(R.string.msg_note_updated);
                     EventBusHelper.updateNoteList();
