@@ -9,7 +9,7 @@ import com.axel_stein.domain.repository.NoteLabelPairRepository;
 
 import java.util.List;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
+import static com.axel_stein.data.ObjectUtil.checkNotNull;
 import static com.axel_stein.data.note_label_pair.NoteLabelPairMapper.map;
 
 public class SqlNoteLabelPairRepository implements NoteLabelPairRepository {

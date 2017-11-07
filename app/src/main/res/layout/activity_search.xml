@@ -44,7 +44,7 @@
                     android:id="@+id/button_clear"
 
                     style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
-                    android:layout_width="48dp"
+                    android:layout_width="56dp"
                     android:layout_height="?attr/actionBarSize"
                     android:contentDescription="@string/content_clear"
                     android:src="@drawable/ic_clear_white_24dp"

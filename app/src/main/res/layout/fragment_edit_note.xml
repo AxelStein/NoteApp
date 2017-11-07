@@ -30,7 +30,7 @@
                 android:background="@null"
                 android:hint="@string/hint_title"
                 android:imeOptions="flagNoExtractUi"
-                android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
+                android:inputType="textNoSuggestions|textCapSentences"
                 android:maxLength="@integer/max_title"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -50,7 +50,7 @@
                 app:counterMaxLength="@integer/max_content"
                 app:hintEnabled="false">
 
-                <android.support.design.widget.TextInputEditText
+                <com.axel_stein.noteapp.views.LinedEditText
                     android:id="@+id/edit_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +66,10 @@
                     android:paddingBottom="8dp"
                     android:textSize="16sp"
 
-                    tools:text="iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things I use my iPhone for is jotting down notes. I use it because it’s always available to me and everything I note down is synced across my devices. I have used a lot of note taking apps in the past, and there are quite a few good ones on the App Store. So, if you have been looking for the best note taking apps for iOS, we have you covered. Here are the 10 best note apps for iPhone you can use:"/>
+                    android:linksClickable="true"
+                    android:autoLink="all"
+
+                    tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things I use my iPhone for is jotting down notes. I use it because it’s always available to me and everything I note down is synced across my devices. I have used a lot of note taking apps in the past, and there are quite a few good ones on the App Store. So, if you have been looking for the best note taking apps for iOS, we have you covered. Here are the 10 best note apps for iPhone you can use:"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -111,7 +114,8 @@
             android:textColor="?attr/menuItemTintColor"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            tools:ignore="RelativeOverlap"/>
 
         <ImageButton
             android:id="@+id/button_menu"

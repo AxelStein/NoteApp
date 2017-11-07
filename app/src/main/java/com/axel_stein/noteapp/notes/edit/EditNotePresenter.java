@@ -1,6 +1,7 @@
 package com.axel_stein.noteapp.notes.edit;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
@@ -17,7 +18,6 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.OnNoteChangedListener;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.View;
-import com.axel_stein.noteapp.notes.edit.check_list.CheckItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,34 +31,47 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
 import static android.text.TextUtils.isEmpty;
 
-public class EditNotePresenter implements EditNoteContract.Presenter, CompletableObserver {
+public class EditNotePresenter implements EditNoteContract.Presenter {
+
     @Inject
     InsertNoteInteractor mInsertNoteInteractor;
+
     @Inject
     UpdateNoteInteractor mUpdateNoteInteractor;
+
     @Inject
     TrashNoteInteractor mTrashNoteInteractor;
+
     @Inject
     RestoreNoteInteractor mRestoreNoteInteractor;
+
     @Inject
     DeleteNoteInteractor mDeleteNoteInteractor;
+
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
     @Inject
     QueryLabelInteractor mQueryLabelInteractor;
+
     private Note mNote;
     private Note mSrcNote;
+    private boolean mEditable;
+    private boolean mSaving;
+
+    @Nullable
     private View mView;
+
     private List<OnNoteChangedListener> mOnNoteChangedListeners;
 
-    public EditNotePresenter(@NonNull Note note) {
+    EditNotePresenter(@NonNull Note note) {
         App.getAppComponent().inject(this);
 
-        mNote = checkNotNull(note);
+        mNote = note;
         mSrcNote = note.copy();
+        mEditable = true;
     }
 
     @Override
@@ -75,31 +88,6 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
         l.onNoteChanged(!notChanged);
     }
 
-    @Override
-    public void convertCheckList() {
-        if (mView == null) {
-            return;
-        }
-
-        String content = mNote.getContent();
-        if (content == null) {
-            content = "";
-        }
-
-        List<CheckItem> items = new ArrayList<>();
-
-        String[] array = content.split("\n");
-        for (String s : array) {
-            if (!isEmpty(s)) {
-                CheckItem item = new CheckItem();
-                item.setTitle(s);
-                items.add(item);
-            }
-        }
-
-        mView.showCheckList(items);
-    }
-
     private void notifyChanged() {
         if (mOnNoteChangedListeners != null) {
             boolean notChanged = isEmptyNote() || mSrcNote.equals(mNote);
@@ -113,8 +101,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
 
     @Override
     public void onCreateView(@NonNull View view) {
-        mView = checkNotNull(view);
+        mView = view;
         mView.setNote(mNote);
+        setEditableImpl(mEditable);
     }
 
     @Override
@@ -137,6 +126,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
 
     @Override
     public boolean close() {
+        if (mSaving || mView == null || mNote == null || mSrcNote == null) {
+            return true;
+        }
         if (isEmptyNote() || mSrcNote.equals(mNote)) {
             mView.callFinish();
             return true;
@@ -152,27 +144,75 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
 
     @Override
     public void confirmDiscardChanges() {
-        mView.callFinish();
+        if (mView != null) {
+            mView.callFinish();
+        }
     }
 
     @Override
     public void save() {
+        mSaving = true;
+        setEditableImpl(false);
+
         Completable completable;
         if (mNote.getId() > 0) {
             completable = mUpdateNoteInteractor.execute(mNote);
         } else {
             completable = mInsertNoteInteractor.execute(mNote);
         }
-        completable.observeOn(AndroidSchedulers.mainThread()).subscribe(this);
+
+        completable.observeOn(AndroidSchedulers.mainThread()).subscribe(new CompletableObserver() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                mSrcNote = mNote.copy();
+                mSaving = false;
+
+                setEditableImpl(true);
+
+                if (mView != null) {
+                    notifyChanged();
+                    mView.showMessage(R.string.msg_note_updated);
+                    EventBusHelper.updateNoteList();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+
+                mSaving = false;
+                setEditableImpl(true);
+
+                if (mView != null) {
+                    mView.showMessage(R.string.error);
+                }
+            }
+        });
+    }
+
+    private void setEditableImpl(boolean enable) {
+        mEditable = enable;
+        if (mView != null) {
+            mView.setEditable(enable);
+        }
     }
 
     @Override
     public void delete() {
+        mSaving = true;
+        setEditableImpl(false);
+
         mDeleteNoteInteractor.execute(mNote)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
+                        mSaving = false;
                         if (mView != null) {
                             mView.callFinish();
                         }
@@ -183,7 +223,13 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
+
+                        mSaving = false;
+                        setEditableImpl(true);
+
+                        if (mView != null) {
+                            mView.showMessage(R.string.error);
+                        }
                     }
                 });
     }
@@ -202,22 +248,91 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
 
     @Override
     public void actionMoveToTrash() {
-        mTrashNoteInteractor.execute(mNote)
+        moveToTrash(mNote);
+    }
+
+    @Override
+    public void actionRestore() {
+        restore(mNote);
+    }
+
+    private void moveToTrash(final Note note) {
+        if (note == null) {
+            return;
+        }
+
+        mSaving = true;
+        setEditableImpl(false);
+
+        mTrashNoteInteractor.execute(note)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
+                        mSaving = false;
                         if (mView != null) {
                             mView.callFinish();
                         }
-                        EventBusHelper.showMessage(R.string.msg_note_trashed);
+
+                        EventBusHelper.showMessage(R.string.msg_note_trashed, R.string.action_undo, new Runnable() {
+                            @Override
+                            public void run() {
+                                restore(note);
+                            }
+                        });
                         EventBusHelper.updateNoteList();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
+
+                        mSaving = false;
+                        setEditableImpl(true);
+
+                        if (mView != null) {
+                            mView.showMessage(R.string.error);
+                        }
+                    }
+                });
+    }
+
+    private void restore(final Note note) {
+        if (note == null) {
+            return;
+        }
+
+        mSaving = true;
+        setEditableImpl(false);
+
+        mRestoreNoteInteractor.execute(note)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mSaving = false;
+                        if (mView != null) {
+                            mView.callFinish();
+                        }
+                        EventBusHelper.showMessage(R.string.msg_note_restored, R.string.action_undo, new Runnable() {
+                            @Override
+                            public void run() {
+                                moveToTrash(note);
+                            }
+                        });
+                        EventBusHelper.updateNoteList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+
+                        mSaving = false;
+                        setEditableImpl(true);
+
+                        if (mView != null) {
+                            mView.showMessage(R.string.error);
+                        }
                     }
                 });
     }
@@ -237,7 +352,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
+                        if (mView != null) {
+                            mView.showMessage(R.string.error);
+                        }
                     }
                 });
     }
@@ -261,29 +378,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
-                    }
-                });
-    }
-
-    @Override
-    public void actionRestore() {
-        mRestoreNoteInteractor.execute(mNote)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
-                    @Override
-                    public void run() throws Exception {
                         if (mView != null) {
-                            mView.callFinish();
+                            mView.showMessage(R.string.error);
                         }
-                        EventBusHelper.showMessage(R.string.msg_note_restored);
-                        EventBusHelper.updateNoteList();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
                     }
                 });
     }
@@ -315,26 +412,6 @@ public class EditNotePresenter implements EditNoteContract.Presenter, Completabl
                 mView.showNoteInfoView(mNote);
             }
         }
-    }
-
-    @Override
-    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
-
-    }
-
-    @Override
-    public void onComplete() {
-        if (mView != null) {
-            mView.callFinish();
-            EventBusHelper.showMessage(R.string.msg_note_updated);
-            EventBusHelper.updateNoteList();
-        }
-    }
-
-    @Override
-    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-        e.printStackTrace();
-        EventBusHelper.showMessage(R.string.error);
     }
 
 }

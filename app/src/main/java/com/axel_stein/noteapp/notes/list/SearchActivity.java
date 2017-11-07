@@ -44,7 +44,10 @@ public class SearchActivity extends BaseActivity {
     @BindView(R.id.button_clear)
     ImageButton mButtonClear;
 
+    @Nullable
     private NotesFragment mFragment;
+
+    @Nullable
     private Runnable mSearchTask;
 
     @Override
@@ -162,28 +165,35 @@ public class SearchActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void showMessageEvent(EventBusHelper.Message e) {
-        if (e.isRes()) {
-            showMessage(e.getMsgRes());
-        } else {
-            showMessage(e.getMsg());
-        }
-    }
-
-    private void showMessage(final String msg) {
+    public void showMessageEvent(final EventBusHelper.Message e) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Snackbar.make(findViewById(R.id.coordinator_search), msg, Snackbar.LENGTH_SHORT).show();
+                    String msg = e.getMsg();
+                    if (e.hasMsgRes()) {
+                        msg = getString(e.getMsgRes());
+                    }
+
+                    String actionName = e.getActionName();
+                    if (e.hasActionNameRes()) {
+                        actionName = getString(e.getActionNameRes());
+                    }
+
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_search), msg, Snackbar.LENGTH_SHORT);
+                    if (e.hasAction()) {
+                        snackbar.setAction(actionName, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                e.getAction().run();
+                            }
+                        });
+                    }
+                    snackbar.show();
                 } catch (Exception ignored) {
                 }
             }
         }, 100);
-    }
-
-    private void showMessage(int msgRes) {
-        showMessage(getString(msgRes));
     }
 
 }

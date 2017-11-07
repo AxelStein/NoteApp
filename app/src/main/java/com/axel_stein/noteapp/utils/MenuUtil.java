@@ -83,11 +83,24 @@ public class MenuUtil {
         return items;
     }
 
-    public static void enableMenuItem(@Nullable Menu menu, @IdRes int itemId, boolean enable) {
-        if (menu == null) {
+    public static void enable(@Nullable Menu menu, boolean enable, int... itemIds) {
+        if (menu == null || itemIds == null) {
             return;
         }
-        MenuItem item = menu.findItem(itemId);
+        for (int id : itemIds) {
+            show(menu.findItem(id), enable);
+        }
+    }
+
+    public static void enable(boolean enable, @Nullable MenuItem... items) {
+        if (items != null) {
+            for (MenuItem item : items) {
+                enableMenuItemImpl(item, enable);
+            }
+        }
+    }
+
+    private static void enableMenuItemImpl(@Nullable MenuItem item, boolean enable) {
         if (item != null) {
             item.setEnabled(enable);
             Drawable icon = item.getIcon();
@@ -97,22 +110,22 @@ public class MenuUtil {
         }
     }
 
-    public static void showMenuItem(@Nullable Menu menu, boolean show, int... itemIds) {
+    public static void show(@Nullable Menu menu, boolean show, int... itemIds) {
         if (menu == null || itemIds == null) {
             return;
         }
         for (int id : itemIds) {
-            showMenuItem(menu.findItem(id), show);
+            show(menu.findItem(id), show);
         }
     }
 
-    public static void showMenuItem(@Nullable MenuItem item, boolean show) {
+    public static void show(@Nullable MenuItem item, boolean show) {
         if (item != null) {
             item.setVisible(show);
         }
     }
 
-    public static void checkMenuItem(@Nullable Menu menu, @IdRes int itemId, boolean checked) {
+    public static void check(@Nullable Menu menu, @IdRes int itemId, boolean checked) {
         if (menu == null) {
             return;
         }
@@ -122,16 +135,16 @@ public class MenuUtil {
         }
     }
 
-    public static void showMenuItems(@Nullable Menu menu, boolean show) {
+    public static void show(@Nullable Menu menu, boolean show) {
         if (menu != null) {
             ArrayList<MenuItem> items = getVisibleMenuItems(menu);
             for (MenuItem item : items) {
-                showMenuItem(item, show);
+                show(item, show);
             }
         }
     }
 
-    public static void removeMenuItems(@Nullable Menu menu) {
+    public static void remove(@Nullable Menu menu) {
         if (menu != null) {
             for (int count = menu.size(), i = count - 1; i >= 0; i--) {
                 MenuItem item = menu.getItem(i);
@@ -142,7 +155,7 @@ public class MenuUtil {
         }
     }
 
-    public static void removeGroupMenuItems(@Nullable Menu menu, int groupId) {
+    public static void removeGroup(@Nullable Menu menu, int groupId) {
         if (menu != null) {
             for (int count = menu.size(), i = count - 1; i >= 0; i--) {
                 MenuItem item = menu.getItem(i);

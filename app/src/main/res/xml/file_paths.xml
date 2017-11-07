@@ -9,7 +9,7 @@
     <external-path
         name="external"
         path="."/>
-    <extendal-cache-path
+    <external-cache-path
         name="external-cache"
         path="."/>
     <external-files-path

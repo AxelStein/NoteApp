@@ -9,7 +9,7 @@
     <ImageButton
         android:id="@+id/action_settings"
         style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
-        android:layout_width="?attr/actionBarSize"
+        android:layout_width="56dp"
         android:layout_height="?attr/actionBarSize"
         android:contentDescription="@string/content_settings"
         android:src="@drawable/ic_settings_white_24dp"
@@ -18,7 +18,7 @@
     <ImageButton
         android:id="@+id/action_trash"
         style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
-        android:layout_width="?attr/actionBarSize"
+        android:layout_width="56dp"
         android:layout_height="?attr/actionBarSize"
         android:layout_toRightOf="@+id/action_settings"
         android:contentDescription="@string/content_trash"
@@ -28,7 +28,7 @@
     <ImageButton
         android:id="@+id/action_night_mode"
         style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
-        android:layout_width="?attr/actionBarSize"
+        android:layout_width="56dp"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentRight="true"
         android:contentDescription="@string/content_night_mode"

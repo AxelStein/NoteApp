@@ -22,7 +22,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public class RenameLabelDialog extends EditTextDialog {
 

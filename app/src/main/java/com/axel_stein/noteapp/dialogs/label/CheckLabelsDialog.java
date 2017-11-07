@@ -19,7 +19,7 @@ import com.axel_stein.noteapp.utils.ResourceUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 import static com.axel_stein.noteapp.utils.BooleanUtil.isTrue;
 
 public class CheckLabelsDialog extends AppCompatDialogFragment {

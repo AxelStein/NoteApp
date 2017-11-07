@@ -2,13 +2,16 @@ package com.axel_stein.noteapp.notes.edit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
 import com.axel_stein.domain.model.Label;
@@ -30,7 +33,9 @@ import io.reactivex.functions.Consumer;
 public class EditNoteActivity extends BaseActivity {
 
     public static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
+
     public static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.EXTRA_NOTEBOOK_ID";
+
     public static final String EXTRA_LABEL_ID = "com.axel_stein.noteapp.EXTRA_LABEL_ID";
 
     @BindView(R.id.toolbar)
@@ -39,6 +44,7 @@ public class EditNoteActivity extends BaseActivity {
     @Inject
     GetNoteInteractor mGetNoteInteractor;
 
+    @Nullable
     private EditNotePresenter mPresenter;
 
     public static void launch(Context context) {
@@ -160,12 +166,19 @@ public class EditNoteActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mPresenter.close();
+                onBackPressed();
                 return true;
 
             case R.id.menu_fullscreen:
                 ViewUtil.hide(mToolbar);
                 ViewUtil.hide(findViewById(R.id.bottom));
+
+                SharedPreferences pref = getSharedPreferences("edit_note_activity", MODE_PRIVATE);
+                boolean showMsg = pref.getBoolean("show_exit_fullscreen_msg", true);
+                if (showMsg) {
+                    Toast.makeText(this, R.string.msg_exit_fullscreen, Toast.LENGTH_SHORT).show();
+                    pref.edit().putBoolean("show_exit_fullscreen_msg", false).apply();
+                }
                 return true;
         }
 
@@ -177,7 +190,7 @@ public class EditNoteActivity extends BaseActivity {
         if (!ViewUtil.isShown(mToolbar)) {
             ViewUtil.show(mToolbar);
             ViewUtil.show(findViewById(R.id.bottom));
-        } else if (mPresenter.close()) {
+        } else if (mPresenter != null && mPresenter.close()) {
             super.onBackPressed();
         }
     }

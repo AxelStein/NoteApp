@@ -212,9 +212,7 @@ public class Note implements Cloneable {
             return null;
         }
         List<Long> list = new ArrayList<>();
-        for (long l : labels.keySet()) {
-            list.add(l);
-        }
+        list.addAll(labels.keySet());
         return list;
     }
 
@@ -271,7 +269,6 @@ public class Note implements Cloneable {
                 ", relevance=" + relevance +
                 ", trash=" + trash +
                 ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
                 ", date=" + date +
                 ", update=" + update +
                 '}';

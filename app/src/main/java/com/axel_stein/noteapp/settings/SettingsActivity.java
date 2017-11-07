@@ -36,7 +36,7 @@ public class SettingsActivity extends BaseActivity {
 
     @Subscribe
     public void showMessage(EventBusHelper.Message e) {
-        if (e.isRes()) {
+        if (e.hasMsgRes()) {
             showMessage(e.getMsgRes());
         } else {
             showMessage(e.getMsg());

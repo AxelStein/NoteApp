@@ -54,6 +54,10 @@ public class EventBusHelper {
         post(new Message(stringRes));
     }
 
+    public static void showMessage(int stringRes, int actionNameRes, Runnable action) {
+        post(new Message(stringRes, actionNameRes, action));
+    }
+
     public static void recreate() {
         post(new Recreate());
     }
@@ -150,6 +154,9 @@ public class EventBusHelper {
     public static class Message {
         private String msg;
         private int msgRes;
+        private Runnable action;
+        private String actionName;
+        private int actionNameRes;
 
         public Message(String msg) {
             this.msg = msg;
@@ -159,7 +166,19 @@ public class EventBusHelper {
             this.msgRes = msgRes;
         }
 
-        public boolean isRes() {
+        public Message(String msg, String actionName, Runnable action) {
+            this.msg = msg;
+            this.actionName = actionName;
+            this.action = action;
+        }
+
+        public Message(int msgRes, int actionNameRes, Runnable action) {
+            this.msgRes = msgRes;
+            this.actionNameRes = actionNameRes;
+            this.action = action;
+        }
+
+        public boolean hasMsgRes() {
             return msgRes > 0;
         }
 
@@ -170,6 +189,27 @@ public class EventBusHelper {
         public int getMsgRes() {
             return msgRes;
         }
+
+        public Runnable getAction() {
+            return action;
+        }
+
+        public boolean hasAction() {
+            return action != null;
+        }
+
+        public String getActionName() {
+            return actionName;
+        }
+
+        public int getActionNameRes() {
+            return actionNameRes;
+        }
+
+        public boolean hasActionNameRes() {
+            return actionNameRes > 0;
+        }
+
     }
 
 }

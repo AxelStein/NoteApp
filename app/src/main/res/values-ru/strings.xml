@@ -113,5 +113,8 @@
     <string name="action_keep_editing">Продолжить редактирование</string>
     <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
     <string name="action_fullscreen">Полноэкранный режим</string>
+    <string name="error_share">Приложение не найдено</string>
+    <string name="action_undo">Отмена</string>
+    <string name="msg_exit_fullscreen">Чтобы выйти из полноэкранного режима, нажмите назад</string>
 
 </resources>

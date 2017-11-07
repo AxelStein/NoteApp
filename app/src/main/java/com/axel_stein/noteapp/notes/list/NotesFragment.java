@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,29 +31,36 @@ import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesContract.Presenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
-import com.axel_stein.noteapp.views.CustomCheckedTextView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
-
 public class NotesFragment extends BaseFragment implements NotesContract.View,
         SelectNotebookDialog.OnNotebookSelectedListener,
-        CheckLabelsDialog.OnLabelCheckedListener, ConfirmDialog.OnConfirmListener {
+        CheckLabelsDialog.OnLabelCheckedListener,
+        ConfirmDialog.OnConfirmListener {
 
     private static final String TAG_DELETE_NOTE = "TAG_DELETE_NOTE";
+
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+
     @BindView(R.id.empty_view)
     TextView mEmptyView;
+
     @Nullable
     private Presenter mPresenter;
+
+    @Nullable
     private NoteAdapter mAdapter;
+
     private String mEmptyMsg;
+
+    @Nullable
     private ActionMode mActionMode;
+
     private boolean mViewCreated;
 
     private NoteItemListener mItemListener = new NoteItemListener() {
@@ -124,13 +132,17 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     @Override
     public void setNotes(List<Note> list) {
-        mAdapter.setNotes(list);
+        if (mAdapter != null) {
+            mAdapter.setNotes(list);
+        }
         ViewUtil.show(list != null && list.size() == 0, mEmptyView);
     }
 
     @Override
     public void showError() {
-        showSnackbarMessage("Error");
+        if (getContext() != null) {
+            showSnackbarMessage(getString(R.string.error));
+        }
     }
 
     @Override
@@ -182,8 +194,12 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         if (mActionMode != null) {
             mActionMode.setTitle(String.valueOf(checkCount));
         }
-        if (pos < 0) {
-            mAdapter.notifyDataSetChanged();
+        if (mAdapter != null) {
+            if (pos < 0) {
+                mAdapter.notifyDataSetChanged();
+            } else {
+                mAdapter.notifyItemChanged(pos);
+            }
         }
     }
 
@@ -267,10 +283,14 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         if (mPresenter != null) {
             mPresenter.onDestroyView();
         }
-        mPresenter = checkNotNull(presenter);
+        mPresenter = presenter;
         if (mViewCreated) {
-            mRecyclerView.scrollToPosition(0);
-            mAdapter.setPresenter(mPresenter);
+            if (mRecyclerView != null) {
+                mRecyclerView.scrollToPosition(0);
+            }
+            if (mAdapter != null) {
+                mAdapter.setPresenter(mPresenter);
+            }
             mPresenter.onCreateView(this);
         }
     }
@@ -289,7 +309,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         private NoteItemListener mNoteItemListener;
 
         NoteAdapter(@NonNull NoteItemListener l) {
-            mNoteItemListener = checkNotNull(l, "listener is null");
+            mNoteItemListener = l;
         }
 
         void setPresenter(Presenter presenter) {
@@ -334,41 +354,66 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         }
 
         class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-            private CustomCheckedTextView mTitle;
+            private ImageView mIcon;
+            private TextView mNote;
             private NoteItemListener mListener;
 
             private NoteViewHolder(View itemView, NoteItemListener l) {
                 super(itemView);
-                mTitle = (CustomCheckedTextView) itemView;
+                mIcon = itemView.findViewById(R.id.img_icon);
+                mNote = itemView.findViewById(R.id.text_note);
                 mListener = l;
 
+                mIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!onLongClick(v)) {
+                            int pos = getAdapterPosition();
+                            if (checkAdapterPosition()) {
+                                mListener.onNoteClick(pos, getItem(pos));
+                            }
+                        }
+                    }
+                });
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
             }
 
             public void setNote(Note note) {
-                mTitle.setText(note.getTitle());
+                mNote.setText(note.getTitle());
             }
 
             void setChecked(boolean checkable, boolean checked) {
-                mTitle.setCheckable(checkable);
-                if (checkable) {
-                    mTitle.setChecked(checked);
+                if (!checkable) {
+                    mIcon.setImageResource(R.drawable.ic_description_white_24dp);
+                } else if (checked) {
+                    mIcon.setImageResource(R.drawable.ic_check_box_white_24dp);
+                } else {
+                    mIcon.setImageResource(R.drawable.ic_check_box_outline_blank_white_24dp);
                 }
             }
 
             @Override
             public void onClick(View view) {
                 int pos = getAdapterPosition();
-                mListener.onNoteClick(pos, getItem(pos));
+                if (checkAdapterPosition()) {
+                    mListener.onNoteClick(pos, getItem(pos));
+                }
             }
 
             @Override
             public boolean onLongClick(View view) {
                 int pos = getAdapterPosition();
-                return mListener.onNoteLongClick(pos, getItem(pos));
+                return checkAdapterPosition() && mListener.onNoteLongClick(pos, getItem(pos));
             }
+
+            private boolean checkAdapterPosition() {
+                int pos = getAdapterPosition();
+                return pos >= 0 && pos < getItemCount();
+            }
+
         }
+
     }
 
 }

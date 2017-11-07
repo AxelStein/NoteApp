@@ -1,7 +1,6 @@
 package com.axel_stein.noteapp.dialogs.bottom_menu;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,34 +10,37 @@ import android.view.ViewGroup;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.views.IconTextView;
 
-import java.util.HashMap;
 import java.util.List;
 
-public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
+class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     private LayoutInflater mInflater;
     private List<MenuItem> mItems;
     private OnItemClickListener mOnItemClickListener;
 
+    /*
     @Nullable
     private HashMap<Integer, String> mComments;
+    */
 
-    public MenuAdapter(Context context) {
+    MenuAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
     }
 
-    public void setOnItemClickListener(OnItemClickListener l) {
+    void setOnItemClickListener(OnItemClickListener l) {
         mOnItemClickListener = l;
     }
 
-    public void setItems(List<MenuItem> items) {
+    void setItems(List<MenuItem> items) {
         mItems = items;
         notifyDataSetChanged();
     }
 
+    /*
     public void setComments(@Nullable HashMap<Integer, String> comments) {
         mComments = comments;
         notifyDataSetChanged();
     }
+    */
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,12 +61,15 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         MenuItem item = mItems.get(position);
+        holder.mTextView.setText(item.getTitle());
+        /*
         int id = item.getItemId();
         if (mComments != null && mComments.containsKey(id)) {
             holder.mTextView.setText(String.format("%s  ‣  %s", item.getTitle(), mComments.get(id)));
         } else {
             holder.mTextView.setText(item.getTitle());
         }
+        */
         holder.mTextView.setIconLeft(item.getIcon());
     }
 
@@ -76,7 +81,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         return mItems.size();
     }
 
-    public interface OnItemClickListener {
+    interface OnItemClickListener {
         void onItemClick(MenuItem item);
     }
 

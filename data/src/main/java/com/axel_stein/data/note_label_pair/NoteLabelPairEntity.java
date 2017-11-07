@@ -63,4 +63,14 @@ public class NoteLabelPairEntity {
     public void setTrash(boolean trash) {
         this.trash = trash;
     }
+
+    @Override
+    public String toString() {
+        return "NoteLabelPairEntity{" +
+                "id=" + id +
+                ", noteId=" + noteId +
+                ", labelId=" + labelId +
+                ", trash=" + trash +
+                '}';
+    }
 }

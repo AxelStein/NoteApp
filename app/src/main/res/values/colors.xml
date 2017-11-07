@@ -4,8 +4,9 @@
     <color name="color_accent_dark">#00796b</color>
 
     <color name="text_color_secondary_light">#8a000000</color>
-
     <color name="text_color_primary_dark">#ffffff</color>
+    <color name="edit_text_line_color_light">#22000000</color>
+    <color name="edit_text_line_color_dark">#22ffffff</color>
 
     <color name="grey_color_background">#323e45</color>
     <color name="grey_color_primary">#3f525b</color>

@@ -8,7 +8,7 @@ import com.axel_stein.domain.repository.LabelRepository;
 
 import java.util.List;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
+import static com.axel_stein.data.ObjectUtil.checkNotNull;
 
 public class SqlLabelRepository implements LabelRepository {
 

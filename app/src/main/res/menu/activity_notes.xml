@@ -23,7 +23,7 @@
         android:icon="@drawable/ic_sort_white_24dp"
         android:orderInCategory="102"
         android:title="@string/action_sort_by"
-        app:showAsAction="ifRoom">
+        app:showAsAction="never">
 
         <menu>
 

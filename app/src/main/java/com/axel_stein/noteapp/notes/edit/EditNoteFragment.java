@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
@@ -28,7 +30,6 @@ import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.note.NoteInfoDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.Presenter;
-import com.axel_stein.noteapp.notes.edit.check_list.CheckItem;
 import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -41,8 +42,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
 import static android.text.TextUtils.isEmpty;
 
 public class EditNoteFragment extends BaseFragment implements EditNoteContract.View,
@@ -50,6 +51,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         CheckLabelsDialog.OnLabelCheckedListener, BottomMenuDialog.OnMenuItemClickListener {
 
     private static final String TAG_SAVE_NOTE = "TAG_SAVE_NOTE";
+
     private static final String TAG_DELETE_NOTE = "TAG_DELETE_NOTE";
 
     @BindView(R.id.edit_title)
@@ -61,15 +63,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @BindView(R.id.text_update)
     TextView mTextUpdate;
 
-    /*
-    @BindView(R.id.recycler_view)
-    RecyclerView mRecyclerView;
-
-    CheckListAdapter mCheckListAdapter;
-
-    @BindView(R.id.button_list)
-    ImageButton mButtonList;
-    */
+    @BindView(R.id.button_menu)
+    ImageButton mButtonMenu;
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
@@ -82,6 +77,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private boolean mViewCreated;
     private boolean mTrash;
     private boolean mUpdate;
+    private boolean mEditable;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,70 +114,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         mViewCreated = true;
 
-        root.findViewById(R.id.button_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new BottomMenuDialog.Builder()
-                        .setMenuRes(R.menu.bottom_menu_edit_note)
-                        .showMenuItem(R.id.menu_restore, mTrash)
-                        .showMenuItem(R.id.menu_delete, mUpdate)
-                        .showMenuItem(R.id.menu_move_to_trash, !mTrash && mUpdate)
-                        .showMenuItem(R.id.menu_select_notebook, !mTrash)
-                        .showMenuItem(R.id.menu_labels, !mTrash)
-                        .showMenuItem(R.id.menu_share, !mTrash)
-                        //.showMenuItem(R.id.menu_info, mUpdate)
-                        .showMenuItem(R.id.menu_info, false)
-                        .show(EditNoteFragment.this);
-            }
-        });
-
-        /*
-        mButtonList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                KeyboardUtil.hide(getActivity());
-
-                boolean show = !ViewUtil.isShown(mRecyclerView);
-                ViewUtil.show(show, mRecyclerView);
-                //ViewUtil.show(!show, mEditContent);
-                mButtonList.setImageResource(show ? R.drawable.ic_text_format_white_24dp : R.drawable.ic_list_white_24dp);
-
-                if (mPresenter != null) {
-                    mPresenter.convertCheckList();
-                }
-            }
-        });
-
-        mCheckListAdapter = new CheckListAdapter();
-        mRecyclerView.setAdapter(mCheckListAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-            @Override
-            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.DOWN | ItemTouchHelper.UP);
-            }
-
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder vh, RecyclerView.ViewHolder target) {
-                Collections.swap(mCheckListAdapter.getItems(), vh.getAdapterPosition(), target.getAdapterPosition());
-                mCheckListAdapter.notifyItemMoved(vh.getAdapterPosition(), target.getAdapterPosition());
-                return true;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                return true;
-            }
-        });
-        helper.attachToRecyclerView(mRecyclerView);
-        */
-
         if (mPresenter != null) {
             mPresenter.onCreateView(this);
         }
@@ -189,16 +121,26 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         return root;
     }
 
+    @OnClick(R.id.button_menu)
+    public void onButtonMenuClick() {
+        new BottomMenuDialog.Builder()
+                .setMenuRes(R.menu.bottom_menu_edit_note)
+                .showMenuItem(R.id.menu_restore, mTrash)
+                .showMenuItem(R.id.menu_delete, mUpdate)
+                .showMenuItem(R.id.menu_move_to_trash, !mTrash && mUpdate)
+                .showMenuItem(R.id.menu_select_notebook, !mTrash)
+                .showMenuItem(R.id.menu_labels, !mTrash)
+                .showMenuItem(R.id.menu_share, !mTrash)
+                .showMenuItem(R.id.menu_info, false)
+                .show(EditNoteFragment.this);
+    }
+
     @Override
     public void onDestroyView() {
         mEditTitle = null;
         mEditContent = null;
         mViewCreated = false;
-        /*
-        mCheckListAdapter = null;
-        mRecyclerView = null;
-        mButtonList = null;
-        */
+        mButtonMenu = null;
         mTextUpdate = null;
         mMenu = null;
         if (mPresenter != null) {
@@ -211,12 +153,17 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.activity_edit_note, menu);
+
         mMenu = menu;
+        MenuUtil.show(mMenu, mEditable, R.id.menu_fullscreen, R.id.menu_done);
+
         if (mPresenter != null) {
             mPresenter.addOnNoteChangedListener(new EditNoteContract.OnNoteChangedListener() {
                 @Override
                 public void onNoteChanged(boolean changed) {
-                    MenuUtil.showMenuItem(mMenu, changed, R.id.menu_done);
+                    if (mEditable) {
+                        MenuUtil.show(mMenu, changed, R.id.menu_done);
+                    }
                 }
             });
         }
@@ -226,14 +173,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
-
-        /*
-        MenuUtil.showMenuItem(menu, mTrash, R.id.menu_restore, R.id.menu_delete);
-        MenuUtil.showMenuItem(menu, !mTrash, R.id.menu_move_to_trash, R.id.menu_select_notebook,
-                R.id.menu_labels, R.id.menu_share);
-        MenuUtil.showMenuItem(menu, !mTrash && mUpdate, R.id.menu_move_to_trash);
-        MenuUtil.showMenuItem(menu, mUpdate, R.id.menu_info);
-        */
     }
 
     @Override
@@ -246,6 +185,22 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        mEditable = editable;
+
+        MenuUtil.show(mMenu, editable, R.id.menu_fullscreen, R.id.menu_done);
+
+        ViewUtil.enable(editable, mButtonMenu);
+        if (!mTrash) {
+            ViewUtil.enable(editable, mEditTitle, mEditContent);
+        }
+
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
     }
 
     @Override
@@ -289,11 +244,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
-    public void showCheckList(List<CheckItem> items) {
-        //mCheckListAdapter.setItems(items);
-    }
-
-    @Override
     public void showShareNoteView(Note note) {
         String title = note.getTitle();
         String content = note.getContent();
@@ -310,6 +260,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivity(intent);
+        } else {
+            Log.e("TAG", "share note: no activity found");
+            showMessage(R.string.error_share);
         }
     }
 
@@ -348,14 +301,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @Override
     public void onConfirm(String tag) {
         switch (tag) {
-            /*
-            case TAG_SAVE_NOTE:
-                if (mPresenter != null) {
-                    mPresenter.save();
-                }
-                break;
-            */
-
             case TAG_DELETE_NOTE:
                 if (mPresenter != null) {
                     mPresenter.delete();
@@ -377,11 +322,11 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     public void setPresenter(@NonNull Presenter presenter) {
-        mPresenter = checkNotNull(presenter);
+        mPresenter = presenter;
         mPresenter.addOnNoteChangedListener(new EditNoteContract.OnNoteChangedListener() {
             @Override
             public void onNoteChanged(boolean changed) {
-                MenuUtil.showMenuItem(mMenu, changed, R.id.menu_done);
+                MenuUtil.show(mMenu, changed, R.id.menu_done);
             }
         });
         if (mViewCreated) {

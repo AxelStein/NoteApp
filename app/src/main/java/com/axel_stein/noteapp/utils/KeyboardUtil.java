@@ -65,10 +65,10 @@ public class KeyboardUtil {
             } else if (!mView.requestFocus()) { // Try focusing
                 Log.e(TAG, "Cannot focus on view");
                 post();
-            } else if (!imm.isActive(mView)) { // Check if Imm is active with this view
+            } else if (imm != null && !imm.isActive(mView)) { // Check if Imm is active with this view
                 Log.e(TAG, "IMM is not active");
                 post();
-            } else if (!imm.showSoftInput(mView, InputMethodManager.SHOW_IMPLICIT)) { // Show Keyboard
+            } else if (imm != null && !imm.showSoftInput(mView, InputMethodManager.SHOW_IMPLICIT)) { // Show Keyboard
                 Log.e(TAG, "Unable to show keyboard");
                 post();
             }
@@ -77,6 +77,7 @@ public class KeyboardUtil {
         private void post() {
             mView.postDelayed(this, INTERVAL_MS);
         }
+
     }
 
 }

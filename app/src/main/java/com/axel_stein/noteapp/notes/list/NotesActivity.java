@@ -3,10 +3,12 @@ package com.axel_stein.noteapp.notes.list;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.view.ActionMode;
@@ -57,14 +59,26 @@ public class NotesActivity extends BaseActivity {
 
     @BindView(R.id.fab_add_note)
     FloatingActionButton mAddNoteFAB;
+
     @Inject
     AppSettingsRepository mAppSettings;
+
     private ActionBar mActionBar;
+
     private Drawer mDrawer;
+
+    @Nullable
     private DrawerHelper mDrawerHelper;
+
+    @Nullable
     private Object mTag;
+
+    @Nullable
     private Menu mMenu;
+
+    @Nullable
     private NotesFragment mFragment;
+
     private boolean mShowFAB;
 
     @Override
@@ -112,80 +126,6 @@ public class NotesActivity extends BaseActivity {
         }
     }
 
-    /*
-    10-16 13:19:45.286 194-389/? E/EmbeddedLogger: App crashed! Process: com.axel_stein.noteapp
-10-16 13:19:45.286 194-389/? E/EmbeddedLogger: App crashed! Package: com.axel_stein.noteapp v1 (1.0)
-10-16 13:19:45.286 3242-3242/com.axel_stein.noteapp E/AndroidRuntime: FATAL EXCEPTION: main
-                                                                      java.lang.RuntimeException: Unable to start activity ComponentInfo{com.axel_stein.noteapp/com.axel_stein.noteapp.notes.list.NotesActivity}: android.view.InflateException: Binary XML file line #7: Error inflating class ImageButton
-                                                                          at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2205)
-                                                                          at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2240)
-                                                                          at android.app.ActivityThread.access$600(ActivityThread.java:139)
-                                                                          at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1262)
-                                                                          at android.os.Handler.dispatchMessage(Handler.java:99)
-                                                                          at android.os.Looper.loop(Looper.java:156)
-                                                                          at android.app.ActivityThread.main(ActivityThread.java:4987)
-                                                                          at java.lang.reflect.Method.invokeNative(Native Method)
-                                                                          at java.lang.reflect.Method.invoke(Method.java:511)
-                                                                          at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:784)
-                                                                          at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:551)
-                                                                          at dalvik.system.NativeStart.main(Native Method)
-                                                                       Caused by: android.view.InflateException: Binary XML file line #7: Error inflating class ImageButton
-                                                                          at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:697)
-                                                                          at android.view.LayoutInflater.rInflate(LayoutInflater.java:739)
-                                                                          at android.view.LayoutInflater.inflate(LayoutInflater.java:489)
-                                                                          at android.view.LayoutInflater.inflate(LayoutInflater.java:396)
-                                                                          at com.mikepenz.materialdrawer.DrawerBuilder.withStickyHeader(DrawerBuilder.java:638)
-                                                                          at com.axel_stein.noteapp.notes.list.NotesActivity.onCreate(NotesActivity.java:98)
-                                                                          at android.app.Activity.performCreate(Activity.java:4538)
-                                                                          at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1071)
-                                                                          at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2161)
-                                                                          at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2240) 
-                                                                          at android.app.ActivityThread.access$600(ActivityThread.java:139) 
-                                                                          at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1262) 
-                                                                          at android.os.Handler.dispatchMessage(Handler.java:99) 
-                                                                          at android.os.Looper.loop(Looper.java:156) 
-                                                                          at android.app.ActivityThread.main(ActivityThread.java:4987) 
-                                                                          at java.lang.reflect.Method.invokeNative(Native Method) 
-                                                                          at java.lang.reflect.Method.invoke(Method.java:511) 
-                                                                          at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:784) 
-                                                                          at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:551) 
-                                                                          at dalvik.system.NativeStart.main(Native Method) 
-                                                                       Caused by: java.lang.NumberFormatException: Invalid int: "res/color/abc_secondary_text_material_light.xml"
-                                                                          at java.lang.Integer.invalidInt(Integer.java:138)
-                                                                          at java.lang.Integer.parse(Integer.java:375)
-                                                                          at java.lang.Integer.parseInt(Integer.java:366)
-                                                                          at com.android.internal.util.XmlUtils.convertValueToInt(XmlUtils.java:123)
-                                                                          at android.content.res.TypedArray.getInt(TypedArray.java:254)
-                                                                          at android.widget.ImageView.<init>(ImageView.java:145)
-                                                                          at android.widget.ImageButton.<init>(ImageButton.java:85)
-                                                                          at android.support.v7.widget.AppCompatImageButton.<init>(AppCompatImageButton.java:73)
-                                                                          at android.support.v7.widget.AppCompatImageButton.<init>(AppCompatImageButton.java:69)
-                                                                          at android.support.v7.app.AppCompatViewInflater.createView(AppCompatViewInflater.java:118)
-                                                                          at android.support.v7.app.AppCompatDelegateImplV9.createView(AppCompatDelegateImplV9.java:1024)
-                                                                          at android.support.v7.app.AppCompatDelegateImplV9.onCreateView(AppCompatDelegateImplV9.java:1081)
-                                                                          at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:668)
-                                                                          at android.view.LayoutInflater.rInflate(LayoutInflater.java:739) 
-                                                                          at android.view.LayoutInflater.inflate(LayoutInflater.java:489) 
-                                                                          at android.view.LayoutInflater.inflate(LayoutInflater.java:396) 
-                                                                          at com.mikepenz.materialdrawer.DrawerBuilder.withStickyHeader(DrawerBuilder.java:638) 
-                                                                          at com.axel_stein.noteapp.notes.list.NotesActivity.onCreate(NotesActivity.java:98) 
-                                                                          at android.app.Activity.performCreate(Activity.java:4538) 
-                                                                          at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1071) 
-                                                                          at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2161) 
-                                                                          at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2240) 
-                                                                          at android.app.ActivityThread.access$600(ActivityThread.java:139) 
-                                                                          at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1262) 
-                                                                          at android.os.Handler.dispatchMessage(Handler.java:99) 
-                                                                          at android.os.Looper.loop(Looper.java:156) 
-                                                                          at android.app.ActivityThread.main(ActivityThread.java:4987) 
-                                                                          at java.lang.reflect.Method.invokeNative(Native Method) 
-                                                                          at java.lang.reflect.Method.invoke(Method.java:511) 
-                                                                          at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:784) 
-                                                                          at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:551) 
-                                                                          at dalvik.system.NativeStart.main(Native Method) 
-10-16 13:19:45.296 194-389/? E/EmbeddedLogger: Application Label: NoteApp
-    */
-
     @Override
     protected void onDestroy() {
         EventBusHelper.unsubscribe(this);
@@ -219,7 +159,7 @@ public class NotesActivity extends BaseActivity {
         });
     }
 
-    private boolean drawerItemClick(IDrawerItem item) {
+    private boolean drawerItemClick(final IDrawerItem item) {
         if (item == null) {
             return false;
         }
@@ -261,10 +201,15 @@ public class NotesActivity extends BaseActivity {
         }
 
         setActionBarTitle(title);
-        mFragment.setEmptyMsg(emptyMsg);
-        if (updatePresenter && presenter != null) {
-            mFragment.setPresenter(presenter);
+        if (mFragment != null) {
+            mFragment.setEmptyMsg(emptyMsg);
+
+            if (updatePresenter && presenter != null) {
+                mFragment.setPresenter(presenter);
+            }
         }
+
+        supportInvalidateOptionsMenu();
     }
 
     @Override
@@ -273,14 +218,20 @@ public class NotesActivity extends BaseActivity {
         mMenu = menu;
 
         MenuUtil.tintMenuIconsAttr(this, menu, R.attr.menuItemTintColor);
-        MenuUtil.showMenuItem(menu, !mShowFAB, R.id.menu_add_note);
+        MenuUtil.show(menu, !mShowFAB, R.id.menu_add_note);
+
+        MenuUtil.show(mMenu, mTag != null, R.id.menu_sort);
+        MenuUtil.showGroup(mMenu,R.id.menu_group_notebook, false);
+        MenuUtil.showGroup(mMenu,R.id.menu_group_label, false);
 
         if (mDrawerHelper == null) {
             mDrawerHelper = new DrawerHelper(new DrawerHelper.Callback() {
                 @Override
                 public void update(List<IDrawerItem> items, boolean click, IDrawerItem selected) {
-                    mDrawer.setItems(items);
-                    if (click || mFragment.getPresenter() == null) {
+                    if (mDrawer != null) {
+                        mDrawer.setItems(items);
+                    }
+                    if (click || mFragment != null && mFragment.getPresenter() == null) {
                         drawerItemClick(selected);
                     }
                     supportInvalidateOptionsMenu();
@@ -296,7 +247,7 @@ public class NotesActivity extends BaseActivity {
         NoteOrder currentOrder = mAppSettings.getNotesOrder();
         if (currentOrder != null) {
             MenuItem item = menu.findItem(R.id.menu_sort);
-            MenuUtil.checkMenuItem(item.getSubMenu(), menuItemFromNoteOrder(currentOrder), true);
+            MenuUtil.check(item.getSubMenu(), menuItemFromNoteOrder(currentOrder), true);
         }
 
         if (mTag != null) {
@@ -306,7 +257,7 @@ public class NotesActivity extends BaseActivity {
 
         MenuItem item = menu.findItem(R.id.menu_delete_notebook);
         if (item.isVisible()) {
-            MenuUtil.showMenuItem(item, mDrawerHelper.getNotebookCount() > 1);
+            MenuUtil.show(item, mDrawerHelper != null && mDrawerHelper.getNotebookCount() > 1);
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -332,19 +283,27 @@ public class NotesActivity extends BaseActivity {
                 break;
 
             case R.id.menu_rename_notebook:
-                renameNotebookDialog(getCurrentNotebook());
+                if (mTag != null) {
+                    renameNotebookDialog(getCurrentNotebook());
+                }
                 break;
 
             case R.id.menu_delete_notebook:
-                deleteNotebookDialog(getCurrentNotebook());
+                if (mTag != null) {
+                    deleteNotebookDialog(getCurrentNotebook());
+                }
                 break;
 
             case R.id.menu_rename_label:
-                renameLabelDialog(getCurrentLabel());
+                if (mTag != null) {
+                    renameLabelDialog(getCurrentLabel());
+                }
                 break;
 
             case R.id.menu_delete_label:
-                deleteLabelDialog(getCurrentLabel());
+                if (mTag != null) {
+                    deleteLabelDialog(getCurrentLabel());
+                }
                 break;
         }
 
@@ -446,7 +405,7 @@ public class NotesActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (mDrawer.isDrawerOpen()) {
+        if (mDrawer != null && mDrawer.isDrawerOpen()) {
             mDrawer.closeDrawer();
         } else {
             super.onBackPressed();
@@ -479,17 +438,39 @@ public class NotesActivity extends BaseActivity {
     }
 
     @Subscribe
-    public void showMessage(EventBusHelper.Message e) {
-        if (e.isRes()) {
-            showMessage(e.getMsgRes());
-        } else {
-            showMessage(e.getMsg());
-        }
+    public void showMessage(final EventBusHelper.Message e) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String msg = e.getMsg();
+                    if (e.hasMsgRes()) {
+                        msg = getString(e.getMsgRes());
+                    }
+
+                    String actionName = e.getActionName();
+                    if (e.hasActionNameRes()) {
+                        actionName = getString(e.getActionNameRes());
+                    }
+
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_notes), msg, Snackbar.LENGTH_SHORT);
+                    if (e.hasAction()) {
+                        snackbar.setAction(actionName, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                e.getAction().run();
+                            }
+                        });
+                    }
+                    snackbar.show();
+                } catch (Exception ignored) {
+                }
+            }
+        }, 100);
     }
 
     @Subscribe
     public void onRecreate(EventBusHelper.Recreate e) {
-        // todo bug with API 15
         recreate();
     }
 
@@ -502,42 +483,56 @@ public class NotesActivity extends BaseActivity {
 
     @Subscribe
     public void updateDrawer(EventBusHelper.UpdateDrawer e) {
-        mDrawerHelper.update(true, false);
-        supportInvalidateOptionsMenu();
+        if (mDrawerHelper != null) {
+            mDrawerHelper.update(true, false);
+            supportInvalidateOptionsMenu();
+        }
     }
 
     @Subscribe
     public void addNotebook(EventBusHelper.AddNotebook e) {
-        mDrawerHelper.addNotebook(e.getNotebook());
-        supportInvalidateOptionsMenu();
+        if (mDrawerHelper != null) {
+            mDrawerHelper.addNotebook(e.getNotebook());
+            supportInvalidateOptionsMenu();
+        }
     }
 
     @Subscribe
     public void renameNotebook(EventBusHelper.RenameNotebook e) {
-        mDrawerHelper.renameNotebook(e.getNotebook());
+        if (mDrawerHelper != null) {
+            mDrawerHelper.renameNotebook(e.getNotebook());
+        }
     }
 
     @Subscribe
     public void deleteNotebook(EventBusHelper.DeleteNotebook e) {
-        mDrawerHelper.deleteNotebook(e.getNotebook());
-        supportInvalidateOptionsMenu();
+        if (mDrawerHelper != null) {
+            mDrawerHelper.deleteNotebook(e.getNotebook());
+            supportInvalidateOptionsMenu();
+        }
     }
 
     @Subscribe
     public void addLabel(EventBusHelper.AddLabel e) {
-        mDrawerHelper.addLabel(null);
-        supportInvalidateOptionsMenu();
+        if (mDrawerHelper != null) {
+            mDrawerHelper.addLabel(null);
+            supportInvalidateOptionsMenu();
+        }
     }
 
     @Subscribe
     public void renameLabel(EventBusHelper.RenameLabel e) {
-        mDrawerHelper.renameLabel(null);
+        if (mDrawerHelper != null) {
+            mDrawerHelper.renameLabel(null);
+        }
     }
 
     @Subscribe
     public void deleteLabel(EventBusHelper.DeleteLabel e) {
-        mDrawerHelper.deleteLabel(null);
-        supportInvalidateOptionsMenu();
+        if (mDrawerHelper != null) {
+            mDrawerHelper.deleteLabel(null);
+            supportInvalidateOptionsMenu();
+        }
     }
 
     @Override
@@ -558,24 +553,13 @@ public class NotesActivity extends BaseActivity {
         super.onSupportActionModeFinished(mode);
     }
 
-    private void showMessage(final String msg) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Snackbar.make(findViewById(R.id.coordinator_notes), msg, Snackbar.LENGTH_SHORT).show();
-                } catch (Exception ignored) {
-                }
-            }
-        }, 100);
-    }
-
-    private void showMessage(int msgRes) {
-        showMessage(getString(msgRes));
-    }
-
     private void lockDrawer(boolean lock) {
-        mDrawer.getDrawerLayout().setDrawerLockMode(lock ? LOCK_MODE_LOCKED_CLOSED : LOCK_MODE_UNLOCKED);
+        if (mDrawer != null) {
+            DrawerLayout layout = mDrawer.getDrawerLayout();
+            if (layout != null) {
+                layout.setDrawerLockMode(lock ? LOCK_MODE_LOCKED_CLOSED : LOCK_MODE_UNLOCKED);
+            }
+        }
     }
 
     private void setActionBarTitle(String title) {

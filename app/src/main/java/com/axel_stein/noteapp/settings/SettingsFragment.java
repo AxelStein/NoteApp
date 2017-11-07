@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.content.FileProvider;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.backup.ExportBackupInteractor;
@@ -152,7 +153,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         try {
             ContentResolver cr = getContext().getContentResolver();
-            String src = FileUtil.convertStreamToString(cr.openInputStream(data.getData()));
+            Uri uri = data.getData();
+            if (uri == null) {
+                Log.e("TAG", "data.getData() = null");
+                EventBusHelper.showMessage(R.string.error);
+                return;
+            }
+            String src = FileUtil.convertStreamToString(cr.openInputStream(uri));
 
             final LoadingDialog dialog = LoadingDialog.from(R.string.title_import, R.string.msg_wait);
 

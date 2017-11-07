@@ -44,16 +44,7 @@ public class TrashNotesPresenter extends NotesPresenter {
         super.onActionItemClicked(itemId);
         switch (itemId) {
             case R.id.menu_restore:
-                mRestoreNoteInteractor.execute(getCheckedNotes())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action() {
-                            @Override
-                            public void run() throws Exception {
-                                stopCheckMode();
-                                EventBusHelper.showMessage(R.string.msg_notes_restored);
-                                EventBusHelper.updateNoteList();
-                            }
-                        });
+                restore(getCheckedNotes());
                 break;
 
             case R.id.menu_delete:

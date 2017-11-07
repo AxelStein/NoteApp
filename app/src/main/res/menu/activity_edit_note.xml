@@ -3,15 +3,15 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_fullscreen"
-        android:title="@string/action_fullscreen"
-        android:icon="@drawable/ic_fullscreen_white_24dp"
+        android:id="@+id/menu_done"
+        android:title="@string/action_save"
+        android:visible="false"
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_done"
-        android:title="@string/action_done"
-        android:visible="false"
+        android:id="@+id/menu_fullscreen"
+        android:title="@string/action_fullscreen"
+        android:icon="@drawable/ic_fullscreen_white_24dp"
         app:showAsAction="always"/>
 
 </menu>

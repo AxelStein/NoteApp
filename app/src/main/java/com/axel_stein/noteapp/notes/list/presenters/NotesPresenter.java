@@ -4,6 +4,7 @@ import android.support.v4.util.LongSparseArray;
 
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
+import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookInteractor;
 import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
@@ -30,22 +31,31 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
-import static android.support.v4.util.Preconditions.checkNotNull;
 import static com.axel_stein.noteapp.utils.BooleanUtil.isTrue;
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public abstract class NotesPresenter implements NotesContract.Presenter, SingleObserver<List<Note>> {
 
     protected View mView;
+
     @Inject
     TrashNoteInteractor mTrashNoteInteractor;
+
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
     @Inject
     QueryLabelInteractor mQueryLabelInteractor;
+
     @Inject
     SetNotebookInteractor mSetNotebookInteractor;
+
     @Inject
     SetLabelsInteractor mSetLabelsInteractor;
+
+    @Inject
+    RestoreNoteInteractor mRestoreNoteInteractor;
+
     private List<Note> mNotes;
     private LongSparseArray<Boolean> mCheckedItems;
 
@@ -200,16 +210,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 break;
 
             case R.id.menu_move_to_trash:
-                mTrashNoteInteractor.execute(getCheckedNotes())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Action() {
-                            @Override
-                            public void run() throws Exception {
-                                stopCheckMode();
-                                EventBusHelper.showMessage(R.string.msg_notes_trashed);
-                                EventBusHelper.updateNoteList();
-                            }
-                        });
+                moveToTrash(getCheckedNotes());
                 break;
 
             case R.id.menu_select_notebook:
@@ -254,6 +255,62 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         });
                 break;
         }
+    }
+
+    protected void moveToTrash(final List<Note> notes) {
+        if (notes == null) {
+            return;
+        }
+        mTrashNoteInteractor.execute(notes)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        EventBusHelper.showMessage(R.string.msg_notes_trashed, R.string.action_undo, new Runnable() {
+                            @Override
+                            public void run() {
+                                restore(notes);
+                            }
+                        });
+
+                        stopCheckMode();
+                        EventBusHelper.updateNoteList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        EventBusHelper.showMessage(R.string.error);
+                    }
+                });
+    }
+
+    protected void restore(final List<Note> notes) {
+        if (notes == null) {
+            return;
+        }
+        mRestoreNoteInteractor.execute(notes)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        EventBusHelper.showMessage(R.string.msg_notes_restored, R.string.action_undo, new Runnable() {
+                            @Override
+                            public void run() {
+                                moveToTrash(notes);
+                            }
+                        });
+
+                        stopCheckMode();
+                        EventBusHelper.updateNoteList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        EventBusHelper.showMessage(R.string.error);
+                    }
+                });
     }
 
     @Override

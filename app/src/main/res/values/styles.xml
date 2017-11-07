@@ -13,6 +13,7 @@
         <item name="nightModeButtonTintColor">@color/text_color_secondary_light</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.Fix</item>
         <item name="checkBoxTint">@color/checkbox_tint_light</item>
+        <item name="editTextLineColor">@color/edit_text_line_color_light</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_background</item>
@@ -24,15 +25,6 @@
         <item name="material_drawer_selected">@color/material_drawer_selected</item>
         <item name="material_drawer_selected_text">?attr/colorAccent</item>
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
-    </style>
-
-    <style name="AppThemeDark.Grey">
-        <item name="material_drawer_background">@color/grey_color_background</item>
-        <item name="android:windowBackground">@color/grey_color_background</item>
-        <item name="colorPrimary">@color/grey_color_primary</item>
-        <item name="colorPrimaryDark">@color/grey_color_primary_dark</item>
-        <item name="colorAccent">@color/grey_color_accent</item>
-        <item name="material_drawer_selected">#3f525b</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -48,6 +40,7 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.Fix</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogDark</item>
         <item name="checkBoxTint">@color/checkbox_tint_dark</item>
+        <item name="editTextLineColor">@color/edit_text_line_color_dark</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_dark_background</item>

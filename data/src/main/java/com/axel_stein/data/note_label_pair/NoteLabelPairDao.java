@@ -15,7 +15,7 @@ public interface NoteLabelPairDao {
     @Query("DELETE FROM note_label_pairs WHERE label_id = :labelId")
     void deleteLabel(long labelId);
 
-    @Query("DELETE FROM note_label_pairs WHERE note_id = :noteId")
+    @Query("DELETE FROM note_label_pairs WHERE note_id = :noteId") // fixme
     void deleteNote(long noteId);
 
     @Query("DELETE FROM note_label_pairs")
@@ -28,7 +28,6 @@ public interface NoteLabelPairDao {
     List<NoteLabelPairEntity> query();
 
     @Query("SELECT COUNT(*) FROM note_label_pairs WHERE label_id = :labelId AND entity_trash = 0")
-        //  AND entity_trash = 0
     long count(long labelId);
 
     @Query("UPDATE note_label_pairs SET entity_trash = 1 WHERE note_id = :noteId")

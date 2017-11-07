@@ -28,16 +28,22 @@ import io.reactivex.functions.Function;
 public class DrawerHelper {
 
     private static List<IDrawerItem> mItems;
+
     private static int mNotebookCount;
+
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
     @Inject
     QueryLabelInteractor mQueryLabelInteractor;
+
     private Callback mCallback;
+
     private SectionDrawerItem mNotebooks;
+
     private SectionDrawerItem mLabels;
 
-    public DrawerHelper(Callback callback) {
+    DrawerHelper(Callback callback) {
         mCallback = callback;
 
         App.getAppComponent().inject(this);
@@ -45,32 +51,32 @@ public class DrawerHelper {
         updateDrawerMenu(getSelectedItem(), mItems == null);
     }
 
-    public void invalidate() {
+    private void invalidate() {
         mItems = null;
         mNotebookCount = 0;
     }
 
-    public void addNotebook(Notebook notebook) {
+    void addNotebook(Notebook notebook) {
         updateImpl(true, false);
     }
 
-    public void renameNotebook(Notebook notebook) {
+    void renameNotebook(Notebook notebook) {
         updateImpl(true, true);
     }
 
-    public void deleteNotebook(Notebook notebook) {
+    void deleteNotebook(Notebook notebook) {
         updateImpl(false, true);
     }
 
-    public void addLabel(Label label) {
+    void addLabel(Label label) {
         updateImpl(true, false);
     }
 
-    public void renameLabel(Label label) {
+    void renameLabel(Label label) {
         updateImpl(true, true);
     }
 
-    public void deleteLabel(Label label) {
+    void deleteLabel(Label label) {
         updateImpl(false, true);
     }
 
@@ -86,11 +92,11 @@ public class DrawerHelper {
         return null;
     }
 
-    public void update(boolean saveSelection, boolean click) {
+    void update(boolean saveSelection, boolean click) {
         updateImpl(saveSelection, click);
     }
 
-    public int getNotebookCount() {
+    int getNotebookCount() {
         return mNotebookCount;
     }
 

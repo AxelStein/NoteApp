@@ -18,13 +18,11 @@ import android.view.MenuItem;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.MenuUtil;
 
-import java.util.HashMap;
-
 public class BottomMenuDialog extends BottomSheetDialogFragment {
 
     private int mMenuRes;
     private SparseBooleanArray mItemsVisibility;
-    private HashMap<Integer, String> mComments;
+    //private HashMap<Integer, String> mComments;
     private OnMenuItemClickListener mListener;
 
     @Override
@@ -75,14 +73,16 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         if (mItemsVisibility != null) {
             for (int i = 0; i < mItemsVisibility.size(); i++) {
                 int id = mItemsVisibility.keyAt(i);
-                MenuUtil.showMenuItem(menu, mItemsVisibility.valueAt(i), id);
+                MenuUtil.show(menu, mItemsVisibility.valueAt(i), id);
             }
         }
 
         MenuAdapter adapter = new MenuAdapter(getContext());
+        /*
         if (mComments != null) {
             adapter.setComments(mComments);
         }
+        */
         adapter.setItems(MenuUtil.getVisibleMenuItems(menu));
         adapter.setOnItemClickListener(new MenuAdapter.OnItemClickListener() {
             @Override
@@ -109,7 +109,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     public static class Builder {
         private int mMenuRes;
         private SparseBooleanArray mItemsVisibility;
-        private HashMap<Integer, String> mComments;
+        //private HashMap<Integer, String> mComments;
 
         public Builder setMenuRes(int menuRes) {
             mMenuRes = menuRes;
@@ -124,6 +124,8 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             return this;
         }
 
+        /*
+        @SuppressLint("UseSparseArrays")
         public Builder comment(int itemId, String comment) {
             if (mComments == null) {
                 mComments = new HashMap<>();
@@ -131,12 +133,13 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             mComments.put(itemId, comment);
             return this;
         }
+        */
 
         public void show(Fragment fragment) {
             BottomMenuDialog dialog = new BottomMenuDialog();
             dialog.mMenuRes = mMenuRes;
             dialog.mItemsVisibility = mItemsVisibility;
-            dialog.mComments = mComments;
+            //dialog.mComments = mComments;
             dialog.setTargetFragment(fragment, 0);
             dialog.show(fragment.getFragmentManager(), null);
         }

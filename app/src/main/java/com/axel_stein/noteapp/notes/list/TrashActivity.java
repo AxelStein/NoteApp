@@ -2,6 +2,7 @@ package com.axel_stein.noteapp.notes.list;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
 import com.axel_stein.noteapp.App;
@@ -40,6 +42,7 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
     @Inject
     EmptyTrashInteractor mEmptyTrashInteractor;
 
+    @Nullable
     private NotesFragment mFragment;
 
     @Override
@@ -100,7 +103,9 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
                     @Override
                     public void run() throws Exception {
                         EventBusHelper.showMessage(R.string.msg_trash_empty);
-                        mFragment.setPresenter(new TrashNotesPresenter());
+                        if (mFragment != null) {
+                            mFragment.setPresenter(new TrashNotesPresenter());
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -111,28 +116,35 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
     }
 
     @Subscribe
-    public void showMessage(EventBusHelper.Message e) {
-        if (e.isRes()) {
-            showMessage(e.getMsgRes());
-        } else {
-            showMessage(e.getMsg());
-        }
-    }
-
-    private void showMessage(final String msg) {
+    public void showMessage(final EventBusHelper.Message e) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Snackbar.make(findViewById(R.id.coordinator_trash), msg, Snackbar.LENGTH_SHORT).show();
+                    String msg = e.getMsg();
+                    if (e.hasMsgRes()) {
+                        msg = getString(e.getMsgRes());
+                    }
+
+                    String actionName = e.getActionName();
+                    if (e.hasActionNameRes()) {
+                        actionName = getString(e.getActionNameRes());
+                    }
+
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_trash), msg, Snackbar.LENGTH_SHORT);
+                    if (e.hasAction()) {
+                        snackbar.setAction(actionName, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                e.getAction().run();
+                            }
+                        });
+                    }
+                    snackbar.show();
                 } catch (Exception ignored) {
                 }
             }
         }, 100);
-    }
-
-    private void showMessage(int msgRes) {
-        showMessage(getString(msgRes));
     }
 
     @Override
