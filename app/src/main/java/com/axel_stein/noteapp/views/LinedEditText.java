@@ -34,31 +34,37 @@ public class LinedEditText extends TextInputEditText {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setColor(ColorUtil.getColorAttr(getContext(), R.attr.editTextLineColor));
-        //mPaint.setColor(ContextCompat.getColor(getContext(), R.color.edit_text_line_color));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //int count = getLineCount();
-
-        int height = getHeight();
+        int height = getMeasuredHeight();
         int line_height = getLineHeight();
 
         int count = height / line_height;
 
-        if (getLineCount() > count)
-            count = getLineCount();//for long text with scrolling
+        if (getLineCount() > count) {
+            count = getLineCount(); // for long text with scrolling
+        }
 
-        Rect r = mRect;
-        Paint paint = mPaint;
-        int baseline = getLineBounds(0, r);//first line
-
-        for (int i = 0; i < count; i++) {
-            canvas.drawLine(r.left, baseline + 1, r.right, baseline + 1, paint);
-            baseline += getLineHeight();//next line
+        if (getLineCount() > 1) {
+            for (int i = 0; i < count; i++) {
+                drawLine(canvas, i);
+            }
         }
 
         super.onDraw(canvas);
+    }
+
+    private void drawLine(Canvas canvas, int i) {
+        Rect r = mRect;
+        Paint paint = mPaint;
+
+        try {
+            int baseline = getLineBounds(i, r);
+            canvas.drawLine(r.left, baseline, r.right, baseline, paint);
+        } catch (Exception ignored) {
+        }
     }
 
 }

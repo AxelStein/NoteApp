@@ -208,11 +208,17 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         String title = note.getTitle();
         String content = note.getContent();
 
+        int selectionTitle = mEditTitle.getSelectionStart();
         mEditTitle.setText(title);
-        mEditTitle.setSelection(mEditTitle.length());
+        if (selectionTitle > 0) {
+            mEditTitle.setSelection(selectionTitle);
+        }
 
+        int selectionContent = mEditContent.getSelectionStart();
         mEditContent.setText(content);
-        mEditContent.setSelection(mEditContent.length());
+        if (selectionContent > 0) {
+            mEditContent.setSelection(selectionContent);
+        }
 
         if (isEmpty(title) && isEmpty(content)) {
             KeyboardUtil.show(mEditTitle);
