@@ -1,6 +1,7 @@
 package com.axel_stein.noteapp.dagger;
 
 import android.arch.persistence.room.Room;
+import android.support.v7.preference.PreferenceManager;
 
 import com.axel_stein.data.AppDatabase;
 import com.axel_stein.data.AppSettingsRepository;
@@ -8,6 +9,7 @@ import com.axel_stein.data.label.SqlLabelRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
 import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
+import com.axel_stein.domain.interactor.ResetInteractor;
 import com.axel_stein.domain.interactor.backup.ExportBackupInteractor;
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
@@ -18,7 +20,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-import static android.content.Context.MODE_PRIVATE;
 import static com.axel_stein.data.AppDatabase.MIGRATION_1_2;
 
 @Module
@@ -69,8 +70,7 @@ public class AppModule {
 
     @Provides
     AppSettingsRepository provideSettings(App app) {
-        return new AppSettingsRepository(app.getSharedPreferences(app.getPackageName(), MODE_PRIVATE),
-                app.getString(R.string.default_notebook));
+        return new AppSettingsRepository(PreferenceManager.getDefaultSharedPreferences(app), app.getString(R.string.default_notebook));
     }
 
     @Provides
@@ -87,6 +87,14 @@ public class AppModule {
                                                SqlLabelRepository labels,
                                                SqlNoteLabelPairRepository labelHelper) {
         return new ImportBackupInteractor(notes, notebooks, labels, labelHelper);
+    }
+
+    @Provides
+    ResetInteractor provideReset(SqlNoteRepository notes,
+                                 SqlNotebookRepository notebooks,
+                                 SqlLabelRepository labels,
+                                 SqlNoteLabelPairRepository labelHelper) {
+        return new ResetInteractor(notes, notebooks, labels, labelHelper);
     }
 
 }

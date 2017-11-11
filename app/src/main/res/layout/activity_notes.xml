@@ -41,4 +41,6 @@
         app:elevation="2dp"
         app:fabSize="normal"/>
 
+    <include layout="@layout/layout_password"/>
+
 </android.support.design.widget.CoordinatorLayout>

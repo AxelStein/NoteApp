@@ -49,10 +49,8 @@ public class QueryLabelInteractor {
                     throw new IllegalStateException("result is not valid");
                 }
 
-                if (mSettingsRepository.countersEnabled()) {
-                    for (Label label : result) {
-                        label.setNoteCount(mNoteLabelPairRepository.count(label));
-                    }
+                for (Label label : result) {
+                    label.setNoteCount(mNoteLabelPairRepository.count(label));
                 }
 
                 return result;

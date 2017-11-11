@@ -61,10 +61,8 @@ public class QueryNotebookInteractor {
                     notebooks.add(notebook);
                 }
 
-                if (mSettingsRepository.countersEnabled()) {
-                    for (Notebook notebook : notebooks) {
-                        notebook.setNoteCount(mNoteRepository.count(notebook));
-                    }
+                for (Notebook notebook : notebooks) {
+                    notebook.setNoteCount(mNoteRepository.count(notebook));
                 }
 
                 return notebooks;

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -27,7 +28,6 @@ import com.axel_stein.noteapp.base.BaseFragment;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
-import com.axel_stein.noteapp.dialogs.note.NoteInfoDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.Presenter;
 import com.axel_stein.noteapp.utils.DateFormatter;
@@ -70,6 +70,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
+    @Inject
+    AppSettingsRepository mAppSettings;
 
     @Nullable
     private Presenter mPresenter;
@@ -114,6 +117,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
             }
         });
 
+        int baseFontSize = mAppSettings.getBaseFontSize();
+        mEditTitle.setTextSize(baseFontSize + 4);
+        mEditContent.setTextSize(baseFontSize);
+
         mViewCreated = true;
 
         if (mPresenter != null) {
@@ -133,7 +140,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 .showMenuItem(R.id.menu_select_notebook, !mTrash)
                 .showMenuItem(R.id.menu_labels, !mTrash)
                 .showMenuItem(R.id.menu_share, !mTrash)
-                .showMenuItem(R.id.menu_info, false)
+                .showMenuItem(R.id.menu_duplicate, !mTrash && mUpdate)
                 .show(EditNoteFragment.this);
     }
 
@@ -289,11 +296,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
-    public void showNoteInfoView(Note note) {
-        NoteInfoDialog.launch(getContext(), this, note);
-    }
-
-    @Override
     public void showConfirmDeleteNoteView() {
         ConfirmDialog dialog = new ConfirmDialog();
         dialog.setTitle(R.string.title_delete_note);
@@ -381,8 +383,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                     mPresenter.actionShare();
                     break;
 
-                case R.id.menu_info:
-                    mPresenter.actionInfo();
+                case R.id.menu_duplicate:
+                    mPresenter.actionDuplicate();
                     break;
             }
         }

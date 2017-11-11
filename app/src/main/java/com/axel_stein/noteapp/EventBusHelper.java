@@ -22,6 +22,11 @@ public class EventBusHelper {
         post(new UpdateDrawer());
     }
 
+    public static void updateNoteList(boolean saveSelection, boolean click) {
+        post(new UpdateNoteList());
+        post(new UpdateDrawer(saveSelection, click));
+    }
+
     public static void addNotebook(Notebook notebook) {
         post(new AddNotebook(notebook));
     }
@@ -62,10 +67,6 @@ public class EventBusHelper {
         post(new Recreate());
     }
 
-    public static void updateDrawer() {
-        post(new UpdateDrawer());
-    }
-
     private static void post(@NonNull Object o) {
         EventBus.getDefault().postSticky(o);
     }
@@ -74,6 +75,25 @@ public class EventBusHelper {
     }
 
     public static class UpdateDrawer {
+        private boolean saveSelection;
+        private boolean click;
+
+        public UpdateDrawer() {
+            saveSelection = true;
+        }
+
+        public UpdateDrawer(boolean saveSelection, boolean click) {
+            this.saveSelection = saveSelection;
+            this.click = click;
+        }
+
+        public boolean saveSelection() {
+            return saveSelection;
+        }
+
+        public boolean click() {
+            return click;
+        }
     }
 
     public static class UpdateNoteList {

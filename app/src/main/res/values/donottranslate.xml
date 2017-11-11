@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="font_sizes_values">
+        <item>pref_font_size_small</item>
+        <item>pref_font_size_default</item>
+        <item>pref_font_size_large</item>
+        <item>pref_font_size_extra_large</item>
+    </string-array>
+</resources>

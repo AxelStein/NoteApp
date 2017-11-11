@@ -59,6 +59,11 @@ public class SettingsActivity extends BaseActivity {
         showMessage(getString(msgRes));
     }
 
+    @Subscribe
+    public void onRecreate(EventBusHelper.Recreate e) {
+        recreate();
+    }
+
     @Override
     protected void onDestroy() {
         EventBusHelper.unsubscribe(this);

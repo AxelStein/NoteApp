@@ -13,12 +13,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.axel_stein.data.AppSettingsRepository;
+import com.axel_stein.domain.interactor.ResetInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.Notebook;
@@ -26,13 +32,16 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotesPresenter;
 import com.axel_stein.noteapp.utils.ColorUtil;
 import com.axel_stein.noteapp.utils.DisplayUtil;
+import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
+import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -48,20 +57,34 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 import static android.support.v4.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
 import static android.support.v4.widget.DrawerLayout.LOCK_MODE_UNLOCKED;
 
-public class NotesActivity extends BaseActivity {
+public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfirmListener {
+
+    private static final String TAG_RESET_PASSWORD = "TAG_RESET_PASSWORD";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.edit_password)
+    EditText mEditPassword;
+
+    @BindView(R.id.layout_password)
+    View mLayoutPasswordInput;
 
     @BindView(R.id.fab_add_note)
     FloatingActionButton mAddNoteFAB;
 
     @Inject
     AppSettingsRepository mAppSettings;
+
+    @Inject
+    ResetInteractor mResetInteractor;
 
     private ActionBar mActionBar;
 
@@ -105,6 +128,45 @@ public class NotesActivity extends BaseActivity {
             mFragment = (NotesFragment) fragment;
         }
 
+        findViewById(R.id.button_reset_password).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmDialog dialog = new ConfirmDialog();
+                dialog.setTitle(R.string.title_password_reset);
+                dialog.setMessage(R.string.msg_password_reset_caution);
+                dialog.setPositiveButtonText(R.string.action_ok);
+                dialog.setNegativeButtonText(R.string.action_cancel);
+                dialog.show(getSupportFragmentManager(), TAG_RESET_PASSWORD);
+            }
+        });
+
+        ViewUtil.show(mAppSettings.showPasswordInput(), mLayoutPasswordInput);
+
+        mEditPassword.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkPassword();
+            }
+        });
+        mEditPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                return actionId == EditorInfo.IME_ACTION_DONE && checkPassword();
+            }
+        });
+        mEditPassword.post(new Runnable() {
+            @Override
+            public void run() {
+                if (ViewUtil.isShown(mLayoutPasswordInput)) {
+                    mEditPassword.requestFocus();
+                    KeyboardUtil.show(mEditPassword);
+                } else {
+                    mLayoutPasswordInput.requestFocus();
+                    KeyboardUtil.hide(mEditPassword);
+                }
+            }
+        });
+
         mDrawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(mToolbar)
@@ -124,6 +186,15 @@ public class NotesActivity extends BaseActivity {
         if (savedInstanceState != null) {
             restoreCurrentItem(savedInstanceState);
         }
+    }
+
+    private boolean checkPassword() {
+        if (mAppSettings.checkPassword(mEditPassword.getText().toString())) {
+            ViewUtil.hide(mLayoutPasswordInput);
+            KeyboardUtil.hide(NotesActivity.this);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -484,7 +555,7 @@ public class NotesActivity extends BaseActivity {
     @Subscribe
     public void updateDrawer(EventBusHelper.UpdateDrawer e) {
         if (mDrawerHelper != null) {
-            mDrawerHelper.update(true, false);
+            mDrawerHelper.update(e.saveSelection(), e.click());
             supportInvalidateOptionsMenu();
         }
     }
@@ -568,4 +639,40 @@ public class NotesActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onConfirm(String tag) {
+        if (tag != null) {
+            switch (tag) {
+                case TAG_RESET_PASSWORD:
+                    mAppSettings.setPassword(null);
+                    mResetInteractor.execute()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new CompletableObserver() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    ViewUtil.hide(mLayoutPasswordInput);
+                                    EventBusHelper.updateNoteList(false, true);
+                                    EventBusHelper.recreate();
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    e.printStackTrace();
+                                    EventBusHelper.showMessage(R.string.error);
+                                }
+                            });
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onCancel(String tag) {
+
+    }
 }

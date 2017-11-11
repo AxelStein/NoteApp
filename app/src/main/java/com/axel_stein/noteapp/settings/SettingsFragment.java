@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.FileProvider;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.LoadingDialog;
+import com.axel_stein.noteapp.dialogs.PasswordDialog;
 import com.axel_stein.noteapp.utils.FileUtil;
 
 import java.io.File;
@@ -36,7 +38,7 @@ import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat implements PasswordDialog.OnPasswordCommitListener {
 
     private static final int REQUEST_CODE_PICK_FILE = 100;
 
@@ -51,8 +53,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -78,6 +80,33 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
         */
+
+        CheckBoxPreference nightMode = (CheckBoxPreference) findPreference("PREF_NIGHT_MODE");
+        nightMode.setChecked(mSettingsRepository.nightMode());
+        nightMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                mSettingsRepository.setNightMode(!mSettingsRepository.nightMode());
+                EventBusHelper.recreate();
+                return true;
+            }
+        });
+
+        findPreference("secure_notes").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                boolean reset = mSettingsRepository.showPasswordInput();
+
+                PasswordDialog dialog = new PasswordDialog();
+                dialog.setTitle(reset ? R.string.title_confirm_password : R.string.title_password_setup);
+                dialog.setPositiveButtonText(R.string.action_ok);
+                dialog.setShowMessage(!reset);
+                dialog.setNegativeButtonText(R.string.action_cancel);
+                dialog.setTargetFragment(SettingsFragment.this, 0);
+                dialog.show(getFragmentManager(), null);
+                return true;
+            }
+        });
 
         findPreference("export").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -139,7 +168,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            EventBusHelper.showMessage("No activities to launch");
+            Log.e("TAG", "Export: no activity found");
+            EventBusHelper.showMessage(R.string.error_share);
         }
     }
 
@@ -176,9 +206,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             dialog.dismiss();
 
                             EventBusHelper.showMessage(R.string.msg_import_success);
-                            // fixme
-                            EventBusHelper.updateNoteList();
-                            //EventBusHelper.recreate();
+                            EventBusHelper.updateNoteList(false, true);
+                            EventBusHelper.recreate();
                         }
 
                         @Override
@@ -193,6 +222,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             e.printStackTrace();
             EventBusHelper.showMessage(R.string.error);
         }
+    }
+
+    @Override
+    public void onPasswordCommit(String password) {
+        boolean reset = mSettingsRepository.showPasswordInput();
+        mSettingsRepository.setPassword(reset ? null : password);
+        EventBusHelper.showMessage(reset ? R.string.msg_security_disabled : R.string.msg_security_enabled);
     }
 
 }

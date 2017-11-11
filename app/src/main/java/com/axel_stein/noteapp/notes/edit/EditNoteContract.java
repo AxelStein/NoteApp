@@ -24,8 +24,6 @@ public interface EditNoteContract {
 
         void showCheckLabelsView(List<Label> labels, List<Long> checkedLabels);
 
-        void showNoteInfoView(Note note);
-
         void showConfirmDeleteNoteView();
 
         void callFinish();
@@ -71,7 +69,7 @@ public interface EditNoteContract {
 
         void actionShare();
 
-        void actionInfo();
+        void actionDuplicate();
 
         void addOnNoteChangedListener(OnNoteChangedListener l);
 

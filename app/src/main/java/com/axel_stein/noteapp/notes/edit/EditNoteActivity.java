@@ -2,7 +2,6 @@ package com.axel_stein.noteapp.notes.edit;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +14,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -47,13 +47,14 @@ public class EditNoteActivity extends BaseActivity {
 
     private static final String BUNDLE_KEEP_SCREEN_ON = "BUNDLE_KEEP_SCREEN_ON";
 
-    private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
-
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @Inject
     GetNoteInteractor mGetNoteInteractor;
+
+    @Inject
+    AppSettingsRepository mAppSettings;
 
     @Nullable
     private EditNotePresenter mPresenter;
@@ -213,14 +214,10 @@ public class EditNoteActivity extends BaseActivity {
                 ViewUtil.hide(mToolbar);
                 ViewUtil.hide(findViewById(R.id.bottom));
 
-                SharedPreferences pref = getSharedPreferences(getClass().getSimpleName(), MODE_PRIVATE);
-                if (pref != null) {
-                    boolean showMsg = pref.getBoolean(PREF_SHOW_EXIT_FULLSCREEN_MSG, true);
-                    if (showMsg) {
-                        Toast.makeText(this, R.string.msg_exit_fullscreen, Toast.LENGTH_SHORT).show();
-                        pref.edit().putBoolean(PREF_SHOW_EXIT_FULLSCREEN_MSG, false).apply();
-                    }
+                if (mAppSettings.showExitFullscreenMessage()) {
+                    Toast.makeText(this, R.string.msg_exit_fullscreen, Toast.LENGTH_SHORT).show();
                 }
+
                 return true;
 
             case R.id.menu_keep_screen_on:
@@ -235,6 +232,21 @@ public class EditNoteActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /*
+    todo
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateWindowFlagsKeepScreenOn(mKeepScreenOn);
+    }
+
+    @Override
+    protected void onStop() {
+        updateWindowFlagsKeepScreenOn(false);
+        super.onStop();
+    }
+    */
 
     @Override
     protected void onDestroy() {

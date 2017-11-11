@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        android:title="@string/pref_category_appearance">
+
+        <CheckBoxPreference
+            android:key="PREF_NIGHT_MODE"
+            android:title="@string/pref_night_mode"/>
+
+        <ListPreference
+            android:key="PREF_FONT_SIZE"
+            android:entries="@array/font_sizes"
+            android:defaultValue="pref_font_size_default"
+            android:summary="%s"
+            android:entryValues="@array/font_sizes_values"
+            android:title="@string/pref_font_size"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_security">
+
+        <Preference
+            android:key="secure_notes"
+            android:title="@string/pref_secure_notes"
+            android:summary="@string/pref_secure_notes_summary"/>
+
+        <!--
+        <CheckBoxPreference
+            android:enabled="false"
+            android:title="Unlock with fingerprint"/>
+        -->
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_category_backup">
+
+        <Preference
+            android:key="export"
+            android:title="@string/pref_export"/>
+
+        <Preference
+            android:key="import"
+            android:title="@string/pref_import"/>
+
+    </PreferenceCategory>
+
     <!--
     <CheckBoxPreference
         android:defaultValue="true"
@@ -13,12 +59,5 @@
         android:title="@string/pref_enable_counters"/>
     -->
 
-    <Preference
-        android:key="export"
-        android:title="@string/pref_export"/>
-
-    <Preference
-        android:key="import"
-        android:title="@string/pref_import"/>
 
 </PreferenceScreen>

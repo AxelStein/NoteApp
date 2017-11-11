@@ -178,8 +178,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     mView.setNote(mNote);
                     notifyChanged();
                     mView.showMessage(R.string.msg_note_updated);
-                    EventBusHelper.updateNoteList();
                 }
+
+                EventBusHelper.updateNoteList();
             }
 
             @Override
@@ -405,14 +406,36 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void actionInfo() {
-        if (mView != null) {
-            if (mNote.getId() <= 0 || isEmptyNote()) {
-                mView.showMessage(R.string.msg_note_empty);
-            } else {
-                mView.showNoteInfoView(mNote);
-            }
-        }
+    public void actionDuplicate() {
+        Note duplicate = mSrcNote.copy();
+        duplicate.setId(0);
+
+        mInsertNoteInteractor.execute(duplicate)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (mView != null) {
+                            mView.showMessage(R.string.msg_note_duplicated);
+                        }
+
+                        EventBusHelper.updateNoteList();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+
+                        if (mView != null) {
+                            mView.showMessage(R.string.error);
+                        }
+                    }
+                });
     }
 
 }

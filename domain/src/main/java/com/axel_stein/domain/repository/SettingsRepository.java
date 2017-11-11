@@ -13,8 +13,4 @@ public interface SettingsRepository {
 
     String defaultNotebookTitle();
 
-    boolean countersEnabled();
-
-    void enableCounters(boolean enable);
-
 }
