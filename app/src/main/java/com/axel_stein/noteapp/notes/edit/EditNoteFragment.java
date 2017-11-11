@@ -171,12 +171,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_done:
@@ -209,9 +203,17 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         String title = note.getTitle();
         String content = note.getContent();
 
+        int selectionTitle = mEditTitle.getSelectionStart();
         mEditTitle.setText(title);
+        if (selectionTitle > 0) {
+            mEditTitle.setSelection(selectionTitle);
+        }
 
+        int selectionContent = mEditContent.getSelectionStart();
         mEditContent.setText(content);
+        if (selectionContent > 0) {
+            mEditContent.setSelection(selectionContent);
+        }
 
         if (isEmpty(title) && isEmpty(content)) {
             KeyboardUtil.show(mEditTitle);
