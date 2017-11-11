@@ -116,5 +116,6 @@
 
     <string name="default_notebook">Notes</string>
     <string name="note_info">Created: %1$s\nUpdated: %2$s</string>
+    <string name="action_keep_screen_on">Keep screen on</string>
 
 </resources>

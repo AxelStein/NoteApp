@@ -17,11 +17,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     private List<MenuItem> mItems;
     private OnItemClickListener mOnItemClickListener;
 
-    /*
-    @Nullable
-    private HashMap<Integer, String> mComments;
-    */
-
     MenuAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
     }
@@ -34,13 +29,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         mItems = items;
         notifyDataSetChanged();
     }
-
-    /*
-    public void setComments(@Nullable HashMap<Integer, String> comments) {
-        mComments = comments;
-        notifyDataSetChanged();
-    }
-    */
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,14 +50,14 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         MenuItem item = mItems.get(position);
         holder.mTextView.setText(item.getTitle());
-        /*
-        int id = item.getItemId();
-        if (mComments != null && mComments.containsKey(id)) {
-            holder.mTextView.setText(String.format("%s  ‣  %s", item.getTitle(), mComments.get(id)));
+
+        if (item.isCheckable()) {
+            int icon = item.isChecked() ? R.drawable.ic_check_box_white_24dp : R.drawable.ic_check_box_outline_blank_white_24dp;
+            holder.mTextView.setIconRight(icon);
         } else {
-            holder.mTextView.setText(item.getTitle());
+            holder.mTextView.setIconRight(null);
         }
-        */
+
         holder.mTextView.setIconLeft(item.getIcon());
     }
 

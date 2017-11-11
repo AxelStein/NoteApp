@@ -40,6 +40,15 @@ public class MenuUtil {
         tintMenuIcons(menu, ColorUtil.getColorAttr(context, colorAttr));
     }
 
+    public static void tintAttr(@Nullable Context context, @Nullable MenuItem item, int colorAttr) {
+        if (item != null) {
+            Drawable icon = item.getIcon();
+            if (icon != null) {
+                icon.mutate().setColorFilter(ColorUtil.getColorAttr(context, colorAttr), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+    }
+
     private static void tintMenuIcons(@Nullable Menu menu, int color) {
         if (menu == null) {
             return;
@@ -126,10 +135,12 @@ public class MenuUtil {
     }
 
     public static void check(@Nullable Menu menu, @IdRes int itemId, boolean checked) {
-        if (menu == null) {
-            return;
+        if (menu != null) {
+            check(menu.findItem(itemId), checked);
         }
-        MenuItem item = menu.findItem(itemId);
+    }
+
+    public static void check(@Nullable MenuItem item, boolean checked) {
         if (item != null) {
             item.setChecked(checked);
         }
@@ -196,6 +207,7 @@ public class MenuUtil {
         }
         return null;
     }
+
 }
 
 

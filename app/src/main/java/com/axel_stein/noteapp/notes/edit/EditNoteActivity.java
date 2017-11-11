@@ -10,7 +10,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
@@ -21,6 +23,7 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 
 import javax.inject.Inject;
@@ -30,6 +33,8 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+
 public class EditNoteActivity extends BaseActivity {
 
     public static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
@@ -37,6 +42,12 @@ public class EditNoteActivity extends BaseActivity {
     public static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.EXTRA_NOTEBOOK_ID";
 
     public static final String EXTRA_LABEL_ID = "com.axel_stein.noteapp.EXTRA_LABEL_ID";
+
+    private static final String BUNDLE_FULLSCREEN = "BUNDLE_FULLSCREEN";
+
+    private static final String BUNDLE_KEEP_SCREEN_ON = "BUNDLE_KEEP_SCREEN_ON";
+
+    private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -46,6 +57,8 @@ public class EditNoteActivity extends BaseActivity {
 
     @Nullable
     private EditNotePresenter mPresenter;
+
+    private boolean mKeepScreenOn;
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, EditNoteActivity.class);
@@ -149,17 +162,38 @@ public class EditNoteActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("fullscreen", !ViewUtil.isShown(mToolbar));
+        outState.putBoolean(BUNDLE_FULLSCREEN, !ViewUtil.isShown(mToolbar));
+        outState.putBoolean(BUNDLE_KEEP_SCREEN_ON, mKeepScreenOn);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        boolean fullscreen = savedInstanceState.getBoolean("fullscreen");
+        boolean fullscreen = savedInstanceState.getBoolean(BUNDLE_FULLSCREEN);
 
         ViewUtil.show(!fullscreen, mToolbar);
         ViewUtil.show(!fullscreen, findViewById(R.id.bottom));
+
+        mKeepScreenOn = savedInstanceState.getBoolean(BUNDLE_KEEP_SCREEN_ON);
+        updateWindowFlagsKeepScreenOn(mKeepScreenOn);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_edit_note, menu);
+
+        mToolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                int colorAttr = mKeepScreenOn ? R.attr.colorAccent : R.attr.menuItemTintColor;
+                if (menu != null) {
+                    MenuUtil.tintAttr(EditNoteActivity.this, menu.findItem(R.id.menu_keep_screen_on), colorAttr);
+                }
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -173,12 +207,23 @@ public class EditNoteActivity extends BaseActivity {
                 ViewUtil.hide(mToolbar);
                 ViewUtil.hide(findViewById(R.id.bottom));
 
-                SharedPreferences pref = getSharedPreferences("edit_note_activity", MODE_PRIVATE);
-                boolean showMsg = pref.getBoolean("show_exit_fullscreen_msg", true);
-                if (showMsg) {
-                    Toast.makeText(this, R.string.msg_exit_fullscreen, Toast.LENGTH_SHORT).show();
-                    pref.edit().putBoolean("show_exit_fullscreen_msg", false).apply();
+                SharedPreferences pref = getSharedPreferences(getClass().getSimpleName(), MODE_PRIVATE);
+                if (pref != null) {
+                    boolean showMsg = pref.getBoolean(PREF_SHOW_EXIT_FULLSCREEN_MSG, true);
+                    if (showMsg) {
+                        Toast.makeText(this, R.string.msg_exit_fullscreen, Toast.LENGTH_SHORT).show();
+                        pref.edit().putBoolean(PREF_SHOW_EXIT_FULLSCREEN_MSG, false).apply();
+                    }
                 }
+                return true;
+
+            case R.id.menu_keep_screen_on:
+                mKeepScreenOn = !mKeepScreenOn;
+
+                int colorAttr = mKeepScreenOn ? R.attr.colorAccent : R.attr.menuItemTintColor;
+                MenuUtil.tintAttr(this, item, colorAttr);
+
+                updateWindowFlagsKeepScreenOn(mKeepScreenOn);
                 return true;
         }
 
@@ -186,12 +231,29 @@ public class EditNoteActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        updateWindowFlagsKeepScreenOn(false);
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         if (!ViewUtil.isShown(mToolbar)) {
             ViewUtil.show(mToolbar);
             ViewUtil.show(findViewById(R.id.bottom));
-        } else if (mPresenter != null && mPresenter.close()) {
+        } else if (mPresenter == null || mPresenter.close()) {
             super.onBackPressed();
+        }
+    }
+
+    private void updateWindowFlagsKeepScreenOn(boolean keepScreenOn) {
+        Window window = getWindow();
+        if (window != null) {
+            if (keepScreenOn) {
+                window.addFlags(FLAG_KEEP_SCREEN_ON);
+            } else {
+                window.clearFlags(FLAG_KEEP_SCREEN_ON);
+            }
         }
     }
 

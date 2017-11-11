@@ -38,7 +38,7 @@
 
         <activity
             android:name=".notes.edit.EditNoteActivity"
-            android:windowSoftInputMode="adjustUnspecified"/>
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name=".notes.view.ViewNoteActivity"/>
 

@@ -14,4 +14,10 @@
         android:icon="@drawable/ic_fullscreen_white_24dp"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/menu_keep_screen_on"
+        android:title="@string/action_keep_screen_on"
+        android:icon="@drawable/ic_wb_incandescent_white_24dp"
+        app:showAsAction="always"/>
+
 </menu>

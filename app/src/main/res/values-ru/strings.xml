@@ -116,5 +116,6 @@
     <string name="error_share">Приложение не найдено</string>
     <string name="action_undo">Отмена</string>
     <string name="msg_exit_fullscreen">Чтобы выйти из полноэкранного режима, нажмите назад</string>
+    <string name="action_keep_screen_on">Не выключать экран</string>
 
 </resources>

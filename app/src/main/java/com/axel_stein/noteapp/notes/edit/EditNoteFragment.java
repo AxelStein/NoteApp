@@ -47,8 +47,10 @@ import butterknife.OnClick;
 import static android.text.TextUtils.isEmpty;
 
 public class EditNoteFragment extends BaseFragment implements EditNoteContract.View,
-        ConfirmDialog.OnConfirmListener, SelectNotebookDialog.OnNotebookSelectedListener,
-        CheckLabelsDialog.OnLabelCheckedListener, BottomMenuDialog.OnMenuItemClickListener {
+        ConfirmDialog.OnConfirmListener,
+        SelectNotebookDialog.OnNotebookSelectedListener,
+        CheckLabelsDialog.OnLabelCheckedListener,
+        BottomMenuDialog.OnMenuItemClickListener {
 
     private static final String TAG_SAVE_NOTE = "TAG_SAVE_NOTE";
 
@@ -152,7 +154,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.activity_edit_note, menu);
 
         mMenu = menu;
         MenuUtil.show(mMenu, mEditable, R.id.menu_fullscreen, R.id.menu_done);
@@ -208,17 +209,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         String title = note.getTitle();
         String content = note.getContent();
 
-        int selectionTitle = mEditTitle.getSelectionStart();
         mEditTitle.setText(title);
-        if (selectionTitle > 0) {
-            mEditTitle.setSelection(selectionTitle);
-        }
 
-        int selectionContent = mEditContent.getSelectionStart();
         mEditContent.setText(content);
-        if (selectionContent > 0) {
-            mEditContent.setSelection(selectionContent);
-        }
 
         if (isEmpty(title) && isEmpty(content)) {
             KeyboardUtil.show(mEditTitle);
