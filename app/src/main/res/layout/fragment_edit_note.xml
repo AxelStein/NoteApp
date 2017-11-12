@@ -30,7 +30,6 @@
 
                 android:background="@null"
                 android:hint="@string/hint_title"
-                android:imeOptions="flagNoExtractUi"
                 android:inputType="textNoSuggestions|textCapSentences"
                 android:maxLength="@integer/max_title"
                 android:textSize="20sp"
@@ -58,7 +57,6 @@
                     android:background="@null"
 
                     android:hint="@string/hint_content"
-                    android:imeOptions="flagNoExtractUi"
                     android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
                     android:lineSpacingExtra="6dp"
                     android:maxLength="@integer/max_content"

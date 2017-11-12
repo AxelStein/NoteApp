@@ -106,6 +106,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
             mView.setNotes(notes);
         }
         mNotes = notes;
+        stopCheckMode();
     }
 
     @Override

@@ -72,6 +72,7 @@
     <string name="error_title_required">Title is required</string>
     <string name="error_title_exists">Title already exists</string>
     <string name="error_share">Application not found</string>
+    <string name="error_security_wrong_password">Wrong password</string>
 
     <!--Hints-->
     <string name="hint_label">Title</string>

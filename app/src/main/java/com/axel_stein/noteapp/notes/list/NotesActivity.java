@@ -128,6 +128,22 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
             mFragment = (NotesFragment) fragment;
         }
 
+        mDrawer = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(mToolbar)
+                .withStickyHeader(R.layout.layout_header)
+                .withDelayDrawerClickEvent(300)
+                .withSavedInstance(savedInstanceState)
+                .build();
+        mDrawer.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem item) {
+                return drawerItemClick(item);
+            }
+        });
+
+        setupDrawerHeader(mDrawer.getStickyHeader());
+
         findViewById(R.id.button_reset_password).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +156,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
             }
         });
 
-        ViewUtil.show(mAppSettings.showPasswordInput(), mLayoutPasswordInput);
+        showPasswordLayout(mAppSettings.showPasswordInput());
 
         mEditPassword.addTextChangedListener(new SimpleTextWatcher() {
             @Override
@@ -167,22 +183,6 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
             }
         });
 
-        mDrawer = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(mToolbar)
-                .withStickyHeader(R.layout.layout_header)
-                .withDelayDrawerClickEvent(300)
-                .withSavedInstance(savedInstanceState)
-                .build();
-        mDrawer.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-            @Override
-            public boolean onItemClick(View view, int position, IDrawerItem item) {
-                return drawerItemClick(item);
-            }
-        });
-
-        setupDrawerHeader(mDrawer.getStickyHeader());
-
         if (savedInstanceState != null) {
             restoreCurrentItem(savedInstanceState);
         }
@@ -190,7 +190,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
 
     private boolean checkPassword() {
         if (mAppSettings.checkPassword(mEditPassword.getText().toString())) {
-            ViewUtil.hide(mLayoutPasswordInput);
+            showPasswordLayout(false);
             KeyboardUtil.hide(NotesActivity.this);
             return true;
         }
@@ -545,13 +545,6 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         recreate();
     }
 
-    /*
-    @Subscribe
-    public void updateNotebookCounters(EventBusHelper.UpdateNotebookCounters e) {
-        mDrawerHelper.updateNotebookCounters();
-    }
-    */
-
     @Subscribe
     public void updateDrawer(EventBusHelper.UpdateDrawer e) {
         if (mDrawerHelper != null) {
@@ -633,7 +626,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         }
     }
 
-    private void setActionBarTitle(String title) {
+    private void setActionBarTitle(final String title) {
         if (mActionBar != null) {
             mActionBar.setTitle(title);
         }
@@ -655,9 +648,9 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
 
                                 @Override
                                 public void onComplete() {
-                                    ViewUtil.hide(mLayoutPasswordInput);
-                                    EventBusHelper.updateNoteList(false, true);
+                                    showPasswordLayout(false);
                                     EventBusHelper.recreate();
+                                    EventBusHelper.updateNoteList(false, true);
                                 }
 
                                 @Override
@@ -675,4 +668,10 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
     public void onCancel(String tag) {
 
     }
+
+    private void showPasswordLayout(boolean show) {
+        ViewUtil.show(show, mLayoutPasswordInput);
+        lockDrawer(show);
+    }
+
 }

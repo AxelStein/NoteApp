@@ -134,5 +134,6 @@
     <string name="msg_security_disabled">Защита отключена</string>
     <string name="title_password_reset">Сброс пароля</string>
     <string name="msg_password_reset_caution">Вы уверены, что хотите сбросить пароль? Все заметки будут удалены навсегда.</string>
+    <string name="error_security_wrong_password">Неверный пароль</string>
 
 </resources>

@@ -206,8 +206,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
                             dialog.dismiss();
 
                             EventBusHelper.showMessage(R.string.msg_import_success);
-                            EventBusHelper.updateNoteList(false, true);
                             EventBusHelper.recreate();
+                            EventBusHelper.updateNoteList(false, true);
                         }
 
                         @Override
@@ -227,8 +227,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
     @Override
     public void onPasswordCommit(String password) {
         boolean reset = mSettingsRepository.showPasswordInput();
-        mSettingsRepository.setPassword(reset ? null : password);
-        EventBusHelper.showMessage(reset ? R.string.msg_security_disabled : R.string.msg_security_enabled);
+        if (reset) {
+            if (mSettingsRepository.checkPassword(password)) {
+                mSettingsRepository.setPassword(null);
+                EventBusHelper.showMessage(R.string.msg_security_disabled);
+            } else {
+                EventBusHelper.showMessage(R.string.error_security_wrong_password);
+            }
+        } else {
+            mSettingsRepository.setPassword(password);
+            EventBusHelper.showMessage(R.string.msg_security_enabled);
+        }
     }
 
 }
