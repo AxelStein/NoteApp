@@ -17,7 +17,7 @@ public class NoteValidator {
             if (isEmpty(note.getContent())) {
                 return false;
             }
-            note.setTitle(note.getContent());
+            //note.setTitle(note.getContent());
         }
 
         return true;
@@ -32,7 +32,7 @@ public class NoteValidator {
             if (isEmpty(note.getContent())) {
                 return false;
             }
-            note.setTitle(note.getContent());
+            //note.setTitle(note.getContent());
         }
 
         return true;

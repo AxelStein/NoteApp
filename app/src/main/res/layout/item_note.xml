@@ -7,10 +7,14 @@
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
+    android:minHeight="48dp"
     android:layout_width="match_parent"
-    android:layout_height="48dp">
+    android:layout_height="wrap_content">
 
     <ImageView
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
         android:id="@+id/img_icon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -21,27 +25,49 @@
         android:src="@drawable/ic_description_white_24dp"
         android:tint="?attr/menuItemTintColor"
         android:scaleType="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription"/>
 
     <TextView
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_content"
+        app:layout_goneMarginBottom="12dp"
+
         android:id="@+id/text_note"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginLeft="72dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="72dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginBottom="12dp"
         tools:text="Item"/>
+
+    <TextView
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_note"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:id="@+id/text_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+
+        android:layout_marginLeft="72dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+
+        tools:text="Content"/>
 
 </android.support.constraint.ConstraintLayout>

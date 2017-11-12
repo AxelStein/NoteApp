@@ -194,6 +194,21 @@ public class QueryNoteInteractor {
         // set labels
         for (Note note : list) {
             note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
+
+            String content = note.getContent();
+            if (!isEmpty(content)) {
+                content = content.replace('\n', ' ');
+                if (content.length() > 128) {
+                    content = content.substring(0, 128);
+                }
+                content = content.replaceAll(" [ ]+", " ");
+                note.setContent(content);
+            }
+
+            if (isEmpty(note.getTitle())) {
+                note.setTitle(content);
+                note.setContent(null);
+            }
         }
 
         Collections.sort(list, new Comparator<Note>() {

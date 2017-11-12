@@ -7,7 +7,7 @@ import android.util.DisplayMetrics;
 public class DisplayUtil {
 
     public static int getStatusBarHeight(Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        if (context == null || (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)) {
             return 0;
         }
 
@@ -20,11 +20,17 @@ public class DisplayUtil {
     }
 
     public static int dpToPx(Context context, int dp) {
+        if (context == null) {
+            return 0;
+        }
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     public static int pxToDp(Context context, int px) {
+        if (context == null) {
+            return 0;
+        }
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }

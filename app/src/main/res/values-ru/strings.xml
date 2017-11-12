@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Заметки</string>
+    <string name="default_notebook">Заметки</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -42,6 +43,7 @@
     <string name="action_keep_screen_on">Не выключать экран</string>
     <string name="action_duplicate">Дублировать заметку</string>
     <string name="action_undo">Отмена</string>
+    <string name="action_reset_password">Сбросить пароль</string>
 
     <!--Pref-->
     <string name="pref_export">Экспорт</string>
@@ -51,18 +53,26 @@
     <string name="pref_font_size_default">По умолчанию</string>
     <string name="pref_font_size_large">Большой</string>
     <string name="pref_font_size_extra_large">Самый большой</string>
+    <string name="pref_category_appearance">Внешний вид</string>
+    <string name="pref_category_security">Безопасность</string>
+    <string name="pref_category_backup">Резервная копия и импорт</string>
+    <string name="pref_secure_notes">Защитить заметки</string>
+    <string name="pref_secure_notes_summary">Для приложения потребуется пароль</string>
+    <string name="pref_night_mode">Ночной режим</string>
 
     <!--Errors-->
     <string name="error">Ошибка</string>
     <string name="error_title_required">Название обязательно</string>
     <string name="error_title_exists">Название уже существует</string>
     <string name="error_share">Приложение не найдено</string>
+    <string name="error_security_wrong_password">Неверный пароль</string>
 
     <!--Hints-->
     <string name="hint_label">Название</string>
     <string name="hint_content">Заметка</string>
     <string name="hint_title">Название</string>
     <string name="hint_notebook">Название</string>
+    <string name="hint_password">Введите пароль</string>
 
     <!--Content description-->
     <string name="content_clear">Очистить</string>
@@ -90,6 +100,9 @@
     <string name="title_select_notebook">Выберите блокнот</string>
     <string name="title_save">Сохранить изменения?</string>
     <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
+    <string name="title_password_setup">Настройка пароля</string>
+    <string name="title_confirm_password">Подтвердите пароль</string>
+    <string name="title_password_reset">Сброс пароля</string>
 
     <!--Messages-->
     <string name="msg_wait">Пожалуйста, подождите</string>
@@ -118,22 +131,8 @@
     <string name="msg_note_duplicated">Заметка дублирована</string>
     <string name="msg_exit_fullscreen">Чтобы выйти из полноэкранного режима, нажмите назад</string>
     <string name="msg_password_caution">Пароль должен быть легко запоминающимся. Если Вы его забудете, то не сможете просматривать свои заметки.</string>
-
-    <string name="default_notebook">Заметки</string>
-    <string name="pref_category_appearance">Внешний вид</string>
-    <string name="pref_category_security">Безопасность</string>
-    <string name="pref_category_backup">Резервная копия и импорт</string>
-    <string name="pref_secure_notes">Защитить заметки</string>
-    <string name="pref_secure_notes_summary">Для приложения потребуется пароль</string>
-    <string name="pref_night_mode">Ночной режим</string>
-    <string name="action_reset_password">Сбросить пароль</string>
-    <string name="hint_password">Введите пароль</string>
-    <string name="title_password_setup">Настройка пароля</string>
-    <string name="title_confirm_password">Подтвердите пароль</string>
     <string name="msg_security_enabled">Защита включена</string>
     <string name="msg_security_disabled">Защита отключена</string>
-    <string name="title_password_reset">Сброс пароля</string>
     <string name="msg_password_reset_caution">Вы уверены, что хотите сбросить пароль? Все заметки будут удалены навсегда.</string>
-    <string name="error_security_wrong_password">Неверный пароль</string>
 
 </resources>

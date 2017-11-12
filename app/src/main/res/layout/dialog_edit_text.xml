@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
 
             android:ellipsize="end"
-            android:imeOptions="actionDone|flagNoExtractUi"
+            android:imeOptions="actionDone"
             android:inputType="textCapSentences"
             android:textColor="?android:attr/textColorPrimary"
             android:textColorHint="?android:attr/textColorSecondary"/>

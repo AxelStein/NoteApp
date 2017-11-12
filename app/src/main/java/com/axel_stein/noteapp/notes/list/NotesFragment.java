@@ -37,6 +37,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.text.TextUtils.isEmpty;
+
 public class NotesFragment extends BaseFragment implements NotesContract.View,
         SelectNotebookDialog.OnNotebookSelectedListener,
         CheckLabelsDialog.OnLabelCheckedListener,
@@ -356,12 +358,14 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
             private ImageView mIcon;
             private TextView mNote;
+            private TextView mContent;
             private NoteItemListener mListener;
 
             private NoteViewHolder(View itemView, NoteItemListener l) {
                 super(itemView);
                 mIcon = itemView.findViewById(R.id.img_icon);
                 mNote = itemView.findViewById(R.id.text_note);
+                mContent = itemView.findViewById(R.id.text_content);
                 mListener = l;
 
                 mIcon.setOnClickListener(new View.OnClickListener() {
@@ -380,7 +384,12 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
             }
 
             public void setNote(Note note) {
+                String content = note.getContent();
+
+                ViewUtil.show(!isEmpty(content), mContent);
+
                 mNote.setText(note.getTitle());
+                mContent.setText(content);
             }
 
             void setChecked(boolean checkable, boolean checked) {
