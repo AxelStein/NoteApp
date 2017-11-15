@@ -4,7 +4,7 @@
     <PreferenceCategory
         android:title="@string/pref_category_appearance">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:key="PREF_NIGHT_MODE"
             android:title="@string/pref_night_mode"/>
 
