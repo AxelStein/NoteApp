@@ -287,10 +287,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         }
         mPresenter = presenter;
         if (mViewCreated) {
-            if (mRecyclerView != null) {
-                mRecyclerView.scrollToPosition(0);
-            }
             if (mAdapter != null) {
+                mAdapter.setNotes(null);
                 mAdapter.setPresenter(mPresenter);
             }
             mPresenter.onCreateView(this);
