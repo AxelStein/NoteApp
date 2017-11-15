@@ -7,8 +7,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.FileProvider;
-import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
@@ -89,7 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             }
         });
 
-        CheckBoxPreference nightMode = (CheckBoxPreference) findPreference("PREF_NIGHT_MODE");
+        SwitchPreference nightMode = (SwitchPreference) findPreference("PREF_NIGHT_MODE");
         nightMode.setChecked(mSettingsRepository.nightMode());
         nightMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
