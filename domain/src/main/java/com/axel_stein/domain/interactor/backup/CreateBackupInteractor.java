@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 
-public class ExportBackupInteractor {
+public class CreateBackupInteractor {
 
     @NonNull
     private NoteRepository mNoteRepository;
@@ -29,7 +29,7 @@ public class ExportBackupInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
-    public ExportBackupInteractor(@NonNull NoteRepository noteRepository,
+    public CreateBackupInteractor(@NonNull NoteRepository noteRepository,
                                   @NonNull NotebookRepository notebookRepository,
                                   @NonNull LabelRepository labelRepository,
                                   @NonNull NoteLabelPairRepository noteLabelPairRepository) {

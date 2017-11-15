@@ -14,17 +14,21 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
 
 import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.domain.interactor.backup.ExportBackupInteractor;
+import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.backup.BackupActivity;
 import com.axel_stein.noteapp.dialogs.LoadingDialog;
 import com.axel_stein.noteapp.dialogs.PasswordDialog;
 import com.axel_stein.noteapp.utils.FileUtil;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -43,7 +47,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
     private static final int REQUEST_CODE_PICK_FILE = 100;
 
     @Inject
-    ExportBackupInteractor mExportBackupInteractor;
+    CreateBackupInteractor mCreateBackupInteractor;
 
     @Inject
     ImportBackupInteractor mImportBackupInteractor;
@@ -119,7 +123,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
         findPreference("export").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                mExportBackupInteractor.execute()
+                mCreateBackupInteractor.execute()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<String>() {
                             @Override
@@ -147,10 +151,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
                 return true;
             }
         });
+
+        findPreference("backup_manager").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(getContext(), BackupActivity.class));
+                return true;
+            }
+        });
     }
 
     private void exportImpl(String backup) {
-        String fileName = getString(R.string.app_name).toLowerCase() + "_backup";
+        String fileName = "notes " + new SimpleDateFormat("yyyy-MM-dd kk:mm", Locale.ROOT).format(new Date());
         File dir = getContext().getFilesDir();
         File file = writeToFile(dir, fileName, backup);
 

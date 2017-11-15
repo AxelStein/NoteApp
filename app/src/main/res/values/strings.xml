@@ -44,6 +44,9 @@
     <string name="action_keep_screen_on">Keep screen on</string>
     <string name="action_duplicate">Duplicate note</string>
     <string name="action_reset_password">Reset password</string>
+    <string name="action_send">Send</string>
+    <string name="action_import">Import</string>
+    <string name="action_add_backup">Add backup</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
@@ -52,14 +55,15 @@
     <string name="pref_category_backup">Backup and import</string>
     <string name="pref_secure_notes">Secure notes</string>
     <string name="pref_secure_notes_summary">App will require a password</string>
-    <string name="pref_export">Export</string>
-    <string name="pref_import">Import</string>
+    <string name="pref_export">Export to file</string>
+    <string name="pref_import">Import from file</string>
     <string name="pref_font_size">Font size</string>
     <string name="pref_font_size_small">Small</string>
     <string name="pref_font_size_default">Default</string>
     <string name="pref_font_size_large">Large</string>
     <string name="pref_font_size_extra_large">Extra large</string>
     <string name="pref_show_notes_content">Show note`s content</string>
+    <string name="pref_backup_manager">Backup manager</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>
@@ -93,6 +97,7 @@
     <string name="empty_label">No notes with this label yet</string>
     <string name="empty_search">No matching notes</string>
     <string name="empty_trash">No notes in trash</string>
+    <string name="empty_backup">No backups found</string>
 
     <!--Dialog titles-->
     <string name="title_empty_trash">Empty trash?</string>
