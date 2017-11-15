@@ -42,12 +42,12 @@ public class AppSettingsRepository implements SettingsRepository {
 
     @Override
     public boolean showNotesContent() {
-        return mPreferences.getBoolean(PREF_SHOW_NOTES_CONTENT, false);
+        return mPreferences.getBoolean(PREF_SHOW_NOTES_CONTENT, true);
     }
 
     @Override
     public void setShowNotesContent(boolean show) {
-        mPreferences.edit().putBoolean(PREF_NIGHT_MODE, show).apply();
+        mPreferences.edit().putBoolean(PREF_SHOW_NOTES_CONTENT, show).apply();
     }
 
     public void setNightMode(boolean nightMode) {

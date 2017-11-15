@@ -196,13 +196,15 @@ public class QueryNoteInteractor {
             note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
 
             String content = note.getContent();
-            if (!isEmpty(content)) {
+            if (!isEmpty(content) && mSettingsRepository.showNotesContent()) {
                 content = content.replace('\n', ' ');
                 if (content.length() > 128) {
                     content = content.substring(0, 128);
                 }
                 content = content.replaceAll(" [ ]+", " ");
                 note.setContent(content);
+            } else {
+                note.setContent(null);
             }
 
             if (isEmpty(note.getTitle())) {

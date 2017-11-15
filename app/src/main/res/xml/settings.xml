@@ -8,6 +8,11 @@
             android:key="PREF_NIGHT_MODE"
             android:title="@string/pref_night_mode"/>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="PREF_SHOW_NOTES_CONTENT"
+            android:title="@string/pref_show_notes_content"/>
+
         <ListPreference
             android:key="PREF_FONT_SIZE"
             android:entries="@array/font_sizes"
@@ -15,10 +20,6 @@
             android:summary="%s"
             android:entryValues="@array/font_sizes_values"
             android:title="@string/pref_font_size"/>
-
-        <SwitchPreference
-            android:key="PREF_SHOW_NOTES_CONTENT"
-            android:title="@string/pref_show_notes_content"/>
 
     </PreferenceCategory>
 

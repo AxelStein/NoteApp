@@ -81,6 +81,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
         });
         */
 
+        findPreference("PREF_SHOW_NOTES_CONTENT").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                EventBusHelper.updateNoteList();
+                return false;
+            }
+        });
+
         CheckBoxPreference nightMode = (CheckBoxPreference) findPreference("PREF_NIGHT_MODE");
         nightMode.setChecked(mSettingsRepository.nightMode());
         nightMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
