@@ -13,6 +13,7 @@ public class AppSettingsRepository implements SettingsRepository {
     private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
     private static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
     private static final String PREF_PASSWORD = "PREF_PASSWORD";
+    private static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
 
     private SharedPreferences mPreferences;
     private String mDefaultNotebookTitle;
@@ -37,6 +38,16 @@ public class AppSettingsRepository implements SettingsRepository {
     @Override
     public String defaultNotebookTitle() {
         return mDefaultNotebookTitle;
+    }
+
+    @Override
+    public boolean showNotesContent() {
+        return mPreferences.getBoolean(PREF_SHOW_NOTES_CONTENT, false);
+    }
+
+    @Override
+    public void setShowNotesContent(boolean show) {
+        mPreferences.edit().putBoolean(PREF_NIGHT_MODE, show).apply();
     }
 
     public void setNightMode(boolean nightMode) {

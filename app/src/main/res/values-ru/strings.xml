@@ -134,5 +134,6 @@
     <string name="msg_security_enabled">Защита включена</string>
     <string name="msg_security_disabled">Защита отключена</string>
     <string name="msg_password_reset_caution">Вы уверены, что хотите сбросить пароль? Все заметки будут удалены навсегда.</string>
+    <string name="pref_show_notes_content">Показывать содержимое заметки</string>
 
 </resources>

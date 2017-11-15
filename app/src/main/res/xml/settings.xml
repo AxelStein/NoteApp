@@ -16,6 +16,10 @@
             android:entryValues="@array/font_sizes_values"
             android:title="@string/pref_font_size"/>
 
+        <SwitchPreference
+            android:key="PREF_SHOW_NOTES_CONTENT"
+            android:title="@string/pref_show_notes_content"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

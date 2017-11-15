@@ -59,6 +59,7 @@
     <string name="pref_font_size_default">Default</string>
     <string name="pref_font_size_large">Large</string>
     <string name="pref_font_size_extra_large">Extra large</string>
+    <string name="pref_show_notes_content">Show note`s content</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>

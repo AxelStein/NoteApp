@@ -13,4 +13,8 @@ public interface SettingsRepository {
 
     String defaultNotebookTitle();
 
+    boolean showNotesContent();
+
+    void setShowNotesContent(boolean show);
+
 }
