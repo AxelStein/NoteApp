@@ -126,10 +126,22 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
     @Override
     public boolean close() {
-        if (mSaving || mView == null || mNote == null || mSrcNote == null) {
+        if (mSaving) {
             return true;
         }
-        if (isEmptyNote() || mSrcNote.equals(mNote)) {
+        if (isEmptyNote()) {
+            return true;
+        }
+        if (mView == null) {
+            return true;
+        }
+        if (mNote == null) {
+            return true;
+        }
+        if (mSrcNote == null) {
+            return true;
+        }
+        if (mSrcNote.equals(mNote)) {
             mView.callFinish();
             return true;
         } else {
@@ -139,7 +151,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     private boolean isEmptyNote() {
-        return isEmpty(mNote.getTitle()) && isEmpty(mNote.getContent());
+        return mNote != null && isEmpty(mNote.getTitle()) && isEmpty(mNote.getContent());
     }
 
     @Override

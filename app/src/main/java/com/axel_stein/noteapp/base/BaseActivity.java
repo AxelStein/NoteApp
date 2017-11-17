@@ -55,10 +55,15 @@ public class BaseActivity extends AppCompatActivity implements Screen {
             return;
         }
 
-        FragmentManager fm = getSupportFragmentManager();
-        fm.beginTransaction()
-                .replace(R.id.content, fragment, tag)
-                .commit();
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction()
+                    .replace(R.id.content, fragment, tag)
+                    .commit();
+        } catch (Exception e) {
+            // Catch IllegalStateException: Can not perform this action after onSaveInstanceState
+            e.printStackTrace();
+        }
     }
 
     @Override
