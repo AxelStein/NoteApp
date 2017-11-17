@@ -267,7 +267,8 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
-                        EventBusHelper.showMessage(R.string.msg_notes_trashed, R.string.action_undo, new Runnable() {
+                        int msg = notes.size() == 1 ? R.string.msg_note_trashed : R.string.msg_notes_trashed;
+                        EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
                             @Override
                             public void run() {
                                 restore(notes);
@@ -295,7 +296,8 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
-                        EventBusHelper.showMessage(R.string.msg_notes_restored, R.string.action_undo, new Runnable() {
+                        int msg = notes.size() == 1 ? R.string.msg_note_restored : R.string.msg_notes_restored;
+                        EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
                             @Override
                             public void run() {
                                 moveToTrash(notes);
@@ -316,13 +318,16 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Override
     public void onNotebookSelected(Notebook notebook) {
-        mSetNotebookInteractor.execute(getCheckedNotes(), notebook.getId())
+        final List<Note> notes = getCheckedNotes();
+        mSetNotebookInteractor.execute(notes, notebook.getId())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
                         stopCheckMode();
-                        EventBusHelper.showMessage(R.string.msg_notes_updated);
+
+                        int msg = notes.size() == 1 ? R.string.msg_note_updated : R.string.msg_notes_updated;
+                        EventBusHelper.showMessage(msg);
                         EventBusHelper.updateNoteList();
                     }
                 }, new Consumer<Throwable>() {
@@ -336,13 +341,16 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Override
     public void onLabelsChecked(List<Long> labels) {
-        mSetLabelsInteractor.execute(getCheckedNotes(), labels)
+        final List<Note> notes = getCheckedNotes();
+        mSetLabelsInteractor.execute(notes, labels)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
                         stopCheckMode();
-                        EventBusHelper.showMessage(R.string.msg_notes_updated);
+
+                        int msg = notes.size() == 1 ? R.string.msg_note_updated : R.string.msg_notes_updated;
+                        EventBusHelper.showMessage(msg);
                         EventBusHelper.updateNoteList();
                     }
                 }, new Consumer<Throwable>() {

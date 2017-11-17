@@ -126,7 +126,7 @@
     <string name="msg_note_restored">Note restored</string>
     <string name="msg_notes_restored">Notes restored</string>
     <string name="msg_note_trashed">Note trashed</string>
-    <string name="msg_notes_trashed">Note trashed</string>
+    <string name="msg_notes_trashed">Notes trashed</string>
     <string name="msg_note_deleted">Note deleted</string>
     <string name="msg_notes_deleted">Notes deleted</string>
     <string name="msg_delete_label">Label will be deleted from all of your notes. Your notes won`t be deleted.</string>

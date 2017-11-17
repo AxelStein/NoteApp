@@ -3,9 +3,12 @@ package com.axel_stein.noteapp.notes.list.presenters;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.QueryNoteInteractor;
 import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
+import com.axel_stein.domain.model.Note;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -55,13 +58,16 @@ public class TrashNotesPresenter extends NotesPresenter {
 
     @Override
     public void confirmDelete() {
-        mDeleteNoteInteractor.execute(getCheckedNotes())
+        final List<Note> notes = getCheckedNotes();
+        mDeleteNoteInteractor.execute(notes)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
                         stopCheckMode();
-                        EventBusHelper.showMessage(R.string.msg_notes_deleted);
+
+                        int msg = notes.size() == 1 ? R.string.msg_note_deleted : R.string.msg_notes_deleted;
+                        EventBusHelper.showMessage(msg);
                         EventBusHelper.updateNoteList();
                     }
                 });
