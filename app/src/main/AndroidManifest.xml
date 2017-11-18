@@ -3,6 +3,8 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.axel_stein.noteapp">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".App"
         android:allowBackup="false"
@@ -41,6 +43,10 @@
             android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name=".notes.view.ViewNoteActivity"/>
+
+        <activity
+            android:label="@string/pref_backup_manager"
+            android:name=".backup.BackupActivity"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

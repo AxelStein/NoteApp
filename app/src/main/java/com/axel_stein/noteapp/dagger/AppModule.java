@@ -10,8 +10,6 @@ import com.axel_stein.data.note.SqlNoteRepository;
 import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
 import com.axel_stein.domain.interactor.ResetInteractor;
-import com.axel_stein.domain.interactor.backup.ExportBackupInteractor;
-import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 
@@ -71,22 +69,6 @@ public class AppModule {
     @Provides
     AppSettingsRepository provideSettings(App app) {
         return new AppSettingsRepository(PreferenceManager.getDefaultSharedPreferences(app), app.getString(R.string.default_notebook));
-    }
-
-    @Provides
-    ExportBackupInteractor provideExportBackup(SqlNoteRepository notes,
-                                               SqlNotebookRepository notebooks,
-                                               SqlLabelRepository labels,
-                                               SqlNoteLabelPairRepository labelHelper) {
-        return new ExportBackupInteractor(notes, notebooks, labels, labelHelper);
-    }
-
-    @Provides
-    ImportBackupInteractor provideImportBackup(SqlNoteRepository notes,
-                                               SqlNotebookRepository notebooks,
-                                               SqlLabelRepository labels,
-                                               SqlNoteLabelPairRepository labelHelper) {
-        return new ImportBackupInteractor(notes, notebooks, labels, labelHelper);
     }
 
     @Provides

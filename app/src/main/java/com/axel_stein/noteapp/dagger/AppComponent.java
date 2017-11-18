@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.dagger;
 
+import com.axel_stein.noteapp.backup.BackupPresenter;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.DeleteLabelDialog;
@@ -26,7 +27,12 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {AppModule.class, LabelInteractorModule.class, NotebookInteractorModule.class, NoteInteractorModule.class})
+@Component(modules = {
+        AppModule.class, LabelInteractorModule.class,
+        NotebookInteractorModule.class, NoteInteractorModule.class,
+        BackupInteractorModule.class
+})
+
 public interface AppComponent {
 
     void inject(NotebookNotesPresenter presenter);
@@ -68,5 +74,7 @@ public interface AppComponent {
     void inject(SelectNotebookDialog selectNotebookDialog);
 
     void inject(EditNoteFragment editNoteFragment);
+
+    void inject(BackupPresenter backupPresenter);
 
 }

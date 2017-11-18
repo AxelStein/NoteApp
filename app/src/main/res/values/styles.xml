@@ -73,6 +73,11 @@
         <item name="colorControlActivated">@color/color_accent</item>
     </style>
 
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:dropDownVerticalOffset">4dp</item>
+        <item name="android:dropDownHorizontalOffset">-4dp</item>
+    </style>
+
     <!--
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
