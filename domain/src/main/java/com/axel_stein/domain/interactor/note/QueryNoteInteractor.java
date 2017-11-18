@@ -135,7 +135,7 @@ public class QueryNoteInteractor {
                         for (int i = start-1; i >= 0; i--) {
                             char c = content.charAt(i);
                             if (c == ' ' || i == 0) {
-                                start = i + 1;
+                                start = i + (i == 0 ? 0 : 1);
                                 break;
                             }
                         }
