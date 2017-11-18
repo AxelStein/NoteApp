@@ -131,7 +131,7 @@ public class QueryNoteInteractor {
                     }
                     if (!isEmpty(content) && content.contains(q)) {
                         int start = content.indexOf(q);
-                        // trim to space
+
                         for (int i = start-1; i >= 0; i--) {
                             char c = content.charAt(i);
                             if (c == ' ' || i == 0) {
