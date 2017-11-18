@@ -126,10 +126,13 @@ public class QueryNoteInteractor {
                 List<Note> notes = orderImpl(mNoteRepository.search(query), NoteOrder.RELEVANCE, true);
                 for (Note note : notes) {
                     String content = note.getContent();
+                    if (content != null) {
+                        content = content.toLowerCase();
+                    }
                     if (!isEmpty(content) && content.contains(q)) {
                         int start = content.indexOf(q);
                         // trim to space
-                        for (int i = start; i >= 0; i--) {
+                        for (int i = start-1; i >= 0; i--) {
                             char c = content.charAt(i);
                             if (c == ' ' || i == 0) {
                                 start = i + (i == 0 ? 0 : 1);
@@ -150,6 +153,8 @@ public class QueryNoteInteractor {
                         content = builder.toString();
                         note.setContent(content);
                         builder.delete(0, builder.length());
+                    } else {
+                        note.setContent(null);
                     }
                 }
 
