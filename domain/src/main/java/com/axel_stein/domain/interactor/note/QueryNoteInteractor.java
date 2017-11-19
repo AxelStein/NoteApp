@@ -120,7 +120,43 @@ public class QueryNoteInteractor {
                     throw new IllegalArgumentException("query is empty");
                 }
                 q = query.toLowerCase();
-                List<Note> notes = orderImpl(mNoteRepository.search(query), NoteOrder.RELEVANCE);
+
+                StringBuilder builder = new StringBuilder();
+
+                List<Note> notes = orderImpl(mNoteRepository.search(query), NoteOrder.RELEVANCE, true);
+                for (Note note : notes) {
+                    String content = note.getContent();
+                    if (content != null) {
+                        content = content.toLowerCase();
+                    }
+                    if (!isEmpty(content) && content.contains(q)) {
+                        int start = content.indexOf(q);
+
+                        for (int i = start-1; i >= 0; i--) {
+                            char c = content.charAt(i);
+                            if (c == ' ' || i == 0) {
+                                start = i + (i == 0 ? 0 : 1);
+                                break;
+                            }
+                        }
+
+                        if (start > 0) {
+                            builder.append("...");
+                        }
+
+                        int end = start + 128;
+                        if (end > content.length()) {
+                            end = content.length();
+                        }
+                        builder.append(content.substring(start, end));
+
+                        content = builder.toString();
+                        note.setContent(content);
+                        builder.delete(0, builder.length());
+                    } else {
+                        note.setContent(null);
+                    }
+                }
 
                 Collections.sort(notes, new Comparator<Note>() {
                     @Override
@@ -182,11 +218,11 @@ public class QueryNoteInteractor {
     private List<Note> orderImpl(@NonNull List<Note> list) {
         NoteOrder order = mSettingsRepository.getNotesOrder();
         order = requireNonNull(order, "order is null");
-        return orderImpl(list, order);
+        return orderImpl(list, order, false);
     }
 
     @NonNull
-    private List<Note> orderImpl(@NonNull List<Note> list, @NonNull final NoteOrder order) {
+    private List<Note> orderImpl(@NonNull List<Note> list, @NonNull final NoteOrder order, boolean searchFlag) {
         if (!isValid(list)) {
             throw new IllegalStateException("list is not valid");
         }
@@ -196,15 +232,17 @@ public class QueryNoteInteractor {
             note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
 
             String content = note.getContent();
-            if (!isEmpty(content) && mSettingsRepository.showNotesContent()) {
-                content = content.replace('\n', ' ');
-                if (content.length() > 128) {
-                    content = content.substring(0, 128);
+            if (!isEmpty(content)) {
+                if (mSettingsRepository.showNotesContent() || searchFlag) {
+                    content = content.replace('\n', ' ');
+                    content = content.replaceAll(" [ ]+", " ");
+                    if (!searchFlag && content.length() > 128) {
+                        content = content.substring(0, 128);
+                    }
+                    note.setContent(content);
+                } else {
+                    note.setContent(null);
                 }
-                content = content.replaceAll(" [ ]+", " ");
-                note.setContent(content);
-            } else {
-                note.setContent(null);
             }
 
             if (isEmpty(note.getTitle())) {
