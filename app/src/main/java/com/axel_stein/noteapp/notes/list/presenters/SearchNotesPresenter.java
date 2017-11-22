@@ -1,5 +1,7 @@
 package com.axel_stein.noteapp.notes.list.presenters;
 
+import android.text.TextUtils;
+
 import com.axel_stein.domain.interactor.note.QueryNoteInteractor;
 import com.axel_stein.noteapp.App;
 
@@ -20,8 +22,12 @@ public class SearchNotesPresenter extends NotesPresenter {
 
     @Override
     protected void load() {
-        mInteractor.search(mQuery)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this);
+        if (TextUtils.isEmpty(mQuery)) {
+            onSuccess(null);
+        } else {
+            mInteractor.search(mQuery)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this);
+        }
     }
 }

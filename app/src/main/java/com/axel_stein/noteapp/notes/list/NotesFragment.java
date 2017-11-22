@@ -281,7 +281,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         return mPresenter;
     }
 
-    public void setPresenter(@NonNull Presenter presenter) {
+    public void setPresenter(Presenter presenter) {
         if (mPresenter != null) {
             mPresenter.onDestroyView();
         }
@@ -291,7 +291,9 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
                 mAdapter.setNotes(null);
                 mAdapter.setPresenter(mPresenter);
             }
-            mPresenter.onCreateView(this);
+            if (mPresenter != null) {
+                mPresenter.onCreateView(this);
+            }
         }
     }
 

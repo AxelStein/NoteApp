@@ -35,6 +35,9 @@ import butterknife.ButterKnife;
 
 public class SearchActivity extends BaseActivity {
 
+    private static final String BUNDLE_SEARCH_HAS_FOCUS = "BUNDLE_SEARCH_HAS_FOCUS";
+    private static final String BUNDLE_CURRENT_QUERY = "BUNDLE_CURRENT_QUERY";
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -49,6 +52,10 @@ public class SearchActivity extends BaseActivity {
 
     @Nullable
     private Runnable mSearchTask;
+
+    private SimpleTextWatcher mTextWatcher;
+
+    private String mCurrentQuery;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +88,6 @@ public class SearchActivity extends BaseActivity {
             public void onClick(View view) {
                 mEditSearch.setText(null);
                 mEditSearch.requestFocus();
-                KeyboardUtil.show(mEditSearch);
             }
         });
 
@@ -91,23 +97,34 @@ public class SearchActivity extends BaseActivity {
             public void run() {
                 String query = mEditSearch.getText().toString();
                 if (TextUtils.isEmpty(query)) {
-                    mFragment.setNotes(null);
+                    mFragment.setPresenter(null);
                 } else {
                     mFragment.setPresenter(new SearchNotesPresenter(query));
                 }
             }
         };
 
-        mEditSearch.addTextChangedListener(new SimpleTextWatcher() {
+        mTextWatcher = new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                handler.removeCallbacks(mSearchTask);
-                handler.postDelayed(mSearchTask, 400);
+                if (!TextUtils.equals(s, mCurrentQuery)) {
+                    mCurrentQuery = s.toString();
 
-                boolean empty = TextUtils.isEmpty(s);
-                ViewUtil.show(!empty, mButtonClear);
+                    handler.removeCallbacks(mSearchTask);
+                    handler.postDelayed(mSearchTask, 500);
+
+                    boolean empty = TextUtils.isEmpty(s);
+                    ViewUtil.show(!empty, mButtonClear);
+                }
             }
-        });
+        };
+
+        if (savedInstanceState != null) {
+            mCurrentQuery = savedInstanceState.getString(BUNDLE_CURRENT_QUERY);
+            mEditSearch.setText(mCurrentQuery);
+        }
+
+        mEditSearch.addTextChangedListener(mTextWatcher);
         mEditSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -143,21 +160,43 @@ public class SearchActivity extends BaseActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(BUNDLE_SEARCH_HAS_FOCUS, mEditSearch.hasFocus());
+        outState.putString(BUNDLE_CURRENT_QUERY, mEditSearch.getText().toString());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        boolean hasFocus = savedInstanceState.getBoolean(BUNDLE_SEARCH_HAS_FOCUS, false);
+        if (!hasFocus) {
+            mEditSearch.post(new Runnable() {
+                @Override
+                public void run() {
+                    mEditSearch.clearFocus();
+                }
+            });
+        }
+    }
+
+    @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
         mEditSearch.clearFocus();
     }
 
     @Override
-    protected void onDestroy() {
-        EventBusHelper.unsubscribe(this);
-        super.onDestroy();
-    }
-
-    @Override
     protected void onStop() {
         hideKeyboard();
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mEditSearch.removeTextChangedListener(mTextWatcher);
+        EventBusHelper.unsubscribe(this);
+        super.onDestroy();
     }
 
     private void hideKeyboard() {
