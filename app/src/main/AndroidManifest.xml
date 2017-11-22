@@ -3,7 +3,9 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.axel_stein.noteapp">
 
+    <!--
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    -->
 
     <application
         android:name=".App"
