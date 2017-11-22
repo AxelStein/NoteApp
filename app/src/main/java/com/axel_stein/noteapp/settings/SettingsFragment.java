@@ -19,7 +19,6 @@ import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.backup.BackupActivity;
 import com.axel_stein.noteapp.dialogs.LoadingDialog;
 import com.axel_stein.noteapp.dialogs.PasswordDialog;
 import com.axel_stein.noteapp.utils.FileUtil;
@@ -149,6 +148,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             }
         });
 
+        /*
         findPreference("backup_manager").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -156,6 +156,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
                 return true;
             }
         });
+        */
     }
 
     private void exportImpl(String backup) {
