@@ -25,10 +25,7 @@ import com.axel_stein.noteapp.dialogs.PasswordDialog;
 import com.axel_stein.noteapp.utils.FileUtil;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -162,7 +159,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
     }
 
     private void exportImpl(String backup) {
-        String fileName = "notes " + new SimpleDateFormat("yyyy-MM-dd kk:mm", Locale.ROOT).format(new Date());
+        //String fileName = "notes " + new SimpleDateFormat("yyyy-MM-dd kk:mm", Locale.ROOT).format(new Date());
+        String fileName = "notes_backup";
         File dir = getContext().getFilesDir();
         File file = writeToFile(dir, fileName, backup);
 

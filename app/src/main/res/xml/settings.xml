@@ -50,9 +50,11 @@
             android:key="import"
             android:title="@string/pref_import"/>
 
+        <!--
         <Preference
             android:key="backup_manager"
             android:title="@string/pref_backup_manager"/>
+        -->
 
     </PreferenceCategory>
 
