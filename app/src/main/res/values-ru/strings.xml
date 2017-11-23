@@ -64,6 +64,9 @@
     <string name="pref_night_mode">Ночной режим</string>
     <string name="pref_show_notes_content">Показывать содержимое заметки</string>
     <string name="pref_backup_manager">Управление резервными копиями</string>
+    <string name="pref_about_app">О приложении</string>
+    <string name="pref_version">Версия 1.2.4</string>
+    <string name="pref_rate_app">Оценить приложение</string>
 
     <!--Errors-->
     <string name="error">Ошибка</string>

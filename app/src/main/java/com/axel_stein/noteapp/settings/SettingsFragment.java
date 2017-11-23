@@ -7,10 +7,10 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v14.preference.SwitchPreference;
 import android.support.v4.content.FileProvider;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
 
 import com.axel_stein.data.AppSettingsRepository;
@@ -89,7 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             }
         });
 
-        SwitchPreference nightMode = (SwitchPreference) findPreference("PREF_NIGHT_MODE");
+        SwitchPreferenceCompat nightMode = (SwitchPreferenceCompat) findPreference("PREF_NIGHT_MODE");
         nightMode.setChecked(mSettingsRepository.nightMode());
         nightMode.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -144,6 +144,21 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("*/*");
                 startActivityForResult(intent, REQUEST_CODE_PICK_FILE);
+                return true;
+            }
+        });
+
+        findPreference("rate_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                final String packageName = getContext().getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
+                } catch (android.content.ActivityNotFoundException e) {
+                    e.printStackTrace();
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://play.google.com/store/apps/details?id=" + packageName)));
+                }
                 return true;
             }
         });

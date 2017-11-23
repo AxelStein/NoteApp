@@ -64,6 +64,9 @@
     <string name="pref_font_size_extra_large">Extra large</string>
     <string name="pref_show_notes_content">Show note`s content</string>
     <string name="pref_backup_manager">Backup manager</string>
+    <string name="pref_about_app">About app</string>
+    <string name="pref_version">Version 1.2.4</string>
+    <string name="pref_rate_app">Rate app</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>
