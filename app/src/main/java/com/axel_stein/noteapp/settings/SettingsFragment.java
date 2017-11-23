@@ -240,7 +240,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
                             dialog.dismiss();
 
                             EventBusHelper.showMessage(R.string.msg_import_success);
-                            EventBusHelper.recreate();
                             EventBusHelper.updateNoteList(false, true);
                         }
 
