@@ -87,7 +87,10 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 mEditSearch.setText(null);
-                mEditSearch.requestFocus();
+                if (!mEditSearch.hasFocus()) {
+                    mEditSearch.requestFocus();
+                }
+                KeyboardUtil.show(mEditSearch);
             }
         });
 
