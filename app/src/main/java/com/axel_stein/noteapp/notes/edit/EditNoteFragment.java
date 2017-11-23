@@ -380,7 +380,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                     break;
 
                 case R.id.menu_duplicate:
-                    mPresenter.actionDuplicate();
+                    mPresenter.actionDuplicate(getString(R.string.copy));
                     break;
             }
         }

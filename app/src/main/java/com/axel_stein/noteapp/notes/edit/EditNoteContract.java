@@ -69,7 +69,7 @@ public interface EditNoteContract {
 
         void actionShare();
 
-        void actionDuplicate();
+        void actionDuplicate(String copySuffix);
 
         void addOnNoteChangedListener(OnNoteChangedListener l);
 

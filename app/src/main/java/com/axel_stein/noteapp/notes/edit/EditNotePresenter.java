@@ -418,9 +418,18 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void actionDuplicate() {
+    public void actionDuplicate(String copySuffix) {
         Note duplicate = mSrcNote.copy();
         duplicate.setId(0);
+
+        String title = duplicate.getTitle();
+        String content = duplicate.getContent();
+
+        if (!isEmpty(title)) {
+            duplicate.setTitle(String.format("%s (%s)", title, copySuffix));
+        } else if (!isEmpty(content)) {
+            duplicate.setContent(String.format("%s (%s)", content, copySuffix));
+        }
 
         mInsertNoteInteractor.execute(duplicate)
                 .observeOn(AndroidSchedulers.mainThread())

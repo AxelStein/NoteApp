@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Notes</string>
     <string name="default_notebook">Notes</string>
+    <string name="copy">copy</string>
 
     <!--Actions-->
     <string name="action_settings">Settings</string>

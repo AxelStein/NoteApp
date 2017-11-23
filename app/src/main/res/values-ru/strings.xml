@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Заметки</string>
     <string name="default_notebook">Заметки</string>
+    <string name="copy">копия</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
