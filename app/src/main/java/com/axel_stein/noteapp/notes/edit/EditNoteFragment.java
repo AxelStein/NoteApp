@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.axel_stein.data.AppSettingsRepository;
@@ -42,7 +41,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -64,9 +62,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     @BindView(R.id.text_update)
     TextView mTextUpdate;
-
-    @BindView(R.id.button_menu)
-    ImageButton mButtonMenu;
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
@@ -130,7 +125,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         return root;
     }
 
-    @OnClick(R.id.button_menu)
     public void onButtonMenuClick() {
         new BottomMenuDialog.Builder()
                 .setMenuRes(R.menu.bottom_menu_edit_note)
@@ -148,9 +142,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     public void onDestroyView() {
         mEditTitle = null;
         mEditContent = null;
-        mViewCreated = false;
-        mButtonMenu = null;
         mTextUpdate = null;
+        mViewCreated = false;
         mMenu = null;
         if (mPresenter != null) {
             mPresenter.onDestroyView();
@@ -185,6 +178,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                     mPresenter.save();
                 }
                 break;
+
+            case R.id.menu:
+                onButtonMenuClick();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -193,9 +190,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     public void setEditable(boolean editable) {
         mEditable = editable;
 
-        MenuUtil.show(mMenu, editable, R.id.menu_fullscreen, R.id.menu_done);
+        MenuUtil.show(mMenu, editable, R.id.menu_fullscreen, R.id.menu_done, R.id.menu);
 
-        ViewUtil.enable(editable, mButtonMenu);
         if (!mTrash) {
             ViewUtil.enable(editable, mEditTitle, mEditContent);
         }
