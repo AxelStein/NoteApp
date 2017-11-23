@@ -376,4 +376,9 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     public void confirmDelete() {
 
     }
+
+    public List<Note> getNotes() {
+        return mNotes;
+    }
+
 }

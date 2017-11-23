@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
+import com.axel_stein.domain.model.Note;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
@@ -22,6 +23,8 @@ import com.axel_stein.noteapp.notes.list.presenters.TrashNotesPresenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -45,6 +48,8 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
     @Nullable
     private NotesFragment mFragment;
 
+    private TrashNotesPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,12 +68,15 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentByTag(TAG_FRAGMENT);
         if (fragment == null) {
+            mPresenter = new TrashNotesPresenter();
+
             mFragment = new NotesFragment();
-            mFragment.setPresenter(new TrashNotesPresenter());
+            mFragment.setPresenter(mPresenter);
             mFragment.setEmptyMsg(getString(R.string.empty_trash));
             setFragment(mFragment, TAG_FRAGMENT);
         } else {
             mFragment = (NotesFragment) fragment;
+            mPresenter = (TrashNotesPresenter) mFragment.getPresenter();
         }
     }
 
@@ -77,6 +85,15 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
         getMenuInflater().inflate(R.menu.activity_trash, menu);
         MenuUtil.tintMenuIconsAttr(this, menu, R.attr.menuItemTintColor);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mPresenter != null) {
+            List<Note> list = mPresenter.getNotes();
+            MenuUtil.show(menu, list != null && list.size() > 0, R.id.menu_empty_trash);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -102,10 +119,11 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
-                        EventBusHelper.showMessage(R.string.msg_trash_empty);
+                        mPresenter = new TrashNotesPresenter();
                         if (mFragment != null) {
-                            mFragment.setPresenter(new TrashNotesPresenter());
+                            mFragment.setPresenter(mPresenter);
                         }
+                        EventBusHelper.showMessage(R.string.msg_trash_empty);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
