@@ -14,6 +14,7 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.Fix</item>
         <item name="checkBoxTint">@color/checkbox_tint_light</item>
         <item name="editTextLineColor">@color/edit_text_line_color_light</item>
+        <item name="keepScreenOnColor">@color/keep_screen_on_color_light</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_background</item>
@@ -41,6 +42,7 @@
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogDark</item>
         <item name="checkBoxTint">@color/checkbox_tint_dark</item>
         <item name="editTextLineColor">@color/edit_text_line_color_dark</item>
+        <item name="keepScreenOnColor">@color/keep_screen_on_color_dark</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_dark_background</item>

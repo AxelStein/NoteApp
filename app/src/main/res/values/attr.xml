@@ -4,6 +4,7 @@
     <attr name="nightModeButtonTintColor" format="color|reference"/>
     <attr name="checkBoxTint" format="color|reference"/>
     <attr name="editTextLineColor" format="color|reference"/>
+    <attr name="keepScreenOnColor" format="color|reference"/>
 
     <declare-styleable name="IconTextView">
         <attr name="iconLeft" format="reference"/>

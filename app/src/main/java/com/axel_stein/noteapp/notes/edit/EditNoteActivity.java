@@ -186,9 +186,8 @@ public class EditNoteActivity extends BaseActivity {
         mToolbar.post(new Runnable() {
             @Override
             public void run() {
-                int colorAttr = mKeepScreenOn ? R.attr.colorAccent : R.attr.menuItemTintColor;
                 if (menu != null) {
-                    MenuUtil.tintAttr(EditNoteActivity.this, menu.findItem(R.id.menu_keep_screen_on), colorAttr);
+                    updateKeepScreenOnItem(menu.findItem(R.id.menu_keep_screen_on));
                 }
             }
         });
@@ -221,8 +220,7 @@ public class EditNoteActivity extends BaseActivity {
             case R.id.menu_keep_screen_on:
                 mKeepScreenOn = !mKeepScreenOn;
 
-                int colorAttr = mKeepScreenOn ? R.attr.colorAccent : R.attr.menuItemTintColor;
-                MenuUtil.tintAttr(this, item, colorAttr);
+                updateKeepScreenOnItem(item);
 
                 updateWindowFlagsKeepScreenOn(mKeepScreenOn);
                 return true;
@@ -231,8 +229,12 @@ public class EditNoteActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateKeepScreenOnItem(MenuItem item) {
+        int colorAttr = mKeepScreenOn ? R.attr.keepScreenOnColor : R.attr.menuItemTintColor;
+        MenuUtil.tintAttr(this, item, colorAttr);
+    }
+
     /*
-    todo
     @Override
     protected void onStart() {
         super.onStart();
