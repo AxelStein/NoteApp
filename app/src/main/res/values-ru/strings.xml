@@ -107,6 +107,7 @@
     <string name="title_delete_notebook">Удалить блокнот \'%1$s\'?</string>
     <string name="title_add_notebook">Добавить блокнот</string>
     <string name="title_delete_note">Удалить заметку?</string>
+    <string name="title_delete_notes">Удалить заметки?</string>
     <string name="title_select_notebook">Выберите блокнот</string>
     <string name="title_save">Сохранить изменения?</string>
     <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
@@ -135,6 +136,7 @@
     <string name="msg_delete_notebook">Блокнот и заметки будут удалены навсегда.</string>
     <string name="msg_empty_trash">Все заметки в корзине будут удалены навсегда.</string>
     <string name="msg_delete_note">Заметка будет удалена навсегда.</string>
+    <string name="msg_delete_notes">Заметки будут удалены навсегда.</string>
     <string name="msg_note_empty">Заметка пуста</string>
     <string name="msg_create_notebook">Создайте сначала блокнот</string>
     <string name="msg_label_empty">Нет меток для выделения</string>

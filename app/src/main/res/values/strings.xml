@@ -114,6 +114,7 @@
     <string name="title_delete_notebook">Delete notebook \'%1$s\'?</string>
     <string name="title_add_notebook">Add notebook</string>
     <string name="title_delete_note">Delete note?</string>
+    <string name="title_delete_notes">Delete notes?</string>
     <string name="title_select_notebook">Select notebook</string>
     <string name="title_save">Save changes?</string>
     <string name="title_discard">Are you sure you want to discard changes?</string>
@@ -142,6 +143,7 @@
     <string name="msg_delete_notebook">Notebook and notes will be permanently deleted.</string>
     <string name="msg_empty_trash">All notes in trash will be permanently deleted.</string>
     <string name="msg_delete_note">Note will be permanently deleted.</string>
+    <string name="msg_delete_notes">Notes will be permanently deleted.</string>
     <string name="msg_create_notebook">Create notebook first</string>
     <string name="msg_label_empty">There are no labels to check</string>
     <string name="msg_note_empty">Note is empty</string>

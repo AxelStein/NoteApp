@@ -51,7 +51,7 @@ public class TrashNotesPresenter extends NotesPresenter {
                 break;
 
             case R.id.menu_delete:
-                mView.showConfirmDeleteDialog();
+                mView.showConfirmDeleteDialog(getCheckedNotes());
                 break;
         }
     }

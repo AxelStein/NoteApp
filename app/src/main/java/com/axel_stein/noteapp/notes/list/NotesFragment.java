@@ -231,10 +231,12 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     }
 
     @Override
-    public void showConfirmDeleteDialog() {
+    public void showConfirmDeleteDialog(List<Note> notes) {
+        boolean one = notes.size() > 0 && notes.size() == 1;
+
         ConfirmDialog dialog = new ConfirmDialog();
-        dialog.setTitle(R.string.title_delete_note);
-        dialog.setMessage(R.string.msg_delete_note);
+        dialog.setTitle(one ? R.string.title_delete_note : R.string.title_delete_notes);
+        dialog.setMessage(one ? R.string.msg_delete_note : R.string.msg_delete_notes);
         dialog.setPositiveButtonText(R.string.action_delete);
         dialog.setNegativeButtonText(R.string.action_cancel);
         dialog.show(this, TAG_DELETE_NOTE);

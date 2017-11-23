@@ -32,7 +32,7 @@ public interface NotesContract {
 
         void showCheckLabelsView(List<Label> labels);
 
-        void showConfirmDeleteDialog();
+        void showConfirmDeleteDialog(List<Note> notes);
     }
 
     interface Presenter {
