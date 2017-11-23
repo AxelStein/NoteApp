@@ -12,21 +12,21 @@ public class KeyboardUtil {
     private KeyboardUtil() {
     }
 
-    public static void show(View v) {
-        v.post(new KeyboardRunnable(v));
+    public static void show(@Nullable View v) {
+        if (v != null) {
+            v.post(new KeyboardRunnable(v));
+        }
     }
 
     public static void hide(@Nullable View v) {
-        if (v == null) {
-            return;
-        }
+        if (v != null) {
+            InputMethodManager imm = getInputManager(v.getContext());
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
 
-        InputMethodManager imm = getInputManager(v.getContext());
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            v.clearFocus();
         }
-
-        v.clearFocus();
     }
 
     public static void hide(Activity activity) {
@@ -46,9 +46,10 @@ public class KeyboardUtil {
 
         private static final int INTERVAL_MS = 100;
 
+        @Nullable
         private View mView = null;
 
-        KeyboardRunnable(View view) {
+        KeyboardRunnable(@Nullable View view) {
             this.mView = view;
         }
 
@@ -75,7 +76,9 @@ public class KeyboardUtil {
         }
 
         private void post() {
-            mView.postDelayed(this, INTERVAL_MS);
+            if (mView != null) {
+                mView.postDelayed(this, INTERVAL_MS);
+            }
         }
 
     }
