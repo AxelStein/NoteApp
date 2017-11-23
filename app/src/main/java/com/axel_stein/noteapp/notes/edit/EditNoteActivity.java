@@ -174,7 +174,6 @@ public class EditNoteActivity extends BaseActivity {
         boolean fullscreen = savedInstanceState.getBoolean(BUNDLE_FULLSCREEN);
 
         ViewUtil.show(!fullscreen, mToolbar);
-        ViewUtil.show(!fullscreen, findViewById(R.id.bottom));
 
         mKeepScreenOn = savedInstanceState.getBoolean(BUNDLE_KEEP_SCREEN_ON);
         updateWindowFlagsKeepScreenOn(mKeepScreenOn);
@@ -212,7 +211,6 @@ public class EditNoteActivity extends BaseActivity {
 
             case R.id.menu_fullscreen:
                 ViewUtil.hide(mToolbar);
-                ViewUtil.hide(findViewById(R.id.bottom));
 
                 if (mAppSettings.showExitFullscreenMessage()) {
                     Toast.makeText(this, R.string.msg_exit_fullscreen, Toast.LENGTH_SHORT).show();
@@ -258,7 +256,6 @@ public class EditNoteActivity extends BaseActivity {
     public void onBackPressed() {
         if (!ViewUtil.isShown(mToolbar)) {
             ViewUtil.show(mToolbar);
-            ViewUtil.show(findViewById(R.id.bottom));
         } else if (mPresenter == null || mPresenter.close()) {
             super.onBackPressed();
         }
