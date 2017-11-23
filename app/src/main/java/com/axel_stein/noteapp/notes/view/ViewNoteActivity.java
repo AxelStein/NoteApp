@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.Subscribe;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-// todo remove
 public class ViewNoteActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
