@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.dialogs.bottom_menu;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,9 +10,9 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -58,14 +59,13 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         super.onDestroyView();
     }
 
+    @SuppressLint("InflateParams")
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        int padding = getResources().getDimensionPixelSize(R.dimen.padding);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        RecyclerView view = new RecyclerView(getContext());
-        view.setClipToPadding(false);
-        view.setPadding(0, padding, 0, padding);
+        RecyclerView view = (RecyclerView) inflater.inflate(R.layout.dialog_bottom_menu, null);
 
         Menu menu = MenuUtil.inflateMenuFromResource(view, mMenuRes);
         if (mItemsVisibility != null) {
@@ -87,7 +87,6 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         });
 
         view.setAdapter(adapter);
-        view.setLayoutManager(new LinearLayoutManager(getContext()));
         view.setHasFixedSize(true);
 
         BottomSheetDialog dialog = new BottomSheetDialog(getContext(), getTheme());
