@@ -579,7 +579,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
     @Subscribe
     public void addLabel(EventBusHelper.AddLabel e) {
         if (mDrawerHelper != null) {
-            mDrawerHelper.addLabel(null);
+            mDrawerHelper.addLabel(e.getLabel());
             supportInvalidateOptionsMenu();
         }
     }
@@ -587,14 +587,14 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
     @Subscribe
     public void renameLabel(EventBusHelper.RenameLabel e) {
         if (mDrawerHelper != null) {
-            mDrawerHelper.renameLabel(null);
+            mDrawerHelper.renameLabel(e.getLabel());
         }
     }
 
     @Subscribe
     public void deleteLabel(EventBusHelper.DeleteLabel e) {
         if (mDrawerHelper != null) {
-            mDrawerHelper.deleteLabel(null);
+            mDrawerHelper.deleteLabel(e.getLabel());
             supportInvalidateOptionsMenu();
         }
     }
