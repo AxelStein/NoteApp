@@ -2,6 +2,7 @@
     <string name="app_name">Заметки</string>
     <string name="default_notebook">Заметки</string>
     <string name="copy">копия</string>
+    <string name="pref_version">Версия 1.2.6</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -66,7 +67,6 @@
     <string name="pref_show_notes_content">Показывать содержимое заметки</string>
     <string name="pref_backup_manager">Управление резервными копиями</string>
     <string name="pref_about_app">О приложении</string>
-    <string name="pref_version">Версия 1.2.5</string>
     <string name="pref_rate_app">Оценить приложение</string>
 
     <!--Errors-->
