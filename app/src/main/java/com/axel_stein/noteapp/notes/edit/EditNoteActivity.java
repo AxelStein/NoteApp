@@ -25,6 +25,7 @@ import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.SearchPanel;
 
 import javax.inject.Inject;
 
@@ -50,6 +51,9 @@ public class EditNoteActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    @BindView(R.id.search_panel)
+    SearchPanel mSearchPanel;
+
     @Inject
     GetNoteInteractor mGetNoteInteractor;
 
@@ -58,6 +62,8 @@ public class EditNoteActivity extends BaseActivity {
 
     @Nullable
     private EditNotePresenter mPresenter;
+
+    private EditNoteFragment mEditNoteFragment;
 
     private boolean mKeepScreenOn;
 
@@ -104,8 +110,9 @@ public class EditNoteActivity extends BaseActivity {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentByTag("fragment");
         if (fragment != null) {
-            EditNoteFragment edit = (EditNoteFragment) fragment;
-            mPresenter = (EditNotePresenter) edit.getPresenter();
+            mEditNoteFragment = (EditNoteFragment) fragment;
+            mEditNoteFragment.setSearchPanel(mSearchPanel);
+            mPresenter = (EditNotePresenter) mEditNoteFragment.getPresenter();
             setPresenterListener();
         } else {
             Intent intent = getIntent();
@@ -130,10 +137,11 @@ public class EditNoteActivity extends BaseActivity {
                                 }
                             }
 
-                            EditNoteFragment edit = new EditNoteFragment();
-                            edit.setPresenter(mPresenter);
+                            mEditNoteFragment = new EditNoteFragment();
+                            mEditNoteFragment.setSearchPanel(mSearchPanel);
+                            mEditNoteFragment.setPresenter(mPresenter);
 
-                            setFragment(edit, "fragment");
+                            setFragment(mEditNoteFragment, "fragment");
                         }
                     }, new Consumer<Throwable>() {
                         @Override

@@ -1,7 +1,9 @@
 package com.axel_stein.noteapp.utils;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.StringRes;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import static android.view.View.GONE;
@@ -57,6 +59,15 @@ public class ViewUtil {
             for (View v : views) {
                 if (v != null) {
                     v.setEnabled(enable);
+
+                    if (v instanceof ImageView) {
+                        ImageView iv = (ImageView) v;
+
+                        Drawable icon = iv.getDrawable();
+                        if (icon != null) {
+                            icon.mutate().setAlpha(enable ? 255 : 124);
+                        }
+                    }
                 }
             }
         }
