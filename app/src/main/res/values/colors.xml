@@ -11,6 +11,9 @@
     <color name="edit_text_line_color_light">#22000000</color>
     <color name="edit_text_line_color_dark">#22ffffff</color>
 
+    <color name="search_selector_color_light">#f9a825</color>
+    <color name="search_selector_color_dark">#66f9a825</color>
+
     <color name="grey_color_background">#323e45</color>
     <color name="grey_color_primary">#3f525b</color>
     <color name="grey_color_primary_dark">#37474F</color>
