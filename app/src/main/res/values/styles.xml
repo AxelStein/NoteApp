@@ -16,6 +16,7 @@
         <item name="editTextLineColor">@color/edit_text_line_color_light</item>
         <item name="keepScreenOnColor">@color/keep_screen_on_color_light</item>
         <item name="searchSelectorColor">@color/search_selector_color_light</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogLight</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_background</item>
@@ -59,12 +60,22 @@
         <item name="material_drawer_header_selection_text">@color/material_drawer_dark_header_selection_text</item>
     </style>
 
+    <style name="BottomSheetDialogLight" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetModalLight</item>
+    </style>
+
+    <style name="BottomSheetModalLight" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">#ffffff</item>
+        <item name="behavior_peekHeight">900dp</item>
+    </style>
+
     <style name="BottomSheetDialogDark" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetModalDark</item>
     </style>
 
-    <style name="BottomSheetModalDark" parent="android:Widget">
+    <style name="BottomSheetModalDark" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">#ff424242</item>
+        <item name="behavior_peekHeight">900dp</item>
     </style>
 
     <style name="CheckBoxTintLight" parent="Theme.AppCompat.Light">
