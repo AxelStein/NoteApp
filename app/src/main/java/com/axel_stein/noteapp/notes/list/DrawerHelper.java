@@ -57,7 +57,10 @@ public class DrawerHelper {
     }
 
     void addNotebook(Notebook notebook) {
-        updateImpl(true, false);
+        IDrawerItem selected = createNotebookItem(notebook);
+
+        invalidate();
+        updateDrawerMenu(selected, true);
     }
 
     void renameNotebook(Notebook notebook) {
@@ -69,7 +72,10 @@ public class DrawerHelper {
     }
 
     void addLabel(Label label) {
-        updateImpl(true, false);
+        IDrawerItem selected = createLabelItem(label);
+
+        invalidate();
+        updateDrawerMenu(selected, true);
     }
 
     void renameLabel(Label label) {
