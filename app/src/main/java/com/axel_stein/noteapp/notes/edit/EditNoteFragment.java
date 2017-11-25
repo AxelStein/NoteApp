@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.NestedScrollView;
 import android.text.Editable;
+import android.text.Layout;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,19 +33,25 @@ import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.Presenter;
+import com.axel_stein.noteapp.utils.ColorUtil;
 import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.SearchPanel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
 import static android.text.TextUtils.isEmpty;
 
 public class EditNoteFragment extends BaseFragment implements EditNoteContract.View,
@@ -54,6 +64,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     private static final String TAG_DELETE_NOTE = "TAG_DELETE_NOTE";
 
+    @BindView(R.id.scroll_view)
+    NestedScrollView mScrollView;
+
     @BindView(R.id.edit_title)
     EditText mEditTitle;
 
@@ -62,6 +75,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     @BindView(R.id.text_update)
     TextView mTextUpdate;
+
+    @Nullable
+    SearchPanel mSearchPanel;
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
@@ -125,6 +141,79 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         return root;
     }
 
+    private List<Integer> mIndexes;
+
+    public void setSearchPanel(@Nullable SearchPanel searchPanel) {
+        mSearchPanel = searchPanel;
+        if (mSearchPanel != null) {
+            mSearchPanel.setCallback(new SearchPanel.Callback() {
+                @Override
+                public void onQueryTextChange(String q) {
+                    if (!mViewCreated) {
+                        return;
+                    }
+
+                    String content = mEditContent.getText().toString();
+
+                    if (isEmpty(q)) {
+                        if (mSearchPanel != null) {
+                            mSearchPanel.setQueryResultCount(0);
+                        }
+                        onClose();
+                        return;
+                    }
+
+                    SpannableString spannable = new SpannableString(content);
+
+                    Pattern pattern = Pattern.compile(q, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(content.toLowerCase());
+
+                    int color = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorColor);
+                    int resultCount = 0;
+                    mIndexes = new ArrayList<>();
+
+                    while (matcher.find()) {
+                        resultCount++;
+
+                        int start = matcher.start();
+                        mIndexes.add(start);
+
+                        spannable.setSpan(new BackgroundColorSpan(color), start, matcher.end(), SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    if (mSearchPanel != null) {
+                        mSearchPanel.setQueryResultCount(resultCount);
+                    }
+
+                    mEditContent.setText(spannable);
+                }
+
+                @Override
+                public void onCursorChange(int cursor) {
+                    if (mIndexes != null && mViewCreated) {
+                        --cursor;
+                        int pos = mIndexes.get(cursor);
+
+                        Layout layout = mEditContent.getLayout();
+                        if (layout != null) {
+                            int line = layout.getLineForOffset(pos);
+                            int y = layout.getLineBottom(line);
+                            mScrollView.scrollTo(0, y);
+                        }
+                    }
+                }
+
+                @Override
+                public void onClose() {
+                    mIndexes = null;
+                    if (mViewCreated) {
+                        mEditContent.setText(mEditContent.getText().toString());
+                    }
+                }
+            });
+        }
+    }
+
     public void onButtonMenuClick() {
         new BottomMenuDialog.Builder()
                 .setMenuRes(R.menu.bottom_menu_edit_note)
@@ -140,11 +229,13 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     @Override
     public void onDestroyView() {
+        mSearchPanel = null;
         mEditTitle = null;
         mEditContent = null;
         mTextUpdate = null;
         mViewCreated = false;
         mMenu = null;
+        mScrollView = null;
         if (mPresenter != null) {
             mPresenter.onDestroyView();
         }
@@ -361,6 +452,12 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
                 case R.id.menu_labels:
                     mPresenter.actionCheckLabels();
+                    break;
+
+                case R.id.menu_search:
+                    if (mSearchPanel != null) {
+                        mSearchPanel.show();
+                    }
                     break;
 
                 case R.id.menu_move_to_trash:
