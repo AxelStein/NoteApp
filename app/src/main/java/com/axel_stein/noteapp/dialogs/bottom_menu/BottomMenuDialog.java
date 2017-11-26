@@ -10,6 +10,7 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -85,6 +86,11 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
                 }
             }
         });
+
+        GridLayoutManager layoutManager = (GridLayoutManager) view.getLayoutManager();
+        if (adapter.getItemCount() <= 4) {
+            layoutManager.setSpanCount(1);
+        }
 
         view.setAdapter(adapter);
         view.setHasFixedSize(true);
