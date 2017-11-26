@@ -257,11 +257,13 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private void setEditViewsFocusable(boolean focusable) {
         mEditViewsFocusable = focusable;
 
-        mEditTitle.setFocusable(focusable);
-        mEditTitle.setFocusableInTouchMode(focusable);
+        if (mViewCreated) {
+            mEditTitle.setFocusable(focusable);
+            mEditTitle.setFocusableInTouchMode(focusable);
 
-        mEditContent.setFocusable(focusable);
-        mEditContent.setFocusableInTouchMode(focusable);
+            mEditContent.setFocusable(focusable);
+            mEditContent.setFocusableInTouchMode(focusable);
+        }
     }
 
     private void enableMenuItem(boolean enabled) {
