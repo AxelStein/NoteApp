@@ -92,12 +92,22 @@ public class MenuUtil {
         return items;
     }
 
+    public static boolean enabled(Menu menu, int id) {
+        if (menu != null) {
+            MenuItem item = menu.findItem(id);
+            if (item != null) {
+                return item.isEnabled();
+            }
+        }
+        return false;
+    }
+
     public static void enable(@Nullable Menu menu, boolean enable, int... itemIds) {
         if (menu == null || itemIds == null) {
             return;
         }
         for (int id : itemIds) {
-            show(menu.findItem(id), enable);
+            enableMenuItemImpl(menu.findItem(id), enable);
         }
     }
 

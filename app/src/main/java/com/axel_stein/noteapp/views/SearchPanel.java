@@ -140,6 +140,10 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
     public void show() {
         ViewUtil.show(this);
         showKeyboard();
+
+        if (mCallback != null) {
+            mCallback.onShow();
+        }
     }
 
     public void setCallback(Callback callback) {
@@ -249,6 +253,8 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
         void onQueryTextChange(String q);
 
         void onCursorChange(int cursor);
+
+        void onShow();
 
         void onClose();
 
