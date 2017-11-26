@@ -223,6 +223,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 .showMenuItem(R.id.menu_select_notebook, !mTrash)
                 .showMenuItem(R.id.menu_labels, !mTrash)
                 .showMenuItem(R.id.menu_share, !mTrash)
+                .showMenuItem(R.id.menu_search, !mTrash)
                 .showMenuItem(R.id.menu_duplicate, !mTrash && mUpdate)
                 .show(EditNoteFragment.this);
     }
