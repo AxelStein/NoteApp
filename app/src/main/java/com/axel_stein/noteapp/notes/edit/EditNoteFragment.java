@@ -198,7 +198,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                     if (mIndexes != null && mViewCreated) {
                         --cursor;
 
-                        int index = mIndexes.get(cursor);
+                        final int index = mIndexes.get(cursor);
                         int queryLength = mSearchPanel.getQuery().length();
                         int end = index + queryLength;
                         int currentColor = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorCurrentColor);
@@ -211,7 +211,21 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         mPreviousIndex = index;
 
                         Layout layout = mEditContent.getLayout();
-                        if (layout != null) {
+                        if (layout == null) {
+                            mEditContent.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (mEditContent != null) {
+                                        Layout layout = mEditContent.getLayout();
+                                        if (layout != null) {
+                                            int line = layout.getLineForOffset(index);
+                                            int y = layout.getLineBottom(line);
+                                            mScrollView.scrollTo(0, y);
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
                             int line = layout.getLineForOffset(index);
                             int y = layout.getLineBottom(line);
                             mScrollView.scrollTo(0, y);
