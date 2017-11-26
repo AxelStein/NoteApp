@@ -16,6 +16,7 @@
         <item name="editTextLineColor">@color/edit_text_line_color_light</item>
         <item name="keepScreenOnColor">@color/keep_screen_on_color_light</item>
         <item name="searchSelectorColor">@color/search_selector_color_light</item>
+        <item name="searchSelectorCurrentColor">@color/search_selector_current_color_light</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogLight</item>
 
         <!-- MaterialDrawer specific values -->
@@ -46,6 +47,7 @@
         <item name="editTextLineColor">@color/edit_text_line_color_dark</item>
         <item name="keepScreenOnColor">@color/keep_screen_on_color_dark</item>
         <item name="searchSelectorColor">@color/search_selector_color_dark</item>
+        <item name="searchSelectorCurrentColor">@color/search_selector_current_color_dark</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_dark_background</item>
