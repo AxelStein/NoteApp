@@ -34,8 +34,6 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
 
     private ImageButton mButtonNext;
 
-    private ImageButton mButtonClose;
-
     private Callback mCallback;
 
     private int mCursor;
@@ -89,9 +87,7 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    v.clearFocus();
-                    SearchPanel.this.requestFocus();
-                    KeyboardUtil.hide(v);
+                    hideKeyboard();
                     return true;
                 }
                 return false;
@@ -106,8 +102,8 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
         mButtonNext = findViewById(R.id.button_next);
         mButtonNext.setOnClickListener(this);
 
-        mButtonClose = findViewById(R.id.button_close);
-        mButtonClose.setOnClickListener(this);
+        ImageButton buttonClose = findViewById(R.id.button_close);
+        buttonClose.setOnClickListener(this);
 
         setQueryResultCount(mResultCount);
         setCursor(mCursor);
@@ -118,25 +114,17 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.button_prev:
                 setCursor(mCursor - 1);
-                if (mCallback != null) {
-                    mCallback.onCursorChange(mCursor);
-                }
                 break;
 
             case R.id.button_next:
                 setCursor(mCursor + 1);
-                if (mCallback != null) {
-                    mCallback.onCursorChange(mCursor);
-                }
                 break;
 
             case R.id.button_close:
                 ViewUtil.hide(this);
 
                 mEditSearch.setText(null);
-                mEditSearch.clearFocus();
-                requestFocus();
-                KeyboardUtil.hide(v);
+                hideKeyboard();
 
                 if (mCallback != null) {
                     mCallback.onClose();
@@ -147,8 +135,7 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
 
     public void show() {
         ViewUtil.show(this);
-        mEditSearch.requestFocus();
-        KeyboardUtil.show(mEditSearch);
+        showKeyboard();
     }
 
     public void setCallback(Callback callback) {
@@ -159,9 +146,6 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
         if (resultCount >= 0) {
             mResultCount = resultCount;
             setCursor(resultCount == 0 ? 0 : 1);
-            if (mCursor > 0 && mCallback != null) {
-                mCallback.onCursorChange(mCursor);
-            }
             ViewUtil.enable(resultCount > 1, mButtonPrev, mButtonNext);
         }
     }
@@ -175,14 +159,21 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
 
         mCursor = cursor;
         mTextResultCount.setText(String.format(Locale.ROOT, "%d/%d", mCursor, mResultCount));
+
+        if (mCursor > 0 && mCallback != null) {
+            mCallback.onCursorChange(mCursor);
+        }
     }
 
-    public int getCursor() {
-        return mCursor;
+    private void showKeyboard() {
+        mEditSearch.requestFocus();
+        KeyboardUtil.show(mEditSearch);
     }
 
-    public int getResultCount() {
-        return mResultCount;
+    private void hideKeyboard() {
+        mEditSearch.clearFocus();
+        requestFocus();
+        KeyboardUtil.hide(mEditSearch);
     }
 
     static class SavedState extends BaseSavedState {
