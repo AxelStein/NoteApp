@@ -2,7 +2,7 @@
     <string name="app_name">Notes</string>
     <string name="default_notebook">Notes</string>
     <string name="copy">copy</string>
-    <string name="pref_version">Version 1.2.6</string>
+    <string name="pref_version">Version 1.2.7</string>
 
     <!--Actions-->
     <string name="action_settings">Settings</string>

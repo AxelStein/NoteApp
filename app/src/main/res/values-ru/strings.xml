@@ -2,7 +2,7 @@
     <string name="app_name">Заметки</string>
     <string name="default_notebook">Заметки</string>
     <string name="copy">копия</string>
-    <string name="pref_version">Версия 1.2.6</string>
+    <string name="pref_version">Версия 1.2.7</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
