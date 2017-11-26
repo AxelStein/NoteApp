@@ -20,6 +20,9 @@ import java.util.concurrent.Callable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.axel_stein.domain.interactor.note.NoteCache.get;
+import static com.axel_stein.domain.interactor.note.NoteCache.hasKey;
+import static com.axel_stein.domain.interactor.note.NoteCache.put;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
@@ -73,13 +76,24 @@ public class QueryNoteInteractor {
      */
     @NonNull
     public Single<List<Note>> execute(@NonNull final Notebook notebook, final boolean includeTrash) {
+        final String key = "notebook_" + notebook.getId();
+        if (hasKey(key)) {
+            return single(new Callable<List<Note>>() {
+                @Override
+                public List<Note> call() throws Exception {
+                    return get(key);
+                }
+            });
+        }
         return single(new Callable<List<Note>>() {
             @Override
             public List<Note> call() throws Exception {
                 if (!NotebookValidator.isValid(notebook)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
-                return orderImpl(mNoteRepository.query(notebook, includeTrash));
+                List<Note> notes = orderImpl(mNoteRepository.query(notebook, includeTrash));
+                put(key, notes);
+                return notes;
             }
         });
     }
@@ -91,13 +105,24 @@ public class QueryNoteInteractor {
      */
     @NonNull
     public Single<List<Note>> execute(@NonNull final Label label) {
+        final String key = "label_" + label.getId();
+        if (hasKey(key)) {
+            return single(new Callable<List<Note>>() {
+                @Override
+                public List<Note> call() throws Exception {
+                    return get(key);
+                }
+            });
+        }
         return single(new Callable<List<Note>>() {
             @Override
             public List<Note> call() throws Exception {
                 if (!LabelValidator.isValid(label)) {
                     throw new IllegalArgumentException("label is not valid");
                 }
-                return orderImpl(mNoteRepository.query(label));
+                List<Note> notes = orderImpl(mNoteRepository.query(label));
+                put(key, notes);
+                return notes;
             }
         });
     }
