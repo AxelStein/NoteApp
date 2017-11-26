@@ -59,7 +59,6 @@
                 android:maxLength="@integer/max_content"
                 android:minHeight="48dp"
                 android:overScrollMode="never"
-                android:textCursorDrawable="@drawable/cursor"
                 android:textSize="16sp"
 
                 tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things I use my iPhone for is jotting down notes."/>
