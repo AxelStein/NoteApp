@@ -20,9 +20,9 @@ import java.util.concurrent.Callable;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.axel_stein.domain.interactor.note.NoteCache.get;
-import static com.axel_stein.domain.interactor.note.NoteCache.hasKey;
-import static com.axel_stein.domain.interactor.note.NoteCache.put;
+import static com.axel_stein.domain.model.NoteCache.get;
+import static com.axel_stein.domain.model.NoteCache.hasKey;
+import static com.axel_stein.domain.model.NoteCache.put;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;

@@ -2,7 +2,7 @@ package com.axel_stein.noteapp;
 
 import android.support.annotation.NonNull;
 
-import com.axel_stein.domain.interactor.note.NoteCache;
+import com.axel_stein.domain.model.NoteCache;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Notebook;
 

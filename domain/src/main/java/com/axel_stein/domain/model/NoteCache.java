@@ -1,6 +1,4 @@
-package com.axel_stein.domain.interactor.note;
-
-import com.axel_stein.domain.model.Note;
+package com.axel_stein.domain.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,14 +8,14 @@ public class NoteCache {
 
     private static HashMap<String, List<Note>> cache;
 
-    static void put(String key, List<Note> value) {
+    public static void put(String key, List<Note> value) {
         if (cache == null) {
             cache = new HashMap<>();
         }
         cache.put(key, value);
     }
 
-    static List<Note> get(String key) {
+    public static List<Note> get(String key) {
         List<Note> result;
         if (cache != null) {
             result = cache.get(key);
@@ -27,7 +25,7 @@ public class NoteCache {
         return result;
     }
 
-    static boolean hasKey(String key) {
+    public static boolean hasKey(String key) {
         return cache != null && cache.containsKey(key);
     }
 
