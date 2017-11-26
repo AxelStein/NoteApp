@@ -93,6 +93,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private boolean mTrash;
     private boolean mUpdate;
     private boolean mEditable;
+    private boolean mEditViewsFocusable = true;
+    private boolean mMenuItemEnabled = true;
+    private List<Integer> mIndexes;
+    private int mPreviousIndex;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,6 +135,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mEditTitle.setTextSize(baseFontSize + 4);
         mEditContent.setTextSize(baseFontSize);
 
+        setEditViewsFocusable(mEditViewsFocusable);
+
         mViewCreated = true;
 
         if (mPresenter != null) {
@@ -139,10 +145,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         return root;
     }
-
-    private List<Integer> mIndexes;
-
-    private int mPreviousIndex;
 
     public void setSearchPanel(@Nullable SearchPanel searchPanel) {
         mSearchPanel = searchPanel;
@@ -161,7 +163,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         if (mSearchPanel != null) {
                             mSearchPanel.setQueryResultCount(0);
                         }
-                        onClose();
+                        mIndexes = null;
+                        mPreviousIndex = -1;
                         return;
                     }
 
@@ -215,7 +218,16 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 }
 
                 @Override
+                public void onShow() {
+                    setEditViewsFocusable(false);
+                    enableMenuItem(false);
+                }
+
+                @Override
                 public void onClose() {
+                    setEditViewsFocusable(true);
+                    enableMenuItem(true);
+
                     mIndexes = null;
                     mPreviousIndex = -1;
                     if (mViewCreated) {
@@ -224,6 +236,21 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 }
             });
         }
+    }
+
+    private void setEditViewsFocusable(boolean focusable) {
+        mEditViewsFocusable = focusable;
+
+        mEditTitle.setFocusable(focusable);
+        mEditTitle.setFocusableInTouchMode(focusable);
+
+        mEditContent.setFocusable(focusable);
+        mEditContent.setFocusableInTouchMode(focusable);
+    }
+
+    private void enableMenuItem(boolean enabled) {
+        mMenuItemEnabled = enabled;
+        MenuUtil.enable(mMenu, enabled, R.id.menu);
     }
 
     private void setSpan(int color, int start, int end) {
@@ -266,6 +293,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         mMenu = menu;
         MenuUtil.show(mMenu, mEditable, R.id.menu_fullscreen, R.id.menu_done);
+        enableMenuItem(mMenuItemEnabled);
 
         if (mPresenter != null) {
             mPresenter.addOnNoteChangedListener(new EditNoteContract.OnNoteChangedListener() {
