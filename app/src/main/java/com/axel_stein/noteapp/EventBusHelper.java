@@ -2,6 +2,7 @@ package com.axel_stein.noteapp;
 
 import android.support.annotation.NonNull;
 
+import com.axel_stein.domain.interactor.note.NoteCache;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Notebook;
 
@@ -18,11 +19,13 @@ public class EventBusHelper {
     }
 
     public static void updateNoteList() {
+        NoteCache.invalidate();
         post(new UpdateNoteList());
         post(new UpdateDrawer());
     }
 
     public static void updateNoteList(boolean saveSelection, boolean click) {
+        NoteCache.invalidate();
         post(new UpdateNoteList());
         post(new UpdateDrawer(saveSelection, click));
     }
