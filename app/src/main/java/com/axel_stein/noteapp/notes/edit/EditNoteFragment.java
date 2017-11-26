@@ -202,7 +202,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         int currentColor = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorCurrentColor);
                         setSpan(currentColor, index, end);
 
-                        if (mPreviousIndex != -1) {
+                        if (mPreviousIndex != -1 && mPreviousIndex != index) {
                             int color = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorColor);
                             setSpan(color, mPreviousIndex, mPreviousIndex + queryLength);
                         }
