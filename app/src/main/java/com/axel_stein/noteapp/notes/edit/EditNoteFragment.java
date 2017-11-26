@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Editable;
 import android.text.Layout;
-import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -143,6 +142,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     private List<Integer> mIndexes;
 
+    private int mPreviousIndex;
+
     public void setSearchPanel(@Nullable SearchPanel searchPanel) {
         mSearchPanel = searchPanel;
         if (mSearchPanel != null) {
@@ -154,6 +155,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                     }
 
                     String content = mEditContent.getText().toString();
+                    mEditContent.setText(content);
 
                     if (isEmpty(q)) {
                         if (mSearchPanel != null) {
@@ -163,14 +165,14 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         return;
                     }
 
-                    SpannableString spannable = new SpannableString(content);
-
                     Pattern pattern = Pattern.compile(q, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = pattern.matcher(content.toLowerCase());
+                    Matcher matcher = pattern.matcher(content);
 
                     int color = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorColor);
                     int resultCount = 0;
+
                     mIndexes = new ArrayList<>();
+                    mPreviousIndex = -1;
 
                     while (matcher.find()) {
                         resultCount++;
@@ -178,25 +180,34 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         int start = matcher.start();
                         mIndexes.add(start);
 
-                        spannable.setSpan(new BackgroundColorSpan(color), start, matcher.end(), SPAN_EXCLUSIVE_EXCLUSIVE);
+                        setSpan(color, start, matcher.end());
                     }
 
                     if (mSearchPanel != null) {
                         mSearchPanel.setQueryResultCount(resultCount);
                     }
-
-                    mEditContent.setText(spannable);
                 }
 
                 @Override
                 public void onCursorChange(int cursor) {
                     if (mIndexes != null && mViewCreated) {
                         --cursor;
-                        int pos = mIndexes.get(cursor);
+
+                        int index = mIndexes.get(cursor);
+                        int queryLength = mSearchPanel.getQuery().length();
+                        int end = index + queryLength;
+                        int currentColor = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorCurrentColor);
+                        setSpan(currentColor, index, end);
+
+                        if (mPreviousIndex != -1) {
+                            int color = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorColor);
+                            setSpan(color, mPreviousIndex, mPreviousIndex + queryLength);
+                        }
+                        mPreviousIndex = index;
 
                         Layout layout = mEditContent.getLayout();
                         if (layout != null) {
-                            int line = layout.getLineForOffset(pos);
+                            int line = layout.getLineForOffset(index);
                             int y = layout.getLineBottom(line);
                             mScrollView.scrollTo(0, y);
                         }
@@ -206,12 +217,18 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 @Override
                 public void onClose() {
                     mIndexes = null;
+                    mPreviousIndex = -1;
                     if (mViewCreated) {
                         mEditContent.setText(mEditContent.getText().toString());
                     }
                 }
             });
         }
+    }
+
+    private void setSpan(int color, int start, int end) {
+        BackgroundColorSpan span = new BackgroundColorSpan(color);
+        mEditContent.getText().setSpan(span, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     public void onButtonMenuClick() {

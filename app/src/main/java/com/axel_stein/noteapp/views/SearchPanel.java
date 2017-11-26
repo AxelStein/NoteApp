@@ -133,6 +133,10 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    public String getQuery() {
+        return mCurrentQuery == null ? "" : mCurrentQuery;
+    }
+
     public void show() {
         ViewUtil.show(this);
         showKeyboard();
