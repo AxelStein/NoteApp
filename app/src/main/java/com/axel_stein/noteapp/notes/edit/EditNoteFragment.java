@@ -128,6 +128,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 if (mPresenter != null) {
                     mPresenter.setContent(s.toString());
                 }
+                mEditContent.setLineSpacing(0, 1);
+                mEditContent.setLineSpacing(0, 1.5f);
             }
         });
 
