@@ -97,6 +97,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private boolean mMenuItemEnabled = true;
     private List<Integer> mIndexes;
     private int mPreviousIndex;
+    private int mSearchSelectorColor;
+    private int mSearchSelectorCurrentColor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +108,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
+
+        mSearchSelectorColor = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorColor);
+        mSearchSelectorCurrentColor = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorCurrentColor);
     }
 
     @Nullable
@@ -173,7 +178,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                     Pattern pattern = Pattern.compile(q, Pattern.LITERAL | Pattern.CASE_INSENSITIVE);
                     Matcher matcher = pattern.matcher(content);
 
-                    int color = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorColor);
                     int resultCount = 0;
 
                     mIndexes = new ArrayList<>();
@@ -185,7 +189,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         int start = matcher.start();
                         mIndexes.add(start);
 
-                        setSpan(color, start, matcher.end());
+                        setSpan(mSearchSelectorColor, start, matcher.end());
                     }
 
                     if (mSearchPanel != null) {
@@ -201,12 +205,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         final int index = mIndexes.get(cursor);
                         int queryLength = mSearchPanel.getQuery().length();
                         int end = index + queryLength;
-                        int currentColor = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorCurrentColor);
-                        setSpan(currentColor, index, end);
+                        setSpan(mSearchSelectorCurrentColor, index, end);
 
                         if (mPreviousIndex != -1 && mPreviousIndex != index) {
-                            int color = ColorUtil.getColorAttr(getContext(), R.attr.searchSelectorColor);
-                            setSpan(color, mPreviousIndex, mPreviousIndex + queryLength);
+                            setSpan(mSearchSelectorColor, mPreviousIndex, mPreviousIndex + queryLength);
                         }
                         mPreviousIndex = index;
 
@@ -257,11 +259,13 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private void setEditViewsFocusable(boolean focusable) {
         mEditViewsFocusable = focusable;
 
-        mEditTitle.setFocusable(focusable);
-        mEditTitle.setFocusableInTouchMode(focusable);
+        if (mViewCreated) {
+            mEditTitle.setFocusable(focusable);
+            mEditTitle.setFocusableInTouchMode(focusable);
 
-        mEditContent.setFocusable(focusable);
-        mEditContent.setFocusableInTouchMode(focusable);
+            mEditContent.setFocusable(focusable);
+            mEditContent.setFocusableInTouchMode(focusable);
+        }
     }
 
     private void enableMenuItem(boolean enabled) {
