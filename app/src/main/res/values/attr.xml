@@ -7,6 +7,7 @@
     <attr name="keepScreenOnColor" format="color|reference"/>
     <attr name="searchSelectorColor" format="color|reference"/>
     <attr name="searchSelectorCurrentColor" format="color|reference"/>
+    <attr name="toolbarBackgroundColor" format="color|reference"/>
 
     <declare-styleable name="IconTextView">
         <attr name="iconLeft" format="reference"/>

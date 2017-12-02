@@ -205,7 +205,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
 
     private void setupDrawerHeader(View header) {
         header.setPadding(0, DisplayUtil.getStatusBarHeight(this), 0, 0);
-        header.setBackgroundColor(ColorUtil.getColorAttr(this, R.attr.colorPrimary));
+        header.setBackgroundColor(ColorUtil.getColorAttr(this, R.attr.toolbarBackgroundColor));
 
         header.findViewById(R.id.action_settings).setOnClickListener(new View.OnClickListener() {
             @Override
