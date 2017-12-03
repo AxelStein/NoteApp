@@ -16,7 +16,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     app:iconLeft="@drawable/ic_book_white_24dp"
-    app:iconLeftTint="?attr/menuItemTintColor"
-    app:iconRightTint="?attr/menuItemTintColor"
+    app:iconLeftTint="?attr/colorControlNormal"
+    app:iconRightTint="?attr/colorControlNormal"
     tools:ignore="RtlHardcoded"
     tools:text="Notebook"/>

@@ -3,8 +3,8 @@
     <color name="color_accent">#00796b</color>
     <color name="color_accent_dark">#00796b</color>
 
-    <color name="keep_screen_on_color_light">#D32F2F</color>
-    <color name="keep_screen_on_color_dark">#D32F2F</color>
+    <color name="keep_screen_on_color_light">#f44336</color>
+    <color name="keep_screen_on_color_dark">#f44336</color>
 
     <color name="text_color_secondary_light">#8a000000</color>
     <color name="text_color_primary_dark">#ffffff</color>

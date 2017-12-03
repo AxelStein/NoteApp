@@ -3,12 +3,14 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorPrimary">@android:color/white</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">@android:color/white</item>
+        <item name="actionModeBackground">?attr/colorPrimary</item>
         <item name="actionModeCloseDrawable">@drawable/ic_clear_black_24dp</item>
+        <item name="colorControlNormal">@color/text_color_secondary_light</item>
         <item name="menuItemTintColor">@color/text_color_secondary_light</item>
         <item name="nightModeButtonTintColor">@color/text_color_secondary_light</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.Fix</item>
@@ -18,7 +20,7 @@
         <item name="searchSelectorColor">@color/search_selector_color_light</item>
         <item name="searchSelectorCurrentColor">@color/search_selector_current_color_light</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogLight</item>
-        <item name="toolbarBackgroundColor">@android:color/white</item>
+        <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@android:color/white</item>
@@ -49,7 +51,7 @@
         <item name="keepScreenOnColor">@color/keep_screen_on_color_dark</item>
         <item name="searchSelectorColor">@color/search_selector_color_dark</item>
         <item name="searchSelectorCurrentColor">@color/search_selector_current_color_dark</item>
-        <item name="toolbarBackgroundColor">?attr/colorPrimary</item>
+        <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_dark_background</item>
