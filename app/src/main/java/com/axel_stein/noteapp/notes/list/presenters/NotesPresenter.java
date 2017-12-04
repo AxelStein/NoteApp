@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -56,7 +57,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     @Inject
     RestoreNoteInteractor mRestoreNoteInteractor;
 
+    @Nullable
     private List<Note> mNotes;
+
+    @Nullable
     private LongSparseArray<Boolean> mCheckedItems;
 
     @Override
@@ -364,9 +368,11 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     protected List<Note> getCheckedNotes() {
         List<Note> notes = new ArrayList<>();
-        for (Note note : mNotes) {
-            if (isTrue(mCheckedItems.get(note.getId()))) {
-                notes.add(note);
+        if (mNotes != null && mCheckedItems != null) {
+            for (Note note : mNotes) {
+                if (isTrue(mCheckedItems.get(note.getId()))) {
+                    notes.add(note);
+                }
             }
         }
         return notes;
