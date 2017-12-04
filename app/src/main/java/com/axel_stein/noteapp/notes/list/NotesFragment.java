@@ -408,6 +408,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
                 } else {
                     mIcon.setImageResource(R.drawable.ic_check_box_outline_blank_white_24dp);
                 }
+                mIcon.setSelected(checkable && checked);
             }
 
             @Override
