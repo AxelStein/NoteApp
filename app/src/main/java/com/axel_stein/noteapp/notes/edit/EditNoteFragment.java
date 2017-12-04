@@ -314,7 +314,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         super.onCreateOptionsMenu(menu, inflater);
 
         mMenu = menu;
-        MenuUtil.show(mMenu, mEditable, R.id.menu_fullscreen, R.id.menu_done);
+        MenuUtil.show(mMenu, mEditable, R.id.menu_done);
         enableMenuItem(mMenuItemEnabled);
 
         if (mPresenter != null) {
@@ -349,7 +349,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     public void setEditable(boolean editable) {
         mEditable = editable;
 
-        MenuUtil.show(mMenu, editable, R.id.menu_fullscreen, R.id.menu_done, R.id.menu);
+        MenuUtil.show(mMenu, editable, R.id.menu_done, R.id.menu);
 
         if (!mTrash) {
             ViewUtil.enable(editable, mEditTitle, mEditContent);
