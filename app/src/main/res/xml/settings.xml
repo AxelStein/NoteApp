@@ -67,7 +67,6 @@
             android:title="@string/pref_rate_app"/>
 
         <Preference
-            android:enabled="false"
             android:title="@string/pref_version"/>
 
         <!--
