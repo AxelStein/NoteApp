@@ -111,7 +111,7 @@ public class EditNoteActivity extends BaseActivity {
         Fragment fragment = fm.findFragmentByTag("fragment");
         if (fragment != null) {
             mEditNoteFragment = (EditNoteFragment) fragment;
-            mEditNoteFragment.setSearchPanel(mSearchPanel);
+            mEditNoteFragment.setSearchPanel(mToolbar, mSearchPanel);
             mPresenter = (EditNotePresenter) mEditNoteFragment.getPresenter();
             setPresenterListener();
         } else {
@@ -138,7 +138,7 @@ public class EditNoteActivity extends BaseActivity {
                             }
 
                             mEditNoteFragment = new EditNoteFragment();
-                            mEditNoteFragment.setSearchPanel(mSearchPanel);
+                            mEditNoteFragment.setSearchPanel(mToolbar, mSearchPanel);
                             mEditNoteFragment.setPresenter(mPresenter);
 
                             setFragment(mEditNoteFragment, "fragment");
@@ -159,9 +159,8 @@ public class EditNoteActivity extends BaseActivity {
                 @Override
                 public void onNoteChanged(boolean changed) {
                     if (mToolbar != null) {
-                        int clearIconRes = mNightMode ? R.drawable.ic_clear_white_24dp : R.drawable.ic_clear_black_24dp;
                         int backIconRes = mNightMode ? R.drawable.ic_arrow_back_white_24dp : R.drawable.ic_arrow_back_black_24dp;
-                        mToolbar.setNavigationIcon(changed ? clearIconRes : backIconRes);
+                        mToolbar.setNavigationIcon(changed ? R.drawable.ic_done_accent_24dp : backIconRes);
                     }
                 }
             });
@@ -213,7 +212,9 @@ public class EditNoteActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                onBackPressed();
+                if (mPresenter != null) {
+                    mPresenter.saveOrFinish();
+                }
                 return true;
 
             case R.id.menu_fullscreen:
@@ -264,9 +265,7 @@ public class EditNoteActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!ViewUtil.isShown(mToolbar)) {
-            ViewUtil.show(mToolbar);
-        } else if (mPresenter == null || mPresenter.close()) {
+        if (mPresenter == null || mPresenter.onBackPressed()) {
             super.onBackPressed();
         }
     }

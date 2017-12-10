@@ -102,6 +102,14 @@ public class MenuUtil {
         return false;
     }
 
+    public static void enable(@Nullable Menu menu, boolean enable) {
+        if (menu != null) {
+            for (int i = 0; i < menu.size(); i++) {
+                enableMenuItemImpl(menu.getItem(i), enable);
+            }
+        }
+    }
+
     public static void enable(@Nullable Menu menu, boolean enable, int... itemIds) {
         if (menu == null || itemIds == null) {
             return;

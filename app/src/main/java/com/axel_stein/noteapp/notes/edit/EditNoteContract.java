@@ -30,6 +30,10 @@ public interface EditNoteContract {
 
         void setEditable(boolean editable);
 
+        boolean searchPanelShown();
+
+        void hideSearchPanel();
+
     }
 
     interface Presenter {
@@ -46,6 +50,8 @@ public interface EditNoteContract {
 
         void setLabels(List<Long> labels);
 
+        boolean onBackPressed();
+
         /**
          * @return true if should finish
          */
@@ -54,6 +60,8 @@ public interface EditNoteContract {
         void confirmDiscardChanges();
 
         void save();
+
+        void saveOrFinish();
 
         void delete();
 
