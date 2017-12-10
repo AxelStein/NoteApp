@@ -125,6 +125,16 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
+    public boolean onBackPressed() {
+        if (mView != null && mView.searchPanelShown()){
+            mView.hideSearchPanel();
+            return false;
+        } else {
+            return close();
+        }
+    }
+
+    @Override
     public boolean close() {
         if (mSaving) {
             return true;
@@ -158,6 +168,19 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     public void confirmDiscardChanges() {
         if (mView != null) {
             mView.callFinish();
+        }
+    }
+
+    @Override
+    public void saveOrFinish() {
+        if (mView == null) {
+            return;
+        }
+        boolean notChanged = isEmptyNote() || mSrcNote.equals(mNote);
+        if (notChanged) {
+            mView.callFinish();
+        } else {
+            save();
         }
     }
 

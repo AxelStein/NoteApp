@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.style.BackgroundColorSpan;
@@ -28,7 +29,6 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseFragment;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
-import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.Presenter;
@@ -56,8 +56,7 @@ import static android.text.TextUtils.isEmpty;
 public class EditNoteFragment extends BaseFragment implements EditNoteContract.View,
         ConfirmDialog.OnConfirmListener,
         SelectNotebookDialog.OnNotebookSelectedListener,
-        CheckLabelsDialog.OnLabelCheckedListener,
-        BottomMenuDialog.OnMenuItemClickListener {
+        CheckLabelsDialog.OnLabelCheckedListener {
 
     private static final String TAG_SAVE_NOTE = "TAG_SAVE_NOTE";
 
@@ -78,6 +77,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @Nullable
     SearchPanel mSearchPanel;
 
+    @Nullable
+    Toolbar mToolbar;
+
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
 
@@ -94,7 +96,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private boolean mUpdate;
     private boolean mEditable;
     private boolean mEditViewsFocusable = true;
-    private boolean mMenuItemEnabled = true;
     private List<Integer> mIndexes;
     private int mPreviousIndex;
     private int mSearchSelectorColor;
@@ -153,7 +154,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         return root;
     }
 
-    public void setSearchPanel(@Nullable SearchPanel searchPanel) {
+    public void setSearchPanel(@Nullable Toolbar toolbar, @Nullable SearchPanel searchPanel) {
+        mToolbar = toolbar;
         mSearchPanel = searchPanel;
         if (mSearchPanel != null) {
             mSearchPanel.setCallback(new SearchPanel.Callback() {
@@ -238,13 +240,13 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 @Override
                 public void onShow() {
                     setEditViewsFocusable(false);
-                    enableMenuItem(false);
+                    ViewUtil.hide(mToolbar);
                 }
 
                 @Override
                 public void onClose() {
                     setEditViewsFocusable(true);
-                    enableMenuItem(true);
+                    ViewUtil.show(mToolbar);
 
                     mIndexes = null;
                     mPreviousIndex = -1;
@@ -270,32 +272,14 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         editText.setLongClickable(focusable);
     }
 
-    private void enableMenuItem(boolean enabled) {
-        mMenuItemEnabled = enabled;
-        MenuUtil.enable(mMenu, enabled, R.id.menu);
-    }
-
     private void setSpan(int color, int start, int end) {
         BackgroundColorSpan span = new BackgroundColorSpan(color);
         mEditContent.getText().setSpan(span, start, end, SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    public void onButtonMenuClick() {
-        new BottomMenuDialog.Builder()
-                .setMenuRes(R.menu.bottom_menu_edit_note)
-                .showMenuItem(R.id.menu_restore, mTrash)
-                .showMenuItem(R.id.menu_delete, mUpdate)
-                .showMenuItem(R.id.menu_move_to_trash, !mTrash && mUpdate)
-                .showMenuItem(R.id.menu_select_notebook, !mTrash)
-                .showMenuItem(R.id.menu_labels, !mTrash)
-                .showMenuItem(R.id.menu_share, !mTrash)
-                .showMenuItem(R.id.menu_search, !mTrash)
-                .showMenuItem(R.id.menu_duplicate, !mTrash && mUpdate)
-                .show(EditNoteFragment.this);
-    }
-
     @Override
     public void onDestroyView() {
+        mToolbar = null;
         mSearchPanel = null;
         mEditTitle = null;
         mEditContent = null;
@@ -314,42 +298,64 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         super.onCreateOptionsMenu(menu, inflater);
 
         mMenu = menu;
-        MenuUtil.show(mMenu, mEditable, R.id.menu_done);
-        enableMenuItem(mMenuItemEnabled);
+        MenuUtil.enable(mMenu, mEditable);
 
-        if (mPresenter != null) {
-            mPresenter.addOnNoteChangedListener(new EditNoteContract.OnNoteChangedListener() {
-                @Override
-                public void onNoteChanged(boolean changed) {
-                    if (mEditable) {
-                        MenuUtil.show(mMenu, changed, R.id.menu_done);
-                    }
-                }
-            });
-        }
+        MenuUtil.show(mMenu, !mTrash && mUpdate, R.id.menu_move_to_trash, R.id.menu_duplicate);
+        MenuUtil.show(mMenu, !mTrash, R.id.menu_select_notebook, R.id.menu_labels, R.id.menu_share, R.id.menu_search);
+        MenuUtil.show(mMenu, mTrash, R.id.menu_restore);
+        MenuUtil.show(mMenu, mUpdate, R.id.menu_delete);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (mPresenter == null) {
+            return super.onOptionsItemSelected(item);
+        }
+
         switch (item.getItemId()) {
-            case R.id.menu_done:
-                if (mPresenter != null) {
-                    mPresenter.save();
+            case R.id.menu_select_notebook:
+                mPresenter.actionSelectNotebook();
+                break;
+
+            case R.id.menu_labels:
+                mPresenter.actionCheckLabels();
+                break;
+
+            case R.id.menu_search:
+                if (mSearchPanel != null) {
+                    mSearchPanel.show();
                 }
                 break;
 
-            case R.id.menu:
-                onButtonMenuClick();
+            case R.id.menu_move_to_trash:
+                mPresenter.actionMoveToTrash();
+                break;
+
+            case R.id.menu_restore:
+                mPresenter.actionRestore();
+                break;
+
+            case R.id.menu_delete:
+                mPresenter.actionDelete();
+                break;
+
+            case R.id.menu_share:
+                mPresenter.actionShare();
+                break;
+
+            case R.id.menu_duplicate:
+                mPresenter.actionDuplicate(getString(R.string.copy));
                 break;
         }
-        return super.onOptionsItemSelected(item);
+
+        return true;
     }
 
     @Override
     public void setEditable(boolean editable) {
         mEditable = editable;
 
-        MenuUtil.show(mMenu, editable, R.id.menu_done, R.id.menu);
+        MenuUtil.enable(mMenu, editable);
 
         if (!mTrash) {
             ViewUtil.enable(editable, mEditTitle, mEditContent);
@@ -358,6 +364,17 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
+    }
+
+    @Override
+    public boolean searchPanelShown() {
+        return ViewUtil.isShown(mSearchPanel);
+    }
+
+    @Override
+    public void hideSearchPanel() {
+        ViewUtil.hide(mSearchPanel);
+        ViewUtil.show(mToolbar);
     }
 
     @Override
@@ -392,7 +409,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         ViewUtil.enable(!mTrash, mEditTitle, mEditContent);
 
-        getActivity().invalidateOptionsMenu();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
     }
 
     @Override
@@ -485,12 +504,6 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     public void setPresenter(@NonNull Presenter presenter) {
         mPresenter = presenter;
-        mPresenter.addOnNoteChangedListener(new EditNoteContract.OnNoteChangedListener() {
-            @Override
-            public void onNoteChanged(boolean changed) {
-                MenuUtil.show(mMenu, changed, R.id.menu_done);
-            }
-        });
         if (mViewCreated) {
             mPresenter.onCreateView(this);
         }
@@ -510,45 +523,4 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         }
     }
 
-    @Override
-    public void onMenuItemClick(BottomMenuDialog dialog, MenuItem item) {
-        if (mPresenter != null) {
-            switch (item.getItemId()) {
-                case R.id.menu_select_notebook:
-                    mPresenter.actionSelectNotebook();
-                    break;
-
-                case R.id.menu_labels:
-                    mPresenter.actionCheckLabels();
-                    break;
-
-                case R.id.menu_search:
-                    if (mSearchPanel != null) {
-                        mSearchPanel.show();
-                    }
-                    break;
-
-                case R.id.menu_move_to_trash:
-                    mPresenter.actionMoveToTrash();
-                    break;
-
-                case R.id.menu_restore:
-                    mPresenter.actionRestore();
-                    break;
-
-                case R.id.menu_delete:
-                    mPresenter.actionDelete();
-                    break;
-
-                case R.id.menu_share:
-                    mPresenter.actionShare();
-                    break;
-
-                case R.id.menu_duplicate:
-                    mPresenter.actionDuplicate(getString(R.string.copy));
-                    break;
-            }
-        }
-        dialog.dismiss();
-    }
 }
