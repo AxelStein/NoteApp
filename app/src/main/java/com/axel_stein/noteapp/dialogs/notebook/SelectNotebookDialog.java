@@ -37,7 +37,6 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
     public static void launch(Fragment fragment, List<Notebook> notebooks, long selectedNotebook) {
         SelectNotebookDialog dialog = new SelectNotebookDialog();
         dialog.setTitle(R.string.title_select_notebook);
-        dialog.setPositiveButtonText(R.string.action_ok);
         dialog.setNegativeButtonText(R.string.action_cancel);
         dialog.setNotebooks(notebooks, selectedNotebook);
         dialog.setTargetFragment(fragment, 0);
@@ -114,14 +113,6 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getResourceText(mTitle, mTitleRes));
-        builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mListener != null && mNotebooks != null) {
-                    mListener.onNotebookSelected(mNotebooks.get(mSelectedPosition));
-                }
-            }
-        });
         builder.setNegativeButton(getResourceText(mNegativeButtonText, mNegativeButtonTextRes), new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -133,7 +124,11 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
             builder.setSingleChoiceItems(mNotebookTitles, mSelectedPosition, new OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    mSelectedPosition = i;
+                    if (i != mSelectedPosition && mListener != null && mNotebooks != null) {
+                        mSelectedPosition = i;
+                        mListener.onNotebookSelected(mNotebooks.get(mSelectedPosition));
+                    }
+                    dismiss();
                 }
             });
         }

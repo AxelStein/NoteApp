@@ -14,12 +14,18 @@ import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookInteractor;
 import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
+import com.axel_stein.domain.interactor.note.UpdateNoteNotebookInteractor;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
 class NoteInteractorModule {
+
+    @Provides
+    UpdateNoteNotebookInteractor updateNotebook(SqlNoteRepository repository) {
+        return new UpdateNoteNotebookInteractor(repository);
+    }
 
     @Provides
     DeleteNoteInteractor delete(SqlNoteRepository repository, SqlNoteLabelPairRepository helperRepository) {
