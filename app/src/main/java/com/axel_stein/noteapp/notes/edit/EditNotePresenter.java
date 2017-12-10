@@ -314,9 +314,37 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void setLabels(List<Long> labels) {
-        mNote.setLabels(labels);
-        notifyChanged();
+    public void setLabels(final List<Long> labels) {
+        if (mNote.getId() > 0) {
+            mSetLabelsInteractor.execute(mNote, labels)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mNote.setLabels(labels);
+                            mSrcNote.setLabels(labels);
+                            if (mView != null) {
+                                mView.showMessage(R.string.msg_note_updated);
+                            }
+                            EventBusHelper.updateNoteList();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            if (mView != null) {
+                                mView.showMessage(R.string.error);
+                            }
+                        }
+                    });
+        } else {
+            notifyChanged();
+        }
     }
 
     @Override
