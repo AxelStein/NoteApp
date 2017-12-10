@@ -309,6 +309,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                         }
                     });
         } else {
+            mNote.setNotebook(notebook);
+            mSrcNote.setNotebook(notebook);
+            
             notifyChanged();
         }
     }
@@ -343,6 +346,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                         }
                     });
         } else {
+            mNote.setLabels(labels);
+            mSrcNote.setLabels(labels);
+
             notifyChanged();
         }
     }
