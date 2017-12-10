@@ -311,7 +311,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
         } else {
             mNote.setNotebook(notebook);
             mSrcNote.setNotebook(notebook);
-            
+
             notifyChanged();
         }
     }

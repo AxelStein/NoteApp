@@ -51,7 +51,7 @@ public class DeleteNotebookInteractor {
                 }
                 mNotebookRepository.delete(notebook);
             }})
-                .andThen(mQueryNoteInteractor.execute(notebook, true))
+                .andThen(mQueryNoteInteractor.execute(notebook, true, false))
                 .flatMapCompletable(new Function<List<Note>, CompletableSource>() {
                     @Override
                     public CompletableSource apply(@io.reactivex.annotations.NonNull List<Note> notes) throws Exception {
