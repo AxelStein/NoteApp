@@ -32,6 +32,11 @@ public class SqlNoteRepository implements NoteRepository {
     }
 
     @Override
+    public void updateNotebook(long noteId, long notebookId) {
+        mDao.updateNotebook(noteId, notebookId);
+    }
+
+    @Override
     public void delete(@NonNull Note note) {
         mDao.delete(map(note));
     }

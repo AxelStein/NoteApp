@@ -21,6 +21,8 @@ public interface NoteRepository {
 
     void update(@NonNull Note note);
 
+    void updateNotebook(long noteId, long notebookId);
+
     void delete(@NonNull Note note);
 
     @Nullable

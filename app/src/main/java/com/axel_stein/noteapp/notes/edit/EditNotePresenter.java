@@ -4,11 +4,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
+import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
 import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
 import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
+import com.axel_stein.domain.interactor.note.UpdateNoteNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -55,6 +57,12 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
     @Inject
     QueryLabelInteractor mQueryLabelInteractor;
+
+    @Inject
+    UpdateNoteNotebookInteractor mUpdateNoteNotebookInteractor;
+
+    @Inject
+    SetLabelsInteractor mSetLabelsInteractor;
 
     private Note mNote;
     private Note mSrcNote;
@@ -272,9 +280,37 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void setNotebook(Notebook notebook) {
-        mNote.setNotebook(notebook);
-        notifyChanged();
+    public void setNotebook(final Notebook notebook) {
+        if (mNote.getId() > 0) {
+            mUpdateNoteNotebookInteractor.execute(mNote.getId(), notebook.getId())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            mNote.setNotebook(notebook);
+                            mSrcNote.setNotebook(notebook);
+                            if (mView != null) {
+                                mView.showMessage(R.string.msg_note_updated);
+                            }
+                            EventBusHelper.updateNoteList();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            if (mView != null) {
+                                mView.showMessage(R.string.error);
+                            }
+                        }
+                    });
+        } else {
+            notifyChanged();
+        }
     }
 
     @Override
