@@ -238,14 +238,18 @@ public class SearchPanel extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        SavedState ss = (SavedState) state;
-        mCurrentQuery = ss.currentQuery;
+        try {
+            SavedState ss = (SavedState) state;
+            mCurrentQuery = ss.currentQuery;
 
-        super.onRestoreInstanceState(ss.getSuperState());
+            super.onRestoreInstanceState(ss.getSuperState());
 
-        setQueryResultCount(ss.resultCount);
-        setCursor(ss.cursor);
-        ViewUtil.show(ss.shown, this);
+            setQueryResultCount(ss.resultCount);
+            setCursor(ss.cursor);
+            ViewUtil.show(ss.shown, this);
+        } catch (Exception ignored) {
+            super.onRestoreInstanceState(state);
+        }
     }
 
     public interface Callback {
