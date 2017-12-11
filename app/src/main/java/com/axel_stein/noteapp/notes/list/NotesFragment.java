@@ -305,6 +305,12 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         }
     }
 
+    public void scrollToTop() {
+        if (mRecyclerView != null) {
+            mRecyclerView.scrollToPosition(0);
+        }
+    }
+
     interface NoteItemListener {
 
         void onNoteClick(int pos, Note note);

@@ -341,6 +341,9 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
             item.setChecked(true);
             mAppSettings.setNotesOrder(order);
             EventBusHelper.updateNoteList();
+            if (mFragment != null) {
+                mFragment.scrollToTop();
+            }
             return true;
         }
 
