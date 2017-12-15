@@ -7,12 +7,20 @@ import android.graphics.Rect;
 import android.support.design.widget.TextInputEditText;
 import android.util.AttributeSet;
 
+import com.axel_stein.data.AppSettingsRepository;
+import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.ColorUtil;
+
+import javax.inject.Inject;
 
 public class LinedEditText extends TextInputEditText {
     private Rect mRect;
     private Paint mPaint;
+    private boolean mShowLines;
+
+    @Inject
+    AppSettingsRepository mAppSettings;
 
     public LinedEditText(Context context) {
         super(context);
@@ -34,22 +42,28 @@ public class LinedEditText extends TextInputEditText {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setColor(ColorUtil.getColorAttr(getContext(), R.attr.editTextLineColor));
+
+        App.getAppComponent().inject(this);
+
+        mShowLines = mAppSettings.showNoteEditorLines();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        int height = getMeasuredHeight();
-        int line_height = getLineHeight();
+        if (mShowLines) {
+            int height = getMeasuredHeight();
+            int line_height = getLineHeight();
 
-        int count = height / line_height;
+            int count = height / line_height;
 
-        if (getLineCount() > count) {
-            count = getLineCount(); // for long text with scrolling
-        }
+            if (getLineCount() > count) {
+                count = getLineCount(); // for long text with scrolling
+            }
 
-        if (getLineCount() > 1) {
-            for (int i = 0; i < count; i++) {
-                drawLine(canvas, i);
+            if (getLineCount() > 1) {
+                for (int i = 0; i < count; i++) {
+                    drawLine(canvas, i);
+                }
             }
         }
 

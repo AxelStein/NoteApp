@@ -46,7 +46,7 @@
             app:counterMaxLength="@integer/max_content"
             app:hintEnabled="false">
 
-            <android.support.design.widget.TextInputEditText
+            <com.axel_stein.noteapp.views.LinedEditText
                 android:id="@+id/edit_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

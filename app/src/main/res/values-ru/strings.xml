@@ -68,6 +68,7 @@
     <string name="pref_backup_manager">Управление резервными копиями</string>
     <string name="pref_about_app">О приложении</string>
     <string name="pref_rate_app">Оценить приложение</string>
+    <string name="pref_show_note_editor_lines">Показывать линии в редакторе заметок</string>
 
     <!--Errors-->
     <string name="error">Ошибка</string>

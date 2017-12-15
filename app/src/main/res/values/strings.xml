@@ -68,6 +68,7 @@
     <string name="pref_backup_manager">Backup manager</string>
     <string name="pref_about_app">About app</string>
     <string name="pref_rate_app">Rate app</string>
+    <string name="pref_show_note_editor_lines">Show lines in the note editor</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>
