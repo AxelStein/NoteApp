@@ -72,7 +72,8 @@
             android:title="@string/pref_rate_app"/>
 
         <Preference
-            android:title="@string/pref_version"/>
+            android:key="app_version"
+            android:title="@string/app_name"/>
 
         <!--
         <Preference

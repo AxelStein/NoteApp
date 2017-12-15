@@ -163,6 +163,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             }
         });
 
+        Preference appVersion = findPreference("app_version");
+        appVersion.setSummary(String.format("%s %s", getString(R.string.app_version_title), getString(R.string.app_version_number)));
+
         /*
         findPreference("backup_manager").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
