@@ -44,30 +44,34 @@ public class QueryNotebookInteractor {
         return Single.fromCallable(new Callable<List<Notebook>>() {
             @Override
             public List<Notebook> call() throws Exception {
-                List<Notebook> notebooks = mNotebookRepository.query();
-                if (!isValid(notebooks)) {
-                    throw new IllegalStateException("result is not valid");
-                }
-
-                if (notebooks.size() == 0) {
-                    Notebook notebook = new Notebook();
-                    notebook.setTitle(mSettingsRepository.defaultNotebookTitle());
-                    notebook.setId(mNotebookRepository.insert(notebook));
-
-                    if (!isValid(notebook)) {
-                        throw new IllegalStateException("notebook is not valid");
-                    }
-
-                    notebooks.add(notebook);
-                }
-
-                for (Notebook notebook : notebooks) {
-                    notebook.setNoteCount(mNoteRepository.count(notebook));
-                }
-
-                return notebooks;
+                return executeSync();
             }
         }).subscribeOn(Schedulers.io());
+    }
+
+    public List<Notebook> executeSync() {
+        List<Notebook> notebooks = mNotebookRepository.query();
+        if (!isValid(notebooks)) {
+            throw new IllegalStateException("result is not valid");
+        }
+
+        if (notebooks.size() == 0) {
+            Notebook notebook = new Notebook();
+            notebook.setTitle(mSettingsRepository.defaultNotebookTitle());
+            notebook.setId(mNotebookRepository.insert(notebook));
+
+            if (!isValid(notebook)) {
+                throw new IllegalStateException("notebook is not valid");
+            }
+
+            notebooks.add(notebook);
+        }
+
+        for (Notebook notebook : notebooks) {
+            notebook.setNoteCount(mNoteRepository.count(notebook));
+        }
+
+        return notebooks;
     }
 
 }

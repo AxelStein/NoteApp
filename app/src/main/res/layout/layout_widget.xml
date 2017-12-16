@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:background="#fff5f5f5"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/text"
+            android:textColor="@color/text_color_primary_light"
+            android:drawablePadding="8dp"
+            android:text="Inbox"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/list_buttons"
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/list_buttons"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/button_search"
+                android:scaleType="center"
+                android:tint="@color/text_color_secondary_light"
+                android:src="@drawable/ic_search_white_24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingLeft="20dp"
+                android:paddingRight="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <ImageView
+                android:id="@+id/button_add_note"
+                android:scaleType="center"
+                android:tint="@color/text_color_secondary_light"
+                android:src="@drawable/ic_add_white_24dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <ListView
+        tools:listitem="@layout/item_widget_note"
+        android:id="@+id/list_view"
+        android:scrollbars="vertical"
+        android:scrollbarThumbVertical="@drawable/scrollbar_thumb_vertical"
+        android:divider="@drawable/widget_divider"
+        android:dividerHeight="1px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

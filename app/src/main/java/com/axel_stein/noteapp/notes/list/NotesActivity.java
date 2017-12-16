@@ -1,5 +1,8 @@
 package com.axel_stein.noteapp.notes.list;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -14,6 +17,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -43,6 +47,7 @@ import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.widgets.WidgetProvider;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
@@ -554,6 +559,26 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
             mDrawerHelper.update(e.saveSelection(), e.click());
             supportInvalidateOptionsMenu();
         }
+        updateWidget();
+    }
+
+    @Subscribe
+    public void onUpdate(EventBusHelper.UpdateNoteList e) {
+        updateWidget();
+    }
+
+    private void updateWidget() {
+        Log.d("TAG", "updateWidget");
+        Intent updateIntent = new Intent();
+        updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+        int[] ids = widgetManager.getAppWidgetIds(new ComponentName(this, WidgetProvider.class));
+
+        widgetManager.notifyAppWidgetViewDataChanged(ids, android.R.id.list);
+
+        updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(updateIntent);
     }
 
     @Subscribe

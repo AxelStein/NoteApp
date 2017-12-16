@@ -46,6 +46,19 @@ public class QueryNoteInteractor {
         mNoteLabelPairRepository = requireNonNull(helperRepository, "helperRepository is null");
     }
 
+    public List<Note> executeSync(@NonNull final Notebook notebook) {
+        final String key = "notebook_" + notebook.getId();
+        if (hasKey(key)) {
+            return get(key);
+        }
+        if (!NotebookValidator.isValid(notebook)) {
+            throw new IllegalArgumentException("notebook is not valid");
+        }
+        List<Note> notes = orderImpl(mNoteRepository.query(notebook, false));
+        put(key, notes);
+        return notes;
+    }
+
     /**
      * @return all notes, including trash
      */
