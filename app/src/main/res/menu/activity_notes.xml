@@ -4,24 +4,24 @@
       tools:context=".android.activities.MainActivity">
 
     <item
+        android:id="@+id/menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="1"
+        android:title="@string/action_search"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/menu_add_note"
         android:icon="@drawable/ic_add_white_24dp"
-        android:orderInCategory="101"
+        android:orderInCategory="2"
         android:title="@string/action_add_note"
         android:visible="false"
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_search"
-        android:icon="@drawable/ic_search_white_24dp"
-        android:orderInCategory="100"
-        android:title="@string/action_search"
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/menu_sort"
         android:icon="@drawable/ic_sort_white_24dp"
-        android:orderInCategory="102"
+        android:orderInCategory="3"
         android:title="@string/action_sort_by"
         app:showAsAction="never">
 
@@ -64,8 +64,8 @@
 
     <group
         android:id="@+id/menu_group_notebook"
-        android:orderInCategory="103"
-        android:visible="true">
+        android:orderInCategory="4"
+        android:visible="false">
 
         <item
             android:id="@+id/menu_rename_notebook"
@@ -79,7 +79,7 @@
 
     <group
         android:id="@+id/menu_group_label"
-        android:orderInCategory="104"
+        android:orderInCategory="5"
         android:visible="false">
 
         <item

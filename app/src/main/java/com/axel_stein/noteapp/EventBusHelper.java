@@ -74,6 +74,13 @@ public class EventBusHelper {
         EventBus.getDefault().postSticky(o);
     }
 
+    public static void updateAddNoteFAB() {
+        post(new UpdateAddNoteFAB());
+    }
+
+    public static class UpdateAddNoteFAB {
+    }
+
     public static class Recreate {
     }
 

@@ -51,6 +51,7 @@
     <string name="action_add_backup">Добавить резервную копию</string>
 
     <!--Pref-->
+    <string name="pref_show_add_note_fab">Показывать FAB</string>
     <string name="pref_export">Экспорт в файл</string>
     <string name="pref_import">Импорт из файла</string>
     <string name="pref_font_size">Размер шрифта</string>
