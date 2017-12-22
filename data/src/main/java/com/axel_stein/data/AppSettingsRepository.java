@@ -15,6 +15,7 @@ public class AppSettingsRepository implements SettingsRepository {
     private static final String PREF_PASSWORD = "PREF_PASSWORD";
     private static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
     private static final String PREF_SHOW_NOTE_EDITOR_LINES = "PREF_SHOW_NOTE_EDITOR_LINES";
+    private static final String PREF_SHOW_ADD_NOTE_FAB = "PREF_SHOW_ADD_NOTE_FAB";
 
     private SharedPreferences mPreferences;
     private String mDefaultNotebookTitle;
@@ -39,6 +40,10 @@ public class AppSettingsRepository implements SettingsRepository {
     @Override
     public String defaultNotebookTitle() {
         return mDefaultNotebookTitle;
+    }
+
+    public boolean showAddNoteFAB() {
+        return mPreferences.getBoolean(PREF_SHOW_ADD_NOTE_FAB, true);
     }
 
     public boolean showNoteEditorLines() {

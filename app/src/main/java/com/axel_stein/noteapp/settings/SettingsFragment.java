@@ -61,6 +61,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.settings);
 
+        findPreference("PREF_SHOW_ADD_NOTE_FAB").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                EventBusHelper.updateAddNoteFAB();
+                return false;
+            }
+        });
+
         /*
         findPreference("show_fab").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

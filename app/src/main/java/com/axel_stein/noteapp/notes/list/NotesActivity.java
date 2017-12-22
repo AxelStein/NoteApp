@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -102,7 +101,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
     @Nullable
     private NotesFragment mFragment;
 
-    private boolean mShowFAB;
+    private boolean mShowAddNoteFAB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +112,8 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         ButterKnife.bind(this);
         EventBusHelper.subscribe(this);
 
-        mShowFAB = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_fab", true);
-        ViewUtil.show(mShowFAB, mAddNoteFAB);
+        mShowAddNoteFAB = mAppSettings.showAddNoteFAB();
+        ViewUtil.show(mShowAddNoteFAB, mAddNoteFAB);
 
         setSupportActionBar(mToolbar);
         mActionBar = getSupportActionBar();
@@ -289,7 +288,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         mMenu = menu;
 
         MenuUtil.tintMenuIconsAttr(this, menu, R.attr.menuItemTintColor);
-        MenuUtil.show(menu, !mShowFAB, R.id.menu_add_note);
+        MenuUtil.show(menu, !mShowAddNoteFAB, R.id.menu_add_note);
 
         MenuUtil.show(mMenu, mTag != null, R.id.menu_sort);
         MenuUtil.showGroup(mMenu,R.id.menu_group_notebook, false);
@@ -544,6 +543,15 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
     }
 
     @Subscribe
+    public void onUpdateAddNoteFAB(EventBusHelper.UpdateAddNoteFAB e) {
+        if (mAppSettings != null) {
+            mShowAddNoteFAB = mAppSettings.showAddNoteFAB();
+            ViewUtil.show(mShowAddNoteFAB, mAddNoteFAB);
+            MenuUtil.show(mMenu, !mShowAddNoteFAB, R.id.menu_add_note);
+        }
+    }
+
+    @Subscribe
     public void onRecreate(EventBusHelper.Recreate e) {
         recreate();
     }
@@ -605,7 +613,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
     @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        if (mShowFAB) {
+        if (mShowAddNoteFAB) {
             ViewUtil.show(false, mAddNoteFAB);
         }
         lockDrawer(true);
@@ -613,7 +621,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
 
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
-        if (mShowFAB) {
+        if (mShowAddNoteFAB) {
             ViewUtil.show(true, mAddNoteFAB);
         }
         lockDrawer(false);

@@ -11,6 +11,11 @@
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
+            android:key="PREF_SHOW_ADD_NOTE_FAB"
+            android:title="@string/pref_show_add_note_fab"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
             android:key="PREF_SHOW_NOTES_CONTENT"
             android:title="@string/pref_show_notes_content"/>
 
