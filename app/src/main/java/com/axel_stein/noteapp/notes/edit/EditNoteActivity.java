@@ -142,6 +142,8 @@ public class EditNoteActivity extends BaseActivity {
                             mEditNoteFragment.setPresenter(mPresenter);
 
                             setFragment(mEditNoteFragment, "fragment");
+
+                            handleIntent();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -150,6 +152,35 @@ public class EditNoteActivity extends BaseActivity {
                             EventBusHelper.showMessage(R.string.error);
                         }
                     });
+        }
+    }
+
+    private void handleIntent() {
+        Intent intent = getIntent();
+        if (intent == null) {
+            return;
+        }
+
+        String action = intent.getAction();
+        if (action == null) {
+            return;
+        }
+        String type = intent.getType();
+        if (type == null) {
+            return;
+        }
+        if (mPresenter == null) {
+            return;
+        }
+
+        if (Intent.ACTION_SEND.equals(action)) {
+            if ("text/plain".equals(type)) {
+                String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
+                mPresenter.setTitle(title);
+
+                String content = intent.getStringExtra(Intent.EXTRA_TEXT);
+                mPresenter.setContent(content);
+            }
         }
     }
 
