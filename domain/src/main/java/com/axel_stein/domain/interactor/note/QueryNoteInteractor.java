@@ -303,9 +303,14 @@ public class QueryNoteInteractor {
                 }
             }
 
-            if (isEmpty(note.getTitle())) {
+            String title = note.getTitle();
+            if (isEmpty(title)) {
                 note.setTitle(content);
                 note.setContent(null);
+            } else {
+                title = title.replace('\n', ' ');
+                title = title.replaceAll(" [ ]+", " ");
+                note.setTitle(title);
             }
         }
 
