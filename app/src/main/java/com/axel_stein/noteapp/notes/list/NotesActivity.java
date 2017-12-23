@@ -122,6 +122,7 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         Fragment fragment = fm.findFragmentByTag("fragment");
         if (fragment == null) {
             mFragment = new NotesFragment();
+            mFragment.showBottomPadding(mShowAddNoteFAB);
             setFragment(mFragment, "fragment");
         } else {
             mFragment = (NotesFragment) fragment;
@@ -546,8 +547,13 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
     public void onUpdateAddNoteFAB(EventBusHelper.UpdateAddNoteFAB e) {
         if (mAppSettings != null) {
             mShowAddNoteFAB = mAppSettings.showAddNoteFAB();
+
             ViewUtil.show(mShowAddNoteFAB, mAddNoteFAB);
             MenuUtil.show(mMenu, !mShowAddNoteFAB, R.id.menu_add_note);
+
+            if (mFragment != null) {
+                mFragment.showBottomPadding(mShowAddNoteFAB);
+            }
         }
     }
 

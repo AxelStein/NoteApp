@@ -1,6 +1,7 @@
 package com.axel_stein.noteapp.notes.list;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -66,6 +67,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     private boolean mViewCreated;
 
+    private boolean mShowBottomPadding = true;
+
     private NoteItemListener mItemListener = new NoteItemListener() {
         @Override
         public void onNoteClick(int pos, Note note) {
@@ -105,6 +108,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        updateBottomPadding();
 
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         mRecyclerView.addItemDecoration(divider);
@@ -118,6 +122,25 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         }
 
         return root;
+    }
+
+    public void showBottomPadding(boolean show) {
+        mShowBottomPadding = show;
+        updateBottomPadding();
+    }
+
+    private void updateBottomPadding() {
+        if (mRecyclerView == null) {
+            return;
+        }
+
+        Resources res = getResources();
+        if (res == null) {
+            return;
+        }
+
+        int p = res.getDimensionPixelOffset(R.dimen.note_list_bottom_padding);
+        mRecyclerView.setPadding(0, 0, 0, mShowBottomPadding ? p : 0);
     }
 
     @Override
