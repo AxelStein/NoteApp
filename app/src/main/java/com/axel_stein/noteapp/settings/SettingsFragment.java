@@ -7,11 +7,13 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
+import android.view.View;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
@@ -138,7 +140,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
                             @Override
                             public void accept(Throwable throwable) throws Exception {
                                 throwable.printStackTrace();
-                                EventBusHelper.showMessage(R.string.error);
+                                showMessage(R.string.error);
                             }
                         });
                 return true;
@@ -214,7 +216,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             startActivity(intent);
         } else {
             Log.e("TAG", "Export: no activity found");
-            EventBusHelper.showMessage(R.string.error_share);
+            showMessage(R.string.error_share);
         }
     }
 
@@ -231,40 +233,48 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             Uri uri = data.getData();
             if (uri == null) {
                 Log.e("TAG", "data.getData() = null");
-                EventBusHelper.showMessage(R.string.error);
+                showMessage(R.string.error);
                 return;
             }
             String src = FileUtil.convertStreamToString(cr.openInputStream(uri));
 
-            final LoadingDialog dialog = LoadingDialog.from(R.string.title_import, R.string.msg_wait);
-
             mImportBackupInteractor.execute(src)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new CompletableObserver() {
+                        private LoadingDialog mDialog;
+
                         @Override
                         public void onSubscribe(@NonNull Disposable d) {
-                            dialog.show(getFragmentManager());
+                            mDialog = LoadingDialog.from(R.string.title_import, R.string.msg_wait);
+                            mDialog.show(getFragmentManager());
                         }
 
                         @Override
                         public void onComplete() {
-                            dialog.dismiss();
+                            dismissDialog();
 
-                            EventBusHelper.showMessage(R.string.msg_import_success);
+                            showMessage(R.string.msg_import_success);
                             EventBusHelper.updateNoteList(false, true);
                         }
 
                         @Override
                         public void onError(@NonNull Throwable e) {
-                            dialog.dismiss();
+                            dismissDialog();
 
                             e.printStackTrace();
-                            EventBusHelper.showMessage(R.string.error);
+                            showMessage(R.string.error);
+                        }
+
+                        private void dismissDialog() {
+                            if (mDialog != null) {
+                                mDialog.dismiss();
+                                mDialog = null;
+                            }
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
-            EventBusHelper.showMessage(R.string.error);
+            showMessage(R.string.error);
         }
     }
 
@@ -274,13 +284,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
         if (reset) {
             if (mSettingsRepository.checkPassword(password)) {
                 mSettingsRepository.setPassword(null);
-                EventBusHelper.showMessage(R.string.msg_security_disabled);
+                showMessage(R.string.msg_security_disabled);
             } else {
-                EventBusHelper.showMessage(R.string.error_security_wrong_password);
+                showMessage(R.string.error_security_wrong_password);
             }
         } else {
             mSettingsRepository.setPassword(password);
-            EventBusHelper.showMessage(R.string.msg_security_enabled);
+            showMessage(R.string.msg_security_enabled);
+        }
+    }
+
+    private void showMessage(int msgRes) {
+        View v = getView();
+        if (v != null) {
+            Snackbar.make(v, msgRes, Snackbar.LENGTH_SHORT).show();
         }
     }
 
