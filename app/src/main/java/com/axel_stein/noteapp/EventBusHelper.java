@@ -19,9 +19,7 @@ public class EventBusHelper {
     }
 
     public static void updateNoteList() {
-        NoteCache.invalidate();
-        post(new UpdateNoteList());
-        post(new UpdateDrawer());
+        updateNoteList(true, false);
     }
 
     public static void updateNoteList(boolean saveSelection, boolean click) {
@@ -70,12 +68,12 @@ public class EventBusHelper {
         post(new Recreate());
     }
 
-    private static void post(@NonNull Object o) {
-        EventBus.getDefault().postSticky(o);
-    }
-
     public static void updateAddNoteFAB() {
         post(new UpdateAddNoteFAB());
+    }
+
+    private static void post(@NonNull Object o) {
+        EventBus.getDefault().postSticky(o);
     }
 
     public static class UpdateAddNoteFAB {
@@ -88,11 +86,7 @@ public class EventBusHelper {
         private boolean saveSelection;
         private boolean click;
 
-        public UpdateDrawer() {
-            saveSelection = true;
-        }
-
-        public UpdateDrawer(boolean saveSelection, boolean click) {
+        UpdateDrawer(boolean saveSelection, boolean click) {
             this.saveSelection = saveSelection;
             this.click = click;
         }
@@ -112,7 +106,7 @@ public class EventBusHelper {
     public static class AddNotebook {
         private Notebook notebook;
 
-        public AddNotebook(Notebook notebook) {
+        AddNotebook(Notebook notebook) {
             this.notebook = notebook;
         }
 
@@ -124,7 +118,7 @@ public class EventBusHelper {
     public static class RenameNotebook {
         private Notebook notebook;
 
-        public RenameNotebook(Notebook notebook) {
+        RenameNotebook(Notebook notebook) {
             this.notebook = notebook;
         }
 
@@ -136,7 +130,7 @@ public class EventBusHelper {
     public static class DeleteNotebook {
         private Notebook notebook;
 
-        public DeleteNotebook(Notebook notebook) {
+        DeleteNotebook(Notebook notebook) {
             this.notebook = notebook;
         }
 
@@ -148,7 +142,7 @@ public class EventBusHelper {
     public static class AddLabel {
         private Label label;
 
-        public AddLabel(Label label) {
+        AddLabel(Label label) {
             this.label = label;
         }
 
@@ -160,7 +154,7 @@ public class EventBusHelper {
     public static class RenameLabel {
         private Label label;
 
-        public RenameLabel(Label label) {
+        RenameLabel(Label label) {
             this.label = label;
         }
 
@@ -172,7 +166,7 @@ public class EventBusHelper {
     public static class DeleteLabel {
         private Label label;
 
-        public DeleteLabel(Label label) {
+        DeleteLabel(Label label) {
             this.label = label;
         }
 
@@ -185,26 +179,19 @@ public class EventBusHelper {
         private String msg;
         private int msgRes;
         private Runnable action;
-        private String actionName;
-        private int actionNameRes;
+        private int actionName;
 
-        public Message(String msg) {
+        Message(String msg) {
             this.msg = msg;
         }
 
-        public Message(int msgRes) {
+        Message(int msgRes) {
             this.msgRes = msgRes;
         }
 
-        public Message(String msg, String actionName, Runnable action) {
-            this.msg = msg;
+        Message(int msgRes, int actionName, Runnable action) {
+            this.msgRes = msgRes;
             this.actionName = actionName;
-            this.action = action;
-        }
-
-        public Message(int msgRes, int actionNameRes, Runnable action) {
-            this.msgRes = msgRes;
-            this.actionNameRes = actionNameRes;
             this.action = action;
         }
 
@@ -228,16 +215,12 @@ public class EventBusHelper {
             return action != null;
         }
 
-        public String getActionName() {
+        public int getActionName() {
             return actionName;
         }
 
-        public int getActionNameRes() {
-            return actionNameRes;
-        }
-
         public boolean hasActionNameRes() {
-            return actionNameRes > 0;
+            return actionName > 0;
         }
 
     }

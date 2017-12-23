@@ -521,9 +521,9 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
                         msg = getString(e.getMsgRes());
                     }
 
-                    String actionName = e.getActionName();
+                    String actionName = null;
                     if (e.hasActionNameRes()) {
-                        actionName = getString(e.getActionNameRes());
+                        actionName = getString(e.getActionName());
                     }
 
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_notes), msg, Snackbar.LENGTH_SHORT);

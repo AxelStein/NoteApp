@@ -217,9 +217,9 @@ public class SearchActivity extends BaseActivity {
                         msg = getString(e.getMsgRes());
                     }
 
-                    String actionName = e.getActionName();
+                    String actionName = null;
                     if (e.hasActionNameRes()) {
-                        actionName = getString(e.getActionNameRes());
+                        actionName = getString(e.getActionName());
                     }
 
                     Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_search), msg, Snackbar.LENGTH_SHORT);
