@@ -6,7 +6,6 @@
     app:layout_optimizationLevel="all"
     android:clickable="true"
     android:focusable="true"
-    android:background="@drawable/item_notebook_bg"
     android:layout_width="match_parent"
     android:layout_height="48dp">
 

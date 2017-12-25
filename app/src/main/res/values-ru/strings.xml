@@ -51,7 +51,7 @@
     <string name="action_add_backup">Добавить резервную копию</string>
     <string name="action_manage_notebooks">Управление блокнотами</string>
     <string name="action_select">Выделить</string>
-    <string name="action_select_notebooks">Выберите блокноты</string>
+    <string name="action_select_notebooks">Выделите блокноты</string>
     <string name="action_sort_custom">Вручную</string>
 
     <!--Pref-->

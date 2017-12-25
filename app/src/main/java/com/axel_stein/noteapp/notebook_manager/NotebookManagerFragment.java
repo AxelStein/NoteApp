@@ -1,7 +1,9 @@
 package com.axel_stein.noteapp.notebook_manager;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerContract.Presenter;
+import com.axel_stein.noteapp.utils.ColorUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 
@@ -105,7 +108,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_notebook_manager, container, false);
 
-        mAdapter = new Adapter(mPresenter, mOrderInteractor);
+        mAdapter = new Adapter(getContext(), mPresenter, mOrderInteractor);
         mAdapter.setItemListener(mListener);
         mAdapter.attachRecyclerView(view);
 
@@ -216,6 +219,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
             } else {
                 mActionMode.setTitle(String.valueOf(checkCount));
             }
+            MenuUtil.enable(mActionMode.getMenu(), checkCount > 0, R.id.menu_delete);
         }
         if (mAdapter != null) {
             if (pos < 0) {
@@ -286,7 +290,10 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
 
         private UpdateNotebookOrderInteractor mOrderInteractor;
 
-        Adapter(Presenter presenter, UpdateNotebookOrderInteractor orderInteractor) {
+        private int mSelectedBackgroundColor;
+
+        Adapter(@NonNull Context context, Presenter presenter, UpdateNotebookOrderInteractor orderInteractor) {
+            mSelectedBackgroundColor = ColorUtil.getColorAttr(context, R.attr.selectedNotebookBackgroundColor);
             mOrderInteractor = orderInteractor;
             mPresenter = presenter;
             mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(UP | DOWN, 0) {
@@ -378,7 +385,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
             setText(holder.mTextNotebook, notebook.getTitle());
             setText(holder.mTextBadge, String.valueOf(notebook.getNoteCount()));
 
-            holder.itemView.setSelected(mPresenter.isChecked(notebook));
+            holder.itemView.setBackgroundColor(mPresenter.isChecked(notebook) ? mSelectedBackgroundColor : 0);
             ViewUtil.enable(!mPresenter.checkModeEnabled(), holder.mDragHandler, holder.mMenu);
         }
 
