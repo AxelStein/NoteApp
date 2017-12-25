@@ -2,8 +2,10 @@ package com.axel_stein.noteapp.notes.list.presenters;
 
 import android.support.v4.util.LongSparseArray;
 
+import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
+import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookInteractor;
 import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
@@ -43,6 +45,9 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     TrashNoteInteractor mTrashNoteInteractor;
 
     @Inject
+    DeleteNoteInteractor mDeleteNoteInteractor;
+
+    @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
 
     @Inject
@@ -56,6 +61,9 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Inject
     RestoreNoteInteractor mRestoreNoteInteractor;
+
+    @Inject
+    AppSettingsRepository mSettings;
 
     @Nullable
     private List<Note> mNotes;
@@ -218,6 +226,14 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 moveToTrash(getCheckedNotes());
                 break;
 
+            case R.id.menu_delete:
+                delete(getCheckedNotes());
+                break;
+
+            case R.id.menu_restore:
+                restore(getCheckedNotes());
+                break;
+
             case R.id.menu_select_notebook:
                 mQueryNotebookInteractor.execute()
                         .observeOn(AndroidSchedulers.mainThread())
@@ -262,6 +278,42 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         }
     }
 
+    @Override
+    public boolean hasSwipeLeftAction() {
+        return mSettings.hasSwipeLeftAction();
+    }
+
+    @Override
+    public boolean hasSwipeRightAction() {
+        return mSettings.hasSwipeRightAction();
+    }
+
+    @Override
+    public void swipeLeft(Note note) {
+        handleSwipeAction(mSettings.getSwipeLeftAction(), note);
+    }
+
+    @Override
+    public void swipeRight(Note note) {
+        handleSwipeAction(mSettings.getSwipeRightAction(), note);
+    }
+
+    protected void handleSwipeAction(int action, Note note) {
+        switch (action) {
+            case AppSettingsRepository.SWIPE_ACTION_TRASH_RESTORE:
+                moveToTrash(note);
+                break;
+
+            case AppSettingsRepository.SWIPE_ACTION_DELETE:
+                delete(note);
+                break;
+        }
+    }
+
+    protected void moveToTrash(Note note) {
+        moveToTrash(makeList(note));
+    }
+
     protected void moveToTrash(final List<Note> notes) {
         if (notes == null) {
             return;
@@ -289,6 +341,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
+    }
+
+    protected void restore(Note note) {
+        restore(makeList(note));
     }
 
     protected void restore(final List<Note> notes) {
@@ -378,13 +434,24 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         return notes;
     }
 
-    @Override
-    public void confirmDelete() {
+    protected void delete(Note note) {
+        delete(makeList(note));
+    }
 
+    protected void delete(List<Note> notes) {
+        if (mView != null) {
+            mView.showConfirmDeleteDialog(notes);
+        }
     }
 
     public List<Note> getNotes() {
         return mNotes;
+    }
+
+    private List<Note> makeList(Note note) {
+        List<Note> list = new ArrayList<>();
+        list.add(note);
+        return list;
     }
 
 }

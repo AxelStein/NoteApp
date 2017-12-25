@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * This specifies the contract between the view and the presenter.
  */
-// FIXME: 13.10.2017
 public interface NotesContract {
 
     interface View {
@@ -45,6 +44,14 @@ public interface NotesContract {
 
         boolean onNoteLongClick(int pos, Note note);
 
+        boolean hasSwipeLeftAction();
+
+        boolean hasSwipeRightAction();
+
+        void swipeLeft(Note note);
+
+        void swipeRight(Note note);
+
         boolean isChecked(Note note);
 
         boolean hasChecked();
@@ -59,8 +66,6 @@ public interface NotesContract {
         void onLabelsChecked(List<Long> labels);
 
         void stopCheckMode();
-
-        void confirmDelete();
     }
 
 }
