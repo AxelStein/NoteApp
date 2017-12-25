@@ -69,11 +69,11 @@
 
         <item
             android:id="@+id/menu_rename_notebook"
-            android:title="@string/action_rename_notebook"/>
+            android:title="@string/action_rename"/>
 
         <item
             android:id="@+id/menu_delete_notebook"
-            android:title="@string/action_delete_notebook"/>
+            android:title="@string/action_delete"/>
 
     </group>
 
@@ -84,11 +84,11 @@
 
         <item
             android:id="@+id/menu_rename_label"
-            android:title="@string/action_rename_label"/>
+            android:title="@string/action_rename"/>
 
         <item
             android:id="@+id/menu_delete_label"
-            android:title="@string/action_delete_label"/>
+            android:title="@string/action_delete"/>
 
     </group>
 
