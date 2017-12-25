@@ -14,6 +14,11 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -26,11 +31,17 @@ public class DeleteNotebookDialog extends ConfirmDialog {
 
     @Inject
     DeleteNotebookInteractor mDeleteNotebookInteractor;
-    private Notebook mNotebook;
+    private List<Notebook> mList;
+    private Queue<Notebook> mQueue;
 
     public static void launch(AppCompatActivity activity, Notebook notebook) {
         checkNotNull(activity);
         launch(activity, activity.getSupportFragmentManager(), notebook);
+    }
+
+    public static void launch(AppCompatActivity activity, List<Notebook> notebooks) {
+        checkNotNull(activity);
+        launch(activity, activity.getSupportFragmentManager(), notebooks);
     }
 
     public static void launch(Context context, Fragment fragment, Notebook notebook) {
@@ -43,17 +54,36 @@ public class DeleteNotebookDialog extends ConfirmDialog {
 
     public static void launch(Context context, FragmentManager manager, Notebook notebook) {
         checkNotNull(manager);
-
         createDialog(context, notebook).show(manager, null);
+    }
+
+    public static void launch(Context context, FragmentManager manager, List<Notebook> notebooks) {
+        checkNotNull(manager);
+        createDialog(context, notebooks).show(manager, null);
     }
 
     private static DeleteNotebookDialog createDialog(Context context, Notebook notebook) {
         checkNotNull(context);
         checkNotNull(notebook);
 
+        List<Notebook> list = new ArrayList<>();
+        list.add(notebook);
+        return createDialog(context, list);
+    }
+
+    private static DeleteNotebookDialog createDialog(Context context, List<Notebook> notebooks) {
+        checkNotNull(context);
+        checkNotNull(notebooks);
+
         DeleteNotebookDialog dialog = new DeleteNotebookDialog();
-        dialog.mNotebook = notebook;
-        dialog.setTitle(context.getString(R.string.title_delete_notebook, notebook.getTitle()));
+        dialog.mList = notebooks;
+
+        if (notebooks.size() == 1) {
+            Notebook notebook = notebooks.get(0);
+            dialog.setTitle(context.getString(R.string.title_delete_notebook, notebook.getTitle()));
+        } else {
+            dialog.setTitle(R.string.title_delete_notebooks);
+        }
         dialog.setMessage(R.string.msg_delete_notebook);
         dialog.setPositiveButtonText(R.string.action_delete);
         dialog.setNegativeButtonText(R.string.action_cancel);
@@ -68,23 +98,38 @@ public class DeleteNotebookDialog extends ConfirmDialog {
 
     @Override
     protected void onConfirm() {
-        mDeleteNotebookInteractor.execute(mNotebook)
+        if (mList != null) {
+            mQueue = new LinkedBlockingQueue<>(mList);
+            deleteImpl(mQueue.poll());
+        }
+        dismiss();
+    }
+
+    private void deleteImpl(final Notebook notebook) {
+        if (notebook == null) {
+            return;
+        }
+        mDeleteNotebookInteractor.execute(notebook)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
-                        EventBusHelper.showMessage(R.string.msg_note_deleted);
-                        EventBusHelper.deleteNotebook(mNotebook);
-                        dismiss();
+                        Notebook next = mQueue.poll();
+                        if (next == null) {
+                            EventBusHelper.showMessage(R.string.msg_notebook_deleted);
+                            EventBusHelper.deleteNotebook(notebook);
+                        } else {
+                            deleteImpl(next);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-
                         EventBusHelper.showMessage(R.string.error);
-                        dismiss();
+                        deleteImpl(mQueue.poll());
                     }
                 });
     }
+
 }
