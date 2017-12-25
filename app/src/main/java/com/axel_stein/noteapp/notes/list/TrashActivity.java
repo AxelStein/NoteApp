@@ -174,7 +174,13 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
 
     @Override
     public void onConfirm(String tag) {
-        emptyTrash();
+        if (tag != null) {
+            switch (tag) {
+                case TAG_EMPTY_TRASH:
+                    emptyTrash();
+                    break;
+            }
+        }
     }
 
     @Override
