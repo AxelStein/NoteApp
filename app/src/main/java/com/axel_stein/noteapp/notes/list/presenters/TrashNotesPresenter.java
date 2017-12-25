@@ -8,6 +8,7 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,6 +41,13 @@ public class TrashNotesPresenter extends NotesPresenter {
     @Override
     public int getCheckModeMenu() {
         return R.menu.action_mode_notes_trash;
+    }
+
+    @Override
+    public void swipeLeft(Note note) {
+        List<Note> list = new ArrayList<>();
+        list.add(note);
+        restore(list);
     }
 
     @Override

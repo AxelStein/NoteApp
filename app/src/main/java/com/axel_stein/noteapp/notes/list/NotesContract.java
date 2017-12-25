@@ -45,6 +45,8 @@ public interface NotesContract {
 
         boolean onNoteLongClick(int pos, Note note);
 
+        void swipeLeft(Note note);
+
         boolean isChecked(Note note);
 
         boolean hasChecked();

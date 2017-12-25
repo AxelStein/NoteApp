@@ -12,6 +12,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.text.TextUtils.isEmpty;
 
 public class NotesFragment extends BaseFragment implements NotesContract.View,
@@ -114,6 +116,37 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         mRecyclerView.addItemDecoration(divider);
 
         updateEmptyView();
+
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getAdapterPosition();
+                if (mAdapter != null && mPresenter != null) {
+                    switch (direction) {
+                        case LEFT:
+                            Note note = mAdapter.getItem(pos);
+                            mPresenter.swipeLeft(note);
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return false;
+            }
+        });
+        helper.attachToRecyclerView(mRecyclerView);
 
         mViewCreated = true;
 

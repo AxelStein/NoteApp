@@ -262,6 +262,13 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         }
     }
 
+    @Override
+    public void swipeLeft(Note note) {
+        List<Note> list = new ArrayList<>();
+        list.add(note);
+        moveToTrash(list);
+    }
+
     protected void moveToTrash(final List<Note> notes) {
         if (notes == null) {
             return;
