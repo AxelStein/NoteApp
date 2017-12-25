@@ -49,6 +49,10 @@
     <string name="action_send">Send</string>
     <string name="action_import">Import</string>
     <string name="action_add_backup">Add backup</string>
+    <string name="action_manage_notebooks">Manage notebooks</string>
+    <string name="action_select">Select</string>
+    <string name="action_select_notebooks">Select notebooks</string>
+    <string name="action_sort_custom">Custom</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
@@ -114,6 +118,7 @@
     <string name="title_check_labels">Check labels</string>
     <string name="title_rename_notebook">Rename notebook</string>
     <string name="title_delete_notebook">Delete notebook \'%1$s\'?</string>
+    <string name="title_delete_notebooks">Delete notebooks?</string>
     <string name="title_add_notebook">Add notebook</string>
     <string name="title_delete_note">Delete note?</string>
     <string name="title_delete_notes">Delete notes?</string>
@@ -133,6 +138,7 @@
     <string name="msg_import_success">Import completed</string>
     <string name="msg_notebook_added">Notebook added</string>
     <string name="msg_notebook_renamed">Notebook renamed</string>
+    <string name="msg_notebook_deleted">Notebook deleted</string>
     <string name="msg_note_updated">Note updated</string>
     <string name="msg_notes_updated">Notes updated</string>
     <string name="msg_note_restored">Note restored</string>

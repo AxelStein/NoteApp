@@ -49,6 +49,10 @@
     <string name="action_send">Отправить</string>
     <string name="action_import">Импортировать</string>
     <string name="action_add_backup">Добавить резервную копию</string>
+    <string name="action_manage_notebooks">Управление блокнотами</string>
+    <string name="action_select">Выделить</string>
+    <string name="action_select_notebooks">Выберите блокноты</string>
+    <string name="action_sort_custom">Вручную</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>
@@ -107,6 +111,7 @@
     <string name="title_check_labels">Выберите метки</string>
     <string name="title_rename_notebook">Переименовать блокнот</string>
     <string name="title_delete_notebook">Удалить блокнот \'%1$s\'?</string>
+    <string name="title_delete_notebooks">Удалить блокноты?</string>
     <string name="title_add_notebook">Добавить блокнот</string>
     <string name="title_delete_note">Удалить заметку?</string>
     <string name="title_delete_notes">Удалить заметки?</string>
@@ -126,6 +131,7 @@
     <string name="msg_import_success">Импорт завершен</string>
     <string name="msg_notebook_added">Блокнот добавлен</string>
     <string name="msg_notebook_renamed">Блокнот переименован</string>
+    <string name="msg_notebook_deleted">Блокнот удален</string>
     <string name="msg_note_updated">Заметка обновлена</string>
     <string name="msg_notes_updated">Заметки обновлены</string>
     <string name="msg_note_restored">Заметка восстановлена</string>

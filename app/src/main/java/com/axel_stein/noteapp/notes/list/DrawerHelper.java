@@ -154,6 +154,7 @@ public class DrawerHelper {
                         }
 
                         mItems.add(createAddItem(R.id.menu_add_notebook, R.string.action_add_notebook));
+                        mItems.add(createManageItem(R.id.menu_manage_notebooks, R.string.action_manage_notebooks));
 
                         return mQueryLabelInteractor.execute();
                     }
@@ -230,6 +231,15 @@ public class DrawerHelper {
         return new PrimaryDrawerItem()
                 .withIdentifier(id)
                 .withIcon(R.drawable.ic_add_white_24dp)
+                .withIconTintingEnabled(true)
+                .withSelectable(false)
+                .withName(text);
+    }
+
+    private PrimaryDrawerItem createManageItem(long id, int text) {
+        return new PrimaryDrawerItem()
+                .withIdentifier(id)
+                .withIcon(R.drawable.ic_low_priority_white_24dp)
                 .withIconTintingEnabled(true)
                 .withSelectable(false)
                 .withName(text);
