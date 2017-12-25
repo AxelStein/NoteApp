@@ -18,6 +18,12 @@ public class AppSettingsRepository implements SettingsRepository {
     private static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
     private static final String PREF_SHOW_NOTE_EDITOR_LINES = "PREF_SHOW_NOTE_EDITOR_LINES";
     private static final String PREF_SHOW_ADD_NOTE_FAB = "PREF_SHOW_ADD_NOTE_FAB";
+    private static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
+    private static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
+
+    public static final int SWIPE_ACTION_NONE = 0;
+    public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
+    public static final int SWIPE_ACTION_DELETE = 2;
 
     private SharedPreferences mPreferences;
     private String mDefaultNotebookTitle;
@@ -135,6 +141,37 @@ public class AppSettingsRepository implements SettingsRepository {
     @Nullable
     private String getPassword() {
         return mPreferences.getString(PREF_PASSWORD, null);
+    }
+
+    public boolean hasSwipeLeftAction() {
+        String s = mPreferences.getString(PREF_SWIPE_LEFT_ACTION, "swipe_action_none");
+        return !s.contentEquals("swipe_action_none");
+    }
+
+    public boolean hasSwipeRightAction() {
+        String s = mPreferences.getString(PREF_SWIPE_RIGHT_ACTION, "swipe_action_none");
+        return !s.contentEquals("swipe_action_none");
+    }
+
+    public int getSwipeLeftAction() {
+        return wrapSwipeAction(mPreferences.getString(PREF_SWIPE_LEFT_ACTION, "swipe_action_none"));
+    }
+
+    public int getSwipeRightAction() {
+        return wrapSwipeAction(mPreferences.getString(PREF_SWIPE_RIGHT_ACTION, "swipe_action_none"));
+    }
+
+    private int wrapSwipeAction(String s) {
+        if (s != null) {
+            switch (s) {
+                case "swipe_action_trash_restore":
+                    return SWIPE_ACTION_TRASH_RESTORE;
+
+                case "swipe_action_delete":
+                    return SWIPE_ACTION_DELETE;
+            }
+        }
+        return SWIPE_ACTION_NONE;
     }
 
 }

@@ -32,6 +32,22 @@
             android:entryValues="@array/font_sizes_values"
             android:title="@string/pref_font_size"/>
 
+        <android.support.v7.preference.ListPreference
+            android:key="PREF_SWIPE_LEFT_ACTION"
+            android:entries="@array/swipe_action_entries"
+            android:defaultValue="swipe_action_none"
+            android:summary="%s"
+            android:entryValues="@array/swipe_values"
+            android:title="@string/pref_swipe_left"/>
+
+        <android.support.v7.preference.ListPreference
+            android:key="PREF_SWIPE_RIGHT_ACTION"
+            android:entries="@array/swipe_action_entries"
+            android:defaultValue="swipe_action_none"
+            android:summary="%s"
+            android:entryValues="@array/swipe_values"
+            android:title="@string/pref_swipe_right"/>
+
     </android.support.v7.preference.PreferenceCategory>
 
     <android.support.v7.preference.PreferenceCategory

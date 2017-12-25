@@ -27,8 +27,8 @@ import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseFragment;
-import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
+import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesContract.Presenter;
@@ -41,14 +41,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
+import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 import static android.text.TextUtils.isEmpty;
 
 public class NotesFragment extends BaseFragment implements NotesContract.View,
         SelectNotebookDialog.OnNotebookSelectedListener,
-        CheckLabelsDialog.OnLabelCheckedListener,
-        ConfirmDialog.OnConfirmListener {
-
-    private static final String TAG_DELETE_NOTE = "TAG_DELETE_NOTE";
+        CheckLabelsDialog.OnLabelCheckedListener {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -117,7 +115,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
         updateEmptyView();
 
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, LEFT) {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -125,7 +123,12 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                return super.getSwipeDirs(recyclerView, viewHolder);
+                if (mPresenter != null) {
+                    int left = mPresenter.hasSwipeLeftAction() ? LEFT : 0;
+                    int right = mPresenter.hasSwipeRightAction() ? RIGHT : 0;
+                    return left | right;
+                }
+                return 0;
             }
 
             @Override
@@ -134,8 +137,11 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
                 if (mAdapter != null && mPresenter != null) {
                     switch (direction) {
                         case LEFT:
-                            Note note = mAdapter.getItem(pos);
-                            mPresenter.swipeLeft(note);
+                            mPresenter.swipeLeft(mAdapter.getItem(pos));
+                            break;
+
+                        case RIGHT:
+                            mPresenter.swipeRight(mAdapter.getItem(pos));
                             break;
                     }
                 }
@@ -294,14 +300,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     @Override
     public void showConfirmDeleteDialog(List<Note> notes) {
-        boolean one = notes.size() > 0 && notes.size() == 1;
-
-        ConfirmDialog dialog = new ConfirmDialog();
-        dialog.setTitle(one ? R.string.title_delete_note : R.string.title_delete_notes);
-        dialog.setMessage(one ? R.string.msg_delete_note : R.string.msg_delete_notes);
-        dialog.setPositiveButtonText(R.string.action_delete);
-        dialog.setNegativeButtonText(R.string.action_cancel);
-        dialog.show(this, TAG_DELETE_NOTE);
+        DeleteNoteDialog.launch(getActivity(), getFragmentManager(), notes);
     }
 
     private void showSnackbarMessage(String msg) {
@@ -322,22 +321,6 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         if (mPresenter != null) {
             mPresenter.onLabelsChecked(labels);
         }
-    }
-
-    @Override
-    public void onConfirm(String tag) {
-        if (tag != null && mPresenter != null) {
-            switch (tag) {
-                case TAG_DELETE_NOTE:
-                    mPresenter.confirmDelete();
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onCancel(String tag) {
-
     }
 
     @Nullable
