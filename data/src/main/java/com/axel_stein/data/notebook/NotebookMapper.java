@@ -14,6 +14,7 @@ class NotebookMapper {
         Notebook notebook = new Notebook();
         notebook.setId(entity.getId());
         notebook.setTitle(entity.getTitle());
+        notebook.setOrder(entity.getOrder());
         return notebook;
     }
 
@@ -24,6 +25,7 @@ class NotebookMapper {
         NotebookEntity entity = new NotebookEntity();
         entity.setId(notebook.getId());
         entity.setTitle(notebook.getTitle());
+        entity.setOrder(notebook.getOrder());
         return entity;
     }
 

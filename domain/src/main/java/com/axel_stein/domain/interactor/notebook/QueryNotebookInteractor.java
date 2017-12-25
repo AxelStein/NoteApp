@@ -3,10 +3,13 @@ package com.axel_stein.domain.interactor.notebook;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.model.NotebookOrder;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -64,6 +67,21 @@ public class QueryNotebookInteractor {
                 for (Notebook notebook : notebooks) {
                     notebook.setNoteCount(mNoteRepository.count(notebook));
                 }
+
+                Collections.sort(notebooks, new Comparator<Notebook>() {
+                    @Override
+                    public int compare(Notebook n1, Notebook n2) {
+                        NotebookOrder order = mSettingsRepository.getNotebookOrder();
+                        switch (order) {
+                            case TITLE:
+                                return n1.getTitle().compareTo(n2.getTitle());
+
+                            case CUSTOM:
+                                return n1.getOrder() - n2.getOrder();
+                        }
+                        return 0;
+                    }
+                });
 
                 return notebooks;
             }

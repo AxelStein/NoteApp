@@ -1,6 +1,7 @@
 package com.axel_stein.domain.repository;
 
 import com.axel_stein.domain.model.NoteOrder;
+import com.axel_stein.domain.model.NotebookOrder;
 
 public interface SettingsRepository {
 
@@ -10,6 +11,10 @@ public interface SettingsRepository {
     NoteOrder getNotesOrder();
 
     void setNotesOrder(NoteOrder order);
+
+    NotebookOrder getNotebookOrder();
+
+    void setNotebookOrder(NotebookOrder order);
 
     String defaultNotebookTitle();
 

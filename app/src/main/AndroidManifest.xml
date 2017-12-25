@@ -58,6 +58,10 @@
             android:label="@string/pref_backup_manager"
             android:name=".backup.BackupActivity"/>
 
+        <activity
+            android:label="@string/action_manage_notebooks"
+            android:name=".notebook_manager.NotebookManagerActivity"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.axel_stein.noteapp.fileprovider"

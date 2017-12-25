@@ -2,4 +2,5 @@
 <resources>
     <item name="menu_add_notebook" type="id"/>
     <item name="menu_add_label" type="id"/>
+    <item name="menu_manage_notebooks" type="id"/>
 </resources>

@@ -17,6 +17,9 @@
     <color name="search_selector_color_dark">#66f9a825</color>
     <color name="search_selector_current_color_dark">#66e53935</color>
 
+    <color name="selected_notebook_background_color_light">#11000000</color>
+    <color name="selected_notebook_background_color_dark">#21ffffff</color>
+
     <color name="grey_color_background">#323e45</color>
     <color name="grey_color_primary">#3f525b</color>
     <color name="grey_color_primary_dark">#37474F</color>

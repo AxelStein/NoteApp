@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.notes.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
+import com.axel_stein.noteapp.notebook_manager.NotebookManagerActivity;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotebookNotesPresenter;
@@ -242,6 +244,10 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
 
             case R.id.menu_add_label:
                 addLabelDialog();
+                return true;
+
+            case R.id.menu_manage_notebooks:
+                startActivity(new Intent(this, NotebookManagerActivity.class));
                 return true;
         }
 

@@ -13,6 +13,9 @@ public class NotebookEntity {
     @ColumnInfo
     private String title;
 
+    @ColumnInfo
+    private int order;
+
     public long getId() {
         return id;
     }
@@ -27,6 +30,14 @@ public class NotebookEntity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
 }

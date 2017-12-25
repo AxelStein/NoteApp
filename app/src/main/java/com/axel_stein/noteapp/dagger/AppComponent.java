@@ -9,6 +9,8 @@ import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
+import com.axel_stein.noteapp.notebook_manager.NotebookManagerFragment;
+import com.axel_stein.noteapp.notebook_manager.NotebookManagerPresenter;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.edit.EditNoteFragment;
 import com.axel_stein.noteapp.notes.edit.EditNotePresenter;
@@ -79,5 +81,9 @@ public interface AppComponent {
     void inject(BackupPresenter backupPresenter);
 
     void inject(LinedEditText linedEditText);
+
+    void inject(NotebookManagerPresenter presenter);
+
+    void inject(NotebookManagerFragment notebookManagerFragment);
 
 }

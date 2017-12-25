@@ -4,6 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
+import android.support.annotation.NonNull;
 
 import com.axel_stein.data.label.LabelDao;
 import com.axel_stein.data.label.LabelEntity;
@@ -14,13 +15,13 @@ import com.axel_stein.data.note_label_pair.NoteLabelPairEntity;
 import com.axel_stein.data.notebook.NotebookDao;
 import com.axel_stein.data.notebook.NotebookEntity;
 
-@Database(entities = {LabelEntity.class, NotebookEntity.class, NoteLabelPairEntity.class, NoteEntity.class}, version = 1)
+@Database(entities = {LabelEntity.class, NotebookEntity.class, NoteLabelPairEntity.class, NoteEntity.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            // Since we didn't alter the table, there's nothing else to do here.
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `notebooks` ADD `order` INTEGER NOT NULL DEFAULT 0");
         }
     };
 

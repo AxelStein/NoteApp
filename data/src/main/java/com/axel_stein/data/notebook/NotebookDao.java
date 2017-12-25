@@ -28,7 +28,7 @@ public interface NotebookDao {
     @Nullable
     NotebookEntity get(long id);
 
-    @Query("SELECT * FROM notebooks ORDER BY title")
+    @Query("SELECT * FROM notebooks")
     List<NotebookEntity> query();
 
 }

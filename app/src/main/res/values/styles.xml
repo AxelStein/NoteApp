@@ -19,6 +19,7 @@
         <item name="keepScreenOnColor">@color/keep_screen_on_color_light</item>
         <item name="searchSelectorColor">@color/search_selector_color_light</item>
         <item name="searchSelectorCurrentColor">@color/search_selector_current_color_light</item>
+        <item name="selectedNotebookBackgroundColor">@color/selected_notebook_background_color_light</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogLight</item>
         <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
 
@@ -51,6 +52,7 @@
         <item name="keepScreenOnColor">@color/keep_screen_on_color_dark</item>
         <item name="searchSelectorColor">@color/search_selector_color_dark</item>
         <item name="searchSelectorCurrentColor">@color/search_selector_current_color_dark</item>
+        <item name="selectedNotebookBackgroundColor">@color/selected_notebook_background_color_dark</item>
         <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat</item>
 
         <!-- MaterialDrawer specific values -->

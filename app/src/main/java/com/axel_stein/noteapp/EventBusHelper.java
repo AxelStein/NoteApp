@@ -22,6 +22,10 @@ public class EventBusHelper {
         updateNoteList(true, false);
     }
 
+    public static void updateDrawer() {
+        post(new UpdateDrawer(true, false));
+    }
+
     public static void updateNoteList(boolean saveSelection, boolean click) {
         NoteCache.invalidate();
         post(new UpdateNoteList());
