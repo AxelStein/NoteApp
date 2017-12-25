@@ -30,6 +30,8 @@ public interface NotebookManagerContract {
 
         void onItemClick(int pos, Notebook notebook);
 
+        boolean onItemLongClick(int pos, Notebook notebook);
+
         void startCheckMode();
 
         void stopCheckMode();

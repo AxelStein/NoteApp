@@ -71,6 +71,15 @@ public class NotebookManagerPresenter implements NotebookManagerContract.Present
     }
 
     @Override
+    public boolean onItemLongClick(int pos, Notebook notebook) {
+        if (!checkModeEnabled()) {
+            toggleCheck(pos, notebook);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void onSubscribe(Disposable d) {
 
     }

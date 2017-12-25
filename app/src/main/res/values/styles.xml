@@ -91,6 +91,10 @@
         <item name="android:dropDownHorizontalOffset">-4dp</item>
     </style>
 
+    <style name="NotebookPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:dropDownHorizontalOffset">-4dp</item>
+    </style>
+
     <style name="PreferenceCategory">
         <item name="android:layout">@layout/layout_preference_category</item>
         <item name="android:shouldDisableView">false</item>

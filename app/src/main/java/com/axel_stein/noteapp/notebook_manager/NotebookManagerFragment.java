@@ -62,6 +62,11 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
         }
 
         @Override
+        public boolean onItemLongClick(int pos, Notebook notebook) {
+            return mPresenter.onItemLongClick(pos, notebook);
+        }
+
+        @Override
         public void onMenuClick(int pos, Notebook notebook, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_rename:
@@ -274,6 +279,8 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
 
         void onItemClick(int pos, Notebook notebook);
 
+        boolean onItemLongClick(int pos, Notebook notebook);
+
         void onMenuClick(int pos, Notebook notebook, MenuItem item);
 
     }
@@ -417,6 +424,18 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
                         }
                     }
                 });
+                itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (l != null) {
+                            int pos = getAdapterPosition();
+                            if (pos >= 0 && pos < getItemCount()) {
+                                return l.onItemLongClick(pos, getItem(pos));
+                            }
+                        }
+                        return false;
+                    }
+                });
                 mDragHandler = itemView.findViewById(R.id.drag_handler);
                 mTextNotebook = itemView.findViewById(R.id.text_notebook);
                 mTextBadge = itemView.findViewById(R.id.text_badge);
@@ -424,7 +443,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
                 mMenu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PopupMenu menu = new PopupMenu(v.getContext(), v, TOP | END, 0, R.style.PopupMenu);
+                        PopupMenu menu = new PopupMenu(v.getContext(), v, TOP | END, 0, R.style.NotebookPopupMenu);
                         menu.inflate(R.menu.item_notebook);
                         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
