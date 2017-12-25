@@ -5,10 +5,12 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.axel_stein.domain.model.NoteOrder;
+import com.axel_stein.domain.model.NotebookOrder;
 import com.axel_stein.domain.repository.SettingsRepository;
 
 public class AppSettingsRepository implements SettingsRepository {
     private static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
+    private static final String PREF_NOTEBOOK_ORDER = "PREF_NOTEBOOK_ORDER";
     private static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
     private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
     private static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
@@ -35,6 +37,16 @@ public class AppSettingsRepository implements SettingsRepository {
     @Override
     public void setNotesOrder(NoteOrder order) {
         mPreferences.edit().putInt(PREF_NOTES_ORDER, order.ordinal()).apply();
+    }
+
+    @Override
+    public NotebookOrder getNotebookOrder() {
+        return NotebookOrder.fromInt(mPreferences.getInt(PREF_NOTEBOOK_ORDER, NotebookOrder.TITLE.ordinal()));
+    }
+
+    @Override
+    public void setNotebookOrder(NotebookOrder order) {
+        mPreferences.edit().putInt(PREF_NOTEBOOK_ORDER, order.ordinal()).apply();
     }
 
     @Override

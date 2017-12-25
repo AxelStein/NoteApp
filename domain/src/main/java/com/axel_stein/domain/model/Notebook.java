@@ -3,7 +3,6 @@ package com.axel_stein.domain.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.axel_stein.domain.utils.CompareBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Notebook {
@@ -15,6 +14,8 @@ public class Notebook {
 
     @JsonIgnore
     private long noteCount;
+
+    private int order;
 
     public long getId() {
         return id;
@@ -50,14 +51,19 @@ public class Notebook {
         this.noteCount = noteCount;
     }
 
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Notebook) {
             Notebook notebook = (Notebook) obj;
-
-            CompareBuilder builder = new CompareBuilder();
-            builder.append(id, notebook.id);
-            return builder.areEqual();
+            return notebook.id == id;
         }
 
         return false;
@@ -68,6 +74,8 @@ public class Notebook {
         return "Notebook{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", noteCount=" + noteCount +
+                ", order=" + order +
                 '}';
     }
 }
