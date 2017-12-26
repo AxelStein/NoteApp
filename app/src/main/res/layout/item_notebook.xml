@@ -38,10 +38,11 @@
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
         android:paddingStart="8dp"
-        android:paddingRight="4dp"
-        android:paddingEnd="4dp"
+        android:paddingRight="8dp"
+        android:paddingEnd="8dp"
         android:maxLines="1"
         android:ellipsize="end"
+        android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="48dp"/>
 

@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,6 +42,7 @@ import com.axel_stein.noteapp.utils.ViewUtil;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -142,27 +145,54 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        NotebookOrder currentOrder = mSettingsRepository.getNotebookOrder();
+        if (currentOrder != null) {
+            MenuItem item = menu.findItem(R.id.menu_sort);
+            if (item != null) {
+                MenuUtil.check(item.getSubMenu(), menuItemFromOrder(currentOrder), true);
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        NotebookOrder order = orderFromMenuItem(item);
+        if (order != null) {
+            item.setChecked(true);
+            mSettingsRepository.setNotebookOrder(order);
+            EventBusHelper.updateDrawer();
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.menu_add_notebook:
                 AddNotebookDialog.launch(this);
                 return true;
-
-            case R.id.menu_select:
-                mPresenter.startCheckMode();
-                return true;
-
-            case R.id.menu_sort_title:
-                mSettingsRepository.setNotebookOrder(NotebookOrder.TITLE);
-                EventBusHelper.updateDrawer();
-                return true;
-
-            case R.id.menu_sort_custom:
-                mSettingsRepository.setNotebookOrder(NotebookOrder.CUSTOM);
-                EventBusHelper.updateDrawer();
-                return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private int menuItemFromOrder(NotebookOrder order) {
+        if (order == null) {
+            return -1;
+        }
+        HashMap<NotebookOrder, Integer> map = new HashMap<>();
+        map.put(NotebookOrder.TITLE, R.id.menu_sort_title);
+        map.put(NotebookOrder.CUSTOM, R.id.menu_sort_custom);
+        return map.get(order);
+    }
+
+    private NotebookOrder orderFromMenuItem(MenuItem item) {
+        if (item == null) {
+            return null;
+        }
+        SparseArray<NotebookOrder> sparseArray = new SparseArray<>();
+        sparseArray.put(R.id.menu_sort_title, NotebookOrder.TITLE);
+        sparseArray.put(R.id.menu_sort_custom, NotebookOrder.CUSTOM);
+        return sparseArray.get(item.getItemId());
     }
 
     @Override
@@ -219,12 +249,8 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     @Override
     public void onItemChecked(int pos, int checkCount) {
         if (mActionMode != null) {
-            if (checkCount == 0) {
-                mActionMode.setTitle(R.string.action_select_notebooks);
-            } else {
-                mActionMode.setTitle(String.valueOf(checkCount));
-            }
-            MenuUtil.enable(mActionMode.getMenu(), checkCount > 0, R.id.menu_delete);
+            mActionMode.setTitle(String.valueOf(checkCount));
+            MenuUtil.enable(mActionMode.getMenu(), checkCount != mAdapter.getItemCount(), R.id.menu_select_all);
         }
         if (mAdapter != null) {
             if (pos < 0) {
@@ -258,6 +284,10 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     @Subscribe
     public void updateDrawer(EventBusHelper.UpdateDrawer e) {
         mPresenter.forceUpdate();
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+        }
     }
 
     @Subscribe

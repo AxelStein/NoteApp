@@ -51,7 +51,6 @@
     <string name="action_add_backup">Add backup</string>
     <string name="action_manage_notebooks">Manage notebooks</string>
     <string name="action_select">Select</string>
-    <string name="action_select_notebooks">Select notebooks</string>
     <string name="action_sort_custom">Custom</string>
 
     <!--Pref-->

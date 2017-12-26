@@ -171,6 +171,9 @@ public class NotebookManagerPresenter implements NotebookManagerContract.Present
 
         if (startCheckMode) {
             mView.startCheckMode();
+        } else if (mCheckedItems.size() == 0) {
+            stopCheckMode();
+            return;
         }
 
         mView.onItemChecked(position, getCheckedCount());
