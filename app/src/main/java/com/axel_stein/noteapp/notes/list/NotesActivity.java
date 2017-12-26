@@ -324,7 +324,9 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         NoteOrder currentOrder = mAppSettings.getNotesOrder();
         if (currentOrder != null) {
             MenuItem item = menu.findItem(R.id.menu_sort);
-            MenuUtil.check(item.getSubMenu(), menuItemFromNoteOrder(currentOrder), true);
+            if (item != null) {
+                MenuUtil.check(item.getSubMenu(), menuItemFromNoteOrder(currentOrder), true);
+            }
         }
 
         if (mTag != null) {
@@ -333,8 +335,10 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         }
 
         MenuItem item = menu.findItem(R.id.menu_delete_notebook);
-        if (item.isVisible()) {
-            MenuUtil.show(item, mDrawerHelper != null && mDrawerHelper.getNotebookCount() > 1);
+        if (item != null) {
+            if (item.isVisible()) {
+                MenuUtil.show(item, mDrawerHelper != null && mDrawerHelper.getNotebookCount() > 1);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
