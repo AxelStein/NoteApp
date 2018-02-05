@@ -50,6 +50,7 @@
 
     </android.support.v7.preference.PreferenceCategory>
 
+    <!--
     <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_category_security">
 
@@ -58,13 +59,12 @@
             android:title="@string/pref_secure_notes"
             android:summary="@string/pref_secure_notes_summary"/>
 
-        <!--
         <CheckBoxPreference
             android:enabled="false"
             android:title="Unlock with fingerprint"/>
-        -->
 
     </android.support.v7.preference.PreferenceCategory>
+    -->
 
     <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_category_backup">

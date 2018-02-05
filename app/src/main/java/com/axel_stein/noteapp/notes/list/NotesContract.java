@@ -40,6 +40,8 @@ public interface NotesContract {
 
         void onDestroyView();
 
+        void forceUpdate();
+
         void onNoteClick(int pos, Note note);
 
         boolean onNoteLongClick(int pos, Note note);

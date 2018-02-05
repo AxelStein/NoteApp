@@ -11,11 +11,14 @@
     <attr name="selectedNotebookBackgroundColor" format="color|reference"/>
 
     <declare-styleable name="IconTextView">
+        <attr name="iconTop" format="reference"/>
+        <attr name="iconTopTint" format="reference|color"/>
         <attr name="iconLeft" format="reference"/>
         <attr name="iconLeftTint" format="reference|color"/>
         <attr name="iconRight" format="reference"/>
         <attr name="iconRightTint" format="reference|color"/>
         <attr name="showIcons" format="boolean"/>
+        <attr name="showIconTop" format="boolean"/>
         <attr name="showIconLeft" format="boolean"/>
         <attr name="showIconRight" format="boolean"/>
 

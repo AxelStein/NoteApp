@@ -40,6 +40,9 @@ public interface NoteRepository {
     List<Note> query();
 
     @NonNull
+    List<Note> queryHome();
+
+    @NonNull
     List<Note> query(@NonNull Notebook notebook);
 
     List<Note> query(@NonNull Notebook notebook, boolean includeTrash);

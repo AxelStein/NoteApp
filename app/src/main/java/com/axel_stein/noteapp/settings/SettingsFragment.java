@@ -63,6 +63,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.settings);
 
+        findPreference("PREF_SHOW_ADD_NOTE_FAB").setVisible(false);
         findPreference("PREF_SHOW_ADD_NOTE_FAB").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -110,6 +111,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             }
         });
 
+        /*
         findPreference("secure_notes").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -125,6 +127,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
                 return true;
             }
         });
+        */
 
         findPreference("export").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

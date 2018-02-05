@@ -52,6 +52,8 @@
     <string name="action_manage_notebooks">Manage notebooks</string>
     <string name="action_select">Select</string>
     <string name="action_sort_custom">Custom</string>
+    <string name="action_home">Home</string>
+    <string name="action_clear">Clear</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
@@ -118,6 +120,9 @@
     <string name="empty_search">No matching notes</string>
     <string name="empty_trash">No notes in trash</string>
     <string name="empty_backup">No backups found</string>
+    <string name="empty_home">No notes yet</string>
+    <string name="empty_label_list">No labels yet</string>
+    <string name="empty_notebook_list">No notebooks yet</string>
 
     <!--Dialog titles-->
     <string name="title_empty_trash">Empty trash?</string>

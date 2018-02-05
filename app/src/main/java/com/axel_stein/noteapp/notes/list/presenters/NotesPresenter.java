@@ -378,6 +378,13 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Override
     public void onNotebookSelected(Notebook notebook) {
+        if (notebook == null) {
+            notebook = new Notebook();
+        }
+        onNotebookSelectedImpl(notebook);
+    }
+
+    private void onNotebookSelectedImpl(Notebook notebook) {
         final List<Note> notes = getCheckedNotes();
         mSetNotebookInteractor.execute(notes, notebook.getId())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -452,6 +459,11 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         List<Note> list = new ArrayList<>();
         list.add(note);
         return list;
+    }
+
+    @Override
+    public void forceUpdate() {
+        loadImpl();
     }
 
 }

@@ -30,6 +30,9 @@ public interface NoteDao {
     @Query("SELECT * FROM notes")
     List<NoteEntity> query();
 
+    @Query("SELECT * FROM notes WHERE notebook = 0 AND trash = 0")
+    List<NoteEntity> queryHome();
+
     @Query("SELECT * FROM notes WHERE notebook = :notebook AND trash = 0")
     List<NoteEntity> queryNotebook(long notebook);
 
@@ -49,7 +52,7 @@ public interface NoteDao {
     @Query("UPDATE notes SET notebook = :notebook WHERE id IN (:notes)")
     void setNotebook(List<Long> notes, long notebook);
 
-    @Query("UPDATE notes SET trash = 1 WHERE id IN (:notes)")
+    @Query("UPDATE notes SET trash = 1, notebook = 0 WHERE id IN (:notes)")
     void trash(List<Long> notes);
 
     @Query("UPDATE notes SET trash = 0 WHERE id IN (:notes)")

@@ -92,4 +92,9 @@
 
     </group>
 
+    <item
+        android:orderInCategory="6"
+        android:id="@+id/test"
+        android:title="Test"/>
+
 </menu>

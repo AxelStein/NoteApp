@@ -75,6 +75,12 @@ public class SqlNoteRepository implements NoteRepository {
 
     @NonNull
     @Override
+    public List<Note> queryHome() {
+        return map(mDao.queryHome());
+    }
+
+    @NonNull
+    @Override
     public List<Note> query(@NonNull Notebook notebook) {
         return map(mDao.queryNotebook(notebook.getId()));
     }

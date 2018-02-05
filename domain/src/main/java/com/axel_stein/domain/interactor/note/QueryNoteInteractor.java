@@ -50,6 +50,19 @@ public class QueryNoteInteractor {
      * @return all notes, including trash
      */
     @NonNull
+    public Single<List<Note>> executeHome() {
+        return single(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() throws Exception {
+                return orderImpl(mNoteRepository.queryHome());
+            }
+        });
+    }
+
+    /**
+     * @return all notes, including trash
+     */
+    @NonNull
     public Single<List<Note>> execute() {
         return single(new Callable<List<Note>>() {
             @Override

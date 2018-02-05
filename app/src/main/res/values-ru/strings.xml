@@ -52,6 +52,8 @@
     <string name="action_manage_notebooks">Управление блокнотами</string>
     <string name="action_select">Выделить</string>
     <string name="action_sort_custom">Вручную</string>
+    <string name="action_home">Главная</string>
+    <string name="action_clear">Очистить</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>
@@ -105,6 +107,9 @@
     <string name="empty_search">Заметки не найдены</string>
     <string name="empty_trash">Нет заметок в корзине</string>
     <string name="empty_backup">Резервные копии не найдены</string>
+    <string name="empty_home">Заметки не найдены</string>
+    <string name="empty_label_list">Метки не найдены</string>
+    <string name="empty_notebook_list">Блокноты не найдены</string>
 
     <!--Dialog titles-->
     <string name="title_empty_trash">Очистить корзину?</string>

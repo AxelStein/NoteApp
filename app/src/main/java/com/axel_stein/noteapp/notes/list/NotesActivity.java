@@ -34,6 +34,7 @@ import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerActivity;
+import com.axel_stein.noteapp.main.MainActivity;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotebookNotesPresenter;
@@ -358,6 +359,10 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         }
 
         switch (item.getItemId()) {
+            case R.id.test:
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+
             case R.id.menu_add_note:
                 addNote();
                 break;

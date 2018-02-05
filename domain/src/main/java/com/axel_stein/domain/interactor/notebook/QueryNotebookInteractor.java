@@ -52,6 +52,7 @@ public class QueryNotebookInteractor {
                     throw new IllegalStateException("result is not valid");
                 }
 
+                /*
                 if (notebooks.size() == 0) {
                     Notebook notebook = new Notebook();
                     notebook.setTitle(mSettingsRepository.defaultNotebookTitle());
@@ -63,6 +64,7 @@ public class QueryNotebookInteractor {
 
                     notebooks.add(notebook);
                 }
+                */
 
                 for (Notebook notebook : notebooks) {
                     notebook.setNoteCount(mNoteRepository.count(notebook));

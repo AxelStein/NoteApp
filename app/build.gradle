@@ -60,6 +60,7 @@ dependencies {
 
     // custom views
     compile "com.mikepenz:materialdrawer:$materialDrawerVersion"
+    compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
 
     compile "io.reactivex.rxjava2:rxandroid:$rxjavaVersion"
 

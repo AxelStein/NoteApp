@@ -1,5 +1,13 @@
 <resources>
 
+    <style name="AppTheme.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="height">48dp</item>
+    </style>
+
+    <style name="AppThemeDark.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="height">48dp</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -10,6 +18,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
         <item name="actionModeCloseDrawable">@drawable/ic_clear_black_24dp</item>
+        <item name="actionModeStyle">@style/AppTheme.ActionMode</item>
         <item name="colorControlNormal">@color/text_color_secondary_light</item>
         <item name="menuItemTintColor">@color/text_color_secondary_light</item>
         <item name="nightModeButtonTintColor">@color/text_color_secondary_light</item>
@@ -42,6 +51,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
         <item name="actionModeCloseDrawable">@drawable/ic_clear_white_24dp</item>
+        <item name="actionModeStyle">@style/AppThemeDark.ActionMode</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="menuItemTintColor">@color/text_color_primary_dark</item>
         <item name="nightModeButtonTintColor">@color/color_accent_dark</item>

@@ -280,7 +280,14 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void setNotebook(final Notebook notebook) {
+    public void setNotebook(Notebook notebook) {
+        if (notebook == null) {
+            notebook = new Notebook();
+        }
+        setNotebookImpl(notebook);
+    }
+
+    private void setNotebookImpl(final Notebook notebook) {
         if (mNote.getId() > 0) {
             mUpdateNoteNotebookInteractor.execute(mNote.getId(), notebook.getId())
                     .observeOn(AndroidSchedulers.mainThread())
