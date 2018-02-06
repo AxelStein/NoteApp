@@ -23,6 +23,7 @@ import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.utils.BottomNavigationViewHelper;
 import com.axel_stein.noteapp.utils.MenuUtil;
+import com.axel_stein.noteapp.utils.ViewUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -41,6 +42,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.fab_add)
     FloatingActionButton mFAB;
+
+    private static final String TAG_SHOW_FAB = "TAG_SHOW_FAB";
 
     @Inject
     AppSettingsRepository mAppSettings;
@@ -184,4 +187,21 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState != null) {
+            outState.putBoolean(TAG_SHOW_FAB, ViewUtil.isShown(mFAB));
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            ViewUtil.show(savedInstanceState.getBoolean(TAG_SHOW_FAB, true), mFAB);
+        }
+    }
+
 }
