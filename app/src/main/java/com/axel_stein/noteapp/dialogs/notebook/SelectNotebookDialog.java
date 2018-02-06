@@ -37,7 +37,7 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
     public static void launch(Fragment fragment, List<Notebook> notebooks, long selectedNotebook) {
         SelectNotebookDialog dialog = new SelectNotebookDialog();
         dialog.setTitle(R.string.title_select_notebook);
-        dialog.setPositiveButtonText(R.string.action_clear);
+        dialog.setPositiveButtonText(R.string.action_home);
         dialog.setNegativeButtonText(R.string.action_cancel);
         dialog.setNotebooks(notebooks, selectedNotebook);
         dialog.setTargetFragment(fragment, 0);
