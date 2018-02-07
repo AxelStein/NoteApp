@@ -22,6 +22,7 @@ class NoteMapper {
         note.setDate(entity.getDate());
         note.setUpdate(entity.getUpdate());
         note.setTrash(entity.isTrash());
+        note.setPinned(entity.isPinned());
         return note;
     }
 
@@ -38,6 +39,7 @@ class NoteMapper {
         entity.setDate(note.getDate());
         entity.setUpdate(note.getUpdate());
         entity.setTrash(note.isTrash());
+        entity.setPinned(note.isPinned());
         return entity;
     }
 

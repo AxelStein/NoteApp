@@ -356,6 +356,25 @@ public class QueryNoteInteractor {
                 return 0;
             }
         });
+
+        Collections.sort(list, new Comparator<Note>() {
+            @Override
+            public int compare(Note n1, Note n2) {
+                n1 = requireNonNull(n1, "note1 is null");
+                n2 = requireNonNull(n2, "note2 is null");
+
+                boolean p1 = n1.isPinned();
+                boolean p2 = n2.isPinned();
+
+                if (p1 && !p2) {
+                    return -1;
+                } else if (!p1 && p2) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+
         return list;
     }
 

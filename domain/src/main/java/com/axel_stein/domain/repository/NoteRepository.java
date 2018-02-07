@@ -36,6 +36,10 @@ public interface NoteRepository {
 
     void restore(@NonNull List<Note> notes);
 
+    void pin(@NonNull List<Note> notes);
+
+    void unpin(@NonNull List<Note> notes);
+
     @NonNull
     List<Note> query();
 

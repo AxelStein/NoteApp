@@ -94,6 +94,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private boolean mViewCreated;
     private boolean mTrash;
     private boolean mUpdate;
+    private boolean mPinned;
     private boolean mEditable;
     private boolean mEditViewsFocusable = true;
     private List<Integer> mIndexes;
@@ -300,10 +301,17 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mMenu = menu;
         MenuUtil.enable(mMenu, mEditable);
 
+        MenuUtil.show(mMenu, !mTrash, R.id.menu_pin_note);
         MenuUtil.show(mMenu, !mTrash && mUpdate, R.id.menu_move_to_trash, R.id.menu_duplicate);
         MenuUtil.show(mMenu, !mTrash, R.id.menu_select_notebook, R.id.menu_labels, R.id.menu_share, R.id.menu_search);
         MenuUtil.show(mMenu, mTrash, R.id.menu_restore);
         MenuUtil.show(mMenu, mUpdate, R.id.menu_delete);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        setNotePinned(mPinned);
     }
 
     @Override
@@ -313,6 +321,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         }
 
         switch (item.getItemId()) {
+            case R.id.menu_pin_note:
+                mPresenter.actionPinNote();
+                break;
+
             case R.id.menu_select_notebook:
                 mPresenter.actionSelectNotebook();
                 break;
@@ -378,6 +390,14 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
+    public void setNotePinned(boolean pinned) {
+        if (mMenu != null) {
+            int colorAttr = pinned ? R.attr.notePinColor : R.attr.menuItemTintColor;
+            MenuUtil.tintAttr(getContext(), mMenu.findItem(R.id.menu_pin_note), colorAttr);
+        }
+    }
+
+    @Override
     public void setNote(Note note) {
         String title = note.getTitle();
         String content = note.getContent();
@@ -398,6 +418,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
             KeyboardUtil.show(mEditTitle);
         }
 
+        mPinned = note.isPinned();
         mTrash = note.isTrash();
         mUpdate = note.getId() > 0;
 

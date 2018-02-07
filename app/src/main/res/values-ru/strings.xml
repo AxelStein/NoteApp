@@ -54,6 +54,7 @@
     <string name="action_sort_custom">Вручную</string>
     <string name="action_home">Главная</string>
     <string name="action_clear">Очистить</string>
+    <string name="action_pin_note">Прикрепить заметку</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>
@@ -163,5 +164,7 @@
     <string name="msg_security_enabled">Защита включена</string>
     <string name="msg_security_disabled">Защита отключена</string>
     <string name="msg_password_reset_caution">Вы уверены, что хотите сбросить пароль? Все заметки будут удалены навсегда.</string>
+    <string name="msg_note_pinned">Заметка закреплена</string>
+    <string name="msg_note_unpinned">Заметка откреплена</string>
 
 </resources>

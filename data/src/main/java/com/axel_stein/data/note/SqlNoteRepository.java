@@ -67,6 +67,16 @@ public class SqlNoteRepository implements NoteRepository {
         mDao.restore(mapIds(notes));
     }
 
+    @Override
+    public void pin(@NonNull List<Note> notes) {
+        mDao.pin(mapIds(notes));
+    }
+
+    @Override
+    public void unpin(@NonNull List<Note> notes) {
+        mDao.unpin(mapIds(notes));
+    }
+
     @NonNull
     @Override
     public List<Note> query() {

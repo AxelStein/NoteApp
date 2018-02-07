@@ -58,6 +58,12 @@ public interface NoteDao {
     @Query("UPDATE notes SET trash = 0 WHERE id IN (:notes)")
     void restore(List<Long> notes);
 
+    @Query("UPDATE notes SET pinned = 1 WHERE id IN (:notes)")
+    void pin(List<Long> notes);
+
+    @Query("UPDATE notes SET pinned = 0 WHERE id IN (:notes)")
+    void unpin(List<Long> notes);
+
     @Query("DELETE FROM notes")
     void deleteAll();
 
