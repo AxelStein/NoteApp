@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -43,6 +44,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.fab_add)
     FloatingActionButton mFAB;
 
+    private static final String TAG_FRAGMENT = "TAG_FRAGMENT";
     private static final String TAG_SHOW_FAB = "TAG_SHOW_FAB";
 
     @Inject
@@ -73,29 +75,15 @@ public class MainActivity extends BaseActivity {
         mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_home: {
-                        setFragment(new HomeFragment(), "");
-                        break;
-                    }
-
-                    case R.id.action_notebooks:
-                        setFragment(new NotebooksFragment(), "");
-                        break;
-
-                    case R.id.action_labels:
-                        setFragment(new LabelsFragment(), "");
-                        break;
-
-                    case R.id.action_trash:
-                        setFragment(new TrashFragment(), "");
-                        mFAB.hide();
-                        return true;
+                return handleBottomMenuClick(item);
+            }
+        });
+        mBottomNavigation.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem item) {
+                if (!hasFragment(TAG_FRAGMENT)) {
+                    handleBottomMenuClick(item);
                 }
-
-                mFAB.show();
-
-                return true;
             }
         });
 
@@ -121,6 +109,41 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private boolean handleBottomMenuClick(@NonNull MenuItem item) {
+        Fragment fragment = null;
+        boolean showFAB = true;
+
+        switch (item.getItemId()) {
+            case R.id.action_home: {
+                fragment = new HomeFragment();
+                break;
+            }
+
+            case R.id.action_notebooks:
+                fragment = new NotebooksFragment();
+                break;
+
+            case R.id.action_labels:
+                fragment = new LabelsFragment();
+                break;
+
+            case R.id.action_trash:
+                fragment = new TrashFragment();
+                showFAB = false;
+                break;
+        }
+
+        if (showFAB) {
+            mFAB.show();
+        } else {
+            mFAB.hide();
+        }
+
+        setFragment(fragment, TAG_FRAGMENT);
+
+        return true;
     }
 
     @Override
