@@ -183,7 +183,7 @@ public class NoteListActivity extends BaseActivity {
                         actionName = getString(e.getActionName());
                     }
 
-                    Snackbar snackbar = Snackbar.make(mToolbar, msg, Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_note_list), msg, Snackbar.LENGTH_SHORT);
                     if (e.hasAction()) {
                         snackbar.setAction(actionName, new View.OnClickListener() {
                             @Override
