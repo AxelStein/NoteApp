@@ -51,6 +51,81 @@ public class BottomMenuView extends LinearLayout {
                 nightMode ? R.color.bottom_navigation_text_dark : R.color.bottom_navigation_text_light);
     }
 
+    public void setSelectedItemId(int selectedItemId) {
+        mSelectedItemId = selectedItemId;
+        updateViewImpl();
+
+        if (mItemSelectedListener != null) {
+            mItemSelectedListener.onNavigationItemSelected(selectedItemId);
+        }
+    }
+
+    public int getSelectedItemId() {
+        return mSelectedItemId;
+    }
+
+    public void setItemSelectedListener(OnNavigationItemSelectedListener l) {
+        mItemSelectedListener = l;
+    }
+
+    public void setItemReselectedListener(OnNavigationItemReselectedListener l) {
+        mItemReselectedListener = l;
+    }
+
+    public void setItemIconTintList(@Nullable ColorStateList tint) {
+        mItemIconTint = tint;
+        updateViewImpl();
+    }
+
+    public void setItemTextColor(@Nullable ColorStateList textColor) {
+        mItemTextColor = textColor;
+        updateViewImpl();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        init();
+    }
+
+    private void init() {
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            child.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int id = v.getId();
+                    if (id == mSelectedItemId && mItemReselectedListener != null) {
+                        mItemReselectedListener.onNavigationItemReselected(mSelectedItemId);
+                    } else {
+                        setSelectedItemId(id);
+                    }
+                }
+            });
+        }
+    }
+
+    private void updateViewImpl() {
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            IconTextView child = (IconTextView) getChildAt(i);
+            boolean checked = child.getId() == mSelectedItemId;
+            updateItemIconImpl(child, checked);
+            updateItemTextColorImpl(child, checked);
+        }
+    }
+
+    private void updateItemIconImpl(IconTextView view, boolean checked) {
+        int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
+        view.setIconTopTintColor(mItemIconTint.getColorForState(state, 0));
+    }
+
+    private void updateItemTextColorImpl(IconTextView view, boolean checked) {
+        int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
+        view.setTextColor(mItemTextColor.getColorForState(state, 0));
+    }
+
     static class SavedState extends BaseSavedState {
         int selectedItemId;
 
@@ -99,81 +174,6 @@ public class BottomMenuView extends LinearLayout {
 
         mSelectedItemId = ss.selectedItemId;
         updateViewImpl();
-    }
-
-    public void setSelectedItemId(int selectedItemId) {
-        mSelectedItemId = selectedItemId;
-        updateViewImpl();
-
-        if (mItemSelectedListener != null) {
-            mItemSelectedListener.onNavigationItemSelected(selectedItemId);
-        }
-    }
-
-    public int getSelectedItemId() {
-        return mSelectedItemId;
-    }
-
-    public void setItemSelectedListener(OnNavigationItemSelectedListener l) {
-        mItemSelectedListener = l;
-    }
-
-    public void setItemReselectedListener(OnNavigationItemReselectedListener l) {
-        mItemReselectedListener = l;
-    }
-
-    public void setItemIconTintList(@Nullable ColorStateList tint) {
-        mItemIconTint = tint;
-        updateViewImpl();
-    }
-
-    public void setItemTextColor(@Nullable ColorStateList textColor) {
-        mItemTextColor = textColor;
-        updateViewImpl();
-    }
-
-    private void init() {
-        int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            child.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int id = v.getId();
-                    if (id == mSelectedItemId && mItemReselectedListener != null) {
-                        mItemReselectedListener.onNavigationItemReselected(mSelectedItemId);
-                    } else {
-                        setSelectedItemId(id);
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        init();
-    }
-
-    private void updateViewImpl() {
-        int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            IconTextView child = (IconTextView) getChildAt(i);
-            boolean checked = child.getId() == mSelectedItemId;
-            updateItemIconImpl(child, checked);
-            updateItemTextColorImpl(child, checked);
-        }
-    }
-
-    private void updateItemIconImpl(IconTextView view, boolean checked) {
-        int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
-        view.setIconTopTintColor(mItemIconTint.getColorForState(state, 0));
-    }
-
-    private void updateItemTextColorImpl(IconTextView view, boolean checked) {
-        int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
-        view.setTextColor(mItemTextColor.getColorForState(state, 0));
     }
 
     public interface OnNavigationItemSelectedListener {
