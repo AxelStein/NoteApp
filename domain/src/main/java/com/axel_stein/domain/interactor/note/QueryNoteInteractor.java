@@ -51,10 +51,21 @@ public class QueryNoteInteractor {
      */
     @NonNull
     public Single<List<Note>> executeHome() {
+        final String key = "home";
+        if (hasKey(key)) {
+            return single(new Callable<List<Note>>() {
+                @Override
+                public List<Note> call() throws Exception {
+                    return get(key);
+                }
+            });
+        }
         return single(new Callable<List<Note>>() {
             @Override
             public List<Note> call() throws Exception {
-                return orderImpl(mNoteRepository.queryHome());
+                List<Note> notes = orderImpl(mNoteRepository.queryHome());
+                put(key, notes);
+                return notes;
             }
         });
     }
@@ -79,16 +90,6 @@ public class QueryNoteInteractor {
      */
     @NonNull
     public Single<List<Note>> execute(@NonNull final Notebook notebook) {
-        return execute(notebook, false);
-    }
-
-    /**
-     * @return notes in notebook
-     * @throws NullPointerException     if notebook is null
-     * @throws IllegalArgumentException if notebook`s id is 0
-     */
-    @NonNull
-    public Single<List<Note>> execute(@NonNull final Notebook notebook, final boolean includeTrash) {
         final String key = "notebook_" + notebook.getId();
         if (hasKey(key)) {
             return single(new Callable<List<Note>>() {
@@ -104,41 +105,8 @@ public class QueryNoteInteractor {
                 if (!NotebookValidator.isValid(notebook)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
-                List<Note> notes = orderImpl(mNoteRepository.query(notebook, includeTrash));
+                List<Note> notes = orderImpl(mNoteRepository.query(notebook));
                 put(key, notes);
-                return notes;
-            }
-        });
-    }
-
-    /**
-     * @return notes in notebook
-     * @throws NullPointerException     if notebook is null
-     * @throws IllegalArgumentException if notebook`s id is 0
-     */
-    @NonNull
-    public Single<List<Note>> execute(@NonNull final Notebook notebook, final boolean includeTrash, final boolean cache) {
-        final String key = "notebook_" + notebook.getId();
-        if (cache) {
-            if (hasKey(key)) {
-                return single(new Callable<List<Note>>() {
-                    @Override
-                    public List<Note> call() throws Exception {
-                        return get(key);
-                    }
-                });
-            }
-        }
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() throws Exception {
-                if (!NotebookValidator.isValid(notebook)) {
-                    throw new IllegalArgumentException("notebook is not valid");
-                }
-                List<Note> notes = orderImpl(mNoteRepository.query(notebook, includeTrash));
-                if (cache) {
-                    put(key, notes);
-                }
                 return notes;
             }
         });
