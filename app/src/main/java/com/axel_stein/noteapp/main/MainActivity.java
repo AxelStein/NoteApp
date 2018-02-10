@@ -1,14 +1,10 @@
 package com.axel_stein.noteapp.main;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +18,9 @@ import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
-import com.axel_stein.noteapp.utils.BottomNavigationViewHelper;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.BottomMenuView;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -38,8 +34,13 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    /*
     @BindView(R.id.bottom_navigation)
     BottomNavigationView mBottomNavigation;
+    */
+
+    @BindView(R.id.bottom_navigation)
+    BottomMenuView mBottomNavigation;
 
     @BindView(R.id.fab_add)
     FloatingActionButton mFAB;
@@ -61,28 +62,17 @@ public class MainActivity extends BaseActivity {
 
         setSupportActionBar(mToolbar);
 
-        boolean nightMode = mAppSettings.nightMode();
-        ColorStateList iconTint = ContextCompat.getColorStateList(this,
-                nightMode ? R.color.bottom_navigation_icon_dark : R.color.bottom_navigation_icon_light);
-        ColorStateList textColor = ContextCompat.getColorStateList(this,
-                nightMode ? R.color.bottom_navigation_text_dark : R.color.bottom_navigation_text_light);
-
-        mBottomNavigation.setItemIconTintList(iconTint);
-        mBottomNavigation.setItemTextColor(textColor);
-
-        BottomNavigationViewHelper.disableShiftMode(mBottomNavigation);
-
-        mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        mBottomNavigation.setItemSelectedListener(new BottomMenuView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                return handleBottomMenuClick(item);
+            public void onNavigationItemSelected(int itemId) {
+                handleBottomMenuClick(itemId);
             }
         });
-        mBottomNavigation.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+        mBottomNavigation.setItemReselectedListener(new BottomMenuView.OnNavigationItemReselectedListener() {
             @Override
-            public void onNavigationItemReselected(@NonNull MenuItem item) {
+            public void onNavigationItemReselected(int itemId) {
                 if (!hasFragment(TAG_FRAGMENT)) {
-                    handleBottomMenuClick(item);
+                    handleBottomMenuClick(itemId);
                 }
             }
         });
@@ -111,11 +101,11 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private boolean handleBottomMenuClick(@NonNull MenuItem item) {
+    private void handleBottomMenuClick(int id) {
         Fragment fragment = null;
         boolean showFAB = true;
 
-        switch (item.getItemId()) {
+        switch (id) {
             case R.id.action_home: {
                 fragment = new HomeFragment();
                 break;
@@ -142,8 +132,6 @@ public class MainActivity extends BaseActivity {
         }
 
         setFragment(fragment, TAG_FRAGMENT);
-
-        return true;
     }
 
     @Override

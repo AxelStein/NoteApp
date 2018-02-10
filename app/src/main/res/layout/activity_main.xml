@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -42,6 +43,81 @@
         android:layout_above="@+id/bottom_navigation"
         android:background="@drawable/shadow_bottom"/>
 
+    <com.axel_stein.noteapp.views.BottomMenuView
+        tools:ignore="SmallSp"
+
+        android:id="@+id/bottom_navigation"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.axel_stein.noteapp.views.IconTextView
+            android:id="@+id/action_home"
+            app:iconTop="@drawable/ic_home_white_24dp"
+            app:iconTopTint="?attr/menuItemTintColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_horizontal"
+            android:text="@string/action_home"
+            android:textSize="11sp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <com.axel_stein.noteapp.views.IconTextView
+            android:id="@+id/action_notebooks"
+            app:iconTop="@drawable/ic_book_white_24dp"
+            app:iconTopTint="?attr/menuItemTintColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_horizontal"
+            android:text="@string/action_notebooks"
+            android:textSize="11sp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <com.axel_stein.noteapp.views.IconTextView
+            android:id="@+id/action_labels"
+            app:iconTop="@drawable/ic_label_white_24dp"
+            app:iconTopTint="?attr/menuItemTintColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_horizontal"
+            android:text="@string/action_labels"
+            android:textSize="11sp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <com.axel_stein.noteapp.views.IconTextView
+            android:id="@+id/action_trash"
+            app:iconTop="@drawable/ic_delete_white_24dp"
+            app:iconTopTint="?attr/menuItemTintColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_horizontal"
+            android:text="@string/action_trash"
+            android:textSize="11sp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+    </com.axel_stein.noteapp.views.BottomMenuView>
+    <!--
     <android.support.design.widget.BottomNavigationView
         app:menu="@menu/bottom_navigation_main"
         app:itemIconTint="@color/bottom_navigation_icon_light"
@@ -53,6 +129,7 @@
         android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+    -->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add"
@@ -69,69 +146,5 @@
         app:borderWidth="0dp"
         app:elevation="2dp"
         app:fabSize="normal"/>
-
-    <!--
-    <LinearLayout
-        android:id="@+id/bottom_navigation"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="56dp">
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:paddingTop="8dp"
-            android:drawablePadding="-8dp"
-            app:iconTop="@drawable/ic_home_white_24dp"
-            app:iconTopTint="@color/bottom_navigation_icon_light"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="12sp"
-            android:textColor="@color/bottom_navigation_text_light"
-            android:text="@string/action_home"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:paddingTop="8dp"
-            android:drawablePadding="-8dp"
-            app:iconTop="@drawable/ic_book_white_24dp"
-            app:iconTopTint="?attr/menuItemTintColor"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="12sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/action_notebooks"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:paddingTop="8dp"
-            android:drawablePadding="-8dp"
-            app:iconTop="@drawable/ic_label_white_24dp"
-            app:iconTopTint="?attr/menuItemTintColor"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="12sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/action_labels"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:paddingTop="8dp"
-            android:drawablePadding="-8dp"
-            app:iconTop="@drawable/ic_delete_white_24dp"
-            app:iconTopTint="?attr/menuItemTintColor"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:textSize="12sp"
-            android:textColor="?android:attr/textColorPrimary"
-            android:text="@string/action_trash"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"/>
-
-    </LinearLayout>
-
-    -->
 
 </RelativeLayout>
