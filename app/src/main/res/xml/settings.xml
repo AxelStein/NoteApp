@@ -19,19 +19,6 @@
             android:key="PREF_SHOW_NOTES_CONTENT"
             android:title="@string/pref_show_notes_content"/>
 
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="PREF_SHOW_NOTE_EDITOR_LINES"
-            android:title="@string/pref_show_note_editor_lines"/>
-
-        <android.support.v7.preference.ListPreference
-            android:key="PREF_FONT_SIZE"
-            android:entries="@array/font_sizes"
-            android:defaultValue="pref_font_size_default"
-            android:summary="%s"
-            android:entryValues="@array/font_sizes_values"
-            android:title="@string/pref_font_size"/>
-
         <android.support.v7.preference.ListPreference
             android:key="PREF_SWIPE_LEFT_ACTION"
             android:entries="@array/swipe_action_entries"
@@ -47,6 +34,24 @@
             android:summary="%s"
             android:entryValues="@array/swipe_values"
             android:title="@string/pref_swipe_right"/>
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/pref_category_editor">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="PREF_SHOW_NOTE_EDITOR_LINES"
+            android:title="@string/pref_show_note_editor_lines"/>
+
+        <android.support.v7.preference.ListPreference
+            android:key="PREF_FONT_SIZE"
+            android:entries="@array/font_sizes"
+            android:defaultValue="pref_font_size_default"
+            android:summary="%s"
+            android:entryValues="@array/font_sizes_values"
+            android:title="@string/pref_font_size"/>
 
     </android.support.v7.preference.PreferenceCategory>
 
