@@ -268,8 +268,7 @@ public class QueryNoteInteractor {
 
         // set labels
         for (Note note : list) {
-            note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
-
+            // todo note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
             String content = note.getContent();
             if (!isEmpty(content)) {
                 if (mSettingsRepository.showNotesContent() || searchFlag) {
