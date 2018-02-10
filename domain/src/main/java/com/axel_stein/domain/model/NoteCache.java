@@ -1,16 +1,15 @@
 package com.axel_stein.domain.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class NoteCache {
 
-    private static HashMap<String, List<Note>> cache;
+    private static LruCache<String, List<Note>> cache;
 
     public static void put(String key, List<Note> value) {
         if (cache == null) {
-            cache = new HashMap<>();
+            cache = new LruCache<>(5);
         }
         cache.put(key, value);
     }
@@ -26,7 +25,7 @@ public class NoteCache {
     }
 
     public static boolean hasKey(String key) {
-        return cache != null && cache.containsKey(key);
+        return cache != null && cache.get(key) != null;
     }
 
     public static void invalidate() {

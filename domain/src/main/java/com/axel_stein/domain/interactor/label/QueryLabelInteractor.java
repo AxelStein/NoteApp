@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.label;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
+import com.axel_stein.domain.model.LabelCache;
 import com.axel_stein.domain.repository.LabelRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
@@ -44,6 +45,10 @@ public class QueryLabelInteractor {
         return Single.fromCallable(new Callable<List<Label>>() {
             @Override
             public List<Label> call() throws Exception {
+                if (LabelCache.hasValue()) {
+                    return LabelCache.get();
+                }
+
                 List<Label> result = mLabelRepository.query();
                 if (!isValid(result)) {
                     throw new IllegalStateException("result is not valid");
@@ -52,6 +57,8 @@ public class QueryLabelInteractor {
                 for (Label label : result) {
                     label.setNoteCount(mNoteLabelPairRepository.count(label));
                 }
+
+                LabelCache.put(result);
 
                 return result;
             }
