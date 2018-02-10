@@ -59,7 +59,7 @@
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
     <string name="pref_show_add_note_fab">Show FAB</string>
-    <string name="pref_category_appearance">Appearance</string>
+    <string name="pref_category_appearance">Main screen</string>
     <string name="pref_category_security">Security</string>
     <string name="pref_category_backup">Backup and import</string>
     <string name="pref_secure_notes">Secure notes</string>

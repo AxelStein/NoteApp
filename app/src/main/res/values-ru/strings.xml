@@ -65,7 +65,7 @@
     <string name="pref_font_size_default">По умолчанию</string>
     <string name="pref_font_size_large">Большой</string>
     <string name="pref_font_size_extra_large">Самый большой</string>
-    <string name="pref_category_appearance">Внешний вид</string>
+    <string name="pref_category_appearance">Главный экран</string>
     <string name="pref_category_security">Безопасность</string>
     <string name="pref_category_backup">Резервная копия и импорт</string>
     <string name="pref_secure_notes">Защитить заметки</string>
