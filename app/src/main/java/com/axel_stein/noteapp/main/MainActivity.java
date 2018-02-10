@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
+import com.axel_stein.noteapp.notes.list.NotesFragment;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.BottomMenuView;
@@ -102,6 +104,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void handleBottomMenuClick(int id) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment f = fm.findFragmentByTag(TAG_FRAGMENT);
+        if (f != null && f instanceof NotesFragment) {
+            ((NotesFragment) f).stopCheckMode();
+        }
+
         Fragment fragment = null;
         boolean showFAB = true;
 
