@@ -70,7 +70,10 @@ public class NoteListActivity extends BaseActivity {
     @Inject
     AppSettingsRepository mAppSettings;
 
+    @Nullable
     private Notebook mNotebook;
+
+    @Nullable
     private Label mLabel;
 
     @Nullable
@@ -280,19 +283,27 @@ public class NoteListActivity extends BaseActivity {
                 break;
 
             case R.id.menu_rename_notebook:
-                renameNotebookDialog(mNotebook);
+                if (mNotebook != null) {
+                    renameNotebookDialog(mNotebook);
+                }
                 break;
 
             case R.id.menu_delete_notebook:
-                deleteNotebookDialog(mNotebook);
+                if (mNotebook != null) {
+                    deleteNotebookDialog(mNotebook);
+                }
                 break;
 
             case R.id.menu_rename_label:
-                renameLabelDialog(mLabel);
+                if (mLabel != null) {
+                    renameLabelDialog(mLabel);
+                }
                 break;
 
             case R.id.menu_delete_label:
-                deleteLabelDialog(mLabel);
+                if (mLabel != null) {
+                    deleteLabelDialog(mLabel);
+                }
                 break;
         }
 
