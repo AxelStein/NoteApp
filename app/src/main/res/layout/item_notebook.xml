@@ -27,7 +27,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="?android:attr/textColorPrimary"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         tools:text="Item"/>
