@@ -77,6 +77,16 @@ public class SqlNoteRepository implements NoteRepository {
         mDao.unpin(mapIds(notes));
     }
 
+    @Override
+    public void deleteNotebook(@NonNull Notebook notebook) {
+        mDao.deleteNotebook(notebook.getId());
+    }
+
+    @Override
+    public void setHome(@NonNull Notebook notebook) {
+        mDao.setHome(notebook.getId());
+    }
+
     @NonNull
     @Override
     public List<Note> query() {

@@ -40,6 +40,10 @@ public interface NoteRepository {
 
     void unpin(@NonNull List<Note> notes);
 
+    void deleteNotebook(@NonNull Notebook notebook);
+
+    void setHome(@NonNull Notebook notebook);
+
     @NonNull
     List<Note> query();
 
