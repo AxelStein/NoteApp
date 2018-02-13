@@ -2,6 +2,7 @@ package com.axel_stein.noteapp.main;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    @BindView(R.id.app_bar)
+    AppBarLayout mAppBar;
+
     /*
     @BindView(R.id.bottom_navigation)
     BottomNavigationView mBottomNavigation;
@@ -68,6 +72,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onNavigationItemSelected(int itemId) {
                 handleBottomMenuClick(itemId);
+                mAppBar.setExpanded(true, true);
             }
         });
         mBottomNavigation.setItemReselectedListener(new BottomMenuView.OnNavigationItemReselectedListener() {
@@ -76,6 +81,7 @@ public class MainActivity extends BaseActivity {
                 if (!hasFragment(TAG_FRAGMENT)) {
                     handleBottomMenuClick(itemId);
                 }
+                mAppBar.setExpanded(true, true);
             }
         });
 
@@ -164,7 +170,7 @@ public class MainActivity extends BaseActivity {
                         actionName = getString(e.getActionName());
                     }
 
-                    Snackbar snackbar = Snackbar.make(mToolbar, msg, Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_main), msg, Snackbar.LENGTH_SHORT);
                     if (e.hasAction()) {
                         snackbar.setAction(actionName, new View.OnClickListener() {
                             @Override
