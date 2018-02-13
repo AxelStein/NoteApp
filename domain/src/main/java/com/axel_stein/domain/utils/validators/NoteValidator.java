@@ -9,7 +9,7 @@ import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 public class NoteValidator {
 
     public static boolean validateBeforeInsert(Note note) {
-        if (note == null || note.getNotebook() <= 0) {
+        if (note == null) {
             return false;
         }
 
@@ -24,7 +24,7 @@ public class NoteValidator {
     }
 
     public static boolean validateBeforeUpdate(Note note) {
-        if (note == null || note.getId() <= 0 || note.getNotebook() <= 0) {
+        if (note == null || note.getId() <= 0) {
             return false;
         }
 
@@ -43,7 +43,7 @@ public class NoteValidator {
     }
 
     public static boolean isValid(Note note, boolean checkId) {
-        if (note == null || note.getNotebook() <= 0) {
+        if (note == null) {
             return false;
         }
         if (checkId) {

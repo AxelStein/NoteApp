@@ -34,6 +34,8 @@ public interface EditNoteContract {
 
         void hideSearchPanel();
 
+        void setNotePinned(boolean pinned);
+
     }
 
     interface Presenter {
@@ -64,6 +66,8 @@ public interface EditNoteContract {
         void saveOrFinish();
 
         void delete();
+
+        void actionPinNote();
 
         void actionSelectNotebook();
 

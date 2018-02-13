@@ -90,6 +90,8 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     @Nullable
     private ActionMode mActionMode;
 
+    private View mEmptyView;
+
     @Inject
     AppSettingsRepository mSettingsRepository;
 
@@ -114,15 +116,17 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView view = (RecyclerView) inflater.inflate(R.layout.fragment_notebook_manager, container, false);
+        View view = inflater.inflate(R.layout.fragment_notebook_manager, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        mEmptyView = view.findViewById(R.id.empty_view);
 
         mAdapter = new Adapter(getContext(), mPresenter, mOrderInteractor);
         mAdapter.setItemListener(mListener);
-        mAdapter.attachRecyclerView(view);
+        mAdapter.attachRecyclerView(recyclerView);
 
-        view.setAdapter(mAdapter);
-        view.setHasFixedSize(true);
-        view.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mPresenter.onCreateView(this);
 
@@ -133,6 +137,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     public void onDestroyView() {
         mAdapter = null;
         mActionMode = null;
+        mEmptyView = null;
         mPresenter.onDestroyView();
         super.onDestroyView();
     }
@@ -200,6 +205,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
         if (mAdapter != null) {
             mAdapter.setItems(items);
         }
+        ViewUtil.show(items != null && items.size() == 0, mEmptyView);
     }
 
     @Override
@@ -420,7 +426,9 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
         public void onBindViewHolder(ViewHolder holder, int position) {
             Notebook notebook = getItem(position);
             setText(holder.mTextNotebook, notebook.getTitle());
-            setText(holder.mTextBadge, String.valueOf(notebook.getNoteCount()));
+
+            long count = notebook.getNoteCount();
+            setText(holder.mTextBadge, count <= 0 ? null : String.valueOf(count));
 
             holder.itemView.setBackgroundColor(mPresenter.isChecked(notebook) ? mSelectedBackgroundColor : 0);
             ViewUtil.enable(!mPresenter.checkModeEnabled(), holder.mDragHandler, holder.mMenu);

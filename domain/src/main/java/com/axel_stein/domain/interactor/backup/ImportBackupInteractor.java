@@ -53,13 +53,13 @@ public class ImportBackupInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
+                ObjectMapper mapper = new ObjectMapper();
+                Backup backup = mapper.readValue(src, Backup.class);
+
                 mNoteRepository.deleteAll();
                 mNotebookRepository.deleteAll();
                 mLabelRepository.deleteAll();
                 mNoteLabelPairRepository.deleteAll();
-
-                ObjectMapper mapper = new ObjectMapper();
-                Backup backup = mapper.readValue(src, Backup.class);
 
                 List<Note> notes = backup.getNotes();
                 if (notes != null) {

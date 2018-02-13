@@ -54,7 +54,7 @@ public class GetNoteInteractor {
                     note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
                 } else {
                     note = new Note();
-                    note.setNotebook(mNotebookRepository.query().get(0));
+                    //note.setNotebook(mNotebookRepository.query().get(0));
                 }
                 return note;
             }

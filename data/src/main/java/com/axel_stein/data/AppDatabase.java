@@ -15,13 +15,20 @@ import com.axel_stein.data.note_label_pair.NoteLabelPairEntity;
 import com.axel_stein.data.notebook.NotebookDao;
 import com.axel_stein.data.notebook.NotebookEntity;
 
-@Database(entities = {LabelEntity.class, NotebookEntity.class, NoteLabelPairEntity.class, NoteEntity.class}, version = 2)
+@Database(entities = {LabelEntity.class, NotebookEntity.class, NoteLabelPairEntity.class, NoteEntity.class}, version = 3)
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE `notebooks` ADD `order` INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE `notes` ADD `pinned` INTEGER NOT NULL DEFAULT 0");
         }
     };
 

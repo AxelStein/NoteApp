@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_home"
+        android:title="@string/action_home"
+        android:checkable="true"
+        android:icon="@drawable/ic_home_white_24dp"/>
+
+    <item
+        android:id="@+id/action_notebooks"
+        android:title="@string/action_notebooks"
+        android:checkable="true"
+        android:icon="@drawable/ic_book_white_24dp"/>
+
+    <item
+        android:id="@+id/action_labels"
+        android:title="@string/action_labels"
+        android:checkable="true"
+        android:icon="@drawable/ic_label_white_24dp"/>
+
+    <item
+        android:id="@+id/action_trash"
+        android:title="@string/action_trash"
+        android:checkable="true"
+        android:icon="@drawable/ic_delete_white_24dp"/>
+
+</menu>

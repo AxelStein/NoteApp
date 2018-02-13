@@ -32,8 +32,7 @@ public class Note implements Cloneable {
 
     private long update;
 
-    // todo
-    private boolean checkList;
+    private boolean pinned;
 
     @Nullable
     private HashMap<Long, Boolean> labels;
@@ -194,18 +193,6 @@ public class Note implements Cloneable {
         this.update = update;
     }
 
-    public boolean isCheckList() {
-        return checkList;
-    }
-
-    public void setCheckList(boolean checkList) {
-        this.checkList = checkList;
-    }
-
-    public boolean hasLabels() {
-        return labels != null && labels.size() > 0;
-    }
-
     @Nullable
     public List<Long> getLabels() {
         if (labels == null || labels.size() == 0) {
@@ -223,6 +210,14 @@ public class Note implements Cloneable {
                 addLabel(l);
             }
         }
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
+    public boolean isPinned() {
+        return pinned;
     }
 
     public Note copy() {
@@ -251,6 +246,7 @@ public class Note implements Cloneable {
             builder.append(date, note.date);
             builder.append(update, note.update);
             builder.append(trash, note.trash);
+            builder.append(pinned, note.pinned);
 
             MapComparator<Long, Boolean> mapComparator = new MapComparator<>();
             builder.append(mapComparator.compare(labels, note.labels));
@@ -268,9 +264,11 @@ public class Note implements Cloneable {
                 ", notebook=" + notebook +
                 ", relevance=" + relevance +
                 ", trash=" + trash +
+                ", pinned=" + pinned +
                 ", title='" + title + '\'' +
                 ", date=" + date +
                 ", update=" + update +
                 '}';
     }
+
 }

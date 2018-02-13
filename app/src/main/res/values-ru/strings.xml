@@ -52,6 +52,9 @@
     <string name="action_manage_notebooks">Управление блокнотами</string>
     <string name="action_select">Выделить</string>
     <string name="action_sort_custom">Вручную</string>
+    <string name="action_home">Главная</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_pin_note">Прикрепить заметку</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>
@@ -62,7 +65,7 @@
     <string name="pref_font_size_default">По умолчанию</string>
     <string name="pref_font_size_large">Большой</string>
     <string name="pref_font_size_extra_large">Самый большой</string>
-    <string name="pref_category_appearance">Внешний вид</string>
+    <string name="pref_category_appearance">Главный экран</string>
     <string name="pref_category_security">Безопасность</string>
     <string name="pref_category_backup">Резервная копия и импорт</string>
     <string name="pref_secure_notes">Защитить заметки</string>
@@ -72,12 +75,14 @@
     <string name="pref_backup_manager">Управление резервными копиями</string>
     <string name="pref_about_app">О приложении</string>
     <string name="pref_rate_app">Оценить приложение</string>
-    <string name="pref_show_note_editor_lines">Показывать линии в редакторе заметок</string>
+    <string name="pref_show_note_editor_lines">Показывать линии</string>
     <string name="pref_swipe_left">Свайп влево</string>
     <string name="pref_swipe_right">Свайп вправо</string>
     <string name="pref_swipe_action_none">Ничего</string>
     <string name="pref_swipe_action_trash_restore">В корзину / Восстановить</string>
     <string name="pref_swipe_action_delete">Удалить</string>
+    <string name="pref_swipe_action_pin">Прикрепить / Открепить</string>
+    <string name="pref_category_editor">Редактор заметок</string>
 
     <!--Errors-->
     <string name="error">Ошибка</string>
@@ -105,6 +110,9 @@
     <string name="empty_search">Заметки не найдены</string>
     <string name="empty_trash">Нет заметок в корзине</string>
     <string name="empty_backup">Резервные копии не найдены</string>
+    <string name="empty_home">Заметки не найдены</string>
+    <string name="empty_label_list">Метки не найдены</string>
+    <string name="empty_notebook_list">Блокноты не найдены</string>
 
     <!--Dialog titles-->
     <string name="title_empty_trash">Очистить корзину?</string>
@@ -158,5 +166,9 @@
     <string name="msg_security_enabled">Защита включена</string>
     <string name="msg_security_disabled">Защита отключена</string>
     <string name="msg_password_reset_caution">Вы уверены, что хотите сбросить пароль? Все заметки будут удалены навсегда.</string>
+    <string name="msg_note_pinned">Заметка закреплена</string>
+    <string name="msg_note_unpinned">Заметка откреплена</string>
+    <string name="msg_notes_pinned">Заметки закреплены</string>
+    <string name="msg_notes_unpinned">Заметки откреплены</string>
 
 </resources>

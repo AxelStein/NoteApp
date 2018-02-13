@@ -10,6 +10,12 @@ import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
+import com.axel_stein.noteapp.main.HomeFragment;
+import com.axel_stein.noteapp.main.LabelsFragment;
+import com.axel_stein.noteapp.main.MainActivity;
+import com.axel_stein.noteapp.main.NoteListActivity;
+import com.axel_stein.noteapp.main.NotebooksFragment;
+import com.axel_stein.noteapp.main.TrashFragment;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerFragment;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerPresenter;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
@@ -18,12 +24,14 @@ import com.axel_stein.noteapp.notes.edit.EditNotePresenter;
 import com.axel_stein.noteapp.notes.list.DrawerHelper;
 import com.axel_stein.noteapp.notes.list.NotesActivity;
 import com.axel_stein.noteapp.notes.list.TrashActivity;
+import com.axel_stein.noteapp.notes.list.presenters.HomeNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.SearchNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.TrashNotesPresenter;
 import com.axel_stein.noteapp.settings.SettingsFragment;
+import com.axel_stein.noteapp.views.BottomMenuView;
 import com.axel_stein.noteapp.views.LinedEditText;
 
 import javax.inject.Singleton;
@@ -59,7 +67,11 @@ public interface AppComponent {
 
     void inject(TrashActivity trashActivity);
 
+    void inject(MainActivity activity);
+
     void inject(BaseActivity baseActivity);
+
+    void inject(NoteListActivity activity);
 
     void inject(EditNoteActivity activity);
 
@@ -75,6 +87,8 @@ public interface AppComponent {
 
     void inject(NotesPresenter notesPresenter);
 
+    void inject(HomeNotesPresenter presenter);
+
     void inject(SelectNotebookDialog selectNotebookDialog);
 
     void inject(EditNoteFragment editNoteFragment);
@@ -88,5 +102,15 @@ public interface AppComponent {
     void inject(NotebookManagerFragment notebookManagerFragment);
 
     void inject(DeleteNoteDialog deleteNoteDialog);
+
+    void inject(NotebooksFragment notebooksFragment);
+
+    void inject(LabelsFragment labelsFragment);
+
+    void inject(TrashFragment fragment);
+
+    void inject(HomeFragment fragment);
+
+    void inject(BottomMenuView view);
 
 }

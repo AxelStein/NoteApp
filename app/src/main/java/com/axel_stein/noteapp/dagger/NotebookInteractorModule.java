@@ -3,8 +3,6 @@ package com.axel_stein.noteapp.dagger;
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
-import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
-import com.axel_stein.domain.interactor.note.QueryNoteInteractor;
 import com.axel_stein.domain.interactor.notebook.DeleteNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.GetNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
@@ -29,10 +27,8 @@ class NotebookInteractorModule {
     }
 
     @Provides
-    DeleteNotebookInteractor delete(SqlNotebookRepository repository,
-                                    DeleteNoteInteractor deleteNotes,
-                                    QueryNoteInteractor queryNotes) {
-        return new DeleteNotebookInteractor(repository, deleteNotes, queryNotes);
+    DeleteNotebookInteractor delete(SqlNoteRepository n, SqlNotebookRepository b) {
+        return new DeleteNotebookInteractor(n, b);
     }
 
     @Provides

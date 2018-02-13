@@ -410,6 +410,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
         class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
             private ImageView mIcon;
+            private ImageView mPin;
             private TextView mNote;
             private TextView mContent;
             private NoteItemListener mListener;
@@ -417,6 +418,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
             private NoteViewHolder(View itemView, NoteItemListener l) {
                 super(itemView);
                 mIcon = itemView.findViewById(R.id.img_icon);
+                mPin = itemView.findViewById(R.id.img_pin);
                 mNote = itemView.findViewById(R.id.text_note);
                 mContent = itemView.findViewById(R.id.text_content);
                 mListener = l;
@@ -443,6 +445,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
                 mNote.setText(note.getTitle());
                 mContent.setText(content);
+
+                ViewUtil.show(note.isPinned(), mPin);
             }
 
             void setChecked(boolean checkable, boolean checked) {

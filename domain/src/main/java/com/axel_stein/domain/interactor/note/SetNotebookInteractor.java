@@ -35,8 +35,8 @@ public class SetNotebookInteractor {
                     throw new IllegalArgumentException("notes is not valid");
                 }
 
-                if (notebookId <= 0) {
-                    throw new IllegalArgumentException("notebookId is 0");
+                if (notebookId < 0) {
+                    throw new IllegalArgumentException("notebookId is less than 0");
                 }
 
                 mNoteRepository.setNotebook(notes, notebookId);

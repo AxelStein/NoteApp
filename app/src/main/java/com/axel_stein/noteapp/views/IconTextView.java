@@ -26,14 +26,17 @@ public class IconTextView extends AppCompatTextView {
 
     private final ForegroundViewImpl mImpl = new ForegroundViewImpl(this);
 
+    private int mIconTopTintColor;
     private int mIconLeftTintColor;
     private int mIconRightTintColor;
 
     private boolean mShowIcons;
 
+    private boolean mShowIconTop;
     private boolean mShowIconLeft;
     private boolean mShowIconRight;
 
+    private Drawable mIconTop;
     private Drawable mIconLeft;
     private Drawable mIconRight;
 
@@ -57,13 +60,16 @@ public class IconTextView extends AppCompatTextView {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconTextView);
 
+        mIconTopTintColor = a.getColor(R.styleable.IconTextView_iconTopTint, 0);
         mIconLeftTintColor = a.getColor(R.styleable.IconTextView_iconLeftTint, 0);
         mIconRightTintColor = a.getColor(R.styleable.IconTextView_iconRightTint, 0);
 
+        mIconTop = a.getDrawable(R.styleable.IconTextView_iconTop);
         mIconLeft = a.getDrawable(R.styleable.IconTextView_iconLeft);
         mIconRight = a.getDrawable(R.styleable.IconTextView_iconRight);
 
         mShowIcons = a.getBoolean(R.styleable.IconTextView_showIcons, true);
+        mShowIconTop = a.getBoolean(R.styleable.IconTextView_showIconTop, true);
         mShowIconLeft = a.getBoolean(R.styleable.IconTextView_showIconLeft, true);
         mShowIconRight = a.getBoolean(R.styleable.IconTextView_showIconRight, true);
 
@@ -74,6 +80,20 @@ public class IconTextView extends AppCompatTextView {
 
     public void showIcons(boolean showIcons) {
         mShowIcons = showIcons;
+        update();
+    }
+
+    public void setIconTop(@DrawableRes int iconRes) {
+        try {
+            mIconTop = ContextCompat.getDrawable(getContext(), iconRes);
+        } catch (Exception ignored) {
+            mIconTop = null;
+        }
+        update();
+    }
+
+    public void setIconTop(Drawable icon) {
+        mIconTop = icon;
         update();
     }
 
@@ -91,6 +111,16 @@ public class IconTextView extends AppCompatTextView {
         update();
     }
 
+    public void setIconTopTintColor(@ColorInt int color) {
+        mIconTopTintColor = color;
+        update();
+    }
+
+    public void setIconTopTintColorRes(@ColorRes int color) {
+        mIconTopTintColor = ContextCompat.getColor(getContext(), color);
+        update();
+    }
+
     public void setIconLeftTintColor(@ColorInt int color) {
         mIconLeftTintColor = color;
         update();
@@ -98,6 +128,11 @@ public class IconTextView extends AppCompatTextView {
 
     public void setIconLeftTintColorRes(@ColorRes int color) {
         mIconLeftTintColor = ContextCompat.getColor(getContext(), color);
+        update();
+    }
+
+    public void showIconTop(boolean show) {
+        mShowIconTop = show;
         update();
     }
 
@@ -141,13 +176,15 @@ public class IconTextView extends AppCompatTextView {
             return;
         }
 
+        tintIcon(mIconTop, mIconTopTintColor);
         tintIcon(mIconLeft, mIconLeftTintColor);
         tintIcon(mIconRight, mIconRightTintColor);
 
+        Drawable top = mShowIconTop ? mIconTop : null;
         Drawable left = mShowIconLeft ? mIconLeft : null;
         Drawable right = mShowIconRight ? mIconRight : null;
 
-        setCompoundDrawablesWithIntrinsicBounds(left, null, right, null);
+        setCompoundDrawablesWithIntrinsicBounds(left, top, right, null);
     }
 
     private void tintIcon(@Nullable Drawable icon, int color) {

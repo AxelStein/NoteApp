@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.notebook;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.model.NotebookCache;
 import com.axel_stein.domain.model.NotebookOrder;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
@@ -47,11 +48,16 @@ public class QueryNotebookInteractor {
         return Single.fromCallable(new Callable<List<Notebook>>() {
             @Override
             public List<Notebook> call() throws Exception {
+                if (NotebookCache.hasValue()) {
+                    return NotebookCache.get();
+                }
+
                 List<Notebook> notebooks = mNotebookRepository.query();
                 if (!isValid(notebooks)) {
                     throw new IllegalStateException("result is not valid");
                 }
 
+                /*
                 if (notebooks.size() == 0) {
                     Notebook notebook = new Notebook();
                     notebook.setTitle(mSettingsRepository.defaultNotebookTitle());
@@ -63,6 +69,7 @@ public class QueryNotebookInteractor {
 
                     notebooks.add(notebook);
                 }
+                */
 
                 for (Notebook notebook : notebooks) {
                     notebook.setNoteCount(mNoteRepository.count(notebook));
@@ -82,6 +89,8 @@ public class QueryNotebookInteractor {
                         return 0;
                     }
                 });
+
+                NotebookCache.put(notebooks);
 
                 return notebooks;
             }

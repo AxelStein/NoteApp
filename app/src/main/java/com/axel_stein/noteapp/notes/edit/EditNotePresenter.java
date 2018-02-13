@@ -7,8 +7,10 @@ import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
+import com.axel_stein.domain.interactor.note.PinNoteInteractor;
 import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
 import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
+import com.axel_stein.domain.interactor.note.UnpinNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
@@ -63,6 +65,12 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
     @Inject
     SetLabelsInteractor mSetLabelsInteractor;
+
+    @Inject
+    PinNoteInteractor mPinNoteInteractor;
+
+    @Inject
+    UnpinNoteInteractor mUnpinNoteInteractor;
 
     private Note mNote;
     private Note mSrcNote;
@@ -280,7 +288,58 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void setNotebook(final Notebook notebook) {
+    public void actionPinNote() {
+        if (mNote.getId() <= 0) {
+            boolean p = !mNote.isPinned();
+
+            mNote.setPinned(p);
+            mSrcNote.setPinned(p);
+
+            if (mView != null) {
+                mView.setNotePinned(p);
+            }
+
+            notifyChanged();
+            return;
+        }
+
+        Completable c;
+        final boolean result = !mNote.isPinned();
+        if (mNote.isPinned()) {
+            c = mUnpinNoteInteractor.execute(mNote);
+        } else {
+            c = mPinNoteInteractor.execute(mNote);
+        }
+        c.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        mSrcNote.setPinned(result);
+
+                        if (mView != null) {
+                            mView.setNotePinned(result);
+                            mView.showMessage(result ? R.string.msg_note_pinned : R.string.msg_note_unpinned);
+                        }
+
+                        EventBusHelper.updateNoteList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                    }
+                });
+    }
+
+    @Override
+    public void setNotebook(Notebook notebook) {
+        if (notebook == null) {
+            notebook = new Notebook();
+        }
+        setNotebookImpl(notebook);
+    }
+
+    private void setNotebookImpl(final Notebook notebook) {
         if (mNote.getId() > 0) {
             mUpdateNoteNotebookInteractor.execute(mNote.getId(), notebook.getId())
                     .observeOn(AndroidSchedulers.mainThread())

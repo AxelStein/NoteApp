@@ -26,6 +26,9 @@ public class NoteEntity {
     private boolean trash;
 
     @ColumnInfo
+    private boolean pinned;
+
+    @ColumnInfo
     private long date;
 
     @ColumnInfo
@@ -77,6 +80,14 @@ public class NoteEntity {
 
     public void setTrash(boolean trash) {
         this.trash = trash;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
+    public boolean isPinned() {
+        return pinned;
     }
 
     public long getDate() {

@@ -52,11 +52,14 @@
     <string name="action_manage_notebooks">Manage notebooks</string>
     <string name="action_select">Select</string>
     <string name="action_sort_custom">Custom</string>
+    <string name="action_home">Home</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_pin_note">Pin note</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
     <string name="pref_show_add_note_fab">Show FAB</string>
-    <string name="pref_category_appearance">Appearance</string>
+    <string name="pref_category_appearance">Main screen</string>
     <string name="pref_category_security">Security</string>
     <string name="pref_category_backup">Backup and import</string>
     <string name="pref_secure_notes">Secure notes</string>
@@ -72,12 +75,14 @@
     <string name="pref_backup_manager">Backup manager</string>
     <string name="pref_about_app">About app</string>
     <string name="pref_rate_app">Rate app</string>
-    <string name="pref_show_note_editor_lines">Show lines in the note editor</string>
+    <string name="pref_show_note_editor_lines">Show lines</string>
     <string name="pref_swipe_left">Swipe left</string>
     <string name="pref_swipe_right">Swipe right</string>
     <string name="pref_swipe_action_none">None</string>
     <string name="pref_swipe_action_trash_restore">Trash / Restore</string>
     <string name="pref_swipe_action_delete">Delete</string>
+    <string name="pref_swipe_action_pin">Pin / Unpin</string>
+    <string name="pref_category_editor">Note editor</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>
@@ -90,6 +95,7 @@
         <item>@string/pref_swipe_action_none</item>
         <item>@string/pref_swipe_action_trash_restore</item>
         <item>@string/pref_swipe_action_delete</item>
+        <item>@string/pref_swipe_action_pin</item>
     </string-array>
 
     <!--Errors-->
@@ -118,6 +124,9 @@
     <string name="empty_search">No matching notes</string>
     <string name="empty_trash">No notes in trash</string>
     <string name="empty_backup">No backups found</string>
+    <string name="empty_home">No notes yet</string>
+    <string name="empty_label_list">No labels yet</string>
+    <string name="empty_notebook_list">No notebooks yet</string>
 
     <!--Dialog titles-->
     <string name="title_empty_trash">Empty trash?</string>
@@ -171,5 +180,9 @@
     <string name="msg_security_enabled">Security enabled</string>
     <string name="msg_security_disabled">Security disabled</string>
     <string name="msg_password_reset_caution">Are you sure you want to reset password? All of your notes will be permanently deleted.</string>
+    <string name="msg_note_pinned">Note pinned</string>
+    <string name="msg_note_unpinned">Note unpinned</string>
+    <string name="msg_notes_pinned">Notes pinned</string>
+    <string name="msg_notes_unpinned">Notes unpinned</string>
 
 </resources>

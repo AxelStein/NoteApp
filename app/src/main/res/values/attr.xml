@@ -5,17 +5,21 @@
     <attr name="checkBoxTint" format="color|reference"/>
     <attr name="editTextLineColor" format="color|reference"/>
     <attr name="keepScreenOnColor" format="color|reference"/>
+    <attr name="notePinColor" format="color|reference"/>
     <attr name="searchSelectorColor" format="color|reference"/>
     <attr name="searchSelectorCurrentColor" format="color|reference"/>
     <attr name="toolbarPopupTheme" format="reference"/>
     <attr name="selectedNotebookBackgroundColor" format="color|reference"/>
 
     <declare-styleable name="IconTextView">
+        <attr name="iconTop" format="reference"/>
+        <attr name="iconTopTint" format="reference|color"/>
         <attr name="iconLeft" format="reference"/>
         <attr name="iconLeftTint" format="reference|color"/>
         <attr name="iconRight" format="reference"/>
         <attr name="iconRightTint" format="reference|color"/>
         <attr name="showIcons" format="boolean"/>
+        <attr name="showIconTop" format="boolean"/>
         <attr name="showIconLeft" format="boolean"/>
         <attr name="showIconRight" format="boolean"/>
 

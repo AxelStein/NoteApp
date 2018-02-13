@@ -16,7 +16,6 @@ import io.reactivex.schedulers.Schedulers;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
-// todo test
 public class TrashNoteInteractor {
 
     @NonNull

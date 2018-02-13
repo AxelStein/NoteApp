@@ -37,6 +37,7 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
     public static void launch(Fragment fragment, List<Notebook> notebooks, long selectedNotebook) {
         SelectNotebookDialog dialog = new SelectNotebookDialog();
         dialog.setTitle(R.string.title_select_notebook);
+        dialog.setPositiveButtonText(R.string.action_home);
         dialog.setNegativeButtonText(R.string.action_cancel);
         dialog.setNotebooks(notebooks, selectedNotebook);
         dialog.setTargetFragment(fragment, 0);
@@ -117,6 +118,13 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mListener.onNotebookSelected(null);
+                dismiss();
             }
         });
 

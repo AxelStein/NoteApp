@@ -6,9 +6,11 @@ import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
+import com.axel_stein.domain.interactor.note.PinNoteInteractor;
 import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookInteractor;
 import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
+import com.axel_stein.domain.interactor.note.UnpinNoteInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -61,6 +64,12 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Inject
     RestoreNoteInteractor mRestoreNoteInteractor;
+
+    @Inject
+    PinNoteInteractor mPinNoteInteractor;
+
+    @Inject
+    UnpinNoteInteractor mUnpinNoteInteractor;
 
     @Inject
     AppSettingsRepository mSettings;
@@ -222,6 +231,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 checkAll();
                 break;
 
+            case R.id.menu_pin_note:
+                pin(getCheckedNotes());
+                break;
+
             case R.id.menu_move_to_trash:
                 moveToTrash(getCheckedNotes());
                 break;
@@ -280,12 +293,12 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Override
     public boolean hasSwipeLeftAction() {
-        return mSettings.hasSwipeLeftAction();
+        return !hasChecked() && mSettings.hasSwipeLeftAction();
     }
 
     @Override
     public boolean hasSwipeRightAction() {
-        return mSettings.hasSwipeRightAction();
+        return !hasChecked() && mSettings.hasSwipeRightAction();
     }
 
     @Override
@@ -300,6 +313,9 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     protected void handleSwipeAction(int action, Note note) {
         switch (action) {
+            case AppSettingsRepository.SWIPE_ACTION_NONE:
+                break;
+
             case AppSettingsRepository.SWIPE_ACTION_TRASH_RESTORE:
                 moveToTrash(note);
                 break;
@@ -307,7 +323,57 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
             case AppSettingsRepository.SWIPE_ACTION_DELETE:
                 delete(note);
                 break;
+
+            case AppSettingsRepository.SWIPE_ACTION_PIN:
+                pin(note);
+                break;
         }
+    }
+
+    protected void pin(Note note) {
+        List<Note> list = new ArrayList<>();
+        list.add(note);
+        pin(list);
+    }
+
+    protected void pin(final List<Note> notes) {
+        boolean pin = false;
+        for (Note note : notes) {
+            if (!note.isPinned()) {
+                pin = true;
+                break;
+            }
+        }
+
+        final boolean result = pin;
+
+        Completable c;
+        if (pin) {
+            c = mPinNoteInteractor.execute(notes);
+        } else {
+            c = mUnpinNoteInteractor.execute(notes);
+        }
+        c.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        int msg;
+                        if (notes.size() == 1) {
+                            msg = result ? R.string.msg_note_pinned : R.string.msg_note_unpinned;
+                        } else {
+                            msg = result ? R.string.msg_notes_pinned : R.string.msg_notes_unpinned;
+                        }
+
+                        EventBusHelper.showMessage(msg);
+                        EventBusHelper.updateNoteList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwable.printStackTrace();
+                        EventBusHelper.showMessage(R.string.error);
+                    }
+                });
     }
 
     protected void moveToTrash(Note note) {
@@ -378,6 +444,13 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Override
     public void onNotebookSelected(Notebook notebook) {
+        if (notebook == null) {
+            notebook = new Notebook();
+        }
+        onNotebookSelectedImpl(notebook);
+    }
+
+    private void onNotebookSelectedImpl(Notebook notebook) {
         final List<Note> notes = getCheckedNotes();
         mSetNotebookInteractor.execute(notes, notebook.getId())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -452,6 +525,11 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         List<Note> list = new ArrayList<>();
         list.add(note);
         return list;
+    }
+
+    @Override
+    public void forceUpdate() {
+        loadImpl();
     }
 
 }

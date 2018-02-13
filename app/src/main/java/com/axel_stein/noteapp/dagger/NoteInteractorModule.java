@@ -9,10 +9,12 @@ import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
+import com.axel_stein.domain.interactor.note.PinNoteInteractor;
 import com.axel_stein.domain.interactor.note.QueryNoteInteractor;
 import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookInteractor;
 import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
+import com.axel_stein.domain.interactor.note.UnpinNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteNotebookInteractor;
 
@@ -79,6 +81,16 @@ class NoteInteractorModule {
     @Provides
     UpdateNoteInteractor update(SqlNoteRepository repository, SetLabelsInteractor setLabelsInteractor) {
         return new UpdateNoteInteractor(repository, setLabelsInteractor);
+    }
+
+    @Provides
+    PinNoteInteractor pin(SqlNoteRepository repository) {
+        return new PinNoteInteractor(repository);
+    }
+
+    @Provides
+    UnpinNoteInteractor unpin(SqlNoteRepository repository) {
+        return new UnpinNoteInteractor(repository);
     }
 
 }

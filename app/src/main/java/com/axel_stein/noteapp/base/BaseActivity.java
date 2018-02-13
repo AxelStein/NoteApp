@@ -66,6 +66,19 @@ public class BaseActivity extends AppCompatActivity implements Screen {
         }
     }
 
+    protected boolean hasFragment(String tag) {
+        try {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.findFragmentByTag(tag) != null) {
+                return true;
+            }
+        } catch (Exception e) {
+            // Catch IllegalStateException: Can not perform this action after onSaveInstanceState
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @Override
     public void showTrashActivity() {
         startActivity(new Intent(this, TrashActivity.class));

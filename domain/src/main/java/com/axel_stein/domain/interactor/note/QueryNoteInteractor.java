@@ -50,6 +50,30 @@ public class QueryNoteInteractor {
      * @return all notes, including trash
      */
     @NonNull
+    public Single<List<Note>> executeHome() {
+        final String key = "home";
+        if (hasKey(key)) {
+            return single(new Callable<List<Note>>() {
+                @Override
+                public List<Note> call() throws Exception {
+                    return get(key);
+                }
+            });
+        }
+        return single(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() throws Exception {
+                List<Note> notes = orderImpl(mNoteRepository.queryHome());
+                put(key, notes);
+                return notes;
+            }
+        });
+    }
+
+    /**
+     * @return all notes, including trash
+     */
+    @NonNull
     public Single<List<Note>> execute() {
         return single(new Callable<List<Note>>() {
             @Override
@@ -66,16 +90,6 @@ public class QueryNoteInteractor {
      */
     @NonNull
     public Single<List<Note>> execute(@NonNull final Notebook notebook) {
-        return execute(notebook, false);
-    }
-
-    /**
-     * @return notes in notebook
-     * @throws NullPointerException     if notebook is null
-     * @throws IllegalArgumentException if notebook`s id is 0
-     */
-    @NonNull
-    public Single<List<Note>> execute(@NonNull final Notebook notebook, final boolean includeTrash) {
         final String key = "notebook_" + notebook.getId();
         if (hasKey(key)) {
             return single(new Callable<List<Note>>() {
@@ -91,41 +105,8 @@ public class QueryNoteInteractor {
                 if (!NotebookValidator.isValid(notebook)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
-                List<Note> notes = orderImpl(mNoteRepository.query(notebook, includeTrash));
+                List<Note> notes = orderImpl(mNoteRepository.query(notebook));
                 put(key, notes);
-                return notes;
-            }
-        });
-    }
-
-    /**
-     * @return notes in notebook
-     * @throws NullPointerException     if notebook is null
-     * @throws IllegalArgumentException if notebook`s id is 0
-     */
-    @NonNull
-    public Single<List<Note>> execute(@NonNull final Notebook notebook, final boolean includeTrash, final boolean cache) {
-        final String key = "notebook_" + notebook.getId();
-        if (cache) {
-            if (hasKey(key)) {
-                return single(new Callable<List<Note>>() {
-                    @Override
-                    public List<Note> call() throws Exception {
-                        return get(key);
-                    }
-                });
-            }
-        }
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() throws Exception {
-                if (!NotebookValidator.isValid(notebook)) {
-                    throw new IllegalArgumentException("notebook is not valid");
-                }
-                List<Note> notes = orderImpl(mNoteRepository.query(notebook, includeTrash));
-                if (cache) {
-                    put(key, notes);
-                }
                 return notes;
             }
         });
@@ -287,8 +268,7 @@ public class QueryNoteInteractor {
 
         // set labels
         for (Note note : list) {
-            note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
-
+            // todo note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
             String content = note.getContent();
             if (!isEmpty(content)) {
                 if (mSettingsRepository.showNotesContent() || searchFlag) {
@@ -343,6 +323,27 @@ public class QueryNoteInteractor {
                 return 0;
             }
         });
+
+        if (!searchFlag) {
+            Collections.sort(list, new Comparator<Note>() {
+                @Override
+                public int compare(Note n1, Note n2) {
+                    n1 = requireNonNull(n1, "note1 is null");
+                    n2 = requireNonNull(n2, "note2 is null");
+
+                    boolean p1 = n1.isPinned();
+                    boolean p2 = n2.isPinned();
+
+                    if (p1 && !p2) {
+                        return -1;
+                    } else if (!p1 && p2) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+        }
+
         return list;
     }
 

@@ -2,9 +2,11 @@ package com.axel_stein.noteapp;
 
 import android.support.annotation.NonNull;
 
-import com.axel_stein.domain.model.NoteCache;
 import com.axel_stein.domain.model.Label;
+import com.axel_stein.domain.model.LabelCache;
+import com.axel_stein.domain.model.NoteCache;
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.model.NotebookCache;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,31 +30,39 @@ public class EventBusHelper {
 
     public static void updateNoteList(boolean saveSelection, boolean click) {
         NoteCache.invalidate();
+        NotebookCache.invalidate();
+        LabelCache.invalidate();
         post(new UpdateNoteList());
         post(new UpdateDrawer(saveSelection, click));
     }
 
     public static void addNotebook(Notebook notebook) {
+        NotebookCache.invalidate();
         post(new AddNotebook(notebook));
     }
 
     public static void renameNotebook(Notebook notebook) {
+        NotebookCache.invalidate();
         post(new RenameNotebook(notebook));
     }
 
     public static void deleteNotebook(Notebook notebook) {
+        NotebookCache.invalidate();
         post(new DeleteNotebook(notebook));
     }
 
     public static void addLabel(Label label) {
+        LabelCache.invalidate();
         post(new AddLabel(label));
     }
 
     public static void renameLabel(Label label) {
+        LabelCache.invalidate();
         post(new RenameLabel(label));
     }
 
     public static void deleteLabel(Label label) {
+        LabelCache.invalidate();
         post(new DeleteLabel(label));
     }
 

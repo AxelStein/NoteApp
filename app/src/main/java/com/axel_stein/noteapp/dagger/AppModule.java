@@ -19,6 +19,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import static com.axel_stein.data.AppDatabase.MIGRATION_1_2;
+import static com.axel_stein.data.AppDatabase.MIGRATION_2_3;
 
 @Module
 public class AppModule {
@@ -39,6 +40,7 @@ public class AppModule {
     AppDatabase provideDatabase(App app) {
         return Room.databaseBuilder(app, AppDatabase.class, app.getPackageName())
                 .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
                 .build();
     }
 

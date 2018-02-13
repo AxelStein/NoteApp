@@ -9,18 +9,10 @@
 
         app:showAsAction="always"/>
 
-
     <item
-        android:id="@+id/menu_select_notebook"
-        android:icon="@drawable/ic_book_white_24dp"
-        android:title="@string/action_notebook"
-
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_check_labels"
-        android:icon="@drawable/ic_label_white_24dp"
-        android:title="@string/action_labels"
+        android:id="@+id/menu_pin_note"
+        android:icon="@drawable/ic_pin_white_24dp"
+        android:title="@string/action_pin_note"
 
         app:showAsAction="always"/>
 
@@ -30,5 +22,19 @@
         android:title="@string/action_move_to_trash"
 
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_select_notebook"
+        android:icon="@drawable/ic_book_white_24dp"
+        android:title="@string/action_notebook"
+
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_check_labels"
+        android:icon="@drawable/ic_label_white_24dp"
+        android:title="@string/action_labels"
+
+        app:showAsAction="ifRoom"/>
 
 </menu>
