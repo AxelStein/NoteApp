@@ -231,6 +231,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 checkAll();
                 break;
 
+            case R.id.menu_pin_note:
+                pin(getCheckedNotes());
+                break;
+
             case R.id.menu_move_to_trash:
                 moveToTrash(getCheckedNotes());
                 break;
@@ -327,18 +331,40 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     }
 
     protected void pin(Note note) {
+        List<Note> list = new ArrayList<>();
+        list.add(note);
+        pin(list);
+    }
+
+    protected void pin(final List<Note> notes) {
+        boolean pin = false;
+        for (Note note : notes) {
+            if (!note.isPinned()) {
+                pin = true;
+                break;
+            }
+        }
+
+        final boolean result = pin;
+
         Completable c;
-        final boolean result = !note.isPinned();
-        if (note.isPinned()) {
-            c = mUnpinNoteInteractor.execute(note);
+        if (pin) {
+            c = mPinNoteInteractor.execute(notes);
         } else {
-            c = mPinNoteInteractor.execute(note);
+            c = mUnpinNoteInteractor.execute(notes);
         }
         c.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
                     public void run() throws Exception {
-                        EventBusHelper.showMessage(result ? R.string.msg_note_pinned : R.string.msg_note_unpinned);
+                        int msg;
+                        if (notes.size() == 1) {
+                            msg = result ? R.string.msg_note_pinned : R.string.msg_note_unpinned;
+                        } else {
+                            msg = result ? R.string.msg_notes_pinned : R.string.msg_notes_unpinned;
+                        }
+
+                        EventBusHelper.showMessage(msg);
                         EventBusHelper.updateNoteList();
                     }
                 }, new Consumer<Throwable>() {

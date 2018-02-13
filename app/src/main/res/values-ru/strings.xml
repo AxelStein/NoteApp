@@ -168,5 +168,7 @@
     <string name="msg_password_reset_caution">Вы уверены, что хотите сбросить пароль? Все заметки будут удалены навсегда.</string>
     <string name="msg_note_pinned">Заметка закреплена</string>
     <string name="msg_note_unpinned">Заметка откреплена</string>
+    <string name="msg_notes_pinned">Заметки закреплены</string>
+    <string name="msg_notes_unpinned">Заметки откреплены</string>
 
 </resources>

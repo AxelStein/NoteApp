@@ -9,6 +9,13 @@
 
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/menu_pin_note"
+        android:icon="@drawable/ic_pin_white_24dp"
+        android:title="@string/action_pin_note"
+
+        app:showAsAction="always"/>
+
 
     <item
         android:id="@+id/menu_select_notebook"

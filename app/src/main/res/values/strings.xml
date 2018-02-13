@@ -182,5 +182,7 @@
     <string name="msg_password_reset_caution">Are you sure you want to reset password? All of your notes will be permanently deleted.</string>
     <string name="msg_note_pinned">Note pinned</string>
     <string name="msg_note_unpinned">Note unpinned</string>
+    <string name="msg_notes_pinned">Notes pinned</string>
+    <string name="msg_notes_unpinned">Notes unpinned</string>
 
 </resources>
