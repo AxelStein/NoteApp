@@ -81,6 +81,7 @@
     <string name="pref_swipe_action_none">None</string>
     <string name="pref_swipe_action_trash_restore">Trash / Restore</string>
     <string name="pref_swipe_action_delete">Delete</string>
+    <string name="pref_swipe_action_pin">Pin / Unpin</string>
     <string name="pref_category_editor">Note editor</string>
 
     <string-array name="font_sizes">
@@ -94,6 +95,7 @@
         <item>@string/pref_swipe_action_none</item>
         <item>@string/pref_swipe_action_trash_restore</item>
         <item>@string/pref_swipe_action_delete</item>
+        <item>@string/pref_swipe_action_pin</item>
     </string-array>
 
     <!--Errors-->

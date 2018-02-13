@@ -24,6 +24,7 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final int SWIPE_ACTION_NONE = 0;
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
     public static final int SWIPE_ACTION_DELETE = 2;
+    public static final int SWIPE_ACTION_PIN = 3;
 
     private SharedPreferences mPreferences;
     private String mDefaultNotebookTitle;
@@ -169,6 +170,9 @@ public class AppSettingsRepository implements SettingsRepository {
 
                 case "swipe_action_delete":
                     return SWIPE_ACTION_DELETE;
+
+                case "swipe_action_pin":
+                    return SWIPE_ACTION_PIN;
             }
         }
         return SWIPE_ACTION_NONE;
