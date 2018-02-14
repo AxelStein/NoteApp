@@ -2,11 +2,13 @@ package com.axel_stein.noteapp.main;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
+import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 
 public class MainActivity extends BaseActivity {
 
@@ -71,17 +76,19 @@ public class MainActivity extends BaseActivity {
         mBottomNavigation.setItemSelectedListener(new BottomMenuView.OnNavigationItemSelectedListener() {
             @Override
             public void onNavigationItemSelected(int itemId) {
-                handleBottomMenuClick(itemId);
                 mAppBar.setExpanded(true, true);
+
+                handleBottomMenuClick(itemId);
             }
         });
         mBottomNavigation.setItemReselectedListener(new BottomMenuView.OnNavigationItemReselectedListener() {
             @Override
             public void onNavigationItemReselected(int itemId) {
+                mAppBar.setExpanded(true, true);
+
                 if (!hasFragment(TAG_FRAGMENT)) {
                     handleBottomMenuClick(itemId);
                 }
-                mAppBar.setExpanded(true, true);
             }
         });
 
@@ -211,6 +218,27 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+        setToolbarScrollFlags(false);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
+        super.onSupportActionModeFinished(mode);
+        setToolbarScrollFlags(true);
+    }
+
+    private void setToolbarScrollFlags(boolean scroll) {
+        int flags = scroll ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0;
+
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
+        params.setScrollFlags(flags);
+
+        mAppBar.requestLayout();
     }
 
     @Override
