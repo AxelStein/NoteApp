@@ -12,11 +12,7 @@
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_settings_white_24dp"
         android:title="@string/action_settings"
+        android:orderInCategory="10"
         app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_empty_trash"
-        android:title="@string/action_empty_trash"
-        android:visible="false"/>
 
 </menu>
