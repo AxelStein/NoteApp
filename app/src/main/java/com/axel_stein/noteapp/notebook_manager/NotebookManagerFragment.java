@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookOrderInteractor;
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.model.NotebookCache;
 import com.axel_stein.domain.model.NotebookOrder;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
@@ -167,6 +168,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
         if (order != null) {
             item.setChecked(true);
             mSettingsRepository.setNotebookOrder(order);
+            NotebookCache.invalidate();
             EventBusHelper.updateDrawer();
             return true;
         }
