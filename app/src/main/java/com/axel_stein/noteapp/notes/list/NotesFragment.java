@@ -263,6 +263,9 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     public void onItemChecked(int pos, int checkCount) {
         if (mActionMode != null) {
             mActionMode.setTitle(String.valueOf(checkCount));
+            if (mAdapter != null) {
+                MenuUtil.enable(mActionMode.getMenu(), checkCount != mAdapter.getItemCount(), R.id.menu_select_all);
+            }
         }
         if (mAdapter != null) {
             if (pos < 0) {
