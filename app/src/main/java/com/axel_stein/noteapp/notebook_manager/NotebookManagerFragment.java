@@ -361,6 +361,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
                 @Override
                 public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                     super.clearView(recyclerView, viewHolder);
+                    NotebookCache.invalidate();
                     mOrderInteractor.execute(mItems).subscribe(new CompletableObserver() {
                         @Override
                         public void onSubscribe(Disposable d) {

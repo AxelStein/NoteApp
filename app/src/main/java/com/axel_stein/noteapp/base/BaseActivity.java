@@ -38,12 +38,12 @@ public class BaseActivity extends AppCompatActivity implements Screen {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         App.getAppComponent().inject(this);
 
         mNightMode = mAppSettings.nightMode();
         setTheme(mNightMode ? R.style.AppThemeDark : R.style.AppTheme);
+
+        super.onCreate(savedInstanceState);
     }
 
     public void setHandleHomeButton(boolean handleHomeButton) {
