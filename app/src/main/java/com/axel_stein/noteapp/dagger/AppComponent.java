@@ -31,8 +31,6 @@ import com.axel_stein.noteapp.notes.list.presenters.NotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.SearchNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.TrashNotesPresenter;
 import com.axel_stein.noteapp.settings.SettingsFragment;
-import com.axel_stein.noteapp.views.BottomMenuView;
-import com.axel_stein.noteapp.views.LinedEditText;
 
 import javax.inject.Singleton;
 
@@ -94,8 +92,6 @@ public interface AppComponent {
     void inject(EditNoteFragment editNoteFragment);
 
     void inject(BackupPresenter backupPresenter);
-
-    void inject(LinedEditText linedEditText);
 
     void inject(NotebookManagerPresenter presenter);
 

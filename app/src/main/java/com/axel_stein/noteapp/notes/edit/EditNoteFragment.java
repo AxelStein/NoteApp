@@ -38,6 +38,7 @@ import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.LinedEditText;
 import com.axel_stein.noteapp.views.SearchPanel;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     EditText mEditTitle;
 
     @BindView(R.id.edit_content)
-    EditText mEditContent;
+    LinedEditText mEditContent;
 
     @BindView(R.id.text_update)
     TextView mTextUpdate;
@@ -139,6 +140,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                 mEditContent.setLineSpacing(0, 1.5f);
             }
         });
+
+        mEditContent.showLines(mAppSettings.showNoteEditorLines());
 
         int baseFontSize = mAppSettings.getBaseFontSize();
         mEditTitle.setTextSize(baseFontSize + 4);

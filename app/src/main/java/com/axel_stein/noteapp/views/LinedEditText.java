@@ -7,20 +7,13 @@ import android.graphics.Rect;
 import android.support.design.widget.TextInputEditText;
 import android.util.AttributeSet;
 
-import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.ColorUtil;
-
-import javax.inject.Inject;
 
 public class LinedEditText extends TextInputEditText {
     private Rect mRect;
     private Paint mPaint;
     private boolean mShowLines;
-
-    @Inject
-    AppSettingsRepository mAppSettings;
 
     public LinedEditText(Context context) {
         super(context);
@@ -42,10 +35,11 @@ public class LinedEditText extends TextInputEditText {
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mPaint.setColor(ColorUtil.getColorAttr(getContext(), R.attr.editTextLineColor));
+    }
 
-        App.getAppComponent().inject(this);
-
-        mShowLines = mAppSettings.showNoteEditorLines();
+    public void showLines(boolean show) {
+        mShowLines = show;
+        requestLayout();
     }
 
     @Override
