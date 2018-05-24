@@ -111,6 +111,4 @@ public interface AppComponent {
 
     void inject(HomeFragment fragment);
 
-    void inject(BottomMenuView view);
-
 }

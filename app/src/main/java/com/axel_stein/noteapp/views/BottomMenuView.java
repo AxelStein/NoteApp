@@ -5,21 +5,11 @@ import android.content.res.ColorStateList;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.noteapp.App;
-import com.axel_stein.noteapp.R;
-
-import javax.inject.Inject;
-
 public class BottomMenuView extends LinearLayout {
-
-    @Inject
-    AppSettingsRepository mAppSettings;
 
     private int mSelectedItemId;
 
@@ -41,14 +31,6 @@ public class BottomMenuView extends LinearLayout {
 
     public BottomMenuView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        App.getAppComponent().inject(this);
-
-        boolean nightMode = mAppSettings.nightMode();
-        mItemIconTint = ContextCompat.getColorStateList(context,
-                nightMode ? R.color.bottom_navigation_icon_dark : R.color.bottom_navigation_icon_light);
-        mItemTextColor = ContextCompat.getColorStateList(context,
-                nightMode ? R.color.bottom_navigation_text_dark : R.color.bottom_navigation_text_light);
     }
 
     public void setSelectedItemId(int selectedItemId) {
@@ -117,13 +99,17 @@ public class BottomMenuView extends LinearLayout {
     }
 
     private void updateItemIconImpl(IconTextView view, boolean checked) {
-        int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
-        view.setIconTopTintColor(mItemIconTint.getColorForState(state, 0));
+        if (mItemIconTint != null) {
+            int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
+            view.setIconTopTintColor(mItemIconTint.getColorForState(state, 0));
+        }
     }
 
     private void updateItemTextColorImpl(IconTextView view, boolean checked) {
-        int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
-        view.setTextColor(mItemTextColor.getColorForState(state, 0));
+        if (mItemTextColor != null) {
+            int[] state = new int[]{checked ? android.R.attr.state_checked : -android.R.attr.state_checked};
+            view.setTextColor(mItemTextColor.getColorForState(state, 0));
+        }
     }
 
     static class SavedState extends BaseSavedState {
