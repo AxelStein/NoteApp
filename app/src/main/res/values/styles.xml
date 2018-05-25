@@ -13,7 +13,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorAccent">@color/color_accent</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@color/window_background_light</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
@@ -47,7 +47,10 @@
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorPrimary">#222E3C</item>
+        <item name="colorPrimaryDark">#19222D</item>
         <item name="colorAccent">@color/color_accent_dark</item>
+        <item name="android:windowBackground">@color/window_background_dark</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">?attr/colorPrimary</item>
@@ -66,6 +69,7 @@
         <item name="searchSelectorCurrentColor">@color/search_selector_current_color_dark</item>
         <item name="selectedNotebookBackgroundColor">@color/selected_notebook_background_color_dark</item>
         <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat</item>
+        <item name="alertDialogTheme">@style/DialogThemeDark</item>
 
         <!-- MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_dark_background</item>
@@ -80,12 +84,17 @@
         <item name="material_drawer_header_selection_text">@color/material_drawer_dark_header_selection_text</item>
     </style>
 
+    <style name="DialogThemeDark" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/window_background_dark</item>
+        <item name="colorAccent">@color/color_accent_dark</item>
+    </style>
+
     <style name="BottomSheetDialogLight" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetModalLight</item>
     </style>
 
     <style name="BottomSheetModalLight" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">#ffffff</item>
+        <item name="android:background">@color/window_background_light</item>
         <item name="behavior_peekHeight">900dp</item>
     </style>
 
@@ -94,7 +103,7 @@
     </style>
 
     <style name="BottomSheetModalDark" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">#ff424242</item>
+        <item name="android:background">@color/window_background_dark</item> <!--#ff424242-->
         <item name="behavior_peekHeight">900dp</item>
     </style>
 

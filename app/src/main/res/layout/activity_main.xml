@@ -65,6 +65,7 @@
         android:id="@+id/bottom_navigation"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
