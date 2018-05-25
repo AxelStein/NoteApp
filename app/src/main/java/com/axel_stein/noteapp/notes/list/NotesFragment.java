@@ -26,6 +26,7 @@ import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.base.BaseFragment;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
@@ -46,7 +47,8 @@ import static android.text.TextUtils.isEmpty;
 
 public class NotesFragment extends BaseFragment implements NotesContract.View,
         SelectNotebookDialog.OnNotebookSelectedListener,
-        CheckLabelsDialog.OnLabelCheckedListener {
+        CheckLabelsDialog.OnLabelCheckedListener,
+        ScrollableFragment {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -347,6 +349,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         }
     }
 
+    @Override
     public void scrollToTop() {
         if (mRecyclerView != null) {
             mRecyclerView.scrollToPosition(0);

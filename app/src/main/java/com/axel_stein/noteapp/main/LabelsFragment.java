@@ -15,6 +15,7 @@ import com.axel_stein.domain.model.Label;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.utils.ViewUtil;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -29,7 +30,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ViewUtil.setText;
 
-public class LabelsFragment extends Fragment {
+public class LabelsFragment extends Fragment implements ScrollableFragment {
 
     private ItemListener mListener = new ItemListener() {
         @Override
@@ -43,6 +44,8 @@ public class LabelsFragment extends Fragment {
     private List<Label> mItems;
 
     private View mEmptyView;
+
+    private RecyclerView mRecyclerView;
 
     @Inject
     QueryLabelInteractor mInteractor;
@@ -65,15 +68,15 @@ public class LabelsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_labels, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyView = view.findViewById(R.id.empty_view);
 
         mAdapter = new Adapter();
         mAdapter.setItemListener(mListener);
 
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if (mItems == null) {
             forceUpdate();
@@ -109,6 +112,7 @@ public class LabelsFragment extends Fragment {
     public void onDestroyView() {
         mAdapter = null;
         mEmptyView = null;
+        mRecyclerView = null;
         super.onDestroyView();
     }
 
@@ -118,6 +122,13 @@ public class LabelsFragment extends Fragment {
             mAdapter.setItems(items);
         }
         ViewUtil.show(items != null && items.size() == 0, mEmptyView);
+    }
+
+    @Override
+    public void scrollToTop() {
+        if (mRecyclerView != null) {
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 
     @Subscribe

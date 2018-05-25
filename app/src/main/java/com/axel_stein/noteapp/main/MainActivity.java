@@ -3,6 +3,7 @@ package com.axel_stein.noteapp.main;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
@@ -90,6 +92,11 @@ public class MainActivity extends BaseActivity {
 
                 if (!hasFragment(TAG_FRAGMENT)) {
                     handleBottomMenuClick(itemId);
+                } else {
+                    Fragment f = findMainFragment();
+                    if (f != null && f instanceof ScrollableFragment) {
+                        ((ScrollableFragment) f).scrollToTop();
+                    }
                 }
             }
         });
@@ -118,9 +125,14 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void handleBottomMenuClick(int id) {
+    @Nullable
+    private Fragment findMainFragment() {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment f = fm.findFragmentByTag(TAG_FRAGMENT);
+        return fm.findFragmentByTag(TAG_FRAGMENT);
+    }
+
+    private void handleBottomMenuClick(int id) {
+        Fragment f = findMainFragment();
         if (f != null && f instanceof NotesFragment) {
             ((NotesFragment) f).stopCheckMode();
         }

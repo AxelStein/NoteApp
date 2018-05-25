@@ -3,6 +3,7 @@ package com.axel_stein.noteapp.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
@@ -34,7 +36,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ViewUtil.setText;
 
-public class NotebooksFragment extends android.support.v4.app.Fragment {
+public class NotebooksFragment extends Fragment implements ScrollableFragment {
 
     private NotebookItemListener mListener = new NotebookItemListener() {
         @Override
@@ -48,6 +50,8 @@ public class NotebooksFragment extends android.support.v4.app.Fragment {
     private List<Notebook> mItems;
 
     private View mEmptyView;
+
+    private RecyclerView mRecyclerView;
 
     @Inject
     QueryNotebookInteractor mInteractor;
@@ -88,15 +92,15 @@ public class NotebooksFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notebooks, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyView = view.findViewById(R.id.empty_view);
 
         mAdapter = new Adapter();
         mAdapter.setItemListener(mListener);
 
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if (mItems == null) {
             forceUpdate();
@@ -132,6 +136,7 @@ public class NotebooksFragment extends android.support.v4.app.Fragment {
     public void onDestroyView() {
         mAdapter = null;
         mEmptyView = null;
+        mRecyclerView = null;
         super.onDestroyView();
     }
 
@@ -141,6 +146,13 @@ public class NotebooksFragment extends android.support.v4.app.Fragment {
             mAdapter.setItems(items);
         }
         ViewUtil.show(items != null && items.size() == 0, mEmptyView);
+    }
+
+    @Override
+    public void scrollToTop() {
+        if (mRecyclerView != null) {
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 
     @Subscribe
