@@ -201,20 +201,24 @@ public class EditNoteActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(BUNDLE_FULLSCREEN, !ViewUtil.isShown(mToolbar));
-        outState.putBoolean(BUNDLE_KEEP_SCREEN_ON, mKeepScreenOn);
+        if (outState != null) {
+            outState.putBoolean(BUNDLE_FULLSCREEN, !ViewUtil.isShown(mToolbar));
+            outState.putBoolean(BUNDLE_KEEP_SCREEN_ON, mKeepScreenOn);
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        boolean fullscreen = savedInstanceState.getBoolean(BUNDLE_FULLSCREEN);
+        if (savedInstanceState != null) {
+            boolean fullscreen = savedInstanceState.getBoolean(BUNDLE_FULLSCREEN);
 
-        ViewUtil.show(!fullscreen, mToolbar);
+            ViewUtil.show(!fullscreen, mToolbar);
 
-        mKeepScreenOn = savedInstanceState.getBoolean(BUNDLE_KEEP_SCREEN_ON);
-        updateWindowFlagsKeepScreenOn(mKeepScreenOn);
+            mKeepScreenOn = savedInstanceState.getBoolean(BUNDLE_KEEP_SCREEN_ON);
+            updateWindowFlagsKeepScreenOn(mKeepScreenOn);
+        }
     }
 
     @Override
