@@ -53,6 +53,7 @@
     <string name="action_select">Выделить</string>
     <string name="action_sort_custom">Вручную</string>
     <string name="action_home">Главная</string>
+    <string name="action_inbox">Входящие</string>
     <string name="action_clear">Очистить</string>
     <string name="action_pin_note">Прикрепить заметку</string>
 

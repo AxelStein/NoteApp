@@ -8,6 +8,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Notebook {
     public static final int MAX_TITLE_LENGTH = 128;
 
+    public static Notebook from(String title) {
+        Notebook n = new Notebook();
+        n.setTitle(title);
+        return n;
+    }
+
     private long id;
 
     private String title;

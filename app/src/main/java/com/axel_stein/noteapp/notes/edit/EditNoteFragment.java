@@ -72,6 +72,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @BindView(R.id.edit_content)
     LinedEditText mEditContent;
 
+    @BindView(R.id.text_date)
+    TextView mTextDate;
+
     @BindView(R.id.text_update)
     TextView mTextUpdate;
 
@@ -218,26 +221,23 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
                         }
                         mPreviousIndex = index;
 
-                        Layout layout = mEditContent.getLayout();
-                        if (layout == null) {
-                            mEditContent.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (mEditContent != null) {
-                                        Layout layout = mEditContent.getLayout();
-                                        if (layout != null) {
-                                            int line = layout.getLineForOffset(index);
-                                            int y = layout.getLineBottom(line);
-                                            mScrollView.scrollTo(0, y);
-                                        }
-                                    }
-                                }
-                            });
-                        } else {
-                            int line = layout.getLineForOffset(index);
-                            int y = layout.getLineBottom(line);
-                            mScrollView.scrollTo(0, y);
-                        }
+                        scrollToIndex(index);
+                    }
+                }
+
+                private void scrollToIndex(final int index) {
+                    Layout layout = mEditContent.getLayout();
+                    if (layout != null) {
+                        int line = layout.getLineForOffset(index);
+                        int y = layout.getLineBottom(line);
+                        mScrollView.scrollTo(0, y);
+                    } else {
+                        mEditContent.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollToIndex(index);
+                            }
+                        });
                     }
                 }
 
@@ -287,6 +287,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mSearchPanel = null;
         mEditTitle = null;
         mEditContent = null;
+        mTextDate = null;
         mTextUpdate = null;
         mViewCreated = false;
         mMenu = null;
@@ -425,11 +426,15 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mTrash = note.isTrash();
         mUpdate = note.getId() > 0;
 
-        long date = System.currentTimeMillis();
-        if (note.getId() > 0) {
-            date = note.getUpdate();
+        long date;
+        if (note.getId() == 0) {
+            date = System.currentTimeMillis();
+            ViewUtil.hide(mTextUpdate);
+        } else {
+            date = note.getDate();
+            mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), note.getUpdate()));
         }
-        mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), date));
+        mTextDate.setText(DateFormatter.formatDateTime(getContext(), date));
 
         ViewUtil.enable(!mTrash, mEditTitle, mEditContent);
 

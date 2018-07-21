@@ -53,6 +53,7 @@
     <string name="action_select">Select</string>
     <string name="action_sort_custom">Custom</string>
     <string name="action_home">Home</string>
+    <string name="action_inbox">Inbox</string>
     <string name="action_clear">Clear</string>
     <string name="action_pin_note">Pin note</string>
 

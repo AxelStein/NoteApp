@@ -71,13 +71,13 @@
 
         <com.axel_stein.noteapp.views.IconTextView
             android:id="@+id/action_home"
-            app:iconTop="@drawable/ic_home_white_24dp"
+            app:iconTop="@drawable/ic_inbox_white_24dp"
             app:iconTopTint="?attr/menuItemTintColor"
             android:clickable="true"
             android:focusable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center_horizontal"
-            android:text="@string/action_home"
+            android:text="@string/action_inbox"
             android:textSize="11sp"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"

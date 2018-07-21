@@ -17,6 +17,7 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.ResourceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
@@ -25,8 +26,6 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
 
     private String mTitle;
     private int mTitleRes;
-    private String mPositiveButtonText;
-    private int mPositiveButtonTextRes;
     private String mNegativeButtonText;
     private int mNegativeButtonTextRes;
     private List<Notebook> mNotebooks;
@@ -37,9 +36,8 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
     public static void launch(Fragment fragment, List<Notebook> notebooks, long selectedNotebook) {
         SelectNotebookDialog dialog = new SelectNotebookDialog();
         dialog.setTitle(R.string.title_select_notebook);
-        dialog.setPositiveButtonText(R.string.action_home);
         dialog.setNegativeButtonText(R.string.action_cancel);
-        dialog.setNotebooks(notebooks, selectedNotebook);
+        dialog.setNotebooks(fragment.getContext(), notebooks, selectedNotebook);
         dialog.setTargetFragment(fragment, 0);
         dialog.show(fragment.getFragmentManager(), null);
     }
@@ -52,14 +50,6 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
         mTitleRes = titleRes;
     }
 
-    public void setPositiveButtonText(String positiveButtonText) {
-        mPositiveButtonText = positiveButtonText;
-    }
-
-    public void setPositiveButtonText(int positiveButtonTextRes) {
-        mPositiveButtonTextRes = positiveButtonTextRes;
-    }
-
     public void setNegativeButtonText(String negativeButtonText) {
         mNegativeButtonText = negativeButtonText;
     }
@@ -68,12 +58,15 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
         mNegativeButtonTextRes = negativeButtonTextRes;
     }
 
-    public void setNotebooks(List<Notebook> notebooks, long selectedNotebookId) {
+    public void setNotebooks(Context context, List<Notebook> notebooks, long selectedNotebookId) {
         mNotebooks = checkNotNull(notebooks);
 
-        mNotebookTitles = new String[notebooks.size()];
-        for (int i = 0; i < notebooks.size(); i++) {
-            Notebook notebook = notebooks.get(i);
+        List<Notebook> list = new ArrayList<>(notebooks);
+        list.add(0, Notebook.from(context.getString(R.string.action_inbox)));
+
+        mNotebookTitles = new String[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            Notebook notebook = list.get(i);
             mNotebookTitles[i] = notebook.getTitle();
             if (selectedNotebookId == notebook.getId()) {
                 mSelectedPosition = i;
@@ -120,13 +113,6 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
                 dialog.dismiss();
             }
         });
-        builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mListener.onNotebookSelected(null);
-                dismiss();
-            }
-        });
 
         if (mNotebookTitles != null) {
             builder.setSingleChoiceItems(mNotebookTitles, mSelectedPosition, new OnClickListener() {
@@ -134,7 +120,12 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (i != mSelectedPosition && mListener != null && mNotebooks != null) {
                         mSelectedPosition = i;
-                        mListener.onNotebookSelected(mNotebooks.get(mSelectedPosition));
+
+                        Notebook notebook = mNotebooks.get(mSelectedPosition);
+                        if (notebook.getId() == 0) { // this is Inbox
+                            notebook = null;
+                        }
+                        mListener.onNotebookSelected(notebook);
                     }
                     dismiss();
                 }

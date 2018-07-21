@@ -67,6 +67,18 @@
         </android.support.design.widget.TextInputLayout>
 
         <TextView
+            android:id="@+id/text_date"
+            tools:text="23 oct"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="?attr/menuItemTintColor"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"/>
+
+        <TextView
             android:id="@+id/text_update"
             tools:text="23 oct"
             android:maxLines="1"
