@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
@@ -30,11 +29,11 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseFragment;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
+import com.axel_stein.noteapp.dialogs.NoteInfoDialog;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.Presenter;
 import com.axel_stein.noteapp.utils.ColorUtil;
-import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
@@ -64,6 +63,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     private static final String TAG_DELETE_NOTE = "TAG_DELETE_NOTE";
 
+    private static final String TAG_NOTE_INFO = "TAG_NOTE_INFO";
+
     @BindView(R.id.scroll_view)
     NestedScrollView mScrollView;
 
@@ -76,11 +77,13 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @BindView(R.id.edit_content)
     LinedEditText mEditContent;
 
+    /*
     @BindView(R.id.text_date)
     TextView mTextDate;
 
     @BindView(R.id.text_update)
     TextView mTextUpdate;
+    */
 
     @Nullable
     SearchPanel mSearchPanel;
@@ -293,8 +296,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mSearchPanel = null;
         mEditTitle = null;
         mEditContent = null;
-        mTextDate = null;
-        mTextUpdate = null;
+        //mTextDate = null;
+        //mTextUpdate = null;
         mViewCreated = false;
         mMenu = null;
         mScrollView = null;
@@ -313,6 +316,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         MenuUtil.show(mMenu, !mTrash, R.id.menu_pin_note);
         MenuUtil.show(mMenu, !mTrash && mUpdate, R.id.menu_move_to_trash, R.id.menu_duplicate);
+        MenuUtil.show(mMenu, mUpdate, R.id.menu_note_info);
         MenuUtil.show(mMenu, !mTrash, R.id.menu_select_notebook, R.id.menu_labels, R.id.menu_share, R.id.menu_search);
         MenuUtil.show(mMenu, mTrash, R.id.menu_restore);
         MenuUtil.show(mMenu, mUpdate, R.id.menu_delete);
@@ -367,6 +371,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
             case R.id.menu_duplicate:
                 mPresenter.actionDuplicate(getString(R.string.copy));
+                break;
+
+            case R.id.menu_note_info:
+                mPresenter.actionNoteInfo();
                 break;
         }
 
@@ -432,6 +440,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mTrash = note.isTrash();
         mUpdate = note.getId() > 0;
 
+        /*
         long date;
         if (note.getId() == 0) {
             date = System.currentTimeMillis();
@@ -441,6 +450,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
             mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), note.getUpdate()));
         }
         mTextDate.setText(DateFormatter.formatDateTime(getContext(), date));
+        */
 
         ViewUtil.enable(!mTrash, mEditTitle, mEditContent);
 
@@ -512,6 +522,13 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         dialog.setPositiveButtonText(R.string.action_delete);
         dialog.setNegativeButtonText(R.string.action_cancel);
         dialog.show(this, TAG_DELETE_NOTE);
+    }
+
+    @Override
+    public void showNoteInfo(Note note) {
+        NoteInfoDialog dialog = new NoteInfoDialog();
+        dialog.setNote(note);
+        dialog.show(this, TAG_NOTE_INFO);
     }
 
     @Override

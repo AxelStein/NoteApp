@@ -82,6 +82,7 @@
         <TextView
             android:id="@+id/text_update"
             tools:text="23 oct"
+            android:visibility="gone"
             android:maxLines="1"
             android:ellipsize="end"
             android:textColor="?attr/menuItemTintColor"

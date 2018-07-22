@@ -611,4 +611,11 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 });
     }
 
+    @Override
+    public void actionNoteInfo() {
+        if (mView != null) {
+            mView.showNoteInfo(mNote);
+        }
+    }
+
 }

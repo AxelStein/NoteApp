@@ -36,6 +36,7 @@ public interface EditNoteContract {
 
         void setNotePinned(boolean pinned);
 
+        void showNoteInfo(Note note);
     }
 
     interface Presenter {
@@ -85,6 +86,7 @@ public interface EditNoteContract {
 
         void addOnNoteChangedListener(OnNoteChangedListener l);
 
+        void actionNoteInfo();
     }
 
     interface OnNoteChangedListener {

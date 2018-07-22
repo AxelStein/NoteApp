@@ -80,4 +80,10 @@
         android:visible="false"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/menu_note_info"
+        android:title="@string/action_note_info"
+        android:icon="@drawable/ic_info_outline_white_24dp"
+        app:showAsAction="ifRoom"/>
+
 </menu>

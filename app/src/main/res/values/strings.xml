@@ -57,6 +57,7 @@
     <string name="action_inbox">Inbox</string>
     <string name="action_clear">Clear</string>
     <string name="action_pin_note">Pin note</string>
+    <string name="action_note_info">Note info</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
@@ -150,6 +151,7 @@
     <string name="title_password_setup">Password setup</string>
     <string name="title_confirm_password">Confirm password</string>
     <string name="title_password_reset">Password reset</string>
+    <string name="title_note_info">Note info</string>
 
     <!--Messages-->
     <string name="msg_wait">Please wait</string>
@@ -187,5 +189,6 @@
     <string name="msg_note_unpinned">Note unpinned</string>
     <string name="msg_notes_pinned">Notes pinned</string>
     <string name="msg_notes_unpinned">Notes unpinned</string>
+    <string name="msg_note_info">Created: %1$s\n\nModified: %2$s\n\nChar count: %3$d</string>
 
 </resources>

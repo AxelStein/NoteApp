@@ -57,6 +57,7 @@
     <string name="action_inbox">Входящие</string>
     <string name="action_clear">Очистить</string>
     <string name="action_pin_note">Прикрепить заметку</string>
+    <string name="action_note_info">Информация</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>
@@ -136,6 +137,7 @@
     <string name="title_password_setup">Настройка пароля</string>
     <string name="title_confirm_password">Подтвердите пароль</string>
     <string name="title_password_reset">Сброс пароля</string>
+    <string name="title_note_info">Информация</string>
 
     <!--Messages-->
     <string name="msg_wait">Пожалуйста, подождите</string>
@@ -173,5 +175,6 @@
     <string name="msg_note_unpinned">Заметка откреплена</string>
     <string name="msg_notes_pinned">Заметки закреплены</string>
     <string name="msg_notes_unpinned">Заметки откреплены</string>
+    <string name="msg_note_info">Создана: %1$s\n\nОбновлена: %2$s\n\nКоличество символов: %3$d</string>
 
 </resources>
