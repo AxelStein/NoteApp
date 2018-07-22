@@ -45,6 +45,11 @@
             android:key="PREF_SHOW_NOTE_EDITOR_LINES"
             android:title="@string/pref_show_note_editor_lines"/>
 
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="PREF_CONTENT_CHAR_COUNTER"
+            android:title="@string/pref_content_char_counter"/>
+
         <android.support.v7.preference.ListPreference
             android:key="PREF_FONT_SIZE"
             android:entries="@array/font_sizes"

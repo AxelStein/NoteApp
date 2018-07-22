@@ -85,6 +85,7 @@
     <string name="pref_swipe_action_delete">Удалить</string>
     <string name="pref_swipe_action_pin">Прикрепить / Открепить</string>
     <string name="pref_category_editor">Редактор заметок</string>
+    <string name="pref_content_char_counter">Счетчик символов</string>
 
     <!--Errors-->
     <string name="error">Ошибка</string>

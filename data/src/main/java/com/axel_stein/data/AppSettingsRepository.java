@@ -22,6 +22,7 @@ public class AppSettingsRepository implements SettingsRepository {
     private static final String PREF_SHOW_ADD_NOTE_FAB = "PREF_SHOW_ADD_NOTE_FAB";
     private static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
     private static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
+    private static final String PREF_CONTENT_CHAR_COUNTER = "PREF_CONTENT_CHAR_COUNTER";
 
     public static final int SWIPE_ACTION_NONE = 0;
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
@@ -188,6 +189,14 @@ public class AppSettingsRepository implements SettingsRepository {
             }
         }
         return SWIPE_ACTION_NONE;
+    }
+
+    public boolean contentCharCounterEnabled() {
+        return mPreferences.getBoolean(PREF_CONTENT_CHAR_COUNTER, true);
+    }
+
+    public void enableContentCharCounter(boolean enable) {
+        mPreferences.edit().putBoolean(PREF_CONTENT_CHAR_COUNTER, enable).apply();
     }
 
 }
