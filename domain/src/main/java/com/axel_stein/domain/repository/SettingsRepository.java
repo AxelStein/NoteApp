@@ -1,5 +1,6 @@
 package com.axel_stein.domain.repository;
 
+import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.NotebookOrder;
 
@@ -15,6 +16,10 @@ public interface SettingsRepository {
     NotebookOrder getNotebookOrder();
 
     void setNotebookOrder(NotebookOrder order);
+
+    void setLabelOrder(LabelOrder order);
+
+    LabelOrder getLabelOrder();
 
     String defaultNotebookTitle();
 

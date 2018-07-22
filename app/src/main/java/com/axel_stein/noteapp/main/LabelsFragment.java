@@ -187,7 +187,7 @@ public class LabelsFragment extends Fragment implements ScrollableFragment {
         @Override
         public Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View v = inflater.inflate(R.layout.item_label, parent, false);
+            View v = inflater.inflate(R.layout.item_label_list, parent, false);
             return new Adapter.ViewHolder(v, mItemListener);
         }
 

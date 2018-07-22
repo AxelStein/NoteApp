@@ -16,6 +16,7 @@ class LabelMapper {
         Label label = new Label();
         label.setId(entity.getId());
         label.setTitle(entity.getTitle());
+        label.setOrder(entity.getOrder());
         return label;
     }
 
@@ -26,6 +27,7 @@ class LabelMapper {
         LabelEntity entity = new LabelEntity();
         entity.setId(label.getId());
         entity.setTitle(label.getTitle());
+        entity.setOrder(label.getOrder());
         return entity;
     }
 

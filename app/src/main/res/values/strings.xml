@@ -38,6 +38,7 @@
     <string name="action_sort_created_oldest_first">Created (oldest first)</string>
     <string name="action_sort_updated_newest_first">Updated (newest first)</string>
     <string name="action_sort_updated_oldest_first">Updated (oldest first)</string>
+    <string name="action_sort_note_count">Note count</string>
     <string name="action_menu">Menu</string>
     <string name="action_done">Done</string>
     <string name="action_keep_editing">Keep editing</string>

@@ -39,6 +39,7 @@
     <string name="action_sort_created_oldest_first">Дате создания (сначала старые)</string>
     <string name="action_sort_updated_newest_first">Дате обновления (сначала новые)</string>
     <string name="action_sort_updated_oldest_first">Дате обновления (сначала старые)</string>
+    <string name="action_sort_note_count">Количеству заметок</string>
     <string name="action_done">Готово</string>
     <string name="action_keep_editing">Продолжить редактирование</string>
     <string name="action_fullscreen">Полноэкранный режим</string>

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.NotebookOrder;
 import com.axel_stein.domain.repository.SettingsRepository;
@@ -11,6 +12,7 @@ import com.axel_stein.domain.repository.SettingsRepository;
 public class AppSettingsRepository implements SettingsRepository {
     private static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
     private static final String PREF_NOTEBOOK_ORDER = "PREF_NOTEBOOK_ORDER";
+    private static final String PREF_LABEL_ORDER = "PREF_LABEL_ORDER";
     private static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
     private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
     private static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
@@ -54,6 +56,16 @@ public class AppSettingsRepository implements SettingsRepository {
     @Override
     public void setNotebookOrder(NotebookOrder order) {
         mPreferences.edit().putInt(PREF_NOTEBOOK_ORDER, order.ordinal()).apply();
+    }
+
+    @Override
+    public void setLabelOrder(LabelOrder order) {
+        mPreferences.edit().putInt(PREF_LABEL_ORDER, order.ordinal()).apply();
+    }
+
+    @Override
+    public LabelOrder getLabelOrder() {
+        return LabelOrder.fromInt(mPreferences.getInt(PREF_LABEL_ORDER, LabelOrder.TITLE.ordinal()));
     }
 
     @Override

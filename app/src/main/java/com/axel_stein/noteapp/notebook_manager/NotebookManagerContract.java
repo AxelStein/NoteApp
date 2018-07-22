@@ -10,14 +10,9 @@ public interface NotebookManagerContract {
 
         void setItems(List<Notebook> items);
 
-        void startCheckMode();
+        void confirmDeleteDialog(Notebook notebook);
 
-        void onItemChecked(int pos, int checkCount);
-
-        void stopCheckMode();
-
-        void confirmDeleteDialog(List<Notebook> items);
-
+        void startNoteListActivity(Notebook notebook);
     }
 
     interface Presenter {
@@ -30,18 +25,5 @@ public interface NotebookManagerContract {
 
         void onItemClick(int pos, Notebook notebook);
 
-        boolean onItemLongClick(int pos, Notebook notebook);
-
-        void startCheckMode();
-
-        void stopCheckMode();
-
-        boolean isChecked(Notebook notebook);
-
-        boolean hasChecked();
-
-        void onActionItemClicked(int itemId);
-
-        boolean checkModeEnabled();
     }
 }

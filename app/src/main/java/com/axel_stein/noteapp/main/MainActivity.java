@@ -24,6 +24,8 @@ import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
+import com.axel_stein.noteapp.label_manager.LabelManagerFragment;
+import com.axel_stein.noteapp.notebook_manager.NotebookManagerFragment;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesFragment;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -147,11 +149,11 @@ public class MainActivity extends BaseActivity {
             }
 
             case R.id.action_notebooks:
-                fragment = new NotebooksFragment();
+                fragment = new NotebookManagerFragment();
                 break;
 
             case R.id.action_labels:
-                fragment = new LabelsFragment();
+                fragment = new LabelManagerFragment();
                 break;
 
             case R.id.action_trash:

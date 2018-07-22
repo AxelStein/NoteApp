@@ -59,14 +59,14 @@ public class SelectNotebookDialog extends AppCompatDialogFragment {
     }
 
     public void setNotebooks(Context context, List<Notebook> notebooks, long selectedNotebookId) {
-        mNotebooks = checkNotNull(notebooks);
+        checkNotNull(notebooks);
 
-        List<Notebook> list = new ArrayList<>(notebooks);
-        list.add(0, Notebook.from(context.getString(R.string.action_inbox)));
+        mNotebooks = new ArrayList<>(notebooks);
+        mNotebooks.add(0, Notebook.from(context.getString(R.string.action_inbox)));
 
-        mNotebookTitles = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            Notebook notebook = list.get(i);
+        mNotebookTitles = new String[mNotebooks.size()];
+        for (int i = 0; i < mNotebooks.size(); i++) {
+            Notebook notebook = mNotebooks.get(i);
             mNotebookTitles[i] = notebook.getTitle();
             if (selectedNotebookId == notebook.getId()) {
                 mSelectedPosition = i;

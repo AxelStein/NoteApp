@@ -1,9 +1,9 @@
-package com.axel_stein.noteapp.notebook_manager;
+package com.axel_stein.noteapp.label_manager;
 
-import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
-import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
+import com.axel_stein.domain.model.Label;
 import com.axel_stein.noteapp.App;
-import com.axel_stein.noteapp.notebook_manager.NotebookManagerContract.View;
+import com.axel_stein.noteapp.label_manager.LabelManagerContract.View;
 
 import java.util.List;
 
@@ -13,16 +13,16 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public class NotebookManagerPresenter implements NotebookManagerContract.Presenter, SingleObserver<List<Notebook>> {
+public class LabelManagerPresenter implements LabelManagerContract.Presenter, SingleObserver<List<Label>> {
 
     private View mView;
 
-    private List<Notebook> mItems;
+    private List<Label> mItems;
 
     @Inject
-    QueryNotebookInteractor mInteractor;
+    QueryLabelInteractor mInteractor;
 
-    public NotebookManagerPresenter() {
+    public LabelManagerPresenter() {
         App.getAppComponent().inject(this);
     }
 
@@ -49,10 +49,8 @@ public class NotebookManagerPresenter implements NotebookManagerContract.Present
     }
 
     @Override
-    public void onItemClick(int pos, Notebook notebook) {
-        if (mView != null) {
-            mView.startNoteListActivity(notebook);
-        }
+    public void onItemClick(int pos, Label label) {
+        mView.startNoteListActivity(label);
     }
 
     @Override
@@ -61,8 +59,8 @@ public class NotebookManagerPresenter implements NotebookManagerContract.Present
     }
 
     @Override
-    public void onSuccess(List<Notebook> notebooks) {
-        mItems = notebooks;
+    public void onSuccess(List<Label> labels) {
+        mItems = labels;
         if (mView != null) {
             mView.setItems(mItems);
         }

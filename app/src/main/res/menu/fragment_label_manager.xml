@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_add_label"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:title="@string/action_add_label"
+        android:visible="false"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/menu_sort"
+        android:icon="@drawable/ic_sort_white_24dp"
+        android:title="@string/action_sort_by"
+        app:showAsAction="always">
+
+        <menu>
+
+            <group
+                android:id="@+id/group_sort"
+                android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/menu_sort_title"
+                    android:title="@string/action_sort_title"/>
+
+                <item
+                    android:id="@+id/menu_sort_note_count"
+                    android:title="@string/action_sort_note_count"/>
+
+                <item
+                    android:id="@+id/menu_sort_custom"
+                    android:title="@string/action_sort_custom"/>
+
+            </group>
+
+        </menu>
+
+    </item>
+
+</menu>

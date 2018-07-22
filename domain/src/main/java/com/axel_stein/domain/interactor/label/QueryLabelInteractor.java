@@ -4,10 +4,13 @@ import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.LabelCache;
+import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.domain.repository.LabelRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -49,18 +52,37 @@ public class QueryLabelInteractor {
                     return LabelCache.get();
                 }
 
-                List<Label> result = mLabelRepository.query();
-                if (!isValid(result)) {
-                    throw new IllegalStateException("result is not valid");
+                List<Label> labels = mLabelRepository.query();
+                if (!isValid(labels)) {
+                    throw new IllegalStateException("labels is not valid");
                 }
 
-                for (Label label : result) {
+                for (Label label : labels) {
                     label.setNoteCount(mNoteLabelPairRepository.count(label));
                 }
 
-                LabelCache.put(result);
+                Collections.sort(labels, new Comparator<Label>() {
+                    @Override
+                    public int compare(Label l1, Label l2) {
+                        LabelOrder order = mSettingsRepository.getLabelOrder();
+                        switch (order) {
+                            case TITLE:
+                                return l1.getTitle().compareTo(l2.getTitle());
 
-                return result;
+                            case NOTE_COUNT:
+                                return l1.getNoteCount() - l2.getNoteCount() > 0 ? -1 : 1;
+
+                            case CUSTOM:
+                                return l1.getOrder() - l2.getOrder();
+                        }
+                        return 0;
+                    }
+                });
+
+
+                LabelCache.put(labels);
+
+                return labels;
             }
         }).subscribeOn(Schedulers.io());
     }

@@ -83,6 +83,9 @@ public class QueryNotebookInteractor {
                             case TITLE:
                                 return n1.getTitle().compareTo(n2.getTitle());
 
+                            case NOTE_COUNT:
+                                return n1.getNoteCount() - n2.getNoteCount() > 0 ? -1 : 1;
+
                             case CUSTOM:
                                 return n1.getOrder() - n2.getOrder();
                         }

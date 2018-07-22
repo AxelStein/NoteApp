@@ -8,6 +8,7 @@ import com.axel_stein.domain.interactor.label.GetLabelInteractor;
 import com.axel_stein.domain.interactor.label.InsertLabelInteractor;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label.UpdateLabelInteractor;
+import com.axel_stein.domain.interactor.label.UpdateLabelOrderInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -40,6 +41,11 @@ class LabelInteractorModule {
                                SqlNoteLabelPairRepository noteLabelPairRepository,
                                AppSettingsRepository settingsRepository) {
         return new QueryLabelInteractor(repository, noteLabelPairRepository, settingsRepository);
+    }
+
+    @Provides
+    UpdateLabelOrderInteractor updateOrder(SqlLabelRepository repository, AppSettingsRepository settings) {
+        return new UpdateLabelOrderInteractor(repository, settings);
     }
 
 

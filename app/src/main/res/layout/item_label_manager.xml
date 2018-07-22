@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="48dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="48dp">
 
     <ImageView
         android:id="@+id/drag_handler"
@@ -13,13 +16,13 @@
         android:paddingLeft="16dp"
         android:paddingRight="32dp"
         android:paddingStart="16dp"
-        android:src="@drawable/ic_drag_handle_white_24dp"
+        android:src="@drawable/baseline_drag_indicator_white_24"
         android:tint="?attr/colorControlNormal"
         android:scaleType="center"
         tools:ignore="ContentDescription"/>
 
     <TextView
-        android:id="@+id/text_notebook"
+        android:id="@+id/text_title"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="48dp"

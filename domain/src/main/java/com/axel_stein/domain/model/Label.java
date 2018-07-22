@@ -16,6 +16,8 @@ public class Label {
     @JsonIgnore
     private long noteCount;
 
+    private int order;
+
     public long getId() {
         return id;
     }
@@ -50,6 +52,14 @@ public class Label {
         this.noteCount = noteCount;
     }
 
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Label) {
@@ -67,6 +77,8 @@ public class Label {
         return "Label{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", noteCount=" + noteCount +
+                ", order=" + order +
                 '}';
     }
 }
