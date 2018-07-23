@@ -11,36 +11,42 @@ import android.support.v4.app.Fragment;
 import android.support.v4.util.LongSparseArray;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.ResourceUtil;
+import com.axel_stein.noteapp.views.IconTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 import static com.axel_stein.noteapp.utils.BooleanUtil.isTrue;
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public class CheckLabelsDialog extends AppCompatDialogFragment {
-
     private String mTitle;
     private int mTitleRes;
     private String mPositiveButtonText;
     private int mPositiveButtonTextRes;
     private String mNegativeButtonText;
     private int mNegativeButtonTextRes;
-    private List<Label> mLabels;
-    private String[] mLabelTitles;
+    private List<Label> mItems;
     private boolean[] mCheckedPositions;
     private OnLabelCheckedListener mListener;
+    private Adapter mAdapter;
 
-    public static void launch(Fragment fragment, List<Label> labels, List<Long> checkedLabels) {
+    public static void launch(Fragment fragment, List<Label> labels, List<Long> checkedLabelIds) {
         CheckLabelsDialog dialog = new CheckLabelsDialog();
         dialog.setTitle(R.string.title_check_labels);
         dialog.setPositiveButtonText(R.string.action_ok);
         dialog.setNegativeButtonText(R.string.action_cancel);
-        dialog.setLabels(labels, checkedLabels);
+        dialog.setLabels(labels, checkedLabelIds);
         dialog.setTargetFragment(fragment, 0);
         dialog.show(fragment.getFragmentManager(), null);
     }
@@ -69,24 +75,22 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
         mNegativeButtonTextRes = negativeButtonTextRes;
     }
 
-    public void setLabels(List<Label> labels, List<Long> checkedLabels) {
-        mLabels = checkNotNull(labels);
-
-        mLabelTitles = new String[labels.size()];
+    public void setLabels(List<Label> labels, List<Long> checkedLabelIds) {
+        mItems = checkNotNull(labels);
         mCheckedPositions = new boolean[labels.size()];
 
         LongSparseArray<Boolean> map = new LongSparseArray<>();
-        if (checkedLabels != null) {
-            for (long l : checkedLabels) {
-                map.put(l, true);
+        if (checkedLabelIds != null) {
+            for (long id : checkedLabelIds) {
+                map.put(id, true);
             }
         }
 
         for (int i = 0; i < labels.size(); i++) {
             Label label = labels.get(i);
-            mLabelTitles[i] = label.getTitle();
-            if (checkedLabels != null) {
-                mCheckedPositions[i] = isTrue(map.get(label.getId()));
+            if (checkedLabelIds != null) {
+                long id = label.getId();
+                mCheckedPositions[i] = isTrue(map.get(id));
             }
         }
     }
@@ -99,6 +103,7 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
 
     @Override
     public void onDestroyView() {
+        mAdapter = null;
         if (getDialog() != null && getRetainInstance()) {
             getDialog().setDismissMessage(null);
         }
@@ -125,18 +130,11 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
         builder.setTitle(getResourceText(mTitle, mTitleRes));
         builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (mListener != null) {
-                    List<Long> result = new ArrayList<>();
-
-                    for (int i = 0; i < mCheckedPositions.length; i++) {
-                        if (mCheckedPositions[i]) {
-                            result.add(mLabels.get(i).getId());
-                        }
-                    }
-
-                    mListener.onLabelChecked(result);
+            public void onClick(DialogInterface dialog, int i) {
+                if (mListener != null && mAdapter != null) {
+                    mListener.onLabelsChecked(mAdapter.getCheckedLabelIds());
                 }
+                dialog.dismiss();
             }
         });
         builder.setNegativeButton(getResourceText(mNegativeButtonText, mNegativeButtonTextRes), new DialogInterface.OnClickListener() {
@@ -145,17 +143,18 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
                 dialog.dismiss();
             }
         });
-
-        if (mLabelTitles != null) {
-            builder.setMultiChoiceItems(mLabelTitles, mCheckedPositions, new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                    mCheckedPositions[i] = b;
-                }
-            });
-        }
-
+        builder.setView(createView());
         return builder.create();
+    }
+
+    private View createView() {
+        mAdapter = new Adapter();
+        mAdapter.setItems(mItems, mCheckedPositions);
+
+        RecyclerView view = new RecyclerView(getContext());
+        view.setLayoutManager(new LinearLayoutManager(getContext()));
+        view.setAdapter(mAdapter);
+        return view;
     }
 
     private String getResourceText(String s, int res) {
@@ -163,7 +162,74 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
     }
 
     public interface OnLabelCheckedListener {
-        void onLabelChecked(List<Long> labels);
+        void onLabelsChecked(List<Long> labels);
     }
 
+    private static class Adapter extends RecyclerView.Adapter<ViewHolder> {
+        private List<Label> mItems;
+        private boolean[] mCheckedPositions;
+
+        public void setItems(List<Label> items, boolean[] checkedPositions) {
+            this.mItems = items;
+            this.mCheckedPositions = checkedPositions;
+            notifyDataSetChanged();
+        }
+
+        public List<Long> getCheckedLabelIds() {
+            List<Long> result = new ArrayList<>();
+            for (int i = 0; i < mCheckedPositions.length; i++) {
+                if (mCheckedPositions[i]) {
+                    result.add(mItems.get(i).getId());
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View view = inflater.inflate(R.layout.item_dialog_label, parent, false);
+            final ViewHolder holder = new ViewHolder(view);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getAdapterPosition();
+                    if (pos >= 0 && pos < getItemCount()) {
+                        mCheckedPositions[pos] = !mCheckedPositions[pos];
+                        notifyItemChanged(pos);
+                    }
+                }
+            });
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            Label label = mItems.get(position);
+            holder.mTitle.setText(label.getTitle());
+
+            boolean checked = mCheckedPositions[position];
+            int icon = checked ? R.drawable.ic_check_box_white_24dp : R.drawable.ic_check_box_outline_blank_white_24dp;
+
+            holder.mChecked.setImageResource(icon);
+            holder.mChecked.setSelected(checked);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mItems == null ? 0 : mItems.size();
+        }
+    }
+
+    private static class ViewHolder extends RecyclerView.ViewHolder {
+        private IconTextView mTitle;
+        private ImageView mChecked;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            mTitle = itemView.findViewById(R.id.text_title);
+            mChecked = itemView.findViewById(R.id.img_checked);
+        }
+
+    }
 }

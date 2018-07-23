@@ -569,10 +569,9 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
-    public void onLabelChecked(List<Long> labels) {
+    public void onLabelsChecked(List<Long> labels) {
         if (mPresenter != null) {
             mPresenter.setLabels(labels);
         }
     }
-
 }

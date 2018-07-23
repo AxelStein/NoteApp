@@ -323,7 +323,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     }
 
     @Override
-    public void onLabelChecked(List<Long> labels) {
+    public void onLabelsChecked(List<Long> labels) {
         if (mPresenter != null) {
             mPresenter.onLabelsChecked(labels);
         }
