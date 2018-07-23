@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="48dp">
+
+    <com.axel_stein.noteapp.views.IconTextView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:iconLeft="@drawable/ic_book_white_24dp"
+        app:iconLeftTint="?attr/menuItemTintColor"
+
+        android:id="@+id/text_title"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        android:drawablePadding="32dp"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+
+        tools:text="Item"/>
+
+    <ImageView
+        android:id="@+id/img_checked"
+        android:scaleType="centerInside"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:tint="?attr/colorControlNormal"
+        tools:src="@drawable/ic_radio_button_checked_white_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

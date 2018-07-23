@@ -7,9 +7,9 @@ import com.axel_stein.noteapp.dialogs.label.DeleteLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.RenameLabelDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
+import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
-import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.label_manager.LabelManagerFragment;
 import com.axel_stein.noteapp.label_manager.LabelManagerPresenter;
 import com.axel_stein.noteapp.main.HomeFragment;
@@ -89,8 +89,6 @@ public interface AppComponent {
 
     void inject(HomeNotesPresenter presenter);
 
-    void inject(SelectNotebookDialog selectNotebookDialog);
-
     void inject(EditNoteFragment editNoteFragment);
 
     void inject(BackupPresenter backupPresenter);
@@ -112,5 +110,7 @@ public interface AppComponent {
     void inject(TrashFragment fragment);
 
     void inject(HomeFragment fragment);
+
+    void inject(CheckNotebookDialog dialog);
 
 }

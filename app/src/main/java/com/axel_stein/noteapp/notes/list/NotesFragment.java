@@ -30,7 +30,7 @@ import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.base.BaseFragment;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
-import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
+import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesContract.Presenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -46,7 +46,7 @@ import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 import static android.text.TextUtils.isEmpty;
 
 public class NotesFragment extends BaseFragment implements NotesContract.View,
-        SelectNotebookDialog.OnNotebookSelectedListener,
+        CheckNotebookDialog.OnNotebookCheckedListener,
         CheckLabelsDialog.OnLabelCheckedListener,
         ScrollableFragment {
 
@@ -295,7 +295,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     @Override
     public void showSelectNotebookView(List<Notebook> notebooks) {
-        SelectNotebookDialog.launch(this, notebooks, -1);
+        //SelectNotebookDialog.launch(this, notebooks, -1);
+        CheckNotebookDialog.launch(this, notebooks, -1);
     }
 
     @Override
@@ -315,7 +316,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     }
 
     @Override
-    public void onNotebookSelected(Notebook notebook) {
+    public void onNotebookChecked(Notebook notebook) {
         if (mPresenter != null) {
             mPresenter.onNotebookSelected(notebook);
         }

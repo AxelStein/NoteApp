@@ -31,7 +31,7 @@ import com.axel_stein.noteapp.base.BaseFragment;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 import com.axel_stein.noteapp.dialogs.NoteInfoDialog;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
-import com.axel_stein.noteapp.dialogs.notebook.SelectNotebookDialog;
+import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
 import com.axel_stein.noteapp.notes.edit.EditNoteContract.Presenter;
 import com.axel_stein.noteapp.utils.ColorUtil;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
@@ -56,7 +56,7 @@ import static android.text.TextUtils.isEmpty;
 
 public class EditNoteFragment extends BaseFragment implements EditNoteContract.View,
         ConfirmDialog.OnConfirmListener,
-        SelectNotebookDialog.OnNotebookSelectedListener,
+        CheckNotebookDialog.OnNotebookCheckedListener,
         CheckLabelsDialog.OnLabelCheckedListener {
 
     private static final String TAG_SAVE_NOTE = "TAG_SAVE_NOTE";
@@ -506,7 +506,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
     @Override
     public void showSelectNotebookView(List<Notebook> notebooks, long selectedNotebook) {
-        SelectNotebookDialog.launch(this, notebooks, selectedNotebook);
+        CheckNotebookDialog.launch(this, notebooks, selectedNotebook);
     }
 
     @Override
@@ -562,7 +562,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
-    public void onNotebookSelected(Notebook notebook) {
+    public void onNotebookChecked(Notebook notebook) {
         if (mPresenter != null) {
             mPresenter.setNotebook(notebook);
         }
