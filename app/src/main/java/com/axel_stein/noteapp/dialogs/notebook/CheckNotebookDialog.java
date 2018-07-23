@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.axel_stein.domain.model.Notebook;
-import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.ResourceUtil;
 import com.axel_stein.noteapp.views.IconTextView;
@@ -75,7 +74,6 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        App.getAppComponent().inject(this);
     }
 
     @Override
