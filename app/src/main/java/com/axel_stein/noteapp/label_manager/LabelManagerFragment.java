@@ -30,6 +30,7 @@ import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.DeleteLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.RenameLabelDialog;
@@ -54,7 +55,7 @@ import static android.view.Gravity.END;
 import static android.view.Gravity.TOP;
 import static com.axel_stein.noteapp.utils.ViewUtil.setText;
 
-public class LabelManagerFragment extends Fragment implements LabelManagerContract.View {
+public class LabelManagerFragment extends Fragment implements LabelManagerContract.View, ScrollableFragment {
 
     private ItemListener mListener = new ItemListener() {
         @Override
@@ -82,6 +83,8 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
     private View mEmptyView;
 
+    private RecyclerView mRecyclerView;
+
     @Inject
     AppSettingsRepository mSettingsRepository;
 
@@ -107,16 +110,16 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_label_manager, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyView = view.findViewById(R.id.empty_view);
 
         mAdapter = new Adapter(mOrderInteractor);
         mAdapter.setItemListener(mListener);
-        mAdapter.attachRecyclerView(recyclerView);
+        mAdapter.attachRecyclerView(mRecyclerView);
 
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mPresenter.onCreateView(this);
 
@@ -127,6 +130,7 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     public void onDestroyView() {
         mAdapter = null;
         mEmptyView = null;
+        mRecyclerView = null;
         mPresenter.onDestroyView();
         super.onDestroyView();
     }
@@ -237,6 +241,13 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     @Subscribe
     public void deleteLabel(EventBusHelper.DeleteLabel e) {
         mPresenter.forceUpdate();
+    }
+
+    @Override
+    public void scrollToTop() {
+        if (mRecyclerView != null) {
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 
     private interface ItemListener {
