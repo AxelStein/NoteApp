@@ -70,6 +70,10 @@ dependencies {
     // eventbus
     compile "org.greenrobot:eventbus:$eventBusVersion"
 
+    // google drive
+    compile "com.google.android.gms:play-services-auth:15.0.1"
+    compile "com.google.android.gms:play-services-drive:15.0.1"
+
     compile project(path: ':domain')
     compile project(path: ':data')
 }

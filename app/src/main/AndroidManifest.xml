@@ -3,9 +3,8 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.axel_stein.noteapp">
 
-    <!--
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:name=".App"
@@ -80,6 +79,10 @@
                 android:resource="@xml/file_paths"/>
 
         </provider>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 

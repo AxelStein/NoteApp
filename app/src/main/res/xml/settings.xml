@@ -3,6 +3,28 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v7.preference.PreferenceCategory
+        android:title="Google Drive">
+
+        <Preference
+            android:key="sign_in"
+            android:title="Sign In"/>
+
+        <Preference
+            android:key="sign_out"
+            android:title="Sign Out"/>
+
+        <Preference
+            android:key="drive_export"
+            android:title="Export to Drive"/>
+
+        <Preference
+            android:key="drive_import"
+            android:title="Import from Drive"
+            android:summary="Last synced 24 Jul, 14:50" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_category_appearance">
 
         <SwitchPreferenceCompat

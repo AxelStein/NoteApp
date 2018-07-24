@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.settings;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
@@ -36,13 +38,16 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
 
+@SuppressLint("CheckResult")
 public class SettingsFragment extends PreferenceFragmentCompat implements PasswordDialog.OnPasswordCommitListener {
 
     private static final int REQUEST_CODE_PICK_FILE = 100;
+    private static final int REQUEST_CODE_SIGN_IN = 101;
 
     @Inject
     CreateBackupInteractor mCreateBackupInteractor;
@@ -53,9 +58,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
     @Inject
     AppSettingsRepository mSettingsRepository;
 
+    private GoogleDriveHelper mDriveHelper;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         App.getAppComponent().inject(this);
+        mDriveHelper = new GoogleDriveHelper();
+        mDriveHelper.init(getActivity(), new GoogleDriveHelper.Callback() {
+            @Override
+            public void startSignInActivity(Intent intent) {
+                startActivityForResult(intent, REQUEST_CODE_SIGN_IN);
+            }
+
+            @Override
+            public void showMessage(String msg) {
+                Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
         super.onCreate(savedInstanceState);
     }
 
@@ -128,6 +147,43 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
             }
         });
         */
+
+        findPreference("sign_in").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                mDriveHelper.signIn();
+                return true;
+            }
+        });
+
+        findPreference("sign_out").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                mDriveHelper.signOut();
+                return true;
+            }
+        });
+
+        findPreference("drive_export").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                mCreateBackupInteractor.execute()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<String>() {
+                            @Override
+                            public void accept(String backup) throws Exception {
+                                mDriveHelper.export(backup);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                throwable.printStackTrace();
+                                showMessage(R.string.error);
+                            }
+                        });
+                return true;
+            }
+        });
 
         findPreference("export").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -226,6 +282,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Passwo
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_CODE_SIGN_IN:
+                if (resultCode == RESULT_OK) {
+                    mDriveHelper.signInResultOk();
+                }
+                return;
+        }
 
         if (data == null) {
             return;
