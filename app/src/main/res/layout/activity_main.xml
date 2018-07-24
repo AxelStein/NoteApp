@@ -22,9 +22,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="?attr/colorPrimary"
+                app:contentInsetStart="0dp"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:title="@string/app_name"
-                app:popupTheme="?attr/toolbarPopupTheme"/>
+                app:popupTheme="?attr/toolbarPopupTheme">
+
+                <LinearLayout
+                    android:id="@+id/user_panel"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/user_photo"
+                        tools:src="@drawable/ic_account_circle_grey_36dp"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="centerCrop"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:layout_marginLeft="26dp"
+                        android:layout_marginStart="26dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:textSize="14sp"
+                        android:text="Guest" />
+
+                    <ProgressBar
+                        android:id="@+id/user_loading_indicator"
+                        android:layout_gravity="center_vertical"
+                        android:indeterminate="true"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 

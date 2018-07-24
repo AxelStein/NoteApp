@@ -195,7 +195,7 @@ public class EventBusHelper {
         private Runnable action;
         private int actionName;
 
-        Message(String msg) {
+        public Message(String msg) {
             this.msg = msg;
         }
 

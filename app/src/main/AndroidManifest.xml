@@ -67,6 +67,7 @@
         </activity>
 
         <activity android:name=".main.NoteListActivity"/>
+        <activity android:name=".main.UserActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

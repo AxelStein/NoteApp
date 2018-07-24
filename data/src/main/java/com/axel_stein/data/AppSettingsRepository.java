@@ -9,20 +9,25 @@ import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.NotebookOrder;
 import com.axel_stein.domain.repository.SettingsRepository;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AppSettingsRepository implements SettingsRepository {
-    private static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
-    private static final String PREF_NOTEBOOK_ORDER = "PREF_NOTEBOOK_ORDER";
-    private static final String PREF_LABEL_ORDER = "PREF_LABEL_ORDER";
-    private static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
+    public static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
+    public static final String PREF_NOTEBOOK_ORDER = "PREF_NOTEBOOK_ORDER";
+    public static final String PREF_LABEL_ORDER = "PREF_LABEL_ORDER";
+    public static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
+    public static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
+    public static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
+    public static final String PREF_SHOW_NOTE_EDITOR_LINES = "PREF_SHOW_NOTE_EDITOR_LINES";
+    public static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
+    public static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
+    public static final String PREF_CONTENT_CHAR_COUNTER = "PREF_CONTENT_CHAR_COUNTER";
+
+    // todo useless
     private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
-    private static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
     private static final String PREF_PASSWORD = "PREF_PASSWORD";
-    private static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
-    private static final String PREF_SHOW_NOTE_EDITOR_LINES = "PREF_SHOW_NOTE_EDITOR_LINES";
     private static final String PREF_SHOW_ADD_NOTE_FAB = "PREF_SHOW_ADD_NOTE_FAB";
-    private static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
-    private static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
-    private static final String PREF_CONTENT_CHAR_COUNTER = "PREF_CONTENT_CHAR_COUNTER";
 
     public static final int SWIPE_ACTION_NONE = 0;
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
@@ -37,6 +42,52 @@ public class AppSettingsRepository implements SettingsRepository {
         mPreferences = preferences;
         mDefaultNotebookTitle = defaultNotebookTitle;
         mPassword = getPassword();
+    }
+
+    public void importSettings(String json) {
+        try {
+            JSONObject object = new JSONObject(json);
+
+            setNightMode(object.optBoolean(PREF_NIGHT_MODE));
+            setShowNotesContent(object.optBoolean(PREF_SHOW_NOTES_CONTENT));
+
+            setPrefSwipeLeftAction(object.optString(PREF_SWIPE_LEFT_ACTION));
+            setPrefSwipeRightAction(object.optString(PREF_SWIPE_RIGHT_ACTION));
+
+            setShowNoteEditorLines(object.optBoolean(PREF_SHOW_NOTE_EDITOR_LINES));
+            enableContentCharCounter(object.optBoolean(PREF_CONTENT_CHAR_COUNTER));
+            setPrefFontSize(object.optString(PREF_FONT_SIZE));
+
+            setNotesOrder(NoteOrder.fromInt(object.optInt(PREF_NOTES_ORDER)));
+            setNotebookOrder(NotebookOrder.fromInt(object.optInt(PREF_NOTEBOOK_ORDER)));
+            setLabelOrder(LabelOrder.fromInt(object.optInt(PREF_LABEL_ORDER)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String exportSettings() {
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put(PREF_NIGHT_MODE, nightMode());
+            object.put(PREF_SHOW_NOTES_CONTENT, showNotesContent());
+
+            object.put(PREF_SWIPE_LEFT_ACTION, getPrefSwipeLeftAction());
+            object.put(PREF_SWIPE_RIGHT_ACTION, getPrefSwipeRightAction());
+
+            object.put(PREF_SHOW_NOTE_EDITOR_LINES, showNoteEditorLines());
+            object.put(PREF_CONTENT_CHAR_COUNTER, contentCharCounterEnabled());
+            object.put(PREF_FONT_SIZE, getPrefFontSize());
+
+            object.put(PREF_NOTES_ORDER, getNotesOrder().ordinal());
+            object.put(PREF_NOTEBOOK_ORDER, getNotebookOrder().ordinal());
+            object.put(PREF_LABEL_ORDER, getLabelOrder().ordinal());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return object.toString();
     }
 
     @Override
@@ -82,6 +133,10 @@ public class AppSettingsRepository implements SettingsRepository {
         return mPreferences.getBoolean(PREF_SHOW_NOTE_EDITOR_LINES, false);
     }
 
+    private void setShowNoteEditorLines(boolean show) {
+        mPreferences.edit().putBoolean(PREF_SHOW_NOTE_EDITOR_LINES, show).apply();
+    }
+
     @Override
     public boolean showNotesContent() {
         return mPreferences.getBoolean(PREF_SHOW_NOTES_CONTENT, true);
@@ -112,28 +167,34 @@ public class AppSettingsRepository implements SettingsRepository {
         return result;
     }
 
+    private void setPrefFontSize(String size) {
+        mPreferences.edit().putString(PREF_FONT_SIZE, size).apply();
+    }
+
+    private String getPrefFontSize() {
+        return mPreferences.getString(PREF_FONT_SIZE, "pref_font_size_default");
+    }
+
     public int getBaseFontSize() {
         int baseSize = 16;
 
-        String value = mPreferences.getString(PREF_FONT_SIZE, null);
-        if (value != null) {
-            switch (value) {
-                case "pref_font_size_small":
-                    baseSize = 14;
-                    break;
+        String value = getPrefFontSize();
+        switch (value) {
+            case "pref_font_size_small":
+                baseSize = 14;
+                break;
 
-                case "pref_font_size_default":
-                    baseSize = 16;
-                    break;
+            case "pref_font_size_default":
+                baseSize = 16;
+                break;
 
-                case "pref_font_size_large":
-                    baseSize = 18;
-                    break;
+            case "pref_font_size_large":
+                baseSize = 18;
+                break;
 
-                case "pref_font_size_extra_large":
-                    baseSize = 20;
-                    break;
-            }
+            case "pref_font_size_extra_large":
+                baseSize = 20;
+                break;
         }
 
         return baseSize;
@@ -168,11 +229,27 @@ public class AppSettingsRepository implements SettingsRepository {
     }
 
     public int getSwipeLeftAction() {
-        return wrapSwipeAction(mPreferences.getString(PREF_SWIPE_LEFT_ACTION, "swipe_action_none"));
+        return wrapSwipeAction(getPrefSwipeLeftAction());
+    }
+
+    private void setPrefSwipeLeftAction(String action) {
+        mPreferences.edit().putString(PREF_SWIPE_LEFT_ACTION, action).apply();
+    }
+
+    private String getPrefSwipeLeftAction() {
+        return mPreferences.getString(PREF_SWIPE_LEFT_ACTION, "swipe_action_none");
     }
 
     public int getSwipeRightAction() {
-        return wrapSwipeAction(mPreferences.getString(PREF_SWIPE_RIGHT_ACTION, "swipe_action_none"));
+        return wrapSwipeAction(getPrefSwipeRightAction());
+    }
+
+    private void setPrefSwipeRightAction(String action) {
+        mPreferences.edit().putString(PREF_SWIPE_RIGHT_ACTION, action).apply();
+    }
+
+    private String getPrefSwipeRightAction() {
+        return mPreferences.getString(PREF_SWIPE_RIGHT_ACTION, "swipe_action_none");
     }
 
     private int wrapSwipeAction(String s) {

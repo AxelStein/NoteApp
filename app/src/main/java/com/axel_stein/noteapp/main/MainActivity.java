@@ -1,5 +1,7 @@
 package com.axel_stein.noteapp.main;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -10,11 +12,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.App;
@@ -31,6 +36,7 @@ import com.axel_stein.noteapp.notes.list.NotesFragment;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.BottomMenuView;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -44,6 +50,10 @@ import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLA
 
 public class MainActivity extends BaseActivity {
 
+    private static final int REQUEST_CODE_SIGN_IN = 100;
+    private static final String TAG_FRAGMENT = "TAG_FRAGMENT";
+    private static final String TAG_SHOW_FAB = "TAG_SHOW_FAB";
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
@@ -56,11 +66,22 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.fab_add)
     FloatingActionButton mFAB;
 
-    private static final String TAG_FRAGMENT = "TAG_FRAGMENT";
-    private static final String TAG_SHOW_FAB = "TAG_SHOW_FAB";
+    @BindView(R.id.user_photo)
+    ImageView mUserPhoto;
+
+    @BindView(R.id.user_name)
+    TextView mUserName;
+
+    @BindView(R.id.user_panel)
+    View mUserPanel;
+
+    @BindView(R.id.user_loading_indicator)
+    View mUserLoadingIndicator;
 
     @Inject
     AppSettingsRepository mAppSettings;
+
+    private GoogleDriveHelper mDriveHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +93,11 @@ public class MainActivity extends BaseActivity {
         EventBusHelper.subscribe(this);
 
         setSupportActionBar(mToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
 
         boolean nightMode = mAppSettings.nightMode();
         mBottomNavigation.setItemIconTintList(ContextCompat.getColorStateList(this,
@@ -125,6 +151,63 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+
+        mUserPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mDriveHelper.isSignedIn()) {
+                    // todo dialog
+                    mDriveHelper.signOut();
+                } else {
+                    mDriveHelper.signIn();
+                }
+            }
+        });
+
+        mDriveHelper = new GoogleDriveHelper();
+        mDriveHelper.init(this, new GoogleDriveHelper.Callback() {
+            @Override
+            public void setUserData(Uri photo, String name) {
+                boolean nightMode = mAppSettings.nightMode();
+                int icon = nightMode ? R.drawable.ic_account_circle_white_36dp : R.drawable.ic_account_circle_grey_36dp;
+
+                if (photo == null) {
+                    mUserPhoto.setImageResource(icon);
+                } else {
+                    Picasso.get().load(photo).placeholder(icon).into(mUserPhoto);
+                }
+
+                ViewUtil.setText(mUserName, name);
+            }
+
+            @Override
+            public void startSignInActivity(Intent intent) {
+                startActivityForResult(intent, REQUEST_CODE_SIGN_IN);
+            }
+
+            @Override
+            public void showMessage(String msg) {
+                MainActivity.this.showMessage(new EventBusHelper.Message(msg));
+            }
+
+            @Override
+            public void showLoading(boolean show) {
+                ViewUtil.show(show, mUserLoadingIndicator);
+            }
+
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_SIGN_IN:
+                if (resultCode == RESULT_OK) {
+                    mDriveHelper.signInResultOk();
+                }
+                break;
+        }
     }
 
     @Nullable

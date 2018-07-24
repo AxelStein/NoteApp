@@ -3,38 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v7.preference.PreferenceCategory
-        android:title="Google Drive">
-
-        <Preference
-            android:key="sign_in"
-            android:title="Sign In"/>
-
-        <Preference
-            android:key="sign_out"
-            android:title="Sign Out"/>
-
-        <Preference
-            android:key="drive_export"
-            android:title="Export to Drive"/>
-
-        <Preference
-            android:key="drive_import"
-            android:title="Import from Drive"
-            android:summary="Last synced 24 Jul, 14:50" />
-
-    </android.support.v7.preference.PreferenceCategory>
-
-    <android.support.v7.preference.PreferenceCategory
         android:title="@string/pref_category_appearance">
 
         <SwitchPreferenceCompat
             android:key="PREF_NIGHT_MODE"
             android:title="@string/pref_night_mode"/>
-
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="PREF_SHOW_ADD_NOTE_FAB"
-            android:title="@string/pref_show_add_note_fab"/>
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
@@ -102,11 +75,11 @@
         android:title="@string/pref_category_backup">
 
         <Preference
-            android:key="export"
+            android:key="export_file"
             android:title="@string/pref_export"/>
 
         <Preference
-            android:key="import"
+            android:key="import_file"
             android:title="@string/pref_import"/>
 
         <!--
@@ -128,25 +101,7 @@
             android:key="app_version"
             android:title="@string/app_name"/>
 
-        <!--
-        <Preference
-            android:key="backup_manager"
-            android:title="@string/pref_backup_manager"/>
-        -->
-
     </android.support.v7.preference.PreferenceCategory>
-
-    <!--
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="show_fab"
-        android:title="@string/pref_show_fab"/>
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="enable_counters"
-        android:title="@string/pref_enable_counters"/>
-    -->
 
 
 </android.support.v7.preference.PreferenceScreen>
