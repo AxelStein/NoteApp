@@ -1,7 +1,5 @@
 package com.axel_stein.noteapp.notes.list.presenters;
 
-import android.support.v4.util.LongSparseArray;
-
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
@@ -24,6 +22,7 @@ import com.axel_stein.noteapp.notes.list.NotesContract.View;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -78,7 +77,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     private List<Note> mNotes;
 
     @Nullable
-    private LongSparseArray<Boolean> mCheckedItems;
+    private HashMap<String, Boolean> mCheckedItems;
 
     @Override
     public void onCreateView(View view) {
@@ -158,19 +157,19 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     private void toggleCheck(int position, Note note) {
         if (mCheckedItems == null) {
-            mCheckedItems = new LongSparseArray<>();
+            mCheckedItems = new HashMap<>();
         }
 
         boolean startCheckMode = mCheckedItems.size() == 0;
 
-        long id = note.getId();
+        String id = note.getId();
         boolean checked = isTrue(mCheckedItems.get(id));
         checked = !checked;
 
         if (checked) {
             mCheckedItems.put(id, true);
         } else {
-            mCheckedItems.delete(id);
+            mCheckedItems.remove(id);
         }
 
         if (startCheckMode) {
@@ -207,7 +206,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
             return;
         }
 
-        mCheckedItems = new LongSparseArray<>();
+        mCheckedItems = new HashMap<>();
         for (Note note : mNotes) {
             mCheckedItems.put(note.getId(), true);
         }

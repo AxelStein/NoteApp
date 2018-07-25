@@ -24,7 +24,7 @@ public class NoteValidator {
     }
 
     public static boolean validateBeforeUpdate(Note note) {
-        if (note == null || note.getId() <= 0) {
+        if (note == null || !note.hasId()) {
             return false;
         }
 
@@ -47,7 +47,7 @@ public class NoteValidator {
             return false;
         }
         if (checkId) {
-            if (note.getId() <= 0) {
+            if (!note.hasId()) {
                 return false;
             }
         }

@@ -3,12 +3,16 @@ package com.axel_stein.data.note;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import org.joda.time.DateTime;
 
 @Entity(tableName = "notes")
 public class NoteEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @PrimaryKey
+    @NonNull
+    private String id = "";
 
     @ColumnInfo
     private String title;
@@ -29,16 +33,17 @@ public class NoteEntity {
     private boolean pinned;
 
     @ColumnInfo
-    private long date;
+    private DateTime created;
 
     @ColumnInfo
-    private long update;
+    private DateTime modified;
 
-    public long getId() {
+    @NonNull
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -90,20 +95,20 @@ public class NoteEntity {
         return pinned;
     }
 
-    public long getDate() {
-        return date;
+    public DateTime getCreated() {
+        return created;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setCreated(DateTime created) {
+        this.created = created;
     }
 
-    public long getUpdate() {
-        return update;
+    public DateTime getModified() {
+        return modified;
     }
 
-    public void setUpdate(long update) {
-        this.update = update;
+    public void setModified(DateTime modified) {
+        this.modified = modified;
     }
 
 }

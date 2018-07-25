@@ -48,15 +48,6 @@ dependencies {
     compile "com.android.support:preference-v14:$supportLibraryVersion"
     compile 'com.takisoft.fix:preference-v7:26.1.0.2'
 
-    // test
-    /*
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
-        exclude group: "com.android.support", module: "support-annotations"
-        exclude group: 'com.google.code.findbugs'
-    })
-    testCompile "junit:junit:$junitVersion"
-    */
-
     // dagger
     compile "com.google.dagger:dagger-android:$daggerVersion"
     compile "com.google.dagger:dagger-android-support:$daggerVersion"
@@ -65,7 +56,6 @@ dependencies {
 
     // custom views
     compile "com.mikepenz:materialdrawer:$materialDrawerVersion"
-    //compile 'com.aurelhubert:ahbottomnavigation:2.1.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     compile "io.reactivex.rxjava2:rxandroid:$rxjavaVersion"
@@ -81,6 +71,8 @@ dependencies {
     compile "com.google.android.gms:play-services-drive:15.0.1"
 
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation "joda-time:joda-time:2.10"
 
     compile project(path: ':domain')
     compile project(path: ':data')

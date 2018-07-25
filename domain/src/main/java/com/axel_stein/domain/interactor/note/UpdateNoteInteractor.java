@@ -6,6 +6,8 @@ import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.NoteRepository;
 
+import org.joda.time.DateTime;
+
 import io.reactivex.Completable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
@@ -38,8 +40,7 @@ public class UpdateNoteInteractor {
                 if (!validateBeforeUpdate(note)) {
                     throw new IllegalArgumentException("note is note valid");
                 }
-
-                note.setUpdate(System.currentTimeMillis());
+                note.setModified(new DateTime());
                 mNoteRepository.update(note);
             }
         }).andThen(mSetLabelsInteractor.execute(note, note.getLabels())).subscribeOn(Schedulers.io());

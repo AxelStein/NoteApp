@@ -19,50 +19,50 @@ public interface NoteDao {
     void update(NoteEntity note);
 
     @Query("UPDATE notes SET notebook = :notebookId WHERE id = :noteId")
-    void updateNotebook(long noteId, long notebookId);
+    void updateNotebook(String noteId, long notebookId);
 
     @Delete
     void delete(NoteEntity note);
 
     @Query("SELECT * FROM notes WHERE id = :id")
-    NoteEntity get(long id);
+    NoteEntity get(String id);
 
     @Query("SELECT * FROM notes")
     List<NoteEntity> query();
 
-    @Query("SELECT * FROM notes WHERE notebook = 0 AND trash = 0")
-    List<NoteEntity> queryHome();
+    @Query("SELECT * FROM notes WHERE notebook = 0 AND trash = 0 ORDER BY :orderBy")
+    List<NoteEntity> queryHome(String orderBy);
 
-    @Query("SELECT * FROM notes WHERE notebook = :notebook AND trash = 0")
-    List<NoteEntity> queryNotebook(long notebook);
+    @Query("SELECT * FROM notes WHERE notebook = :notebook AND trash = 0 ORDER BY :orderBy")
+    List<NoteEntity> queryNotebook(long notebook, String orderBy);
 
-    @Query("SELECT * FROM notes WHERE notebook = :notebook")
-    List<NoteEntity> queryNotebookTrash(long notebook);
+    @Query("SELECT * FROM notes WHERE notebook = :notebook ORDER BY :orderBy")
+    List<NoteEntity> queryNotebookTrash(long notebook, String orderBy);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM notes JOIN note_label_pairs WHERE trash = 0 AND notes.id = note_id AND label_id = :label")
-    List<NoteEntity> queryLabel(long label);
+    @Query("SELECT * FROM notes JOIN note_label_pairs WHERE trash = 0 AND notes.id = note_id AND label_id = :label ORDER BY :orderBy")
+    List<NoteEntity> queryLabel(long label, String orderBy);
 
     @Query("SELECT * FROM notes WHERE trash = 0 AND (title LIKE :query OR content LIKE :query)")
     List<NoteEntity> search(String query);
 
-    @Query("SELECT * FROM notes WHERE trash != 0")
-    List<NoteEntity> queryTrash();
+    @Query("SELECT * FROM notes WHERE trash != 0 ORDER BY :orderBy")
+    List<NoteEntity> queryTrash(String orderBy);
 
     @Query("UPDATE notes SET notebook = :notebook WHERE id IN (:notes)")
-    void setNotebook(List<Long> notes, long notebook);
+    void setNotebook(List<String> notes, long notebook);
 
     @Query("UPDATE notes SET trash = 1 WHERE id IN (:notes)")
-    void trash(List<Long> notes);
+    void trash(List<String> notes);
 
     @Query("UPDATE notes SET trash = 0 WHERE id IN (:notes)")
-    void restore(List<Long> notes);
+    void restore(List<String> notes);
 
     @Query("UPDATE notes SET pinned = 1 WHERE id IN (:notes)")
-    void pin(List<Long> notes);
+    void pin(List<String> notes);
 
     @Query("UPDATE notes SET pinned = 0 WHERE id IN (:notes)")
-    void unpin(List<Long> notes);
+    void unpin(List<String> notes);
 
     @Query("DELETE FROM notes WHERE notebook = :notebook AND trash = 0")
     void deleteNotebook(long notebook);

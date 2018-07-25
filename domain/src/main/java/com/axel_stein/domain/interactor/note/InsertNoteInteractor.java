@@ -6,6 +6,8 @@ import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.NoteRepository;
 
+import org.joda.time.DateTime;
+
 import io.reactivex.Completable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
@@ -16,14 +18,14 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.validateBefor
 public class InsertNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private NoteRepository mRepository;
 
     @NonNull
     private SetLabelsInteractor mSetLabelsInteractor;
 
-    public InsertNoteInteractor(@NonNull NoteRepository noteRepository, @NonNull SetLabelsInteractor setLabelsInteractor) {
-        mNoteRepository = requireNonNull(noteRepository, "noteRepository is null");
-        mSetLabelsInteractor = requireNonNull(setLabelsInteractor, "setLabelsInteractor is null");
+    public InsertNoteInteractor(@NonNull NoteRepository r, @NonNull SetLabelsInteractor setLabelsInteractor) {
+        mRepository = requireNonNull(r);
+        mSetLabelsInteractor = requireNonNull(setLabelsInteractor);
     }
 
     /**
@@ -39,10 +41,11 @@ public class InsertNoteInteractor {
                     throw new IllegalArgumentException("note is not valid");
                 }
 
-                note.setDate(System.currentTimeMillis());
-                note.setUpdate(note.getDate());
+                DateTime created = new DateTime();
+                note.setCreated(created);
+                note.setModified(created);
 
-                note.setId(mNoteRepository.insert(note));
+                note.setId(mRepository.insert(note));
             }
         }).andThen(mSetLabelsInteractor.execute(note, note.getLabels())).subscribeOn(Schedulers.io());
     }

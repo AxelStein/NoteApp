@@ -18,10 +18,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
-import static com.axel_stein.data.AppDatabase.MIGRATION_1_2;
-import static com.axel_stein.data.AppDatabase.MIGRATION_2_3;
-import static com.axel_stein.data.AppDatabase.MIGRATION_3_4;
-
 @Module
 public class AppModule {
     private App mApp;
@@ -39,11 +35,7 @@ public class AppModule {
     @Provides
     @Singleton
     AppDatabase provideDatabase(App app) {
-        return Room.databaseBuilder(app, AppDatabase.class, app.getPackageName())
-                .addMigrations(MIGRATION_1_2)
-                .addMigrations(MIGRATION_2_3)
-                .addMigrations(MIGRATION_3_4)
-                .build();
+        return Room.databaseBuilder(app, AppDatabase.class, app.getPackageName()).build();
     }
 
     @Provides
@@ -72,8 +64,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    SqlNoteRepository provideNoteRepository(AppDatabase db) {
-        return new SqlNoteRepository(db.noteDao());
+    SqlNoteRepository provideNoteRepository(AppDatabase db, AppSettingsRepository s) {
+        return new SqlNoteRepository(db.noteDao(), s);
     }
 
     @Provides

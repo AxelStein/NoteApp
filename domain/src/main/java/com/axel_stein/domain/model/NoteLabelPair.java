@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NoteLabelPair {
 
     @JsonProperty("note_id")
-    private long noteId;
+    private String noteId;
 
     @JsonProperty("label_id")
     private long labelId;
@@ -18,17 +18,17 @@ public class NoteLabelPair {
     }
 
     @JsonIgnore
-    public NoteLabelPair(long noteId, long labelId, boolean trash) {
+    public NoteLabelPair(String noteId, long labelId, boolean trash) {
         this.noteId = noteId;
         this.labelId = labelId;
         this.trash = trash;
     }
 
-    public long getNoteId() {
+    public String getNoteId() {
         return noteId;
     }
 
-    public void setNoteId(long noteId) {
+    public void setNoteId(String noteId) {
         this.noteId = noteId;
     }
 

@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatDialogFragment;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.utils.DateFormatter;
 
 public class NoteInfoDialog extends AppCompatDialogFragment {
 
@@ -55,8 +54,11 @@ public class NoteInfoDialog extends AppCompatDialogFragment {
             return null;
         }
 
-        String created = DateFormatter.formatDateTime(getContext(), mNote.getDate());
-        String modified = DateFormatter.formatDateTime(getContext(), mNote.getUpdate());
+        String created = mNote.getCreated().toString();
+        String modified = mNote.getModified().toString();
+        // fixme
+        //String created = DateFormatter.formatDateTime(getContext(), mNote.getCreated());
+        //String modified = DateFormatter.formatDateTime(getContext(), mNote.getModified());
         int charCount = mNote.getContent() == null ? 0 : mNote.getContent().length();
 
         return getString(R.string.msg_note_info, created, modified, charCount);

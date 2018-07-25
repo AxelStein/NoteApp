@@ -11,22 +11,16 @@ import java.util.List;
 
 public interface NoteRepository {
 
-    /**
-     * Inserts note into repository
-     *
-     * @param note to insert
-     * @return id of the created note
-     */
-    long insert(@NonNull Note note);
+    String insert(@NonNull Note note);
 
     void update(@NonNull Note note);
 
-    void updateNotebook(long noteId, long notebookId);
+    void updateNotebook(String noteId, long notebookId);
 
     void delete(@NonNull Note note);
 
     @Nullable
-    Note get(long id);
+    Note get(String id);
 
     long count(@NonNull Notebook notebook);
 

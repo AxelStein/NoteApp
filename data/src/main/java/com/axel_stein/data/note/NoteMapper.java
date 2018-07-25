@@ -19,8 +19,8 @@ class NoteMapper {
         note.setContent(entity.getContent());
         note.setNotebook(entity.getNotebook());
         note.setRelevance(entity.getRelevance());
-        note.setDate(entity.getDate());
-        note.setUpdate(entity.getUpdate());
+        note.setCreated(entity.getCreated());
+        note.setModified(entity.getModified());
         note.setTrash(entity.isTrash());
         note.setPinned(entity.isPinned());
         return note;
@@ -36,8 +36,8 @@ class NoteMapper {
         entity.setContent(note.getContent());
         entity.setNotebook(note.getNotebook());
         entity.setRelevance(note.getRelevance());
-        entity.setDate(note.getDate());
-        entity.setUpdate(note.getUpdate());
+        entity.setCreated(note.getCreated());
+        entity.setModified(note.getModified());
         entity.setTrash(note.isTrash());
         entity.setPinned(note.isPinned());
         return entity;
@@ -54,11 +54,11 @@ class NoteMapper {
         return notes;
     }
 
-    static List<Long> mapIds(@Nullable List<Note> notes) {
+    static List<String> mapIds(@Nullable List<Note> notes) {
         if (notes == null) {
             return null;
         }
-        List<Long> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (Note n : notes) {
             ids.add(n.getId());
         }

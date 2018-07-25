@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "877bbfb4978f59fd95099fe0ef6255db",
+    "identityHash": "eee2300535d543d52bf623b7a757a7f7",
     "entities": [
       {
         "tableName": "labels",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `order` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -19,6 +19,12 @@
             "columnName": "title",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -32,7 +38,7 @@
       },
       {
         "tableName": "notebooks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `order` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -45,6 +51,12 @@
             "columnName": "title",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "order",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -58,7 +70,7 @@
       },
       {
         "tableName": "note_label_pairs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`entity_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `note_id` INTEGER NOT NULL, `label_id` INTEGER NOT NULL, `entity_trash` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`entity_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `note_id` TEXT, `label_id` INTEGER NOT NULL, `entity_trash` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -69,8 +81,8 @@
           {
             "fieldPath": "noteId",
             "columnName": "note_id",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "labelId",
@@ -96,12 +108,12 @@
       },
       {
         "tableName": "notes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `content` TEXT, `notebook` INTEGER NOT NULL, `relevance` INTEGER NOT NULL, `trash` INTEGER NOT NULL, `date` INTEGER NOT NULL, `update` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `content` TEXT, `notebook` INTEGER NOT NULL, `relevance` INTEGER NOT NULL, `trash` INTEGER NOT NULL, `pinned` INTEGER NOT NULL, `created` TEXT, `modified` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -135,23 +147,29 @@
             "notNull": true
           },
           {
-            "fieldPath": "date",
-            "columnName": "date",
+            "fieldPath": "pinned",
+            "columnName": "pinned",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "update",
-            "columnName": "update",
-            "affinity": "INTEGER",
-            "notNull": true
+            "fieldPath": "created",
+            "columnName": "created",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "modified",
+            "columnName": "modified",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -159,7 +177,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"877bbfb4978f59fd95099fe0ef6255db\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"eee2300535d543d52bf623b7a757a7f7\")"
     ]
   }
 }

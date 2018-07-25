@@ -5,10 +5,10 @@ import android.support.annotation.Nullable;
 public enum NoteOrder {
     TITLE,
     RELEVANCE,
-    DATE_NEWEST,
-    DATE_OLDEST,
-    UPDATE_NEWEST,
-    UPDATE_OLDEST;
+    CREATED_NEWEST,
+    CREATED_OLDEST,
+    MODIFIED_NEWEST,
+    MODIFIED_OLDEST;
 
     @Nullable
     public static NoteOrder fromInt(int x) {
@@ -20,16 +20,16 @@ public enum NoteOrder {
                 return RELEVANCE;
 
             case 2:
-                return DATE_NEWEST;
+                return CREATED_NEWEST;
 
             case 3:
-                return DATE_OLDEST;
+                return CREATED_OLDEST;
 
             case 4:
-                return UPDATE_NEWEST;
+                return MODIFIED_NEWEST;
 
             case 5:
-                return UPDATE_OLDEST;
+                return MODIFIED_OLDEST;
         }
 
         return null;

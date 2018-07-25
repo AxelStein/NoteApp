@@ -116,7 +116,7 @@ public class EditNoteActivity extends BaseActivity {
             setPresenterListener();
         } else {
             Intent intent = getIntent();
-            long id = intent.getLongExtra(EXTRA_NOTE_ID, 0);
+            String id = intent.getStringExtra(EXTRA_NOTE_ID);
             final long notebook = intent.getLongExtra(EXTRA_NOTEBOOK_ID, 0);
             final long label = intent.getLongExtra(EXTRA_LABEL_ID, 0);
 
@@ -128,7 +128,7 @@ public class EditNoteActivity extends BaseActivity {
                             mPresenter = new EditNotePresenter(note);
                             setPresenterListener();
 
-                            if (note.getId() <= 0) {
+                            if (!note.hasId()) {
                                 if (notebook > 0) {
                                     note.setNotebook(notebook);
                                 }

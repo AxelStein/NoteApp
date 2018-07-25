@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 
 import com.axel_stein.domain.utils.CompareBuilder;
 import com.axel_stein.domain.utils.MapComparator;
+import com.axel_stein.domain.utils.TextUtil;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +19,7 @@ public class Note implements Cloneable {
 
     public static final int MAX_TITLE_LENGTH = 128;
 
-    private long id;
+    private String id;
 
     private long notebook;
 
@@ -28,20 +31,24 @@ public class Note implements Cloneable {
 
     private String content;
 
-    private long date;
+    private DateTime created;
 
-    private long update;
+    private DateTime modified;
 
     private boolean pinned;
 
     @Nullable
     private HashMap<Long, Boolean> labels;
 
-    public long getId() {
+    public boolean hasId() {
+        return !TextUtil.isEmpty(id);
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -177,20 +184,20 @@ public class Note implements Cloneable {
         return labels;
     }
 
-    public long getDate() {
-        return date;
+    public DateTime getCreated() {
+        return created;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setCreated(DateTime created) {
+        this.created = created;
     }
 
-    public long getUpdate() {
-        return update;
+    public DateTime getModified() {
+        return modified;
     }
 
-    public void setUpdate(long update) {
-        this.update = update;
+    public void setModified(DateTime modified) {
+        this.modified = modified;
     }
 
     @Nullable
@@ -243,8 +250,8 @@ public class Note implements Cloneable {
             builder.append(title, note.title);
             builder.append(content, note.content);
             builder.append(notebook, note.notebook);
-            builder.append(date, note.date);
-            builder.append(update, note.update);
+            builder.append(created, note.created);
+            builder.append(modified, note.modified);
             builder.append(trash, note.trash);
             builder.append(pinned, note.pinned);
 
@@ -266,8 +273,8 @@ public class Note implements Cloneable {
                 ", trash=" + trash +
                 ", pinned=" + pinned +
                 ", title='" + title + '\'' +
-                ", date=" + date +
-                ", update=" + update +
+                ", created=" + created +
+                ", modified=" + modified +
                 '}';
     }
 

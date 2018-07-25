@@ -32,7 +32,7 @@ public class GetNoteInteractor {
      * @param id request
      * @throws IllegalStateException if id, notebook or title is empty
      */
-    public Single<Note> execute(final long id) {
+    public Single<Note> execute(final String id) {
         return Single.fromCallable(new Callable<Note>() {
             @Override
             public Note call() throws Exception {

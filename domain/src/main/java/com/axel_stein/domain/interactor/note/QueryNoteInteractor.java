@@ -287,6 +287,7 @@ public class QueryNoteInteractor {
             }
         }
 
+        /*
         Collections.sort(list, new Comparator<Note>() {
             @Override
             public int compare(Note n1, Note n2) {
@@ -300,22 +301,23 @@ public class QueryNoteInteractor {
                     case RELEVANCE:
                         return compareDates(n1.getRelevance(), n2.getRelevance(), false);
 
-                    case DATE_NEWEST:
-                        return compareDates(n1.getDate(), n2.getDate(), false);
+                    case CREATED_NEWEST:
+                        return compareDates(n1.getCreated(), n2.getCreated(), false);
 
-                    case DATE_OLDEST:
-                        return compareDates(n1.getDate(), n2.getDate(), true);
+                    case CREATED_OLDEST:
+                        return compareDates(n1.getCreated(), n2.getCreated(), true);
 
-                    case UPDATE_NEWEST:
-                        return compareDates(n1.getUpdate(), n2.getUpdate(), false);
+                    case MODIFIED_NEWEST:
+                        return compareDates(n1.getModified(), n2.getModified(), false);
 
-                    case UPDATE_OLDEST:
-                        return compareDates(n1.getUpdate(), n2.getUpdate(), true);
+                    case MODIFIED_OLDEST:
+                        return compareDates(n1.getModified(), n2.getModified(), true);
                 }
 
                 return 0;
             }
         });
+        */
 
         if (!searchFlag) {
             Collections.sort(list, new Comparator<Note>() {

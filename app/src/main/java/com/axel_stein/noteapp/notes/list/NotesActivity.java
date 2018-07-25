@@ -407,10 +407,10 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         SparseArray<NoteOrder> sparseArray = new SparseArray<>();
         sparseArray.put(R.id.menu_sort_title, NoteOrder.TITLE);
         sparseArray.put(R.id.menu_sort_relevance, NoteOrder.RELEVANCE);
-        sparseArray.put(R.id.menu_created_newest, NoteOrder.DATE_NEWEST);
-        sparseArray.put(R.id.menu_created_oldest, NoteOrder.DATE_OLDEST);
-        sparseArray.put(R.id.menu_updated_newest, NoteOrder.UPDATE_NEWEST);
-        sparseArray.put(R.id.menu_updated_oldest, NoteOrder.UPDATE_OLDEST);
+        sparseArray.put(R.id.menu_created_newest, NoteOrder.CREATED_NEWEST);
+        sparseArray.put(R.id.menu_created_oldest, NoteOrder.CREATED_OLDEST);
+        sparseArray.put(R.id.menu_updated_newest, NoteOrder.MODIFIED_NEWEST);
+        sparseArray.put(R.id.menu_updated_oldest, NoteOrder.MODIFIED_OLDEST);
 
         return sparseArray.get(item.getItemId());
     }
@@ -423,10 +423,10 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         HashMap<NoteOrder, Integer> map = new HashMap<>();
         map.put(NoteOrder.TITLE, R.id.menu_sort_title);
         map.put(NoteOrder.RELEVANCE, R.id.menu_sort_relevance);
-        map.put(NoteOrder.DATE_NEWEST, R.id.menu_created_newest);
-        map.put(NoteOrder.DATE_OLDEST, R.id.menu_created_oldest);
-        map.put(NoteOrder.UPDATE_NEWEST, R.id.menu_updated_newest);
-        map.put(NoteOrder.UPDATE_OLDEST, R.id.menu_updated_oldest);
+        map.put(NoteOrder.CREATED_NEWEST, R.id.menu_created_newest);
+        map.put(NoteOrder.CREATED_OLDEST, R.id.menu_created_oldest);
+        map.put(NoteOrder.MODIFIED_NEWEST, R.id.menu_updated_newest);
+        map.put(NoteOrder.MODIFIED_OLDEST, R.id.menu_updated_oldest);
 
         return map.get(order);
     }

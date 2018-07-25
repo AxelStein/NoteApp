@@ -149,6 +149,7 @@
     <string name="msg_notebook_added">Блокнот добавлен</string>
     <string name="msg_notebook_renamed">Блокнот переименован</string>
     <string name="msg_notebook_deleted">Блокнот удален</string>
+    <string name="msg_note_created">Заметка создана</string>
     <string name="msg_note_updated">Заметка обновлена</string>
     <string name="msg_notes_updated">Заметки обновлены</string>
     <string name="msg_note_restored">Заметка восстановлена</string>

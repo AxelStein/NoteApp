@@ -3,12 +3,15 @@ package com.axel_stein.data.note;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.axel_stein.data.note.NoteMapper.map;
 import static com.axel_stein.data.note.NoteMapper.mapIds;
@@ -17,13 +20,37 @@ public class SqlNoteRepository implements NoteRepository {
 
     private NoteDao mDao;
 
-    public SqlNoteRepository(NoteDao dao) {
+    private AppSettingsRepository mSettings;
+
+    public SqlNoteRepository(NoteDao dao, AppSettingsRepository settings) {
         mDao = dao;
+        mSettings = settings;
+    }
+
+    private String getOrderBy() {
+        NoteOrder order = mSettings.getNotesOrder();
+        switch (order) {
+            case TITLE:
+                return "title";
+            case RELEVANCE:
+                return "relevance desc";
+            case CREATED_NEWEST:
+                return "datetime(created) desc";
+            case CREATED_OLDEST:
+                return "datetime(created)";
+            case MODIFIED_NEWEST:
+                return "datetime(modified) desc";
+            case MODIFIED_OLDEST:
+                return "datetime(modified)";
+        }
+        return "title";
     }
 
     @Override
-    public long insert(@NonNull Note note) {
-        return mDao.insert(map(note));
+    public String insert(@NonNull Note note) {
+        note.setId(UUID.randomUUID().toString());
+        mDao.insert(map(note));
+        return note.getId();
     }
 
     @Override
@@ -32,7 +59,7 @@ public class SqlNoteRepository implements NoteRepository {
     }
 
     @Override
-    public void updateNotebook(long noteId, long notebookId) {
+    public void updateNotebook(String noteId, long notebookId) {
         mDao.updateNotebook(noteId, notebookId);
     }
 
@@ -43,7 +70,7 @@ public class SqlNoteRepository implements NoteRepository {
 
     @Nullable
     @Override
-    public Note get(long id) {
+    public Note get(String id) {
         return map(mDao.get(id));
     }
 
@@ -96,13 +123,13 @@ public class SqlNoteRepository implements NoteRepository {
     @NonNull
     @Override
     public List<Note> queryHome() {
-        return map(mDao.queryHome());
+        return map(mDao.queryHome(getOrderBy()));
     }
 
     @NonNull
     @Override
     public List<Note> query(@NonNull Notebook notebook) {
-        return map(mDao.queryNotebook(notebook.getId()));
+        return map(mDao.queryNotebook(notebook.getId(), getOrderBy()));
     }
 
     @Override
@@ -110,13 +137,13 @@ public class SqlNoteRepository implements NoteRepository {
         if (!includeTrash) {
             return query(notebook);
         }
-        return map(mDao.queryNotebookTrash(notebook.getId()));
+        return map(mDao.queryNotebookTrash(notebook.getId(), getOrderBy()));
     }
 
     @NonNull
     @Override
     public List<Note> query(@NonNull Label label) {
-        return map(mDao.queryLabel(label.getId()));
+        return map(mDao.queryLabel(label.getId(), getOrderBy()));
     }
 
     @NonNull
@@ -129,7 +156,7 @@ public class SqlNoteRepository implements NoteRepository {
     @NonNull
     @Override
     public List<Note> queryTrash() {
-        return map(mDao.queryTrash());
+        return map(mDao.queryTrash(getOrderBy()));
     }
 
     @Override

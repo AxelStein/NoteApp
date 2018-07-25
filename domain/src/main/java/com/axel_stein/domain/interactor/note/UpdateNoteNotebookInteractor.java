@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.note;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.repository.NoteRepository;
+import com.axel_stein.domain.utils.TextUtil;
 
 import io.reactivex.Completable;
 import io.reactivex.functions.Action;
@@ -19,11 +20,11 @@ public class UpdateNoteNotebookInteractor {
         mNoteRepository = requireNonNull(noteRepository, "noteRepository is null");
     }
 
-    public Completable execute(final long noteId, final long notebookId) {
+    public Completable execute(final String noteId, final long notebookId) {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
-                if (noteId <= 0) {
+                if (TextUtil.isEmpty(noteId)) {
                     throw new IllegalArgumentException();
                 }
                 mNoteRepository.updateNotebook(noteId, notebookId);

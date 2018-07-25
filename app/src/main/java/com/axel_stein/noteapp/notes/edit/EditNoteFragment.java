@@ -438,7 +438,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
 
         mPinned = note.isPinned();
         mTrash = note.isTrash();
-        mUpdate = note.getId() > 0;
+        mUpdate = note.hasId();
 
         /*
         long date;
@@ -446,8 +446,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
             date = System.currentTimeMillis();
             ViewUtil.hide(mTextUpdate);
         } else {
-            date = note.getDate();
-            mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), note.getUpdate()));
+            date = note.getCreated();
+            mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), note.getModified()));
         }
         mTextDate.setText(DateFormatter.formatDateTime(getContext(), date));
         */

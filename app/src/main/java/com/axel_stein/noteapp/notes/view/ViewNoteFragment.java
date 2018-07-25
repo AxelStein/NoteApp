@@ -207,7 +207,7 @@ public class ViewNoteFragment extends BaseFragment {
 
         long date = System.currentTimeMillis();
         if (note.getId() > 0) {
-            date = note.getUpdate();
+            date = note.getModified();
         }
         mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), date));
 

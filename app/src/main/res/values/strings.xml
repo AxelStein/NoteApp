@@ -163,6 +163,7 @@
     <string name="msg_notebook_added">Notebook added</string>
     <string name="msg_notebook_renamed">Notebook renamed</string>
     <string name="msg_notebook_deleted">Notebook deleted</string>
+    <string name="msg_note_created">Note created</string>
     <string name="msg_note_updated">Note updated</string>
     <string name="msg_notes_updated">Notes updated</string>
     <string name="msg_note_restored">Note restored</string>

@@ -206,7 +206,9 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
         setEditableImpl(false);
 
         Completable completable;
-        if (mNote.getId() > 0) {
+
+        final boolean hasId = mNote.hasId();
+        if (hasId) {
             completable = mUpdateNoteInteractor.execute(mNote);
         } else {
             completable = mInsertNoteInteractor.execute(mNote);
@@ -228,7 +230,11 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 if (mView != null) {
                     mView.setNote(mNote);
                     notifyChanged();
-                    mView.showMessage(R.string.msg_note_updated);
+                    if (hasId) {
+                        mView.showMessage(R.string.msg_note_updated);
+                    } else {
+                        mView.showMessage(R.string.msg_note_created);
+                    }
                 }
 
                 EventBusHelper.updateNoteList();
@@ -289,7 +295,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
     @Override
     public void actionPinNote() {
-        if (mNote.getId() <= 0) {
+        if (!mNote.hasId()) {
             boolean p = !mNote.isPinned();
 
             mNote.setPinned(p);
@@ -340,7 +346,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     private void setNotebookImpl(final Notebook notebook) {
-        if (mNote.getId() > 0) {
+        if (mNote.hasId()) {
             mUpdateNoteNotebookInteractor.execute(mNote.getId(), notebook.getId())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new CompletableObserver() {
@@ -377,7 +383,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
     @Override
     public void setLabels(final List<Long> labels) {
-        if (mNote.getId() > 0) {
+        if (mNote.hasId()) {
             mSetLabelsInteractor.execute(mNote, labels)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new CompletableObserver() {
@@ -572,7 +578,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     @Override
     public void actionDuplicate(String copySuffix) {
         Note duplicate = mSrcNote.copy();
-        duplicate.setId(0);
+        duplicate.setId(null);
 
         String title = duplicate.getTitle();
         String content = duplicate.getContent();
