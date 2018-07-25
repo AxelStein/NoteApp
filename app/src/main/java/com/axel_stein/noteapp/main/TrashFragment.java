@@ -1,12 +1,15 @@
 package com.axel_stein.noteapp.main;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
+import com.axel_stein.domain.model.Note;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
@@ -15,6 +18,8 @@ import com.axel_stein.noteapp.notes.list.NotesContract;
 import com.axel_stein.noteapp.notes.list.NotesFragment;
 import com.axel_stein.noteapp.notes.list.presenters.TrashNotesPresenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,6 +32,8 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
 
     @Inject
     EmptyTrashInteractor mEmptyTrashInteractor;
+
+    private boolean mEmptyList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,10 +48,28 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
     }
 
     @Override
+    public void setNotes(List<Note> list) {
+        super.setNotes(list);
+
+        mEmptyList = list == null || list.size() == 0;
+
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_trash, menu);
         MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuUtil.show(menu, !mEmptyList, R.id.menu_empty_trash);
     }
 
     @Override
@@ -83,13 +108,13 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
 
     }
 
-
+    @SuppressLint("CheckResult")
     private void emptyTrash() {
         mEmptyTrashInteractor.emptyTrash()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         NotesContract.Presenter presenter = getPresenter();
                         if (presenter != null) {
                             presenter.forceUpdate();
@@ -98,7 +123,7 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
