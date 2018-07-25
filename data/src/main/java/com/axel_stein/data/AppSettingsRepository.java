@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.NotebookOrder;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
 import org.json.JSONException;
@@ -24,9 +25,10 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
     public static final String PREF_CONTENT_CHAR_COUNTER = "PREF_CONTENT_CHAR_COUNTER";
 
+    private static final String PREF_PASSWORD = "PREF_PASSWORD";
+
     // todo useless
     private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
-    private static final String PREF_PASSWORD = "PREF_PASSWORD";
     private static final String PREF_SHOW_ADD_NOTE_FAB = "PREF_SHOW_ADD_NOTE_FAB";
 
     public static final int SWIPE_ACTION_NONE = 0;
@@ -35,16 +37,21 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final int SWIPE_ACTION_PIN = 3;
 
     private SharedPreferences mPreferences;
-    private String mDefaultNotebookTitle;
-    private String mPassword;
+    private DriveSyncRepository mDriveSyncRepository;
 
-    public AppSettingsRepository(SharedPreferences preferences, String defaultNotebookTitle) {
+    private String mPassword; // fixme
+
+    public AppSettingsRepository(SharedPreferences preferences, DriveSyncRepository d) {
         mPreferences = preferences;
-        mDefaultNotebookTitle = defaultNotebookTitle;
+        mDriveSyncRepository = d;
         mPassword = getPassword();
     }
 
-    public void importSettings(String json) {
+    public void syncChanges() {
+        mDriveSyncRepository.notifySettingsChanged(exportSettings());
+    }
+
+    private void importSettings(String json) {
         try {
             JSONObject object = new JSONObject(json);
 
@@ -66,7 +73,7 @@ public class AppSettingsRepository implements SettingsRepository {
         }
     }
 
-    public String exportSettings() {
+    private String exportSettings() {
         JSONObject object = new JSONObject();
 
         try {
@@ -118,11 +125,6 @@ public class AppSettingsRepository implements SettingsRepository {
     @Override
     public LabelOrder getLabelOrder() {
         return LabelOrder.fromInt(mPreferences.getInt(PREF_LABEL_ORDER, LabelOrder.TITLE.ordinal()));
-    }
-
-    @Override
-    public String defaultNotebookTitle() {
-        return mDefaultNotebookTitle;
     }
 
     public boolean showAddNoteFAB() {

@@ -9,6 +9,7 @@ import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookOrderInteractor;
+import com.axel_stein.noteapp.main.GoogleDriveInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -17,18 +18,18 @@ import dagger.Provides;
 class NotebookInteractorModule {
 
     @Provides
-    InsertNotebookInteractor insert(SqlNotebookRepository repository) {
-        return new InsertNotebookInteractor(repository);
+    InsertNotebookInteractor insert(SqlNotebookRepository repository, GoogleDriveInteractor d) {
+        return new InsertNotebookInteractor(repository, d);
     }
 
     @Provides
-    UpdateNotebookInteractor update(SqlNotebookRepository repository) {
-        return new UpdateNotebookInteractor(repository);
+    UpdateNotebookInteractor update(SqlNotebookRepository repository, GoogleDriveInteractor d) {
+        return new UpdateNotebookInteractor(repository, d);
     }
 
     @Provides
-    DeleteNotebookInteractor delete(SqlNoteRepository n, SqlNotebookRepository b) {
-        return new DeleteNotebookInteractor(n, b);
+    DeleteNotebookInteractor delete(SqlNoteRepository n, SqlNotebookRepository b, GoogleDriveInteractor d) {
+        return new DeleteNotebookInteractor(n, b, d);
     }
 
     @Provides
@@ -44,8 +45,8 @@ class NotebookInteractorModule {
     }
 
     @Provides
-    UpdateNotebookOrderInteractor updateOrder(SqlNotebookRepository repository, AppSettingsRepository settings) {
-        return new UpdateNotebookOrderInteractor(repository, settings);
+    UpdateNotebookOrderInteractor updateOrder(SqlNotebookRepository n, AppSettingsRepository s, GoogleDriveInteractor d) {
+        return new UpdateNotebookOrderInteractor(n, s, d);
     }
 
 }

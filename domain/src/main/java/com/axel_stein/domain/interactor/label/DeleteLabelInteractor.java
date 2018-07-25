@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.label;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.LabelRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 
@@ -21,9 +22,13 @@ public class DeleteLabelInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
-    public DeleteLabelInteractor(@NonNull LabelRepository labelRepository, @NonNull NoteLabelPairRepository helperRepository) {
-        mLabelRepository = requireNonNull(labelRepository, "labelRepository is null");
-        mNoteLabelPairRepository = requireNonNull(helperRepository, "helperRepository is null");
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public DeleteLabelInteractor(@NonNull LabelRepository l, @NonNull NoteLabelPairRepository n, @NonNull DriveSyncRepository d) {
+        mLabelRepository = requireNonNull(l);
+        mNoteLabelPairRepository = requireNonNull(n);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -41,6 +46,9 @@ public class DeleteLabelInteractor {
                 }
                 mLabelRepository.delete(label);
                 mNoteLabelPairRepository.delete(label);
+
+                mDriveSyncRepository.notifyLabelsChanged(mLabelRepository.query());
+                mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

@@ -30,6 +30,7 @@ import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.label_manager.LabelManagerFragment;
+import com.axel_stein.noteapp.main.GoogleDriveInteractor.UserData;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerFragment;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesFragment;
@@ -47,6 +48,7 @@ import butterknife.ButterKnife;
 
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
+import static com.axel_stein.noteapp.main.GoogleDriveInteractor.OnSignInListener;
 
 public class MainActivity extends BaseActivity {
 
@@ -81,7 +83,8 @@ public class MainActivity extends BaseActivity {
     @Inject
     AppSettingsRepository mAppSettings;
 
-    private GoogleDriveHelper mDriveHelper;
+    @Inject
+    GoogleDriveInteractor mGoogleDrive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,47 +158,48 @@ public class MainActivity extends BaseActivity {
         mUserPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mDriveHelper.isSignedIn()) {
-                    // todo dialog
-                    mDriveHelper.signOut();
+                if (mGoogleDrive.isSignedIn()) {
+                    // fixme
+                    /*
+                    mGoogleDrive.signOut(new OnSignOutListener() {
+                        @Override
+                        public void onSuccess() {
+                            setUserData(null);
+                        }
+                    });
+                    */
                 } else {
-                    mDriveHelper.signIn();
+                    startActivityForResult(mGoogleDrive.getSignInIntent(), REQUEST_CODE_SIGN_IN);
                 }
             }
         });
 
-        mDriveHelper = new GoogleDriveHelper();
-        mDriveHelper.init(this, new GoogleDriveHelper.Callback() {
-            @Override
-            public void setUserData(Uri photo, String name) {
-                boolean nightMode = mAppSettings.nightMode();
-                int icon = nightMode ? R.drawable.ic_account_circle_white_36dp : R.drawable.ic_account_circle_grey_36dp;
+        setUserData(mGoogleDrive.isSignedIn() ? mGoogleDrive.getUserData() : null);
+    }
 
-                if (photo == null) {
-                    mUserPhoto.setImageResource(icon);
-                } else {
-                    Picasso.get().load(photo).placeholder(icon).into(mUserPhoto);
-                }
+    private void setUserData(UserData user) {
+        Uri photo = null;
+        String name = null;
 
-                ViewUtil.setText(mUserName, name);
-            }
+        if (user != null) {
+            photo = user.getPhoto();
+            name = user.getName();
+        }
 
-            @Override
-            public void startSignInActivity(Intent intent) {
-                startActivityForResult(intent, REQUEST_CODE_SIGN_IN);
-            }
+        boolean nightMode = mAppSettings.nightMode();
+        int icon = nightMode ? R.drawable.ic_account_circle_white_36dp : R.drawable.ic_account_circle_grey_36dp;
 
-            @Override
-            public void showMessage(String msg) {
-                MainActivity.this.showMessage(new EventBusHelper.Message(msg));
-            }
+        if (photo == null) {
+            mUserPhoto.setImageResource(icon);
+        } else {
+            Picasso.get().load(photo).placeholder(icon).into(mUserPhoto);
+        }
 
-            @Override
-            public void showLoading(boolean show) {
-                ViewUtil.show(show, mUserLoadingIndicator);
-            }
-
-        });
+        if (name == null) {
+            ViewUtil.setText(mUserName, R.string.guest);
+        } else {
+            ViewUtil.setText(mUserName, name);
+        }
     }
 
     @Override
@@ -204,7 +208,12 @@ public class MainActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_CODE_SIGN_IN:
                 if (resultCode == RESULT_OK) {
-                    mDriveHelper.signInResultOk();
+                    mGoogleDrive.signIn(new OnSignInListener() {
+                        @Override
+                        public void onSuccess(UserData user) {
+                            setUserData(user);
+                        }
+                    });
                 }
                 break;
         }

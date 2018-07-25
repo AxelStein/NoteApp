@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
-import com.axel_stein.domain.repository.NotebookRepository;
 
 import java.util.concurrent.Callable;
 
@@ -23,15 +22,10 @@ public class GetNoteInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
-    @NonNull
-    private NotebookRepository mNotebookRepository;
-
     public GetNoteInteractor(@NonNull NoteRepository noteRepository,
-                             @NonNull NoteLabelPairRepository helperRepository,
-                             @NonNull NotebookRepository notebookRepository) {
+                             @NonNull NoteLabelPairRepository helperRepository) {
         mNoteRepository = requireNonNull(noteRepository);
         mNoteLabelPairRepository = requireNonNull(helperRepository);
-        mNotebookRepository = requireNonNull(notebookRepository);
     }
 
     /**
@@ -54,7 +48,6 @@ public class GetNoteInteractor {
                     note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
                 } else {
                     note = new Note();
-                    //note.setNotebook(mNotebookRepository.query().get(0));
                 }
                 return note;
             }

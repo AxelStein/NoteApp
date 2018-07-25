@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.notebook;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
 
@@ -21,9 +22,13 @@ public class DeleteNotebookInteractor {
     @NonNull
     private NotebookRepository mNotebookRepository;
 
-    public DeleteNotebookInteractor(@NonNull NoteRepository n, @NonNull NotebookRepository b) {
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public DeleteNotebookInteractor(@NonNull NoteRepository n, @NonNull NotebookRepository b, @NonNull DriveSyncRepository d) {
         mNoteRepository = requireNonNull(n);
         mNotebookRepository = requireNonNull(b);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -38,20 +43,25 @@ public class DeleteNotebookInteractor {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
                 mNotebookRepository.delete(notebook);
-            }})
-                .andThen(Completable.fromAction(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        mNoteRepository.deleteNotebook(notebook);
-                    }
-                }))
-                .andThen(Completable.fromAction(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        mNoteRepository.setHome(notebook);
-                    }
-                }))
-                .subscribeOn(Schedulers.io());
+            }}).andThen(Completable.fromAction(new Action() {
+                @Override
+                public void run() {
+                    mNoteRepository.deleteNotebook(notebook);
+                }
+            }))
+            .andThen(Completable.fromAction(new Action() {
+                @Override
+                public void run() {
+                    mNoteRepository.setHome(notebook);
+                }
+            }))
+            .andThen(Completable.fromAction(new Action() {
+                @Override
+                public void run() {
+                    mDriveSyncRepository.notifyNotebooksChanged(mNotebookRepository.query());
+                }
+            }))
+            .subscribeOn(Schedulers.io());
     }
 
 }

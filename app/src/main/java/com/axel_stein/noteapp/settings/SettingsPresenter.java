@@ -2,9 +2,7 @@ package com.axel_stein.noteapp.settings;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 
 import com.axel_stein.data.AppSettingsRepository;
@@ -13,29 +11,24 @@ import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.main.GoogleDriveHelper;
 import com.axel_stein.noteapp.settings.SettingsContract.View;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 
 import io.reactivex.CompletableObserver;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
 
-public class SettingsPresenter implements SettingsContract.Presenter, GoogleDriveHelper.Callback {
+public class SettingsPresenter implements SettingsContract.Presenter {
 
     @Inject
     CreateBackupInteractor mCreateBackupInteractor;
@@ -46,16 +39,12 @@ public class SettingsPresenter implements SettingsContract.Presenter, GoogleDriv
     @Inject
     AppSettingsRepository mSettings;
 
-    private GoogleDriveHelper mDriveHelper;
     private View mView;
     private Context mContext;
 
     @Override
     public void onCreate(FragmentActivity activity) {
         App.getAppComponent().inject(this);
-
-        mDriveHelper = new GoogleDriveHelper();
-        mDriveHelper.init(activity, this);
     }
 
     @Override
@@ -167,48 +156,7 @@ public class SettingsPresenter implements SettingsContract.Presenter, GoogleDriv
                 EventBusHelper.updateNoteList();
                 break;
         }
-
-        Single.fromCallable(new Callable<String>() {
-            @Override
-            public String call() {
-                return mSettings.exportSettings();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onSuccess(String s) {
-                mDriveHelper.exportSettings(s);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        });
-    }
-
-    @Override
-    public void setUserData(Uri photo, String name) {
-
-    }
-
-    @Override
-    public void startSignInActivity(Intent intent) {
-
-    }
-
-    @Override
-    public void showMessage(String msg) {
-        // Drive Error
-    }
-
-    @Override
-    public void showLoading(boolean show) {
-
+        mSettings.syncChanges();
     }
 
 }

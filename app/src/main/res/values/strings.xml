@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Notes</string>
-    <string name="default_notebook">Notes</string>
     <string name="copy">copy</string>
     <string name="app_version_title">Version</string>
+    <string name="guest">Guest</string>
 
     <!--Actions-->
     <string name="action_settings">Settings</string>
@@ -145,7 +145,7 @@
     <string name="title_add_notebook">Add notebook</string>
     <string name="title_delete_note">Delete note?</string>
     <string name="title_delete_notes">Delete notes?</string>
-    <string name="title_select_notebook">Select notebook</string>
+    <string name="title_select_notebook">Move to notebook</string>
     <string name="title_save">Save changes?</string>
     <string name="title_discard">Are you sure you want to discard changes?</string>
     <string name="title_password_setup">Password setup</string>

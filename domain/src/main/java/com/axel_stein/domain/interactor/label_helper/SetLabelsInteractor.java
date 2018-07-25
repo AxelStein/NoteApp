@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteLabelPair;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 
 import java.util.List;
@@ -20,10 +21,14 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class SetLabelsInteractor {
 
     @NonNull
-    private NoteLabelPairRepository mHelperRepository;
+    private NoteLabelPairRepository mRepository;
 
-    public SetLabelsInteractor(@NonNull NoteLabelPairRepository helperRepository) {
-        mHelperRepository = requireNonNull(helperRepository, "helperRepository is null");
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public SetLabelsInteractor(@NonNull NoteLabelPairRepository n, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(n);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(@NonNull final Note note, @Nullable final List<Long> labelIds) {
@@ -39,6 +44,7 @@ public class SetLabelsInteractor {
                     }
                 }
                 setLabelsImpl(note, labelIds);
+                mDriveSyncRepository.notifyNoteLabelPairsChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -63,17 +69,19 @@ public class SetLabelsInteractor {
                 for (Note note : notes) {
                     setLabelsImpl(note, labelIds);
                 }
+
+                mDriveSyncRepository.notifyNoteLabelPairsChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }
 
     private void setLabelsImpl(Note note, final List<Long> labels) {
         note.setLabels(labels);
-        mHelperRepository.delete(note);
+        mRepository.delete(note);
 
         if (labels != null) {
             for (long l : labels) {
-                mHelperRepository.insert(new NoteLabelPair(note.getId(), l, note.isTrash()));
+                mRepository.insert(new NoteLabelPair(note.getId(), l, note.isTrash()));
             }
         }
     }

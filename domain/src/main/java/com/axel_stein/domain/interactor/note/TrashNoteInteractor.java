@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.note;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
@@ -24,9 +25,13 @@ public class TrashNoteInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
-    public TrashNoteInteractor(@NonNull NoteRepository noteRepository, @NonNull NoteLabelPairRepository noteLabelPairRepository) {
-        mNoteRepository = requireNonNull(noteRepository, "noteStorage is null");
-        mNoteLabelPairRepository = requireNonNull(noteLabelPairRepository);
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public TrashNoteInteractor(@NonNull NoteRepository n, @NonNull NoteLabelPairRepository l, @NonNull DriveSyncRepository d) {
+        mNoteRepository = requireNonNull(n);
+        mNoteLabelPairRepository = requireNonNull(l);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(@NonNull final Note note) {
@@ -46,6 +51,7 @@ public class TrashNoteInteractor {
                 for (Note note : notes) {
                     mNoteLabelPairRepository.trash(note);
                 }
+                mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

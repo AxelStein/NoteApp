@@ -6,7 +6,6 @@ import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.Notebook;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 import com.axel_stein.domain.utils.validators.LabelValidator;
@@ -35,15 +34,9 @@ public class QueryNoteInteractor {
     @NonNull
     private SettingsRepository mSettingsRepository;
 
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
-
-    public QueryNoteInteractor(@NonNull NoteRepository noteRepository,
-                               @NonNull SettingsRepository settingsRepository,
-                               @NonNull NoteLabelPairRepository helperRepository) {
-        mNoteRepository = requireNonNull(noteRepository, "noteStorage is null");
-        mSettingsRepository = requireNonNull(settingsRepository, "settingsStorage is null");
-        mNoteLabelPairRepository = requireNonNull(helperRepository, "helperRepository is null");
+    public QueryNoteInteractor(@NonNull NoteRepository n, @NonNull SettingsRepository s) {
+        mNoteRepository = requireNonNull(n);
+        mSettingsRepository = requireNonNull(s);
     }
 
     /**

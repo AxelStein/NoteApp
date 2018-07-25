@@ -6,6 +6,9 @@
     <color name="color_accent">#00796b</color>
     <color name="color_accent_dark">#62A8E3</color>
 
+    <color name="text_error_light">#f44336</color>
+    <color name="text_error_dark">#f44336</color>
+
     <color name="keep_screen_on_color_light">#f44336</color>
     <color name="keep_screen_on_color_dark">#f44336</color>
 

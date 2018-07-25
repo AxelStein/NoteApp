@@ -11,7 +11,7 @@ import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
 import com.axel_stein.domain.interactor.ResetInteractor;
 import com.axel_stein.noteapp.App;
-import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.main.GoogleDriveInteractor;
 
 import javax.inject.Singleton;
 
@@ -48,6 +48,12 @@ public class AppModule {
 
     @Provides
     @Singleton
+    GoogleDriveInteractor provideGoogleDrive(App app) {
+        return new GoogleDriveInteractor(app);
+    }
+
+    @Provides
+    @Singleton
     SqlLabelRepository provideLabelRepository(AppDatabase db) {
         return new SqlLabelRepository(db.labelDao());
     }
@@ -71,8 +77,8 @@ public class AppModule {
     }
 
     @Provides
-    AppSettingsRepository provideSettings(App app) {
-        return new AppSettingsRepository(PreferenceManager.getDefaultSharedPreferences(app), app.getString(R.string.default_notebook));
+    AppSettingsRepository provideSettings(App app, GoogleDriveInteractor driveInteractor) {
+        return new AppSettingsRepository(PreferenceManager.getDefaultSharedPreferences(app), driveInteractor);
     }
 
     @Provides

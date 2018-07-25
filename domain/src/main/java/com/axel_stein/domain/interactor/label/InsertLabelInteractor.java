@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.label;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.LabelRepository;
 
 import io.reactivex.Completable;
@@ -15,10 +16,14 @@ import static com.axel_stein.domain.utils.validators.LabelValidator.isValid;
 public class InsertLabelInteractor {
 
     @NonNull
-    private LabelRepository mLabelRepository;
+    private LabelRepository mRepository;
 
-    public InsertLabelInteractor(@NonNull LabelRepository labelRepository) {
-        mLabelRepository = requireNonNull(labelRepository, "labelStorage is null");
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public InsertLabelInteractor(@NonNull LabelRepository l, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(l);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -32,7 +37,8 @@ public class InsertLabelInteractor {
                 if (!isValid(label, false)) {
                     throw new IllegalArgumentException("label is not valid");
                 }
-                label.setId(mLabelRepository.insert(label));
+                label.setId(mRepository.insert(label));
+                mDriveSyncRepository.notifyLabelsChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

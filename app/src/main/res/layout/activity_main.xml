@@ -61,9 +61,10 @@
                         android:textColor="?android:attr/textColorPrimary"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textSize="14sp"
-                        android:text="Guest" />
+                        android:text="@string/guest" />
 
                     <ProgressBar
+                        android:visibility="gone"
                         android:id="@+id/user_loading_indicator"
                         android:layout_gravity="center_vertical"
                         android:indeterminate="true"

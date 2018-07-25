@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.LabelOrder;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.LabelRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
@@ -18,13 +19,19 @@ import static com.axel_stein.domain.utils.validators.LabelValidator.isValid;
 
 public class UpdateLabelOrderInteractor {
 
+    @NonNull
     private LabelRepository mRepository;
 
-    private SettingsRepository mSettings;
+    @NonNull
+    private SettingsRepository mSettingsRepository;
 
-    public UpdateLabelOrderInteractor(@NonNull LabelRepository repository, @NonNull SettingsRepository settings) {
-        mRepository = requireNonNull(repository);
-        mSettings = requireNonNull(settings);
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public UpdateLabelOrderInteractor(@NonNull LabelRepository l, @NonNull SettingsRepository s, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(l);
+        mSettingsRepository = requireNonNull(s);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(final List<Label> labels) {
@@ -34,12 +41,13 @@ public class UpdateLabelOrderInteractor {
                 if (!isValid(labels)) {
                     throw new IllegalArgumentException("labels not valid");
                 }
-                mSettings.setLabelOrder(LabelOrder.CUSTOM);
+                mSettingsRepository.setLabelOrder(LabelOrder.CUSTOM);
                 for (int i = 0; i < labels.size(); i++) {
                     Label label = labels.get(i);
                     label.setOrder(i);
                     mRepository.update(label);
                 }
+                mDriveSyncRepository.notifyLabelsChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

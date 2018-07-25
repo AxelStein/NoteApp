@@ -6,9 +6,6 @@ import com.axel_stein.domain.model.NotebookOrder;
 
 public interface SettingsRepository {
 
-    /**
-     * @return notes order
-     */
     NoteOrder getNotesOrder();
 
     void setNotesOrder(NoteOrder order);
@@ -17,11 +14,9 @@ public interface SettingsRepository {
 
     void setNotebookOrder(NotebookOrder order);
 
-    void setLabelOrder(LabelOrder order);
-
     LabelOrder getLabelOrder();
 
-    String defaultNotebookTitle();
+    void setLabelOrder(LabelOrder order);
 
     boolean showNotesContent();
 

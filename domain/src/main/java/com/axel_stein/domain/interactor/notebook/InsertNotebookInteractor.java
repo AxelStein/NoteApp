@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.notebook;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
 
 import io.reactivex.Completable;
@@ -15,10 +16,14 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class InsertNotebookInteractor {
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private NotebookRepository mRepository;
 
-    public InsertNotebookInteractor(@NonNull NotebookRepository notebookRepository) {
-        mNotebookRepository = requireNonNull(notebookRepository, "notebookStorage is null");
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public InsertNotebookInteractor(@NonNull NotebookRepository n, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(n);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -34,7 +39,8 @@ public class InsertNotebookInteractor {
                 if (!isValid(notebook, false)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
-                notebook.setId(mNotebookRepository.insert(notebook));
+                notebook.setId(mRepository.insert(notebook));
+                mDriveSyncRepository.notifyNotebooksChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.model.NotebookOrder;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
@@ -18,13 +19,19 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 
 public class UpdateNotebookOrderInteractor {
 
+    @NonNull
     private NotebookRepository mRepository;
 
-    private SettingsRepository mSettings;
+    @NonNull
+    private SettingsRepository mSettingsRepository;
 
-    public UpdateNotebookOrderInteractor(@NonNull NotebookRepository repository, @NonNull SettingsRepository settings) {
-        mRepository = requireNonNull(repository);
-        mSettings = requireNonNull(settings);
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public UpdateNotebookOrderInteractor(@NonNull NotebookRepository n, @NonNull SettingsRepository s, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(n);
+        mSettingsRepository = requireNonNull(s);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(final List<Notebook> notebooks) {
@@ -34,12 +41,13 @@ public class UpdateNotebookOrderInteractor {
                 if (!isValid(notebooks)) {
                     throw new IllegalArgumentException("notebooks is not valid");
                 }
-                mSettings.setNotebookOrder(NotebookOrder.CUSTOM);
+                mSettingsRepository.setNotebookOrder(NotebookOrder.CUSTOM);
                 for (int i = 0; i < notebooks.size(); i++) {
                     Notebook n = notebooks.get(i);
                     n.setOrder(i);
                     mRepository.update(n);
                 }
+                mDriveSyncRepository.notifyNotebooksChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

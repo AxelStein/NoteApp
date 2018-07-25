@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Заметки</string>
-    <string name="default_notebook">Заметки</string>
     <string name="copy">копия</string>
     <string name="app_version_title">Версия</string>
+    <string name="guest">Гость</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -57,7 +57,7 @@
     <string name="action_inbox">Входящие</string>
     <string name="action_clear">Очистить</string>
     <string name="action_pin_note">Прикрепить заметку</string>
-    <string name="action_note_info">Информация</string>
+    <string name="action_note_info">Информация о заметке</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>
@@ -131,7 +131,7 @@
     <string name="title_add_notebook">Добавить блокнот</string>
     <string name="title_delete_note">Удалить заметку?</string>
     <string name="title_delete_notes">Удалить заметки?</string>
-    <string name="title_select_notebook">Выберите блокнот</string>
+    <string name="title_select_notebook">Переместить в блокнот</string>
     <string name="title_save">Сохранить изменения?</string>
     <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
     <string name="title_password_setup">Настройка пароля</string>
