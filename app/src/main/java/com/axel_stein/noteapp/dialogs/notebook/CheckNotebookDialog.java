@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.dialogs.notebook;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -10,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,6 +112,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
+    @SuppressLint("InflateParams")
     private View createView() {
         Adapter adapter = new Adapter(new OnNotebookCheckedListener() {
             @Override
@@ -125,8 +126,8 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         });
         adapter.setItems(mNotebooks, mSelectedNotebookId);
 
-        RecyclerView view = new RecyclerView(getContext());
-        view.setLayoutManager(new LinearLayoutManager(getContext()));
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        RecyclerView view = (RecyclerView) inflater.inflate(R.layout.dialog_recycler_view, null);
         view.setAdapter(adapter);
         return view;
     }
