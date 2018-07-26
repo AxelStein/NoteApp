@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import org.joda.time.DateTime;
@@ -23,9 +24,13 @@ public class InsertNoteInteractor {
     @NonNull
     private SetLabelsInteractor mSetLabelsInteractor;
 
-    public InsertNoteInteractor(@NonNull NoteRepository r, @NonNull SetLabelsInteractor setLabelsInteractor) {
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public InsertNoteInteractor(@NonNull NoteRepository r, @NonNull SetLabelsInteractor s, @NonNull DriveSyncRepository d) {
         mRepository = requireNonNull(r);
-        mSetLabelsInteractor = requireNonNull(setLabelsInteractor);
+        mSetLabelsInteractor = requireNonNull(s);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -45,9 +50,12 @@ public class InsertNoteInteractor {
                 note.setCreated(created);
                 note.setModified(created);
 
-                note.setId(mRepository.insert(note));
+                mRepository.insert(note);
+                mDriveSyncRepository.notifyNoteChanged(note);
             }
-        }).andThen(mSetLabelsInteractor.execute(note, note.getLabels())).subscribeOn(Schedulers.io());
+        })
+        .andThen(mSetLabelsInteractor.execute(note, note.getLabels()))
+        .subscribeOn(Schedulers.io());
     }
 
 }

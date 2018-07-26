@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.note;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
@@ -18,14 +19,18 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class DeleteNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private NoteRepository mRepository;
 
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
-    public DeleteNoteInteractor(@NonNull NoteRepository noteRepository, @NonNull NoteLabelPairRepository noteLabelPairRepository) {
-        mNoteRepository = requireNonNull(noteRepository, "noteRepository is null");
-        mNoteLabelPairRepository = requireNonNull(noteLabelPairRepository, "helperRepository is null");
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public DeleteNoteInteractor(@NonNull NoteRepository r, @NonNull NoteLabelPairRepository p, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(r);
+        mNoteLabelPairRepository = requireNonNull(p);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -64,8 +69,9 @@ public class DeleteNoteInteractor {
     }
 
     private void deleteImpl(Note note) {
-        mNoteRepository.delete(note);
+        mRepository.delete(note);
         mNoteLabelPairRepository.delete(note);
+        mDriveSyncRepository.notifyNoteDeleted(note);
     }
 
 }

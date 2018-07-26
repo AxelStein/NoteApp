@@ -9,7 +9,7 @@ import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookOrderInteractor;
-import com.axel_stein.noteapp.main.GoogleDriveInteractor;
+import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 
 import dagger.Module;
 import dagger.Provides;

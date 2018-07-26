@@ -47,10 +47,14 @@ public class TrashNoteInteractor {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
+
                 mNoteRepository.trash(notes);
+
                 for (Note note : notes) {
                     mNoteLabelPairRepository.trash(note);
+                    mDriveSyncRepository.notifyNoteChanged(mNoteRepository.get(note.getId()));
                 }
+
                 mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());

@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.backup;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Backup;
+import com.axel_stein.domain.model.JsonNoteWrapper;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteLabelPair;
@@ -39,14 +40,14 @@ public class ImportBackupInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
-    public ImportBackupInteractor(@NonNull NoteRepository noteRepository,
-                                  @NonNull NotebookRepository notebookRepository,
-                                  @NonNull LabelRepository labelRepository,
-                                  @NonNull NoteLabelPairRepository noteLabelPairRepository) {
-        mNoteRepository = requireNonNull(noteRepository);
-        mNotebookRepository = requireNonNull(notebookRepository);
-        mLabelRepository = requireNonNull(labelRepository);
-        mNoteLabelPairRepository = requireNonNull(noteLabelPairRepository);
+    public ImportBackupInteractor(@NonNull NoteRepository n,
+                                  @NonNull NotebookRepository b,
+                                  @NonNull LabelRepository l,
+                                  @NonNull NoteLabelPairRepository p) {
+        mNoteRepository = requireNonNull(n);
+        mNotebookRepository = requireNonNull(b);
+        mLabelRepository = requireNonNull(l);
+        mNoteLabelPairRepository = requireNonNull(p);
     }
 
     public Completable execute(final String src) {
@@ -56,14 +57,17 @@ public class ImportBackupInteractor {
                 ObjectMapper mapper = new ObjectMapper();
                 Backup backup = mapper.readValue(src, Backup.class);
 
+                System.out.println("Import backup, version " + backup.getVersion());
+
                 mNoteRepository.deleteAll();
                 mNotebookRepository.deleteAll();
                 mLabelRepository.deleteAll();
                 mNoteLabelPairRepository.deleteAll();
 
-                List<Note> notes = backup.getNotes();
+                List<JsonNoteWrapper> notes = backup.getNotes();
                 if (notes != null) {
-                    for (Note note : notes) {
+                    for (JsonNoteWrapper wrapper : notes) {
+                        Note note = wrapper.toNote();
                         if (!NoteValidator.isValid(note)) {
                             System.out.println("Error: note is not valid = " + note);
                         } else {

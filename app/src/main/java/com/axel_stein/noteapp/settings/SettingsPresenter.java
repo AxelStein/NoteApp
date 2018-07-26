@@ -11,6 +11,7 @@ import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 import com.axel_stein.noteapp.settings.SettingsContract.View;
 
 import java.io.File;
@@ -38,6 +39,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
     @Inject
     AppSettingsRepository mSettings;
+
+    @Inject
+    GoogleDriveInteractor mGoogleDrive;
 
     private View mView;
     private Context mContext;
@@ -131,6 +135,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
+                        e.printStackTrace();
                         if (mView != null) {
                             mView.dismissImportDialog();
                             mView.showMessage(R.string.error);
@@ -156,7 +161,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                 EventBusHelper.updateNoteList();
                 break;
         }
-        mSettings.syncChanges();
+        mGoogleDrive.notifySettingsChanged(mSettings.exportSettings());
     }
 
 }

@@ -48,10 +48,14 @@ public class RestoreNoteInteractor {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
+
                 mNoteRepository.restore(notes);
+
                 for (Note note : notes) {
                     mNoteLabelPairRepository.restore(note);
+                    mDriveSyncRepository.notifyNoteChanged(mNoteRepository.get(note.getId()));
                 }
+
                 mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());

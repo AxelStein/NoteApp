@@ -32,7 +32,6 @@ ext {
     daggerVersion = '2.11'
     rxjavaVersion = '2.0.1'
     butterknifeVersion = '8.8.1'
-    eventBusVersion = '3.0.0'
 }
 
 dependencies {
@@ -64,14 +63,13 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
 
     // eventbus
-    compile "org.greenrobot:eventbus:$eventBusVersion"
+    compile "org.greenrobot:eventbus:3.0.0"
 
     // google drive
     compile "com.google.android.gms:play-services-auth:15.0.1"
     compile "com.google.android.gms:play-services-drive:15.0.1"
 
     implementation 'com.squareup.picasso:picasso:2.71828'
-
     implementation "joda-time:joda-time:2.10"
 
     compile project(path: ':domain')

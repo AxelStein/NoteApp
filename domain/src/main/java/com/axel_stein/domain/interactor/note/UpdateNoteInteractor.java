@@ -2,8 +2,8 @@ package com.axel_stein.domain.interactor.note;
 
 import android.support.annotation.NonNull;
 
-import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import org.joda.time.DateTime;
@@ -18,14 +18,14 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.validateBefor
 public class UpdateNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private NoteRepository mRepository;
 
     @NonNull
-    private SetLabelsInteractor mSetLabelsInteractor;
+    private DriveSyncRepository mDriveSyncRepository;
 
-    public UpdateNoteInteractor(@NonNull NoteRepository noteRepository, @NonNull SetLabelsInteractor setLabelsInteractor) {
-        mNoteRepository = requireNonNull(noteRepository, "noteRepository is null");
-        mSetLabelsInteractor = requireNonNull(setLabelsInteractor, "setLabelsInteractor is null");
+    public UpdateNoteInteractor(@NonNull NoteRepository r, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(r);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -41,9 +41,12 @@ public class UpdateNoteInteractor {
                     throw new IllegalArgumentException("note is note valid");
                 }
                 note.setModified(new DateTime());
-                mNoteRepository.update(note);
+
+                mRepository.update(note);
+                mDriveSyncRepository.notifyNoteChanged(note);
             }
-        }).andThen(mSetLabelsInteractor.execute(note, note.getLabels())).subscribeOn(Schedulers.io());
+        })
+        .subscribeOn(Schedulers.io());
     }
 
 }

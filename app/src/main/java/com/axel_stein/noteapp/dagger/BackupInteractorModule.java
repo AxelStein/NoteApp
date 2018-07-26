@@ -41,11 +41,11 @@ public class BackupInteractorModule {
     }
 
     @Provides
-    ImportBackupInteractor importBackup(SqlNoteRepository notes,
-                                               SqlNotebookRepository notebooks,
-                                               SqlLabelRepository labels,
-                                               SqlNoteLabelPairRepository labelHelper) {
-        return new ImportBackupInteractor(notes, notebooks, labels, labelHelper);
+    ImportBackupInteractor importBackup(SqlNoteRepository n,
+                                        SqlNotebookRepository b,
+                                        SqlLabelRepository l,
+                                        SqlNoteLabelPairRepository p) {
+        return new ImportBackupInteractor(n, b, l, p);
     }
 
     @Provides

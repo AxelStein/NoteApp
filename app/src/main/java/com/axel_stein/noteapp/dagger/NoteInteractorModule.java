@@ -16,7 +16,7 @@ import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
 import com.axel_stein.domain.interactor.note.UnpinNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteNotebookInteractor;
-import com.axel_stein.noteapp.main.GoogleDriveInteractor;
+import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,13 +25,13 @@ import dagger.Provides;
 class NoteInteractorModule {
 
     @Provides
-    UpdateNoteNotebookInteractor updateNotebook(SqlNoteRepository r) {
-        return new UpdateNoteNotebookInteractor(r);
+    UpdateNoteNotebookInteractor updateNotebook(SqlNoteRepository r, GoogleDriveInteractor d) {
+        return new UpdateNoteNotebookInteractor(r, d);
     }
 
     @Provides
-    DeleteNoteInteractor delete(SqlNoteRepository r, SqlNoteLabelPairRepository p) {
-        return new DeleteNoteInteractor(r, p);
+    DeleteNoteInteractor delete(SqlNoteRepository r, SqlNoteLabelPairRepository p, GoogleDriveInteractor d) {
+        return new DeleteNoteInteractor(r, p, d);
     }
 
     @Provides
@@ -45,8 +45,8 @@ class NoteInteractorModule {
     }
 
     @Provides
-    InsertNoteInteractor insert(SqlNoteRepository r, SetLabelsInteractor setLabelsInteractor) {
-        return new InsertNoteInteractor(r, setLabelsInteractor);
+    InsertNoteInteractor insert(SqlNoteRepository r, SetLabelsInteractor s, GoogleDriveInteractor d) {
+        return new InsertNoteInteractor(r, s, d);
     }
 
     @Provides
@@ -65,8 +65,8 @@ class NoteInteractorModule {
     }
 
     @Provides
-    SetNotebookInteractor setNotebook(SqlNoteRepository repository) {
-        return new SetNotebookInteractor(repository);
+    SetNotebookInteractor setNotebook(SqlNoteRepository r, GoogleDriveInteractor d) {
+        return new SetNotebookInteractor(r, d);
     }
 
     @Provides
@@ -75,18 +75,18 @@ class NoteInteractorModule {
     }
 
     @Provides
-    UpdateNoteInteractor update(SqlNoteRepository r, SetLabelsInteractor setLabelsInteractor) {
-        return new UpdateNoteInteractor(r, setLabelsInteractor);
+    UpdateNoteInteractor update(SqlNoteRepository r, GoogleDriveInteractor d) {
+        return new UpdateNoteInteractor(r, d);
     }
 
     @Provides
-    PinNoteInteractor pin(SqlNoteRepository r) {
-        return new PinNoteInteractor(r);
+    PinNoteInteractor pin(SqlNoteRepository r, GoogleDriveInteractor d) {
+        return new PinNoteInteractor(r, d);
     }
 
     @Provides
-    UnpinNoteInteractor unpin(SqlNoteRepository r) {
-        return new UnpinNoteInteractor(r);
+    UnpinNoteInteractor unpin(SqlNoteRepository r, GoogleDriveInteractor d) {
+        return new UnpinNoteInteractor(r, d);
     }
 
 }

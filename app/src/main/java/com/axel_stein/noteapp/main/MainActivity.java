@@ -24,13 +24,16 @@ import android.widget.TextView;
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
+import com.axel_stein.noteapp.EventBusHelper.SignOutEvent;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
+import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
+import com.axel_stein.noteapp.google_drive.OnSignInListener;
+import com.axel_stein.noteapp.google_drive.UserData;
 import com.axel_stein.noteapp.label_manager.LabelManagerFragment;
-import com.axel_stein.noteapp.main.GoogleDriveInteractor.UserData;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerFragment;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesFragment;
@@ -48,7 +51,6 @@ import butterknife.ButterKnife;
 
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
-import static com.axel_stein.noteapp.main.GoogleDriveInteractor.OnSignInListener;
 
 public class MainActivity extends BaseActivity {
 
@@ -158,18 +160,10 @@ public class MainActivity extends BaseActivity {
         mUserPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mGoogleDrive.isSignedIn()) {
-                    // fixme
-                    /*
-                    mGoogleDrive.signOut(new OnSignOutListener() {
-                        @Override
-                        public void onSuccess() {
-                            setUserData(null);
-                        }
-                    });
-                    */
-                } else {
+                if (!mGoogleDrive.isSignedIn()) {
                     startActivityForResult(mGoogleDrive.getSignInIntent(), REQUEST_CODE_SIGN_IN);
+                } else {
+                    startActivity(new Intent(MainActivity.this, UserActivity.class));
                 }
             }
         });
@@ -217,6 +211,11 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    @Subscribe
+    public void onSignOut(SignOutEvent e) {
+        setUserData(null);
     }
 
     @Nullable

@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Backup {
 
-    private List<Note> notes;
+    private int version = 1;
+
+    private List<JsonNoteWrapper> notes;
 
     private List<Notebook> notebooks;
 
@@ -20,12 +23,19 @@ public class Backup {
     public Backup() {
     }
 
-    public List<Note> getNotes() {
+    public int getVersion() {
+        return version;
+    }
+
+    public List<JsonNoteWrapper> getNotes() {
         return notes;
     }
 
     public void setNotes(List<Note> notes) {
-        this.notes = notes;
+        this.notes = new ArrayList<>();
+        for (Note n : notes) {
+            this.notes.add(new JsonNoteWrapper(n));
+        }
     }
 
     public List<Notebook> getNotebooks() {

@@ -20,6 +20,10 @@ public class EventBusHelper {
         EventBus.getDefault().unregister(o);
     }
 
+    public static void signOut() {
+        post(new SignOutEvent());
+    }
+
     public static void updateNoteList() {
         updateNoteList(true, false);
     }
@@ -88,6 +92,10 @@ public class EventBusHelper {
 
     private static void post(@NonNull Object o) {
         EventBus.getDefault().postSticky(o);
+    }
+
+    public static class SignOutEvent {
+
     }
 
     public static class UpdateAddNoteFAB {

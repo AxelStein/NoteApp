@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.NotebookOrder;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
 import org.json.JSONException;
@@ -37,21 +36,14 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final int SWIPE_ACTION_PIN = 3;
 
     private SharedPreferences mPreferences;
-    private DriveSyncRepository mDriveSyncRepository;
-
     private String mPassword; // fixme
 
-    public AppSettingsRepository(SharedPreferences preferences, DriveSyncRepository d) {
+    public AppSettingsRepository(SharedPreferences preferences) {
         mPreferences = preferences;
-        mDriveSyncRepository = d;
         mPassword = getPassword();
     }
 
-    public void syncChanges() {
-        mDriveSyncRepository.notifySettingsChanged(exportSettings());
-    }
-
-    private void importSettings(String json) {
+    public void importSettings(String json) {
         try {
             JSONObject object = new JSONObject(json);
 
@@ -73,7 +65,7 @@ public class AppSettingsRepository implements SettingsRepository {
         }
     }
 
-    private String exportSettings() {
+    public String exportSettings() {
         JSONObject object = new JSONObject();
 
         try {

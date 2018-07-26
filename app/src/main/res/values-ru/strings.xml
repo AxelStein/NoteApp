@@ -3,6 +3,7 @@
     <string name="copy">копия</string>
     <string name="app_version_title">Версия</string>
     <string name="guest">Гость</string>
+    <string name="user_activity">Управление аккаунтом</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -58,6 +59,7 @@
     <string name="action_clear">Очистить</string>
     <string name="action_pin_note">Прикрепить заметку</string>
     <string name="action_note_info">Информация о заметке</string>
+    <string name="action_sign_out">Выйти из аккаунта</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>

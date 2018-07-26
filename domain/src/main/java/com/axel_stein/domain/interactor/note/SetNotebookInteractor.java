@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.note;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.List;
@@ -14,14 +15,17 @@ import io.reactivex.schedulers.Schedulers;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
-// todo test
 public class SetNotebookInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private NoteRepository mRepository;
 
-    public SetNotebookInteractor(@NonNull NoteRepository noteRepository) {
-        mNoteRepository = requireNonNull(noteRepository, "noteStorage is null");
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public SetNotebookInteractor(@NonNull NoteRepository r, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(r);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -39,7 +43,11 @@ public class SetNotebookInteractor {
                     throw new IllegalArgumentException("notebookId is less than 0");
                 }
 
-                mNoteRepository.setNotebook(notes, notebookId);
+                mRepository.setNotebook(notes, notebookId);
+
+                for (Note note : notes) {
+                    mDriveSyncRepository.notifyNoteChanged(mRepository.get(note.getId()));
+                }
             }
         }).subscribeOn(Schedulers.io());
     }

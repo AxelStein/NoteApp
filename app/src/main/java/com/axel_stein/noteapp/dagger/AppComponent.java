@@ -17,6 +17,7 @@ import com.axel_stein.noteapp.main.MainActivity;
 import com.axel_stein.noteapp.main.NoteListActivity;
 import com.axel_stein.noteapp.main.NotebooksFragment;
 import com.axel_stein.noteapp.main.TrashFragment;
+import com.axel_stein.noteapp.main.UserActivity;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerFragment;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerPresenter;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
@@ -60,15 +61,15 @@ public interface AppComponent {
 
     void inject(DeleteLabelDialog dialog);
 
-    void inject(DrawerHelper drawerHelper);
+    void inject(DrawerHelper helper);
 
     void inject(NotesActivity activity);
 
-    void inject(TrashActivity trashActivity);
+    void inject(TrashActivity activity);
 
     void inject(MainActivity activity);
 
-    void inject(BaseActivity baseActivity);
+    void inject(BaseActivity activity);
 
     void inject(NoteListActivity activity);
 
@@ -76,38 +77,40 @@ public interface AppComponent {
 
     void inject(TrashNotesPresenter presenter);
 
-    void inject(SearchNotesPresenter searchListNotesPresenter);
+    void inject(SearchNotesPresenter presenter);
 
-    void inject(LabelNotesPresenter labelNotesPresenter);
+    void inject(LabelNotesPresenter presenter);
 
-    void inject(EditNotePresenter editNotePresenter);
+    void inject(EditNotePresenter presenter);
 
-    void inject(NotesPresenter notesPresenter);
+    void inject(NotesPresenter presenter);
 
     void inject(HomeNotesPresenter presenter);
 
-    void inject(EditNoteFragment editNoteFragment);
+    void inject(EditNoteFragment fragment);
 
-    void inject(BackupPresenter backupPresenter);
+    void inject(BackupPresenter presenter);
 
     void inject(NotebookManagerPresenter presenter);
 
-    void inject(NotebookManagerFragment notebookManagerFragment);
+    void inject(NotebookManagerFragment fragment);
 
     void inject(LabelManagerFragment fragment);
 
     void inject(LabelManagerPresenter presenter);
 
-    void inject(DeleteNoteDialog deleteNoteDialog);
+    void inject(DeleteNoteDialog dialog);
 
-    void inject(NotebooksFragment notebooksFragment);
+    void inject(NotebooksFragment fragment);
 
-    void inject(LabelsFragment labelsFragment);
+    void inject(LabelsFragment fragment);
 
     void inject(TrashFragment fragment);
 
     void inject(HomeFragment fragment);
 
     void inject(SettingsPresenter presenter);
+
+    void inject(UserActivity activity);
 
 }

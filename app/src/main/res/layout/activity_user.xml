@@ -19,19 +19,16 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/user_panel"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
             android:orientation="horizontal"
+            android:layout_marginTop="8dp"
             android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingStart="16dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="56dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -39,54 +36,73 @@
                 tools:src="@drawable/ic_account_circle_grey_36dp"
                 android:layout_gravity="center_vertical"
                 android:scaleType="centerCrop"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
 
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:layout_marginLeft="26dp"
-                android:layout_marginStart="26dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:layout_gravity="center_vertical"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textSize="14sp"
-                android:text="Guest" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textSize="14sp"
+                    tools:text="Axel Stein" />
+
+                <TextView
+                    android:id="@+id/user_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="12sp"
+                    android:visibility="visible"
+                    tools:text="diefaust1993@gmail.com" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:text="Sign Out"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:textColor="?android:attr/textColorPrimary"
+        <Button
+            android:id="@+id/button_import"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:text="Import and Replace"
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="wrap_content" />
 
-        <TextView
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackground"
-            android:text="Wipe data"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:textColor="?android:attr/textColorPrimary"
+        <Button
+            android:id="@+id/button_sign_out"
+            android:layout_gravity="center_horizontal"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="@string/action_sign_out"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:backgroundTint="@color/text_error_dark"
+            android:text="delete all data"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

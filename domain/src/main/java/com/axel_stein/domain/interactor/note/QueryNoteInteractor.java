@@ -11,6 +11,8 @@ import com.axel_stein.domain.repository.SettingsRepository;
 import com.axel_stein.domain.utils.validators.LabelValidator;
 import com.axel_stein.domain.utils.validators.NotebookValidator;
 
+import org.joda.time.DateTime;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -287,7 +289,6 @@ public class QueryNoteInteractor {
             }
         }
 
-        /*
         Collections.sort(list, new Comparator<Note>() {
             @Override
             public int compare(Note n1, Note n2) {
@@ -299,7 +300,7 @@ public class QueryNoteInteractor {
                         return n1.getTitle().compareTo(n2.getTitle());
 
                     case RELEVANCE:
-                        return compareDates(n1.getRelevance(), n2.getRelevance(), false);
+                        return compareRelevance(n1.getRelevance(), n2.getRelevance());
 
                     case CREATED_NEWEST:
                         return compareDates(n1.getCreated(), n2.getCreated(), false);
@@ -317,7 +318,6 @@ public class QueryNoteInteractor {
                 return 0;
             }
         });
-        */
 
         if (!searchFlag) {
             Collections.sort(list, new Comparator<Note>() {
@@ -342,14 +342,24 @@ public class QueryNoteInteractor {
         return list;
     }
 
-    private int compareDates(long date1, long date2, boolean reverse) {
-        long d = date1 - date2;
+    private int compareDates(DateTime d1, DateTime d2, boolean desc) {
+        if (d1.isEqual(d2)) {
+            return 0;
+        } else if (d1.isAfter(d2)) {
+            return desc ? 1 : -1;
+        } else {
+            return desc ? -1 : 1;
+        }
+    }
+
+    private int compareRelevance(long r1, long r2) {
+        long d = r1 - r2;
         if (d == 0) {
             return 0;
         } else if (d > 0) {
-            return reverse ? 1 : -1;
+            return -1;
         } else {
-            return reverse ? -1 : 1;
+            return 1;
         }
     }
 

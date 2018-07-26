@@ -33,7 +33,7 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
     @Inject
     EmptyTrashInteractor mEmptyTrashInteractor;
 
-    private boolean mEmptyList;
+    private boolean mEmptyList = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

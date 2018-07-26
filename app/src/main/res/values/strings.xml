@@ -3,6 +3,7 @@
     <string name="copy">copy</string>
     <string name="app_version_title">Version</string>
     <string name="guest">Guest</string>
+    <string name="user_activity">Manage account</string>
 
     <!--Actions-->
     <string name="action_settings">Settings</string>
@@ -58,6 +59,7 @@
     <string name="action_clear">Clear</string>
     <string name="action_pin_note">Pin note</string>
     <string name="action_note_info">Note info</string>
+    <string name="action_sign_out">Sign Out</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>

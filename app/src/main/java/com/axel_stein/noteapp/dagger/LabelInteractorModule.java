@@ -9,7 +9,7 @@ import com.axel_stein.domain.interactor.label.InsertLabelInteractor;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label.UpdateLabelInteractor;
 import com.axel_stein.domain.interactor.label.UpdateLabelOrderInteractor;
-import com.axel_stein.noteapp.main.GoogleDriveInteractor;
+import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 
 import dagger.Module;
 import dagger.Provides;

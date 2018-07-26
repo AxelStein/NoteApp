@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface NoteRepository {
 
-    String insert(@NonNull Note note);
+    void insert(@NonNull Note note);
 
     void update(@NonNull Note note);
 

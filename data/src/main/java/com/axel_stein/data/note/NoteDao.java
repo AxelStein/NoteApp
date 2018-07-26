@@ -30,24 +30,24 @@ public interface NoteDao {
     @Query("SELECT * FROM notes")
     List<NoteEntity> query();
 
-    @Query("SELECT * FROM notes WHERE notebook = 0 AND trash = 0 ORDER BY :orderBy")
-    List<NoteEntity> queryHome(String orderBy);
+    @Query("SELECT * FROM notes WHERE notebook = 0 AND trash = 0")
+    List<NoteEntity> queryHome();
 
-    @Query("SELECT * FROM notes WHERE notebook = :notebook AND trash = 0 ORDER BY :orderBy")
-    List<NoteEntity> queryNotebook(long notebook, String orderBy);
+    @Query("SELECT * FROM notes WHERE notebook = :notebook AND trash = 0")
+    List<NoteEntity> queryNotebook(long notebook);
 
-    @Query("SELECT * FROM notes WHERE notebook = :notebook ORDER BY :orderBy")
-    List<NoteEntity> queryNotebookTrash(long notebook, String orderBy);
+    @Query("SELECT * FROM notes WHERE notebook = :notebook")
+    List<NoteEntity> queryNotebookTrash(long notebook);
 
     @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM notes JOIN note_label_pairs WHERE trash = 0 AND notes.id = note_id AND label_id = :label ORDER BY :orderBy")
-    List<NoteEntity> queryLabel(long label, String orderBy);
+    @Query("SELECT * FROM notes JOIN note_label_pairs WHERE trash = 0 AND notes.id = note_id AND label_id = :label")
+    List<NoteEntity> queryLabel(long label);
 
     @Query("SELECT * FROM notes WHERE trash = 0 AND (title LIKE :query OR content LIKE :query)")
     List<NoteEntity> search(String query);
 
-    @Query("SELECT * FROM notes WHERE trash != 0 ORDER BY :orderBy")
-    List<NoteEntity> queryTrash(String orderBy);
+    @Query("SELECT * FROM notes WHERE trash != 0")
+    List<NoteEntity> queryTrash();
 
     @Query("UPDATE notes SET notebook = :notebook WHERE id IN (:notes)")
     void setNotebook(List<String> notes, long notebook);

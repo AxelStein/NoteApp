@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.note;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.ArrayList;
@@ -18,10 +19,14 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class PinNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private NoteRepository mRepository;
 
-    public PinNoteInteractor(@NonNull NoteRepository noteRepository) {
-        mNoteRepository = requireNonNull(noteRepository, "noteStorage is null");
+    @NonNull
+    private DriveSyncRepository mDriveSyncRepository;
+
+    public PinNoteInteractor(@NonNull NoteRepository r, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(r);
+        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(@NonNull final Note note) {
@@ -37,9 +42,12 @@ public class PinNoteInteractor {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
-                mNoteRepository.pin(notes);
+
+                mRepository.pin(notes);
+
                 for (Note note : notes) {
                     note.setPinned(true);
+                    mDriveSyncRepository.notifyNoteChanged(mRepository.get(note.getId()));
                 }
             }
         }).subscribeOn(Schedulers.io());
