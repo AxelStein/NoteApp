@@ -7,8 +7,11 @@ import com.axel_stein.domain.interactor.notebook.DeleteNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.GetNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
+import com.axel_stein.domain.interactor.notebook.RenameNotebookInteractor;
+import com.axel_stein.domain.interactor.notebook.UpdateColorNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
-import com.axel_stein.domain.interactor.notebook.UpdateNotebookOrderInteractor;
+import com.axel_stein.domain.interactor.notebook.UpdateOrderNotebookInteractor;
+import com.axel_stein.domain.interactor.notebook.UpdateViewsNotebookInteractor;
 import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 
 import dagger.Module;
@@ -45,8 +48,23 @@ class NotebookInteractorModule {
     }
 
     @Provides
-    UpdateNotebookOrderInteractor updateOrder(SqlNotebookRepository n, AppSettingsRepository s, GoogleDriveInteractor d) {
-        return new UpdateNotebookOrderInteractor(n, s, d);
+    UpdateOrderNotebookInteractor updateOrder(SqlNotebookRepository n, AppSettingsRepository s, GoogleDriveInteractor d) {
+        return new UpdateOrderNotebookInteractor(n, s, d);
+    }
+
+    @Provides
+    RenameNotebookInteractor rename(SqlNotebookRepository n, GoogleDriveInteractor d) {
+        return new RenameNotebookInteractor(n, d);
+    }
+
+    @Provides
+    UpdateColorNotebookInteractor color(SqlNotebookRepository n, GoogleDriveInteractor d) {
+        return new UpdateColorNotebookInteractor(n, d);
+    }
+
+    @Provides
+    UpdateViewsNotebookInteractor views(SqlNotebookRepository n, GoogleDriveInteractor d) {
+        return new UpdateViewsNotebookInteractor(n, d);
     }
 
 }

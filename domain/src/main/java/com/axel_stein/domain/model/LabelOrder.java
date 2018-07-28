@@ -7,6 +7,18 @@ public enum LabelOrder {
     NOTE_COUNT,
     CUSTOM;
 
+    private boolean desc;
+
+    @Nullable
+    public static LabelOrder from(int value, boolean desc) {
+        LabelOrder order = fromInt(value);
+        if (order != null) {
+            order.setDesc(desc);
+        }
+        return order;
+    }
+
+
     @Nullable
     public static LabelOrder fromInt(int x) {
         switch (x) {
@@ -22,4 +34,13 @@ public enum LabelOrder {
 
         return null;
     }
+
+    public boolean isDesc() {
+        return desc;
+    }
+
+    public void setDesc(boolean desc) {
+        this.desc = desc;
+    }
+
 }

@@ -4,25 +4,40 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.axel_stein.domain.utils.CompareBuilder;
+import com.axel_stein.domain.utils.TextUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.joda.time.DateTime;
 
 public class Label {
     public static final int MAX_TITLE_LENGTH = 128;
 
-    private long id;
+    private String id;
 
     private String title;
+
+    private int order;
+
+    private long views;
+
+    private DateTime createdDate;
+
+    private DateTime modifiedDate;
+
+    private String driveId;
 
     @JsonIgnore
     private long noteCount;
 
-    private int order;
+    public boolean hasId() {
+        return !TextUtil.isEmpty(id);
+    }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -58,6 +73,43 @@ public class Label {
 
     public int getOrder() {
         return order;
+    }
+
+    public long getViews() {
+        return views;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
+    }
+
+    public long incrementViews() {
+        this.views++;
+        return this.views;
+    }
+
+    public DateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public DateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getDriveId() {
+        return driveId;
+    }
+
+    public void setDriveId(String driveId) {
+        this.driveId = driveId;
     }
 
     @Override

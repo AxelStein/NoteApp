@@ -66,6 +66,7 @@ import io.reactivex.disposables.Disposable;
 import static android.support.v4.widget.DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
 import static android.support.v4.widget.DrawerLayout.LOCK_MODE_UNLOCKED;
 
+@Deprecated
 public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfirmListener {
 
     private static final String TAG_RESET_PASSWORD = "TAG_RESET_PASSWORD";
@@ -405,12 +406,14 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         }
 
         SparseArray<NoteOrder> sparseArray = new SparseArray<>();
+        /*
         sparseArray.put(R.id.menu_sort_title, NoteOrder.TITLE);
-        sparseArray.put(R.id.menu_sort_relevance, NoteOrder.RELEVANCE);
+        sparseArray.put(R.id.menu_sort_relevance, NoteOrder.VIEWS);
         sparseArray.put(R.id.menu_created_newest, NoteOrder.CREATED_NEWEST);
         sparseArray.put(R.id.menu_created_oldest, NoteOrder.CREATED_OLDEST);
         sparseArray.put(R.id.menu_updated_newest, NoteOrder.MODIFIED_NEWEST);
         sparseArray.put(R.id.menu_updated_oldest, NoteOrder.MODIFIED_OLDEST);
+        */
 
         return sparseArray.get(item.getItemId());
     }
@@ -421,13 +424,14 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
         }
 
         HashMap<NoteOrder, Integer> map = new HashMap<>();
+        /*
         map.put(NoteOrder.TITLE, R.id.menu_sort_title);
-        map.put(NoteOrder.RELEVANCE, R.id.menu_sort_relevance);
+        map.put(NoteOrder.VIEWS, R.id.menu_sort_relevance);
         map.put(NoteOrder.CREATED_NEWEST, R.id.menu_created_newest);
         map.put(NoteOrder.CREATED_OLDEST, R.id.menu_created_oldest);
         map.put(NoteOrder.MODIFIED_NEWEST, R.id.menu_updated_newest);
         map.put(NoteOrder.MODIFIED_OLDEST, R.id.menu_updated_oldest);
-
+        */
         return map.get(order);
     }
 
@@ -446,14 +450,14 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
             switch (type) {
                 case "notebook":
                     Notebook notebook = new Notebook();
-                    notebook.setId(id);
+                    //notebook.setId(id);
                     notebook.setTitle(title);
                     mTag = notebook;
                     break;
 
                 case "label":
                     Label label = new Label();
-                    label.setId(id);
+                    //label.setId(id);
                     label.setTitle(title);
                     mTag = label;
                     break;
@@ -476,19 +480,19 @@ public class NotesActivity extends BaseActivity implements ConfirmDialog.OnConfi
 
         if (mTag instanceof Notebook) {
             Notebook notebook = (Notebook) mTag;
-            id = notebook.getId();
+            //id = notebook.getId();
             title = notebook.getTitle();
             outState.putString("type", "notebook");
         } else if (mTag instanceof Label) {
             Label label = (Label) mTag;
-            id = label.getId();
+            //id = label.getId();
             title = label.getTitle();
             outState.putString("type", "label");
         } else {
             return;
         }
 
-        outState.putLong("id", id);
+        //outState.putLong("id", id);
         outState.putString("title", title);
     }
 

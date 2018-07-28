@@ -1,6 +1,7 @@
 package com.axel_stein.noteapp.notes.list;
 
 import android.support.annotation.MenuRes;
+import android.view.MenuItem;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -32,6 +33,18 @@ public interface NotesContract {
         void showCheckLabelsView(List<Label> labels);
 
         void showConfirmDeleteDialog(List<Note> notes);
+
+        void showSortDialog(int itemId);
+
+        void showSortPanel(boolean show);
+
+        void setSortPanelCounterText(int noteCount);
+
+        void setSortTitle(int textRes);
+
+        void setSortIndicator(boolean desc, boolean enable);
+
+        void scrollToTop();
     }
 
     interface Presenter {
@@ -65,9 +78,16 @@ public interface NotesContract {
 
         void onNotebookSelected(Notebook notebook);
 
-        void onLabelsChecked(List<Long> labels);
+        void onLabelsChecked(List<String> labels);
 
         void stopCheckMode();
+
+        void onSortTitleClick();
+
+        void onSortTitleLongClick();
+
+        void onSortMenuItemClick(MenuItem item);
+
     }
 
 }

@@ -10,50 +10,6 @@
         android:title="@string/action_search"
         app:showAsAction="always"/>
 
-    <item
-        android:id="@+id/menu_sort"
-        android:icon="@drawable/ic_sort_white_24dp"
-        android:orderInCategory="3"
-        android:title="@string/action_sort_by"
-        app:showAsAction="always">
-
-        <menu>
-
-            <group
-                android:id="@+id/group_sort"
-                android:checkableBehavior="single">
-
-                <item
-                    android:id="@+id/menu_sort_title"
-                    android:checked="true"
-                    android:title="@string/action_sort_title"/>
-
-                <item
-                    android:id="@+id/menu_sort_relevance"
-                    android:title="@string/action_sort_relevance"/>
-
-                <item
-                    android:id="@+id/menu_created_newest"
-                    android:title="@string/action_sort_created_newest_first"/>
-
-                <item
-                    android:id="@+id/menu_created_oldest"
-                    android:title="@string/action_sort_created_oldest_first"/>
-
-                <item
-                    android:id="@+id/menu_updated_newest"
-                    android:title="@string/action_sort_updated_newest_first"/>
-
-                <item
-                    android:id="@+id/menu_updated_oldest"
-                    android:title="@string/action_sort_updated_oldest_first"/>
-
-            </group>
-
-        </menu>
-
-    </item>
-
     <group
         android:id="@+id/menu_group_notebook"
         android:orderInCategory="4"

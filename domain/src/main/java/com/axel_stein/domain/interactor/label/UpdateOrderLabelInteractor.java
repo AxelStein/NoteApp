@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.validators.LabelValidator.isValid;
 
-public class UpdateLabelOrderInteractor {
+public class UpdateOrderLabelInteractor {
 
     @NonNull
     private LabelRepository mRepository;
@@ -28,7 +28,7 @@ public class UpdateLabelOrderInteractor {
     @NonNull
     private DriveSyncRepository mDriveSyncRepository;
 
-    public UpdateLabelOrderInteractor(@NonNull LabelRepository l, @NonNull SettingsRepository s, @NonNull DriveSyncRepository d) {
+    public UpdateOrderLabelInteractor(@NonNull LabelRepository l, @NonNull SettingsRepository s, @NonNull DriveSyncRepository d) {
         mRepository = requireNonNull(l);
         mSettingsRepository = requireNonNull(s);
         mDriveSyncRepository = requireNonNull(d);
@@ -39,15 +39,16 @@ public class UpdateLabelOrderInteractor {
             @Override
             public void run() throws Exception {
                 if (!isValid(labels)) {
-                    throw new IllegalArgumentException("labels not valid");
+                    throw new IllegalArgumentException();
                 }
                 mSettingsRepository.setLabelOrder(LabelOrder.CUSTOM);
                 for (int i = 0; i < labels.size(); i++) {
                     Label label = labels.get(i);
                     label.setOrder(i);
-                    mRepository.update(label);
+
+                    mRepository.updateOrder(label, i);
+                    mDriveSyncRepository.labelOrderChanged(label);
                 }
-                mDriveSyncRepository.notifyLabelsChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

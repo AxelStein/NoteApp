@@ -7,8 +7,10 @@ import com.axel_stein.domain.interactor.label.DeleteLabelInteractor;
 import com.axel_stein.domain.interactor.label.GetLabelInteractor;
 import com.axel_stein.domain.interactor.label.InsertLabelInteractor;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
+import com.axel_stein.domain.interactor.label.RenameLabelInteractor;
 import com.axel_stein.domain.interactor.label.UpdateLabelInteractor;
-import com.axel_stein.domain.interactor.label.UpdateLabelOrderInteractor;
+import com.axel_stein.domain.interactor.label.UpdateOrderLabelInteractor;
+import com.axel_stein.domain.interactor.label.UpdateViewsLabelInteractor;
 import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 
 import dagger.Module;
@@ -43,9 +45,18 @@ class LabelInteractorModule {
     }
 
     @Provides
-    UpdateLabelOrderInteractor updateOrder(SqlLabelRepository r, AppSettingsRepository s, GoogleDriveInteractor d) {
-        return new UpdateLabelOrderInteractor(r, s, d);
+    UpdateOrderLabelInteractor updateOrder(SqlLabelRepository r, AppSettingsRepository s, GoogleDriveInteractor d) {
+        return new UpdateOrderLabelInteractor(r, s, d);
     }
 
+    @Provides
+    RenameLabelInteractor rename(SqlLabelRepository r, GoogleDriveInteractor d) {
+        return new RenameLabelInteractor(r, d);
+    }
+
+    @Provides
+    UpdateViewsLabelInteractor views(SqlLabelRepository r, GoogleDriveInteractor d) {
+        return new UpdateViewsLabelInteractor(r, d);
+    }
 
 }

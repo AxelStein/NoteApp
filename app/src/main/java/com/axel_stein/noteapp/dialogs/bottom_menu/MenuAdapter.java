@@ -52,7 +52,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
         holder.mTextView.setText(item.getTitle());
 
         if (item.isCheckable()) {
-            int icon = item.isChecked() ? R.drawable.ic_check_box_white_24dp : R.drawable.ic_check_box_outline_blank_white_24dp;
+            int icon = item.isChecked() ? R.drawable.ic_done_white_24dp : 0;
             holder.mTextView.setIconRight(icon);
         } else {
             holder.mTextView.setIconRight(null);

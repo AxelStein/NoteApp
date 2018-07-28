@@ -1,13 +1,11 @@
 package com.axel_stein.noteapp.label_manager;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.SimpleCallback;
@@ -16,26 +14,27 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.domain.interactor.label.UpdateLabelOrderInteractor;
+import com.axel_stein.domain.interactor.label.UpdateOrderLabelInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.LabelCache;
 import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
+import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.label.DeleteLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.RenameLabelDialog;
 import com.axel_stein.noteapp.main.NoteListActivity;
+import com.axel_stein.noteapp.main.SortPanelListener;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.IconTextView;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -50,11 +49,11 @@ import io.reactivex.disposables.Disposable;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
 import static android.support.v7.widget.helper.ItemTouchHelper.UP;
-import static android.view.Gravity.END;
-import static android.view.Gravity.TOP;
 import static com.axel_stein.noteapp.utils.ViewUtil.setText;
 
-public class LabelManagerFragment extends Fragment implements LabelManagerContract.View {
+public class LabelManagerFragment extends Fragment implements LabelManagerContract.View, BottomMenuDialog.OnMenuItemClickListener {
+    private static final String TAG_ITEM_LABEL = "com.axel_stein.noteapp.label_manager.TAG_ITEM_LABEL";
+    private static final String TAG_SORT_LABELS = "com.axel_stein.noteapp.label_manager.TAG_SORT_LABELS";
 
     private ItemListener mListener = new ItemListener() {
         @Override
@@ -63,16 +62,12 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
         }
 
         @Override
-        public void onMenuClick(int pos, Label label, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.menu_rename:
-                    RenameLabelDialog.launch(getFragmentManager(), label);
-                    break;
-
-                case R.id.menu_delete:
-                    DeleteLabelDialog.launch(getContext(), getFragmentManager(), label);
-                    break;
-            }
+        public void onMenuItemClick(int pos, Label label) {
+            BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
+            builder.setTitle(label.getTitle());
+            builder.setMenuRes(R.menu.item_label);
+            builder.setData(label);
+            builder.show(LabelManagerFragment.this, TAG_ITEM_LABEL);
         }
     };
 
@@ -82,11 +77,19 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
     private View mEmptyView;
 
-    @Inject
-    AppSettingsRepository mSettingsRepository;
+    private View mSortPanel;
+
+    private TextView mTextCounter;
+
+    private IconTextView mSortTitle;
+
+    private boolean mNotEmptyList;
 
     @Inject
-    UpdateLabelOrderInteractor mOrderInteractor;
+    AppSettingsRepository mAppSettings;
+
+    @Inject
+    UpdateOrderLabelInteractor mOrderInteractor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,6 +123,30 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
         mPresenter.onCreateView(this);
 
+
+        FragmentActivity activity = getActivity();
+        if (activity != null && activity instanceof SortPanelListener) {
+            SortPanelListener l = (SortPanelListener) activity;
+            mSortPanel = l.getSortPanel();
+            mTextCounter = l.getCounter();
+            mSortTitle = l.getSortTitle();
+            mSortTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mAppSettings.toggleLabelDescOrder();
+                    LabelCache.invalidate();
+                    EventBusHelper.updateDrawer();
+                }
+            });
+            mSortTitle.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    launchSortDialog();
+                    return true;
+                }
+            });
+        }
+
         return view;
     }
 
@@ -127,6 +154,9 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     public void onDestroyView() {
         mAdapter = null;
         mEmptyView = null;
+        mSortPanel = null;
+        mTextCounter = null;
+        mSortTitle = null;
         mPresenter.onDestroyView();
         super.onDestroyView();
     }
@@ -141,33 +171,59 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        LabelOrder currentOrder = mSettingsRepository.getLabelOrder();
-        if (currentOrder != null) {
-            MenuItem item = menu.findItem(R.id.menu_sort);
-            if (item != null) {
-                MenuUtil.check(item.getSubMenu(), menuItemFromOrder(currentOrder), true);
-            }
-        }
+        MenuUtil.show(menu, mNotEmptyList, R.id.menu_sort);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        LabelOrder order = orderFromMenuItem(item);
-        if (order != null) {
-            item.setChecked(true);
-            mSettingsRepository.setLabelOrder(order);
-            LabelCache.invalidate();
-            EventBusHelper.updateDrawer();
-            return true;
-        }
-
         switch (item.getItemId()) {
-            case R.id.menu_add_label:
-                AddLabelDialog.launch(this);
+            case R.id.menu_sort:
+                launchSortDialog();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void launchSortDialog() {
+        BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
+        builder.setMenuRes(R.menu.sort_labels);
+        builder.setChecked(menuItemFromOrder(mAppSettings.getLabelOrder()));
+        builder.show(this, TAG_SORT_LABELS);
+    }
+
+    @Override
+    public void onMenuItemClick(BottomMenuDialog dialog, String tag, MenuItem item) {
+        switch (tag) {
+            case TAG_ITEM_LABEL:
+                handleLabelMenuItemClick(item, (Label) dialog.getData());
+                break;
+
+            case TAG_SORT_LABELS:
+                handleSortMenuItemClick(item);
+                break;
+        }
+
+        dialog.dismiss();
+    }
+
+    private void handleLabelMenuItemClick(MenuItem item, Label label) {
+        switch (item.getItemId()) {
+            case R.id.menu_rename:
+                RenameLabelDialog.launch(getFragmentManager(), label);
+                break;
+
+            case R.id.menu_delete:
+                DeleteLabelDialog.launch(getContext(), getFragmentManager(), label);
+                break;
+        }
+    }
+
+    private void handleSortMenuItemClick(MenuItem item) {
+        LabelOrder order = orderFromMenuItem(item);
+        mAppSettings.setLabelOrder(order);
+
+        LabelCache.invalidate();
+        EventBusHelper.updateDrawer();
     }
 
     private int menuItemFromOrder(LabelOrder order) {
@@ -192,12 +248,65 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
         return sparseArray.get(item.getItemId());
     }
 
+    private void setSortText(LabelOrder order) {
+        int textRes = 0;
+        boolean enable = true;
+        switch (order) {
+            case TITLE:
+                textRes = R.string.action_sort_title;
+                break;
+
+            case NOTE_COUNT:
+                textRes = R.string.action_sort_note_count;
+                break;
+
+            case CUSTOM:
+                textRes = R.string.action_sort_custom;
+                enable = false;
+                break;
+        }
+
+        ViewUtil.setText(mSortTitle, getString(textRes));
+        setSortIndicator(order.isDesc(), enable);
+    }
+
+    private void setSortIndicator(boolean desc, boolean enable) {
+        if (mSortTitle != null) {
+            if (enable) {
+                mSortTitle.setIconRight(desc ? R.drawable.ic_arrow_downward_white_18dp : R.drawable.ic_arrow_upward_white_18dp);
+            } else {
+                mSortTitle.setIconRight(null);
+            }
+        }
+    }
+
+    private void showSortPanel(boolean show) {
+        ViewUtil.show(show, mSortPanel);
+    }
+
+    private void setSortPanelCounterText(int labelCount) {
+        ViewUtil.setText(mTextCounter, getString(R.string.template_label_counter, labelCount));
+    }
+
     @Override
     public void setItems(List<Label> items) {
         if (mAdapter != null) {
             mAdapter.setItems(items);
         }
+
         ViewUtil.show(items != null && items.size() == 0, mEmptyView);
+
+        mNotEmptyList = items != null && items.size() > 0;
+        showSortPanel(mNotEmptyList);
+        if (items != null) {
+            setSortPanelCounterText(items.size());
+        }
+        setSortText(mAppSettings.getLabelOrder());
+
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            activity.invalidateOptionsMenu();
+        }
     }
 
     @Override
@@ -243,7 +352,7 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
         void onItemClick(int pos, Label label);
 
-        void onMenuClick(int pos, Label label, MenuItem item);
+        void onMenuItemClick(int pos, Label label);
 
     }
 
@@ -255,9 +364,9 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
         private ItemTouchHelper mItemTouchHelper;
 
-        private UpdateLabelOrderInteractor mOrderInteractor;
+        private UpdateOrderLabelInteractor mOrderInteractor;
 
-        Adapter(UpdateLabelOrderInteractor orderInteractor) {
+        Adapter(UpdateOrderLabelInteractor orderInteractor) {
             mOrderInteractor = orderInteractor;
             mItemTouchHelper = new ItemTouchHelper(new SimpleCallback(UP | DOWN, 0) {
                 @Override
@@ -332,16 +441,7 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             View v = inflater.inflate(R.layout.item_label_manager, parent, false);
-            final ViewHolder holder = new ViewHolder(v, mItemListener);
-            holder.mDragHandler.setOnTouchListener(new View.OnTouchListener() {
-                @SuppressLint("ClickableViewAccessibility")
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    mItemTouchHelper.startDrag(holder);
-                    return true;
-                }
-            });
-            return holder;
+            return new ViewHolder(v, mItemListener);
         }
 
         @Override
@@ -366,8 +466,6 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
             ImageButton mMenu;
 
-            View mDragHandler;
-
             ViewHolder(View itemView, final ItemListener l) {
                 super(itemView);
                 itemView.setOnClickListener(new View.OnClickListener() {
@@ -381,28 +479,18 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
                         }
                     }
                 });
-                mDragHandler = itemView.findViewById(R.id.drag_handler);
                 mTextTitle = itemView.findViewById(R.id.text_title);
                 mTextBadge = itemView.findViewById(R.id.text_badge);
                 mMenu = itemView.findViewById(R.id.button_menu);
                 mMenu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PopupMenu menu = new PopupMenu(v.getContext(), v, TOP | END, 0, R.style.NotebookPopupMenu);
-                        menu.inflate(R.menu.item_label);
-                        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                if (l != null) {
-                                    int pos = getAdapterPosition();
-                                    if (pos >= 0 && pos < getItemCount()) {
-                                        l.onMenuClick(pos, getItem(pos), item);
-                                    }
-                                }
-                                return true;
+                        if (l != null) {
+                            int pos = getAdapterPosition();
+                            if (pos >= 0 && pos < getItemCount()) {
+                                l.onMenuItemClick(pos, getItem(pos));
                             }
-                        });
-                        menu.show();
+                        }
                     }
                 });
             }

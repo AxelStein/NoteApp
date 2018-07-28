@@ -437,7 +437,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         }
 
         mPinned = note.isPinned();
-        mTrash = note.isTrash();
+        mTrash = note.isTrashed();
         mUpdate = note.hasId();
 
         /*
@@ -446,8 +446,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
             date = System.currentTimeMillis();
             ViewUtil.hide(mTextUpdate);
         } else {
-            date = note.getCreated();
-            mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), note.getModified()));
+            date = note.getCreatedDate();
+            mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), note.getModifiedDate()));
         }
         mTextDate.setText(DateFormatter.formatDateTime(getContext(), date));
         */
@@ -505,12 +505,12 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
-    public void showSelectNotebookView(List<Notebook> notebooks, long selectedNotebook) {
+    public void showSelectNotebookView(List<Notebook> notebooks, String selectedNotebook) {
         CheckNotebookDialog.launch(this, notebooks, selectedNotebook);
     }
 
     @Override
-    public void showCheckLabelsView(List<Label> labels, List<Long> checkedLabels) {
+    public void showCheckLabelsView(List<Label> labels, List<String> checkedLabels) {
         CheckLabelsDialog.launch(this, labels, checkedLabels);
     }
 
@@ -569,7 +569,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
-    public void onLabelsChecked(List<Long> labels) {
+    public void onLabelsChecked(List<String> labels) {
         if (mPresenter != null) {
             mPresenter.setLabels(labels);
         }

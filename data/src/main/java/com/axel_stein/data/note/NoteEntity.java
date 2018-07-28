@@ -21,22 +21,31 @@ public class NoteEntity {
     private String content;
 
     @ColumnInfo
-    private long notebook;
+    private String notebookId;
 
     @ColumnInfo
-    private long relevance;
-
-    @ColumnInfo
-    private boolean trash;
+    private long views;
 
     @ColumnInfo
     private boolean pinned;
 
     @ColumnInfo
-    private DateTime created;
+    private boolean trashed;
 
     @ColumnInfo
-    private DateTime modified;
+    private DateTime trashedDate;
+
+    @ColumnInfo
+    private boolean starred;
+
+    @ColumnInfo
+    private DateTime createdDate;
+
+    @ColumnInfo
+    private DateTime modifiedDate;
+
+    @ColumnInfo
+    private String driveId;
 
     @NonNull
     public String getId() {
@@ -63,28 +72,28 @@ public class NoteEntity {
         this.content = content;
     }
 
-    public long getNotebook() {
-        return notebook;
+    public String getNotebookId() {
+        return notebookId;
     }
 
-    public void setNotebook(long notebook) {
-        this.notebook = notebook;
+    public void setNotebookId(String notebookId) {
+        this.notebookId = notebookId;
     }
 
-    public long getRelevance() {
-        return relevance;
+    public long getViews() {
+        return views;
     }
 
-    public void setRelevance(long relevance) {
-        this.relevance = relevance;
+    public void setViews(long views) {
+        this.views = views;
     }
 
-    public boolean isTrash() {
-        return trash;
+    public boolean isTrashed() {
+        return trashed;
     }
 
-    public void setTrash(boolean trash) {
-        this.trash = trash;
+    public void setTrashed(boolean trashed) {
+        this.trashed = trashed;
     }
 
     public void setPinned(boolean pinned) {
@@ -95,20 +104,44 @@ public class NoteEntity {
         return pinned;
     }
 
-    public DateTime getCreated() {
-        return created;
+    public DateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreated(DateTime created) {
-        this.created = created;
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public DateTime getModified() {
-        return modified;
+    public DateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setModified(DateTime modified) {
-        this.modified = modified;
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public DateTime getTrashedDate() {
+        return trashedDate;
+    }
+
+    public void setTrashedDate(DateTime trashedDate) {
+        this.trashedDate = trashedDate;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
+
+    public String getDriveId() {
+        return driveId;
+    }
+
+    public void setDriveId(String driveId) {
+        this.driveId = driveId;
     }
 
 }

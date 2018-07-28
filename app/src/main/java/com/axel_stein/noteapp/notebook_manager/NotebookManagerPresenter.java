@@ -5,6 +5,7 @@ import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.notebook_manager.NotebookManagerContract.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,7 +63,9 @@ public class NotebookManagerPresenter implements NotebookManagerContract.Present
 
     @Override
     public void onSuccess(List<Notebook> notebooks) {
-        mItems = notebooks;
+        mItems = new ArrayList<>(notebooks);
+        mItems.add(0, Notebook.all());
+        mItems.add(1, Notebook.starred());
         if (mView != null) {
             mView.setItems(mItems);
         }

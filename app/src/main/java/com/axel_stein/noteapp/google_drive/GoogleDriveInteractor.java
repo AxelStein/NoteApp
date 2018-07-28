@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.domain.model.JsonNoteWrapper;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteLabelPair;
@@ -16,13 +15,7 @@ import com.axel_stein.domain.repository.LabelRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
-import com.axel_stein.domain.utils.validators.LabelValidator;
-import com.axel_stein.domain.utils.validators.NoteLabelPairValidator;
-import com.axel_stein.domain.utils.validators.NoteValidator;
-import com.axel_stein.domain.utils.validators.NotebookValidator;
 import com.axel_stein.noteapp.App;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,25 +26,12 @@ import com.google.android.gms.drive.DriveResourceClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.noteapp.google_drive.FileHelper.createFile;
-import static com.axel_stein.noteapp.google_drive.FileHelper.deleteFile;
 import static com.axel_stein.noteapp.google_drive.FileHelper.downloadFile;
 import static com.axel_stein.noteapp.google_drive.FileHelper.updateFile;
-import static com.axel_stein.noteapp.google_drive.LogHelper.logWarning;
 
 public class GoogleDriveInteractor implements DriveSyncRepository {
     private static final String FILE_NOTEBOOKS_TITLE = "notebooks.json";
@@ -149,6 +129,7 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
         return null;
     }
 
+    /*
     @SuppressLint("CheckResult")
     @Override
     public void notifyNoteChanged(final Note note) {
@@ -156,7 +137,7 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
             @Override
             public String call() throws Exception {
                 ObjectMapper mapper = new ObjectMapper();
-                String data = mapper.writeValueAsString(new JsonNoteWrapper(note));
+                String data = mapper.writeValueAsString(new NoteWrapper(note));
                 logWarning("notifyNoteChanged", data);
                 return data;
             }
@@ -252,6 +233,7 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
         });
     }
 
+
     private void uploadLabels(final String data) {
         downloadFile(mDriveResourceClient, FILE_LABELS_TITLE, new OnDownloadListener() {
             @Override
@@ -264,10 +246,132 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
             }
         });
     }
+    */
+
+    @Override
+    public void noteCreated(Note note) {
+
+    }
+
+    @Override
+    public void noteUpdated(Note note) {
+
+    }
+
+    @Override
+    public void noteNotebookChanged(Note note) {
+
+    }
+
+    @Override
+    public void noteViewed(Note note) {
+
+    }
+
+    @Override
+    public void notePinned(Note note, boolean pinned) {
+
+    }
+
+    @Override
+    public void notesPinned(List<Note> notes, boolean pinned) {
+
+    }
+
+    @Override
+    public void noteStarred(Note note, boolean starred) {
+
+    }
+
+    @Override
+    public void notesStarred(List<Note> notes, boolean starred) {
+
+    }
+
+    @Override
+    public void noteTrashed(Note note, boolean trashed) {
+
+    }
+
+    @Override
+    public void notesTrashed(List<Note> notes, boolean trashed) {
+
+    }
+
+    @Override
+    public void noteDeleted(Note note) {
+
+    }
+
+    @Override
+    public void notebookCreated(Notebook notebook) {
+
+    }
+
+    @Override
+    public void notebookUpdated(Notebook notebook) {
+
+    }
+
+    @Override
+    public void notebookRenamed(Notebook notebook) {
+
+    }
+
+    @Override
+    public void notebookViewed(Notebook notebook) {
+
+    }
+
+    @Override
+    public void notebookOrderChanged(Notebook notebook) {
+
+    }
+
+    @Override
+    public void notebookColorChanged(Notebook notebook) {
+
+    }
+
+    @Override
+    public void notebookDeleted(Notebook notebook) {
+
+    }
+
+    @Override
+    public void labelCreated(Label label) {
+
+    }
+
+    @Override
+    public void labelUpdated(Label label) {
+
+    }
+
+    @Override
+    public void labelRenamed(Label label) {
+
+    }
+
+    @Override
+    public void labelViewed(Label label) {
+
+    }
+
+    @Override
+    public void labelOrderChanged(Label label) {
+
+    }
+
+    @Override
+    public void labelDeleted(Label label) {
+
+    }
 
     @SuppressLint("CheckResult")
     @Override
     public void notifyNoteLabelPairsChanged(final List<NoteLabelPair> pairs) {
+        /*
         if (!isSignedIn()) {
             return;
         }
@@ -286,6 +390,7 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
                 uploadNoteLabelPairs(s);
             }
         });
+        */
     }
 
     private void uploadNoteLabelPairs(final String data) {
@@ -303,6 +408,7 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
 
     @Override
     public void notifySettingsChanged(final String data) {
+        /*
         if (!isSignedIn()) {
             return;
         }
@@ -319,18 +425,20 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
                 }
             }
         });
+        */
     }
 
     @SuppressLint("CheckResult")
     public void importAndReplace() {
+        /*
         Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
                 logWarning("importAndReplace");
 
                 mNoteRepository.deleteAll();
-                mNotebookRepository.deleteAll();
-                mLabelRepository.deleteAll();
+                mNotebookRepository.delete();
+                mLabelRepository.delete();
                 mNoteLabelPairRepository.deleteAll();
 
                 ObjectMapper mapper = new ObjectMapper();
@@ -382,7 +490,7 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
 
                 List<String> jsonNotes = FileHelper.downloadStarredFilesSync(mDriveResourceClient);
                 for (String data : jsonNotes) {
-                    JsonNoteWrapper wrapper = mapper.readValue(data, JsonNoteWrapper.class);
+                    NoteWrapper wrapper = mapper.readValue(data, NoteWrapper.class);
                     Note note = wrapper.toNote();
                     logWarning(String.valueOf(note));
                     if (!NoteValidator.isValid(note)) {
@@ -408,6 +516,7 @@ public class GoogleDriveInteractor implements DriveSyncRepository {
                 e.printStackTrace();
             }
         });
+        */
     }
 
 }

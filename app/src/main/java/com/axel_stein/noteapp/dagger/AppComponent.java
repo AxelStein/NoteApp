@@ -11,7 +11,7 @@ import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
 import com.axel_stein.noteapp.label_manager.LabelManagerFragment;
 import com.axel_stein.noteapp.label_manager.LabelManagerPresenter;
-import com.axel_stein.noteapp.main.HomeFragment;
+import com.axel_stein.noteapp.main.InboxFragment;
 import com.axel_stein.noteapp.main.LabelsFragment;
 import com.axel_stein.noteapp.main.MainActivity;
 import com.axel_stein.noteapp.main.NoteListActivity;
@@ -26,7 +26,7 @@ import com.axel_stein.noteapp.notes.edit.EditNotePresenter;
 import com.axel_stein.noteapp.notes.list.DrawerHelper;
 import com.axel_stein.noteapp.notes.list.NotesActivity;
 import com.axel_stein.noteapp.notes.list.TrashActivity;
-import com.axel_stein.noteapp.notes.list.presenters.HomeNotesPresenter;
+import com.axel_stein.noteapp.notes.list.presenters.InboxNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotesPresenter;
@@ -85,7 +85,7 @@ public interface AppComponent {
 
     void inject(NotesPresenter presenter);
 
-    void inject(HomeNotesPresenter presenter);
+    void inject(InboxNotesPresenter presenter);
 
     void inject(EditNoteFragment fragment);
 
@@ -107,7 +107,7 @@ public interface AppComponent {
 
     void inject(TrashFragment fragment);
 
-    void inject(HomeFragment fragment);
+    void inject(InboxFragment fragment);
 
     void inject(SettingsPresenter presenter);
 

@@ -4,38 +4,17 @@ import com.axel_stein.domain.model.Note;
 
 import java.util.List;
 
-import static com.axel_stein.domain.utils.TextUtil.isEmpty;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class NoteValidator {
 
     public static boolean validateBeforeInsert(Note note) {
-        if (note == null) {
-            return false;
-        }
-
-        if (isEmpty(note.getTitle())) {
-            if (isEmpty(note.getContent())) {
-                return false;
-            }
-            //note.setTitle(note.getContent());
-        }
-
-        return true;
+        return note != null && (notEmpty(note.getTitle()) || notEmpty(note.getContent()));
     }
 
     public static boolean validateBeforeUpdate(Note note) {
-        if (note == null || !note.hasId()) {
-            return false;
-        }
+        return note != null && note.hasId() && (notEmpty(note.getTitle()) || notEmpty(note.getContent()));
 
-        if (isEmpty(note.getTitle())) {
-            if (isEmpty(note.getContent())) {
-                return false;
-            }
-            //note.setTitle(note.getContent());
-        }
-
-        return true;
     }
 
     public static boolean isValid(Note note) {
@@ -51,12 +30,7 @@ public class NoteValidator {
                 return false;
             }
         }
-        if (isEmpty(note.getTitle())) {
-            if (isEmpty(note.getContent())) {
-                return false;
-            }
-        }
-        return true;
+        return notEmpty(note.getTitle()) || notEmpty(note.getContent());
     }
 
     public static boolean isValid(List<Note> notes) {

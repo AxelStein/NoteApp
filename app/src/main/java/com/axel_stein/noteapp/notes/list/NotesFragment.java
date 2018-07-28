@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +29,16 @@ import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.base.BaseFragment;
+import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
+import com.axel_stein.noteapp.main.SortPanelListener;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesContract.Presenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.IconTextView;
 
 import java.util.List;
 
@@ -48,13 +52,24 @@ import static android.text.TextUtils.isEmpty;
 public class NotesFragment extends BaseFragment implements NotesContract.View,
         CheckNotebookDialog.OnNotebookCheckedListener,
         CheckLabelsDialog.OnLabelCheckedListener,
-        ScrollableFragment {
+        ScrollableFragment,
+        BottomMenuDialog.OnMenuItemClickListener {
+
+    private static final String TAG_SORT_NOTES = "com.axel_stein.noteapp.notes.list.TAG_SORT_NOTES";
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
     @BindView(R.id.empty_view)
     TextView mEmptyView;
+
+    private View mSortPanel;
+
+    private TextView mTextCounter;
+
+    private IconTextView mSortTitle;
+
+    private boolean mNotEmptyList;
 
     @Nullable
     private Presenter mPresenter;
@@ -69,6 +84,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     private boolean mViewCreated;
 
+    private boolean mShowTopPadding = true;
     private boolean mShowBottomPadding = true;
 
     private NoteItemListener mItemListener = new NoteItemListener() {
@@ -98,6 +114,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -110,10 +127,9 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        updateBottomPadding();
+        updatePadding();
 
-        DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        mRecyclerView.addItemDecoration(divider);
+        showListDividers(false);
 
         updateEmptyView();
 
@@ -162,15 +178,48 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
             setPresenter(mPresenter);
         }
 
+        FragmentActivity activity = getActivity();
+        if (activity != null && activity instanceof SortPanelListener) {
+            SortPanelListener l = (SortPanelListener) activity;
+            mSortPanel = l.getSortPanel();
+            mTextCounter = l.getCounter();
+            mSortTitle = l.getSortTitle();
+            mSortTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mPresenter.onSortTitleClick();
+                }
+            });
+            mSortTitle.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    mPresenter.onSortTitleLongClick();
+                    return true;
+                }
+            });
+        }
+
         return root;
+    }
+
+    private void showListDividers(boolean show) {
+        if (show) {
+            DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+            mRecyclerView.addItemDecoration(divider);
+        }
+    }
+
+    public void showTopPadding(boolean show) {
+        mShowTopPadding = show;
+        updatePadding();
     }
 
     public void showBottomPadding(boolean show) {
         mShowBottomPadding = show;
-        updateBottomPadding();
+        updatePadding();
     }
 
-    private void updateBottomPadding() {
+    private void updatePadding() {
         if (mRecyclerView == null) {
             return;
         }
@@ -180,8 +229,9 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
             return;
         }
 
-        int p = res.getDimensionPixelOffset(R.dimen.note_list_bottom_padding);
-        mRecyclerView.setPadding(0, 0, 0, mShowBottomPadding ? p : 0);
+        int top = res.getDimensionPixelOffset(R.dimen.note_list_top_padding);
+        int bottom = res.getDimensionPixelOffset(R.dimen.note_list_bottom_padding);
+        mRecyclerView.setPadding(0, mShowTopPadding ? top : 0, 0, mShowBottomPadding ? bottom : 0);
     }
 
     @Override
@@ -189,6 +239,9 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         mAdapter = null;
         mRecyclerView = null;
         mEmptyView = null;
+        mSortPanel = null;
+        mTextCounter = null;
+        mSortTitle = null;
         mActionMode = null;
         mViewCreated = false;
         if (mPresenter != null) {
@@ -202,6 +255,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         if (mAdapter != null) {
             mAdapter.setNotes(list);
         }
+
+        mNotEmptyList = list != null && list.size() > 0;
         ViewUtil.show(list != null && list.size() == 0, mEmptyView);
 
         FragmentActivity activity = getActivity();
@@ -295,8 +350,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     @Override
     public void showSelectNotebookView(List<Notebook> notebooks) {
-        //SelectNotebookDialog.launch(this, notebooks, -1);
-        CheckNotebookDialog.launch(this, notebooks, -1);
+        CheckNotebookDialog.launch(this, notebooks, null);
     }
 
     @Override
@@ -309,10 +363,69 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         DeleteNoteDialog.launch(getActivity(), getFragmentManager(), notes);
     }
 
+    @Override
+    public void showSortDialog(int itemId) {
+        BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
+        builder.setMenuRes(R.menu.sort_notes);
+        builder.setChecked(itemId);
+        builder.show(this, TAG_SORT_NOTES);
+    }
+
+    @Override
+    public void showSortPanel(boolean show) {
+        ViewUtil.show(show, mSortPanel);
+    }
+
+    @Override
+    public void setSortPanelCounterText(int noteCount) {
+        ViewUtil.setText(mTextCounter, getString(R.string.template_note_counter, noteCount));
+    }
+
+    @Override
+    public void setSortTitle(int textRes) {
+        ViewUtil.setText(mSortTitle, textRes);
+    }
+
+    @Override
+    public void setSortIndicator(boolean desc, boolean enable) {
+        if (mSortTitle != null) {
+            if (enable) {
+                mSortTitle.setIconRight(desc ? R.drawable.ic_arrow_downward_white_18dp : R.drawable.ic_arrow_upward_white_18dp);
+            } else {
+                mSortTitle.setIconRight(null);
+            }
+        }
+    }
+
     private void showSnackbarMessage(String msg) {
         if (getView() != null) {
             Snackbar.make(getView(), msg, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_notes, menu);
+        MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        MenuUtil.show(menu, mNotEmptyList, R.id.menu_sort);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_sort:
+                if (mPresenter != null) {
+                    mPresenter.onSortTitleLongClick();
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -323,7 +436,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     }
 
     @Override
-    public void onLabelsChecked(List<Long> labels) {
+    public void onLabelsChecked(List<String> labels) {
         if (mPresenter != null) {
             mPresenter.onLabelsChecked(labels);
         }
@@ -355,6 +468,14 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         if (mRecyclerView != null) {
             mRecyclerView.scrollToPosition(0);
         }
+    }
+
+    @Override
+    public void onMenuItemClick(BottomMenuDialog dialog, String tag, MenuItem item) {
+        if (mPresenter != null) {
+            mPresenter.onSortMenuItemClick(item);
+        }
+        dialog.dismiss();
     }
 
     interface NoteItemListener {

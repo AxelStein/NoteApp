@@ -1,12 +1,13 @@
 package com.axel_stein.noteapp.dialogs.label;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
-import com.axel_stein.domain.interactor.label.UpdateLabelInteractor;
+import com.axel_stein.domain.interactor.label.RenameLabelInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
@@ -29,7 +30,7 @@ public class RenameLabelDialog extends EditTextDialog {
     @Inject
     QueryLabelInteractor mQueryLabelInteractor;
     @Inject
-    UpdateLabelInteractor mUpdateLabelInteractor;
+    RenameLabelInteractor mRenameLabelInteractor;
     private Label mLabel;
     private HashMap<String, Boolean> mMap;
 
@@ -58,6 +59,7 @@ public class RenameLabelDialog extends EditTextDialog {
         return dialog;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,11 +95,10 @@ public class RenameLabelDialog extends EditTextDialog {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onTextCommit(final String text) {
-        mLabel.setTitle(text);
-
-        mUpdateLabelInteractor.execute(mLabel)
+        mRenameLabelInteractor.execute(mLabel, text)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override

@@ -14,8 +14,14 @@ import org.json.JSONObject;
 
 public class AppSettingsRepository implements SettingsRepository {
     public static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
+    public static final String PREF_NOTES_ORDER_DESC = "PREF_NOTES_ORDER_DESC";
+
     public static final String PREF_NOTEBOOK_ORDER = "PREF_NOTEBOOK_ORDER";
+    public static final String PREF_NOTEBOOK_ORDER_DESC = "PREF_NOTEBOOK_ORDER_DESC";
+
     public static final String PREF_LABEL_ORDER = "PREF_LABEL_ORDER";
+    public static final String PREF_LABEL_ORDER_DESC = "PREF_LABEL_ORDER_DESC";
+
     public static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
     public static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
     public static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
@@ -58,7 +64,7 @@ public class AppSettingsRepository implements SettingsRepository {
             setPrefFontSize(object.optString(PREF_FONT_SIZE));
 
             setNotesOrder(NoteOrder.fromInt(object.optInt(PREF_NOTES_ORDER)));
-            setNotebookOrder(NotebookOrder.fromInt(object.optInt(PREF_NOTEBOOK_ORDER)));
+            setNotebookOrder(NotebookOrder.from(object.optInt(PREF_NOTEBOOK_ORDER), object.optBoolean(PREF_NOTEBOOK_ORDER_DESC)));
             setLabelOrder(LabelOrder.fromInt(object.optInt(PREF_LABEL_ORDER)));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -80,8 +86,14 @@ public class AppSettingsRepository implements SettingsRepository {
             object.put(PREF_FONT_SIZE, getPrefFontSize());
 
             object.put(PREF_NOTES_ORDER, getNotesOrder().ordinal());
-            object.put(PREF_NOTEBOOK_ORDER, getNotebookOrder().ordinal());
-            object.put(PREF_LABEL_ORDER, getLabelOrder().ordinal());
+
+            NotebookOrder notebookOrder = getNotebookOrder();
+            object.put(PREF_NOTEBOOK_ORDER, notebookOrder.ordinal());
+            object.put(PREF_NOTEBOOK_ORDER_DESC, notebookOrder.isDesc());
+
+            LabelOrder labelOrder = getLabelOrder();
+            object.put(PREF_LABEL_ORDER, labelOrder.ordinal());
+            object.put(PREF_LABEL_ORDER_DESC, labelOrder.isDesc());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -91,32 +103,56 @@ public class AppSettingsRepository implements SettingsRepository {
 
     @Override
     public NoteOrder getNotesOrder() {
-        return NoteOrder.fromInt(mPreferences.getInt(PREF_NOTES_ORDER, NoteOrder.TITLE.ordinal()));
+        int order = mPreferences.getInt(PREF_NOTES_ORDER, NoteOrder.TITLE.ordinal());
+        boolean desc = mPreferences.getBoolean(PREF_NOTES_ORDER_DESC, false);
+        return NoteOrder.from(order, desc);
+    }
+
+    public void toggleNoteDescOrder() {
+        boolean desc = mPreferences.getBoolean(PREF_NOTES_ORDER_DESC, false);
+        mPreferences.edit().putBoolean(PREF_NOTES_ORDER_DESC, !desc).apply();
     }
 
     @Override
     public void setNotesOrder(NoteOrder order) {
         mPreferences.edit().putInt(PREF_NOTES_ORDER, order.ordinal()).apply();
+        mPreferences.edit().putBoolean(PREF_NOTES_ORDER_DESC, order.isDesc()).apply();
     }
 
     @Override
     public NotebookOrder getNotebookOrder() {
-        return NotebookOrder.fromInt(mPreferences.getInt(PREF_NOTEBOOK_ORDER, NotebookOrder.TITLE.ordinal()));
+        int order = mPreferences.getInt(PREF_NOTEBOOK_ORDER, NotebookOrder.TITLE.ordinal());
+        boolean desc = mPreferences.getBoolean(PREF_NOTEBOOK_ORDER_DESC, false);
+        return NotebookOrder.from(order, desc);
     }
 
     @Override
     public void setNotebookOrder(NotebookOrder order) {
         mPreferences.edit().putInt(PREF_NOTEBOOK_ORDER, order.ordinal()).apply();
+        mPreferences.edit().putBoolean(PREF_NOTEBOOK_ORDER_DESC, order.isDesc()).apply();
+    }
+
+    public void toggleNotebookDescOrder() {
+        boolean desc = mPreferences.getBoolean(PREF_NOTEBOOK_ORDER_DESC, false);
+        mPreferences.edit().putBoolean(PREF_NOTEBOOK_ORDER_DESC, !desc).apply();
     }
 
     @Override
     public void setLabelOrder(LabelOrder order) {
         mPreferences.edit().putInt(PREF_LABEL_ORDER, order.ordinal()).apply();
+        mPreferences.edit().putBoolean(PREF_LABEL_ORDER_DESC, order.isDesc()).apply();
     }
 
     @Override
     public LabelOrder getLabelOrder() {
-        return LabelOrder.fromInt(mPreferences.getInt(PREF_LABEL_ORDER, LabelOrder.TITLE.ordinal()));
+        int order = mPreferences.getInt(PREF_LABEL_ORDER, LabelOrder.TITLE.ordinal());
+        boolean desc = mPreferences.getBoolean(PREF_LABEL_ORDER_DESC, false);
+        return LabelOrder.from(order, desc);
+    }
+
+    public void toggleLabelDescOrder() {
+        boolean desc = mPreferences.getBoolean(PREF_LABEL_ORDER_DESC, false);
+        mPreferences.edit().putBoolean(PREF_LABEL_ORDER_DESC, !desc).apply();
     }
 
     public boolean showAddNoteFAB() {

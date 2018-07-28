@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@Deprecated
 public class ViewNoteActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)

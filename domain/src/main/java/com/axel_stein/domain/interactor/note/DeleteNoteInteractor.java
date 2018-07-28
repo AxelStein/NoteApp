@@ -71,7 +71,7 @@ public class DeleteNoteInteractor {
     private void deleteImpl(Note note) {
         mRepository.delete(note);
         mNoteLabelPairRepository.delete(note);
-        mDriveSyncRepository.notifyNoteDeleted(note);
+        mDriveSyncRepository.noteDeleted(note);
     }
 
 }

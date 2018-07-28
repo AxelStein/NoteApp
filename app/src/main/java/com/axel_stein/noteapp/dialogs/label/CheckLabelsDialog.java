@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.LongSparseArray;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +23,7 @@ import com.axel_stein.noteapp.utils.ResourceUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.axel_stein.noteapp.utils.BooleanUtil.isTrue;
@@ -41,7 +41,7 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
     private OnLabelCheckedListener mListener;
     private Adapter mAdapter;
 
-    public static void launch(Fragment fragment, List<Label> labels, List<Long> checkedLabelIds) {
+    public static void launch(Fragment fragment, List<Label> labels, List<String> checkedLabelIds) {
         CheckLabelsDialog dialog = new CheckLabelsDialog();
         dialog.setTitle(R.string.title_check_labels);
         dialog.setPositiveButtonText(R.string.action_ok);
@@ -75,13 +75,13 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
         mNegativeButtonTextRes = negativeButtonTextRes;
     }
 
-    public void setLabels(List<Label> labels, List<Long> checkedLabelIds) {
+    public void setLabels(List<Label> labels, List<String> checkedLabelIds) {
         mItems = checkNotNull(labels);
         mCheckedPositions = new boolean[labels.size()];
 
-        LongSparseArray<Boolean> map = new LongSparseArray<>();
+        HashMap<String, Boolean> map = new HashMap<>();
         if (checkedLabelIds != null) {
-            for (long id : checkedLabelIds) {
+            for (String id : checkedLabelIds) {
                 map.put(id, true);
             }
         }
@@ -89,7 +89,7 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
         for (int i = 0; i < labels.size(); i++) {
             Label label = labels.get(i);
             if (checkedLabelIds != null) {
-                long id = label.getId();
+                String id = label.getId();
                 mCheckedPositions[i] = isTrue(map.get(id));
             }
         }
@@ -163,7 +163,7 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
     }
 
     public interface OnLabelCheckedListener {
-        void onLabelsChecked(List<Long> labels);
+        void onLabelsChecked(List<String> labels);
     }
 
     private static class Adapter extends RecyclerView.Adapter<ViewHolder> {
@@ -176,8 +176,8 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
             notifyDataSetChanged();
         }
 
-        public List<Long> getCheckedLabelIds() {
-            List<Long> result = new ArrayList<>();
+        public List<String> getCheckedLabelIds() {
+            List<String> result = new ArrayList<>();
             for (int i = 0; i < mCheckedPositions.length; i++) {
                 if (mCheckedPositions[i]) {
                     result.add(mItems.get(i).getId());

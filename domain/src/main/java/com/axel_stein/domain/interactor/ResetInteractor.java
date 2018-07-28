@@ -42,8 +42,8 @@ public class ResetInteractor {
             @Override
             public void run() throws Exception {
                 mNoteRepository.deleteAll();
-                mNotebookRepository.deleteAll();
-                mLabelRepository.deleteAll();
+                mNotebookRepository.delete();
+                mLabelRepository.delete();
                 mNoteLabelPairRepository.deleteAll();
             }
         }).subscribeOn(Schedulers.io());

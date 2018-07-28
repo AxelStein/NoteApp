@@ -3,12 +3,16 @@ package com.axel_stein.data.label;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import org.joda.time.DateTime;
 
 @Entity(tableName = "labels")
 public class LabelEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @PrimaryKey
+    @NonNull
+    private String id = "";
 
     @ColumnInfo
     private String title;
@@ -16,11 +20,24 @@ public class LabelEntity {
     @ColumnInfo
     private int order;
 
-    public long getId() {
+    @ColumnInfo
+    private long views;
+
+    @ColumnInfo
+    private DateTime createdDate;
+
+    @ColumnInfo
+    private DateTime modifiedDate;
+
+    @ColumnInfo
+    private String driveId;
+
+    @NonNull
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -38,6 +55,38 @@ public class LabelEntity {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public long getViews() {
+        return views;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
+    }
+
+    public DateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public DateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getDriveId() {
+        return driveId;
+    }
+
+    public void setDriveId(String driveId) {
+        this.driveId = driveId;
     }
 
 }

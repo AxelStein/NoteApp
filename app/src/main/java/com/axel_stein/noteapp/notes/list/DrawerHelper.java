@@ -25,6 +25,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
 
+@Deprecated
 public class DrawerHelper {
 
     private static List<IDrawerItem> mItems;

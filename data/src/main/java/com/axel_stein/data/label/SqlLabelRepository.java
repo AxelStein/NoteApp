@@ -7,8 +7,7 @@ import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.repository.LabelRepository;
 
 import java.util.List;
-
-import static com.axel_stein.data.ObjectUtil.checkNotNull;
+import java.util.UUID;
 
 public class SqlLabelRepository implements LabelRepository {
 
@@ -16,12 +15,13 @@ public class SqlLabelRepository implements LabelRepository {
     private LabelDao mDao;
 
     public SqlLabelRepository(@NonNull LabelDao dao) {
-        mDao = checkNotNull(dao, "dao is null");
+        mDao = dao;
     }
 
     @Override
-    public long insert(@NonNull Label label) {
-        return mDao.insert(LabelMapper.map(label));
+    public void insert(@NonNull Label label) {
+        label.setId(UUID.randomUUID().toString());
+        mDao.insert(LabelMapper.map(label));
     }
 
     @Override
@@ -30,13 +30,23 @@ public class SqlLabelRepository implements LabelRepository {
     }
 
     @Override
-    public void delete(@NonNull Label label) {
-        mDao.delete(LabelMapper.map(label));
+    public void rename(@NonNull Label label, String title) {
+        mDao.rename(label.getId(), title);
+    }
+
+    @Override
+    public void updateViews(@NonNull Label label, long views) {
+        mDao.updateViews(label.getId(), views);
+    }
+
+    @Override
+    public void updateOrder(@NonNull Label label, int order) {
+        mDao.updateOrder(label.getId(), order);
     }
 
     @Override
     @Nullable
-    public Label get(long id) {
+    public Label get(String id) {
         return LabelMapper.map(mDao.get(id));
     }
 
@@ -47,8 +57,13 @@ public class SqlLabelRepository implements LabelRepository {
     }
 
     @Override
-    public void deleteAll() {
-        mDao.deleteAll();
+    public void delete(@NonNull Label label) {
+        mDao.delete(LabelMapper.map(label));
+    }
+
+    @Override
+    public void delete() {
+        mDao.delete();
     }
 
 }

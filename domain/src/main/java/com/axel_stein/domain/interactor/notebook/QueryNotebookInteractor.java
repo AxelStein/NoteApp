@@ -47,7 +47,7 @@ public class QueryNotebookInteractor {
     public Single<List<Notebook>> execute() {
         return Single.fromCallable(new Callable<List<Notebook>>() {
             @Override
-            public List<Notebook> call() throws Exception {
+            public List<Notebook> call() {
                 if (NotebookCache.hasValue()) {
                     return NotebookCache.get();
                 }
@@ -57,20 +57,6 @@ public class QueryNotebookInteractor {
                     throw new IllegalStateException("result is not valid");
                 }
 
-                /*
-                if (notebooks.size() == 0) {
-                    Notebook notebook = new Notebook();
-                    notebook.setTitle(mSettingsRepository.defaultNotebookTitle());
-                    notebook.setId(mNotebookRepository.insert(notebook));
-
-                    if (!isValid(notebook)) {
-                        throw new IllegalStateException("notebook is not valid");
-                    }
-
-                    notebooks.add(notebook);
-                }
-                */
-
                 for (Notebook notebook : notebooks) {
                     notebook.setNoteCount(mNoteRepository.count(notebook));
                 }
@@ -79,11 +65,19 @@ public class QueryNotebookInteractor {
                     @Override
                     public int compare(Notebook n1, Notebook n2) {
                         NotebookOrder order = mSettingsRepository.getNotebookOrder();
+                        boolean desc = order.isDesc();
+
                         switch (order) {
                             case TITLE:
+                                if (desc) {
+                                    return n2.getTitle().compareTo(n1.getTitle());
+                                }
                                 return n1.getTitle().compareTo(n2.getTitle());
 
                             case NOTE_COUNT:
+                                if (desc) {
+                                    return n1.getNoteCount() - n2.getNoteCount() > 0 ? 1 : -1;
+                                }
                                 return n1.getNoteCount() - n2.getNoteCount() > 0 ? -1 : 1;
 
                             case CUSTOM:

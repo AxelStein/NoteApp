@@ -21,17 +21,17 @@ public class NoteValidatorTest {
         assertFalse(NoteValidator.validateBeforeInsert(note));
 
         note = new Note();
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertFalse(NoteValidator.validateBeforeInsert(note));
 
         note = new Note();
         note.setTitle("Test");
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertTrue(NoteValidator.validateBeforeInsert(note));
 
         note = new Note();
         note.setContent("Test");
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertTrue(NoteValidator.validateBeforeInsert(note));
     }
 
@@ -44,28 +44,28 @@ public class NoteValidatorTest {
         assertFalse(NoteValidator.validateBeforeUpdate(note));
 
         note = new Note();
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertFalse(NoteValidator.validateBeforeUpdate(note));
 
         note = new Note();
         note.setTitle("Test");
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertFalse(NoteValidator.validateBeforeUpdate(note));
 
         note = new Note();
         note.setId(2);
         note.setTitle("Test");
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertTrue(NoteValidator.validateBeforeUpdate(note));
 
         note = new Note();
         note.setId(2);
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertFalse(NoteValidator.validateBeforeUpdate(note));
 
         note = new Note();
         note.setId(2);
-        note.setNotebook(1);
+        note.setNotebookId(1);
         note.setContent("Test");
         assertTrue(NoteValidator.validateBeforeUpdate(note));
     }
@@ -87,12 +87,12 @@ public class NoteValidatorTest {
         assertFalse(NoteValidator.isValid(note));
 
         note = new Note();
-        note.setNotebook(2);
+        note.setNotebookId(2);
         assertFalse(NoteValidator.isValid(note));
 
         note = new Note();
         note.setTitle("Test");
-        note.setNotebook(2);
+        note.setNotebookId(2);
         assertFalse(NoteValidator.isValid(note));
 
         note = new Note();
@@ -102,13 +102,13 @@ public class NoteValidatorTest {
 
         note = new Note();
         note.setId(1);
-        note.setNotebook(2);
+        note.setNotebookId(2);
         assertFalse(NoteValidator.isValid(note));
 
         note = new Note();
         note.setId(1);
         note.setTitle("Test");
-        note.setNotebook(2);
+        note.setNotebookId(2);
         assertTrue(NoteValidator.isValid(note));
     }
 
@@ -120,7 +120,7 @@ public class NoteValidatorTest {
         Note note = new Note();
         note.setId(1);
         note.setTitle("Test");
-        note.setNotebook(2);
+        note.setNotebookId(2);
 
         list = new ArrayList<>();
         list.add(note);

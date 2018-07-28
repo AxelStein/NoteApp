@@ -17,6 +17,10 @@ class LabelMapper {
         label.setId(entity.getId());
         label.setTitle(entity.getTitle());
         label.setOrder(entity.getOrder());
+        label.setViews(entity.getViews());
+        label.setCreatedDate(entity.getCreatedDate());
+        label.setModifiedDate(entity.getModifiedDate());
+        label.setDriveId(entity.getDriveId());
         return label;
     }
 
@@ -28,6 +32,10 @@ class LabelMapper {
         entity.setId(label.getId());
         entity.setTitle(label.getTitle());
         entity.setOrder(label.getOrder());
+        entity.setViews(label.getViews());
+        entity.setCreatedDate(label.getCreatedDate());
+        entity.setModifiedDate(label.getModifiedDate());
+        entity.setDriveId(label.getDriveId());
         return entity;
     }
 

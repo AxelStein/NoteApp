@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 
-public class UpdateNotebookOrderInteractor {
+public class UpdateOrderNotebookInteractor {
 
     @NonNull
     private NotebookRepository mRepository;
@@ -28,7 +28,7 @@ public class UpdateNotebookOrderInteractor {
     @NonNull
     private DriveSyncRepository mDriveSyncRepository;
 
-    public UpdateNotebookOrderInteractor(@NonNull NotebookRepository n, @NonNull SettingsRepository s, @NonNull DriveSyncRepository d) {
+    public UpdateOrderNotebookInteractor(@NonNull NotebookRepository n, @NonNull SettingsRepository s, @NonNull DriveSyncRepository d) {
         mRepository = requireNonNull(n);
         mSettingsRepository = requireNonNull(s);
         mDriveSyncRepository = requireNonNull(d);
@@ -39,15 +39,18 @@ public class UpdateNotebookOrderInteractor {
             @Override
             public void run() throws Exception {
                 if (!isValid(notebooks)) {
-                    throw new IllegalArgumentException("notebooks is not valid");
+                    throw new IllegalArgumentException();
                 }
+
                 mSettingsRepository.setNotebookOrder(NotebookOrder.CUSTOM);
+
                 for (int i = 0; i < notebooks.size(); i++) {
-                    Notebook n = notebooks.get(i);
-                    n.setOrder(i);
-                    mRepository.update(n);
+                    Notebook notebook = notebooks.get(i);
+                    notebook.setOrder(i);
+
+                    mRepository.updateOrder(notebook, i);
+                    mDriveSyncRepository.notebookOrderChanged(notebook);
                 }
-                mDriveSyncRepository.notifyNotebooksChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

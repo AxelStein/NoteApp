@@ -5,20 +5,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import com.axel_stein.data.AppSettingsRepository;
+import com.axel_stein.domain.interactor.label.UpdateViewsLabelInteractor;
+import com.axel_stein.domain.interactor.notebook.UpdateViewsNotebookInteractor;
 import com.axel_stein.domain.model.Label;
-import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
@@ -29,20 +29,22 @@ import com.axel_stein.noteapp.notes.list.NotesFragment;
 import com.axel_stein.noteapp.notes.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
+import com.axel_stein.noteapp.views.IconTextView;
 
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NoteListActivity extends BaseActivity {
+import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
+import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 
+public class NoteListActivity extends BaseActivity implements SortPanelListener {
     private static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.main.EXTRA_NOTEBOOK_ID";
     private static final String EXTRA_NOTEBOOK_TITLE = "com.axel_stein.noteapp.main.EXTRA_NOTEBOOK_TITLE";
+    private static final String EXTRA_NOTEBOOK_EDITABLE = "com.axel_stein.noteapp.main.EXTRA_NOTEBOOK_EDITABLE";
 
     private static final String EXTRA_LABEL_ID = "com.axel_stein.noteapp.main.EXTRA_LABEL_ID";
     private static final String EXTRA_LABEL_TITLE = "com.axel_stein.noteapp.main.EXTRA_LABEL_TITLE";
@@ -51,6 +53,7 @@ public class NoteListActivity extends BaseActivity {
         Intent intent = new Intent(context, NoteListActivity.class);
         intent.putExtra(EXTRA_NOTEBOOK_ID, notebook.getId());
         intent.putExtra(EXTRA_NOTEBOOK_TITLE, notebook.getTitle());
+        intent.putExtra(EXTRA_NOTEBOOK_EDITABLE, notebook.isEditable());
         context.startActivity(intent);
     }
 
@@ -61,14 +64,23 @@ public class NoteListActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    @BindView(R.id.app_bar)
+    AppBarLayout mAppBar;
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @BindView(R.id.fab_add)
     FloatingActionButton mFAB;
 
-    @Inject
-    AppSettingsRepository mAppSettings;
+    @BindView(R.id.sort_panel)
+    View mSortPanel;
+
+    @BindView(R.id.text_item_counter)
+    TextView mTextCounter;
+
+    @BindView(R.id.text_sort)
+    IconTextView mSortTitle;
 
     @Nullable
     private Notebook mNotebook;
@@ -76,23 +88,32 @@ public class NoteListActivity extends BaseActivity {
     @Nullable
     private Label mLabel;
 
-    @Nullable
-    private NotesFragment mFragment;
+    @Inject
+    UpdateViewsNotebookInteractor mViewsNotebookInteractor;
+
+    @Inject
+    UpdateViewsLabelInteractor mViewsLabelInteractor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getAppComponent().inject(this);
         setContentView(R.layout.activity_note_list);
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_NOTEBOOK_ID)) {
             mNotebook = new Notebook();
-            mNotebook.setId(intent.getLongExtra(EXTRA_NOTEBOOK_ID, 0));
+            mNotebook.setId(intent.getStringExtra(EXTRA_NOTEBOOK_ID));
             mNotebook.setTitle(intent.getStringExtra(EXTRA_NOTEBOOK_TITLE));
+            mNotebook.setEditable(intent.getBooleanExtra(EXTRA_NOTEBOOK_EDITABLE, true));
+
+            mViewsNotebookInteractor.execute(mNotebook).subscribe();
         } else if (intent.hasExtra(EXTRA_LABEL_ID)) {
             mLabel = new Label();
-            mLabel.setId(intent.getLongExtra(EXTRA_LABEL_ID, 0));
+            mLabel.setId(intent.getStringExtra(EXTRA_LABEL_ID));
             mLabel.setTitle(intent.getStringExtra(EXTRA_LABEL_TITLE));
+
+            mViewsLabelInteractor.execute(mLabel).subscribe();
         }
 
         App.getAppComponent().inject(this);
@@ -114,11 +135,14 @@ public class NoteListActivity extends BaseActivity {
             setTitle(title);
         }
 
+        setToolbarScrollFlags(true);
+
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentByTag("fragment");
+        NotesFragment fragment = (NotesFragment) fm.findFragmentByTag("fragment");
+
         if (fragment == null) {
-            mFragment = new NotesFragment();
-            mFragment.showBottomPadding(true);
+            fragment = new NotesFragment();
+            fragment.showBottomPadding(true);
 
             int msg = 0;
             if (mNotebook != null) {
@@ -128,19 +152,17 @@ public class NoteListActivity extends BaseActivity {
             }
 
             try {
-                mFragment.setEmptyMsg(getString(msg));
+                fragment.setEmptyMsg(getString(msg));
             } catch (Exception ignored) {
             }
 
             if (mNotebook != null) {
-                mFragment.setPresenter(new NotebookNotesPresenter(mNotebook));
+                fragment.setPresenter(new NotebookNotesPresenter(mNotebook));
             } else if (mLabel != null) {
-                mFragment.setPresenter(new LabelNotesPresenter(mLabel));
+                fragment.setPresenter(new LabelNotesPresenter(mLabel));
             }
 
-            setFragment(mFragment, "fragment");
-        } else {
-            mFragment = (NotesFragment) fragment;
+            setFragment(fragment, "fragment");
         }
 
         mFAB.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +177,15 @@ public class NoteListActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void setToolbarScrollFlags(boolean scroll) {
+        int flags = scroll ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0;
+
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
+        params.setScrollFlags(flags);
+
+        mAppBar.requestLayout();
     }
 
     private void setTitle(String title) {
@@ -246,37 +277,13 @@ public class NoteListActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.activity_note_list, menu);
         MenuUtil.tintMenuIconsAttr(this, menu, R.attr.menuItemTintColor);
 
-        MenuUtil.showGroup(menu,R.id.menu_group_notebook, mNotebook != null);
+        MenuUtil.showGroup(menu,R.id.menu_group_notebook, mNotebook != null && mNotebook.isEditable());
         MenuUtil.showGroup(menu,R.id.menu_group_label, mLabel != null);
-
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        NoteOrder currentOrder = mAppSettings.getNotesOrder();
-        if (currentOrder != null) {
-            MenuItem item = menu.findItem(R.id.menu_sort);
-            if (item != null) {
-                MenuUtil.check(item.getSubMenu(), menuItemFromNoteOrder(currentOrder), true);
-            }
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        NoteOrder order = noteOrderFromMenuItem(item);
-        if (order != null) {
-            item.setChecked(true);
-            mAppSettings.setNotesOrder(order);
-            EventBusHelper.updateNoteList();
-            if (mFragment != null) {
-                mFragment.scrollToTop();
-            }
-            return true;
-        }
-
         switch (item.getItemId()) {
             case R.id.menu_search:
                 showSearchActivity();
@@ -310,36 +317,19 @@ public class NoteListActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private NoteOrder noteOrderFromMenuItem(MenuItem item) {
-        if (item == null) {
-            return null;
-        }
-
-        SparseArray<NoteOrder> sparseArray = new SparseArray<>();
-        sparseArray.put(R.id.menu_sort_title, NoteOrder.TITLE);
-        sparseArray.put(R.id.menu_sort_relevance, NoteOrder.RELEVANCE);
-        sparseArray.put(R.id.menu_created_newest, NoteOrder.CREATED_NEWEST);
-        sparseArray.put(R.id.menu_created_oldest, NoteOrder.CREATED_OLDEST);
-        sparseArray.put(R.id.menu_updated_newest, NoteOrder.MODIFIED_NEWEST);
-        sparseArray.put(R.id.menu_updated_oldest, NoteOrder.MODIFIED_OLDEST);
-
-        return sparseArray.get(item.getItemId());
+    @Override
+    public View getSortPanel() {
+        return mSortPanel;
     }
 
-    private int menuItemFromNoteOrder(NoteOrder order) {
-        if (order == null) {
-            return -1;
-        }
+    @Override
+    public TextView getCounter() {
+        return mTextCounter;
+    }
 
-        HashMap<NoteOrder, Integer> map = new HashMap<>();
-        map.put(NoteOrder.TITLE, R.id.menu_sort_title);
-        map.put(NoteOrder.RELEVANCE, R.id.menu_sort_relevance);
-        map.put(NoteOrder.CREATED_NEWEST, R.id.menu_created_newest);
-        map.put(NoteOrder.CREATED_OLDEST, R.id.menu_created_oldest);
-        map.put(NoteOrder.MODIFIED_NEWEST, R.id.menu_updated_newest);
-        map.put(NoteOrder.MODIFIED_OLDEST, R.id.menu_updated_oldest);
-
-        return map.get(order);
+    @Override
+    public IconTextView getSortTitle() {
+        return mSortTitle;
     }
 
 }

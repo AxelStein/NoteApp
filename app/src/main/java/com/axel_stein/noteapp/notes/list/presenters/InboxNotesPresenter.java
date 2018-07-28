@@ -7,18 +7,18 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class HomeNotesPresenter extends NotesPresenter {
+public class InboxNotesPresenter extends NotesPresenter {
 
     @Inject
     QueryNoteInteractor mInteractor;
 
-    public HomeNotesPresenter() {
+    public InboxNotesPresenter() {
         App.getAppComponent().inject(this);
     }
 
     @Override
     protected void load() {
-        mInteractor.executeHome()
+        mInteractor.queryInbox()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }

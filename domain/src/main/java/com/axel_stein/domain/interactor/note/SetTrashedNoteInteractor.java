@@ -7,7 +7,8 @@ import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
-import java.util.ArrayList;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -17,8 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
-// todo test
-public class RestoreNoteInteractor {
+public class SetTrashedNoteInteractor {
 
     @NonNull
     private NoteRepository mNoteRepository;
@@ -29,36 +29,52 @@ public class RestoreNoteInteractor {
     @NonNull
     private DriveSyncRepository mDriveSyncRepository;
 
-    public RestoreNoteInteractor(@NonNull NoteRepository n, @NonNull NoteLabelPairRepository p, @NonNull DriveSyncRepository d) {
+    public SetTrashedNoteInteractor(@NonNull NoteRepository n, @NonNull NoteLabelPairRepository l, @NonNull DriveSyncRepository d) {
         mNoteRepository = requireNonNull(n);
-        mNoteLabelPairRepository = requireNonNull(p);
+        mNoteLabelPairRepository = requireNonNull(l);
         mDriveSyncRepository = requireNonNull(d);
     }
 
-    public Completable execute(@NonNull final Note note) {
-        List<Note> notes = new ArrayList<>();
-        notes.add(note);
-        return execute(notes);
-    }
-
-    public Completable execute(@NonNull final List<Note> notes) {
+    public Completable execute(@NonNull final Note note, final boolean trashed) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
+                setTrashedImpl(note, trashed);
+
+                mDriveSyncRepository.noteTrashed(note, trashed);
+                mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Completable execute(@NonNull final List<Note> notes, final boolean trashed) {
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
 
-                mNoteRepository.restore(notes);
-
                 for (Note note : notes) {
-                    mNoteLabelPairRepository.restore(note);
-                    mDriveSyncRepository.notifyNoteChanged(mNoteRepository.get(note.getId()));
+                    setTrashedImpl(note, trashed);
                 }
 
+                mDriveSyncRepository.notesTrashed(notes, trashed);
                 mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());
+    }
+
+    private void setTrashedImpl(Note note, boolean trashed) {
+        if (!isValid(note)) {
+            throw new IllegalArgumentException();
+        }
+
+        note.setTrashed(trashed);
+        note.setTrashedDate(trashed ? new DateTime() : null);
+
+        mNoteRepository.setTrashed(note, trashed);
+        mNoteLabelPairRepository.setTrashed(note, trashed);
     }
 
 }

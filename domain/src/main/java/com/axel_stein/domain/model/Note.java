@@ -21,24 +21,30 @@ public class Note implements Cloneable {
 
     private String id;
 
-    private long notebook;
-
-    private long relevance;
-
-    private boolean trash;
-
     private String title;
 
     private String content;
 
-    private DateTime created;
+    private String notebookId;
 
-    private DateTime modified;
+    private long views;
 
     private boolean pinned;
 
+    private boolean starred;
+
+    private boolean trashed;
+
+    private DateTime trashedDate;
+
+    private DateTime createdDate;
+
+    private DateTime modifiedDate;
+
+    private String driveId;
+
     @Nullable
-    private HashMap<Long, Boolean> labels;
+    private HashMap<String, Boolean> labels;
 
     public boolean hasId() {
         return !TextUtil.isEmpty(id);
@@ -52,40 +58,41 @@ public class Note implements Cloneable {
         this.id = id;
     }
 
-    public long getNotebook() {
-        return notebook;
+    public String getNotebookId() {
+        return notebookId;
+    }
+
+    public void setNotebookId(String notebookId) {
+        this.notebookId = notebookId;
     }
 
     public void setNotebook(@NonNull Notebook notebook) {
         requireNonNull(notebook);
-        this.notebook = notebook.getId();
+        this.notebookId = notebook.getId();
     }
 
-    public void setNotebook(long notebook) {
-        this.notebook = notebook;
+    public long getViews() {
+        return views;
     }
 
-    public long getRelevance() {
-        return relevance;
-    }
-
-    public void setRelevance(long relevance) {
-        if (relevance < 0) {
-            throw new IllegalArgumentException("relevance should be >= 0");
+    public void setViews(long views) {
+        if (views < 0) {
+            throw new IllegalArgumentException("views should be >= 0");
         }
-        this.relevance = relevance;
+        this.views = views;
     }
 
-    public void incrementRelevance() {
-        relevance = relevance + 1;
+    public long incrementViews() {
+        this.views++;
+        return this.views;
     }
 
-    public boolean isTrash() {
-        return trash;
+    public boolean isTrashed() {
+        return trashed;
     }
 
-    public void setTrash(boolean trash) {
-        this.trash = trash;
+    public void setTrashed(boolean trashed) {
+        this.trashed = trashed;
     }
 
     @NonNull
@@ -127,9 +134,9 @@ public class Note implements Cloneable {
     /**
      * @throws IllegalArgumentException if label`s id is 0
      */
-    public void addLabel(long labelId) {
-        if (labelId <= 0) {
-            throw new IllegalArgumentException("labelId is 0");
+    public void addLabel(String labelId) {
+        if (TextUtil.isEmpty(labelId)) {
+            throw new IllegalArgumentException();
         }
         initLabels().put(labelId, true);
     }
@@ -146,9 +153,9 @@ public class Note implements Cloneable {
     /**
      * @throws IllegalArgumentException if labelId is 0
      */
-    public boolean containsLabel(long labelId) {
-        if (labelId <= 0) {
-            throw new IllegalArgumentException("labelId is 0");
+    public boolean containsLabel(String labelId) {
+        if (TextUtil.isEmpty(labelId)) {
+            throw new IllegalArgumentException();
         }
         return initLabels().containsKey(labelId);
     }
@@ -165,9 +172,9 @@ public class Note implements Cloneable {
     /**
      * @throws IllegalArgumentException if labelId is 0
      */
-    public void removeLabel(long labelId) {
-        if (labelId <= 0) {
-            throw new IllegalArgumentException("labelId is 0");
+    public void removeLabel(String labelId) {
+        if (TextUtil.isEmpty(labelId)) {
+            throw new IllegalArgumentException();
         }
         initLabels().remove(labelId);
     }
@@ -177,43 +184,41 @@ public class Note implements Cloneable {
     }
 
     @NonNull
-    private HashMap<Long, Boolean> initLabels() {
+    private HashMap<String, Boolean> initLabels() {
         if (labels == null) {
             labels = new HashMap<>();
         }
         return labels;
     }
 
-    public DateTime getCreated() {
-        return created;
+    public DateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreated(DateTime created) {
-        this.created = created;
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public DateTime getModified() {
-        return modified;
+    public DateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setModified(DateTime modified) {
-        this.modified = modified;
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     @Nullable
-    public List<Long> getLabels() {
+    public List<String> getLabels() {
         if (labels == null || labels.size() == 0) {
             return null;
         }
-        List<Long> list = new ArrayList<>();
-        list.addAll(labels.keySet());
-        return list;
+        return new ArrayList<>(labels.keySet());
     }
 
-    public void setLabels(@Nullable List<Long> labels) {
+    public void setLabels(@Nullable List<String> labels) {
         clearLabels();
         if (labels != null) {
-            for (long l : labels) {
+            for (String l : labels) {
                 addLabel(l);
             }
         }
@@ -227,12 +232,36 @@ public class Note implements Cloneable {
         return pinned;
     }
 
+    public DateTime getTrashedDate() {
+        return trashedDate;
+    }
+
+    public void setTrashedDate(DateTime trashedDate) {
+        this.trashedDate = trashedDate;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
+
+    public String getDriveId() {
+        return driveId;
+    }
+
+    public void setDriveId(String driveId) {
+        this.driveId = driveId;
+    }
+
     public Note copy() {
         Note copy;
         try {
             copy = (Note) clone();
             if (labels != null) {
-                copy.labels = (HashMap<Long, Boolean>) labels.clone();
+                copy.labels = (HashMap<String, Boolean>) labels.clone();
             }
         } catch (Exception ex) {
             copy = new Note();
@@ -249,13 +278,17 @@ public class Note implements Cloneable {
             builder.append(id, note.id);
             builder.append(title, note.title);
             builder.append(content, note.content);
-            builder.append(notebook, note.notebook);
-            builder.append(created, note.created);
-            builder.append(modified, note.modified);
-            builder.append(trash, note.trash);
+            builder.append(notebookId, note.notebookId);
+            builder.append(createdDate, note.createdDate);
+            builder.append(modifiedDate, note.modifiedDate);
+            // todo builder.append(trashedDate, note.trashedDate);
+            builder.append(trashed, note.trashed);
             builder.append(pinned, note.pinned);
+            builder.append(starred, note.starred);
+            // todo driveId
+            // todo views
 
-            MapComparator<Long, Boolean> mapComparator = new MapComparator<>();
+            MapComparator<String, Boolean> mapComparator = new MapComparator<>();
             builder.append(mapComparator.compare(labels, note.labels));
 
             return builder.areEqual();
@@ -267,15 +300,19 @@ public class Note implements Cloneable {
     @Override
     public String toString() {
         return "Note{" +
-                "id=" + id +
-                ", notebook=" + notebook +
-                ", relevance=" + relevance +
-                ", trash=" + trash +
-                ", pinned=" + pinned +
+                "id='" + id + '\'' +
                 ", title='" + title + '\'' +
-                ", created=" + created +
-                ", modified=" + modified +
+                ", content='" + content + '\'' +
+                ", notebookId='" + notebookId + '\'' +
+                ", views=" + views +
+                ", pinned=" + pinned +
+                ", starred=" + starred +
+                ", trashed=" + trashed +
+                ", trashedDate=" + trashedDate +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                ", driveId='" + driveId + '\'' +
+                ", labels=" + labels +
                 '}';
     }
-
 }

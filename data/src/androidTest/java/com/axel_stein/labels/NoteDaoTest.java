@@ -36,15 +36,15 @@ public class NoteDaoTest {
     @Test
     public void insert() throws Exception {
         NoteEntity entity = new NoteEntity();
-        entity.setNotebook(1);
+        entity.setNotebookId(1);
         entity.setTitle("Test");
-        entity.setTrash(true);
+        entity.setTrashed(true);
 
         entity.setId(mDao.insert(entity));
 
-        List<NoteEntity> list = mDao.query();
+        List<NoteEntity> list = mDao.queryAll();
         assertTrue(list.size() > 0);
-        assertTrue(list.get(0).isTrash());
+        assertTrue(list.get(0).isTrashed());
     }
 
 }

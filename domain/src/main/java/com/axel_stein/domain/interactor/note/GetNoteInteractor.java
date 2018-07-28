@@ -41,11 +41,11 @@ public class GetNoteInteractor {
                     if (!isValid(note)) {
                         throw new IllegalStateException("note is not valid");
                     }
-                    if (!note.isTrash()) {
-                        note.incrementRelevance();
+                    if (!note.isTrashed()) {
+                        note.incrementViews();
                         mNoteRepository.update(note);
                     }
-                    note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
+                    note.setLabels(mNoteLabelPairRepository.queryLabels(note));
                 } else {
                     note = new Note();
                 }

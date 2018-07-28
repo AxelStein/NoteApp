@@ -3,31 +3,85 @@ package com.axel_stein.domain.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.axel_stein.domain.utils.CompareBuilder;
+import com.axel_stein.domain.utils.TextUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.joda.time.DateTime;
 
 public class Notebook {
     public static final int MAX_TITLE_LENGTH = 128;
 
-    public static Notebook from(String title) {
+    public static final String ID_ALL = "all";
+    public static String TITLE_ALL;
+    public static int ICON_ALL;
+
+    public static final String ID_STARRED = "starred";
+    public static String TITLE_STARRED;
+    public static int ICON_STARRED;
+
+    public static final String ID_INBOX = "inbox";
+    public static String TITLE_INBOX;
+    public static int ICON_INBOX;
+
+    public static Notebook inbox() {
         Notebook n = new Notebook();
-        n.setTitle(title);
+        n.setId(ID_INBOX);
+        n.setTitle(TITLE_INBOX);
+        n.iconRes = ICON_INBOX;
         return n;
     }
 
-    private long id;
+    public static Notebook all() {
+        Notebook n = new Notebook();
+        n.setId(ID_ALL);
+        n.title = TITLE_ALL;
+        n.iconRes = ICON_ALL;
+        n.setEditable(false);
+        return n;
+    }
+
+    public static Notebook starred() {
+        Notebook n = new Notebook();
+        n.setId(ID_STARRED);
+        n.title = TITLE_STARRED;
+        n.iconRes = ICON_STARRED;
+        n.setEditable(false);
+        return n;
+    }
+
+    private String id;
 
     private String title;
+
+    private int order;
+
+    private long views;
+
+    private String color;
+
+    private DateTime createdDate;
+
+    private DateTime modifiedDate;
+
+    private String driveId;
+
+    private int iconRes;
+
+    private boolean editable = true;
 
     @JsonIgnore
     private long noteCount;
 
-    private int order;
+    public boolean hasId() {
+        return !TextUtil.isEmpty(id);
+    }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -65,13 +119,72 @@ public class Notebook {
         return order;
     }
 
+    public long getViews() {
+        return views;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
+    }
+
+    public long incrementViews() {
+        this.views++;
+        return this.views;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public DateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public DateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getDriveId() {
+        return driveId;
+    }
+
+    public void setDriveId(String driveId) {
+        this.driveId = driveId;
+    }
+
+    public int getIconRes() {
+        return iconRes;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof Notebook) {
             Notebook notebook = (Notebook) obj;
-            return notebook.id == id;
-        }
 
+            CompareBuilder builder = new CompareBuilder();
+            builder.append(id, notebook.id);
+            return builder.areEqual();
+        }
         return false;
     }
 

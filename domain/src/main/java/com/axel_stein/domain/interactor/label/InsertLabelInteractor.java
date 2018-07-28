@@ -37,8 +37,8 @@ public class InsertLabelInteractor {
                 if (!isValid(label, false)) {
                     throw new IllegalArgumentException("label is not valid");
                 }
-                label.setId(mRepository.insert(label));
-                mDriveSyncRepository.notifyLabelsChanged(mRepository.query());
+                mRepository.insert(label);
+                mDriveSyncRepository.labelCreated(label);
             }
         }).subscribeOn(Schedulers.io());
     }

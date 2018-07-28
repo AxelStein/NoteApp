@@ -65,11 +65,19 @@ public class QueryLabelInteractor {
                     @Override
                     public int compare(Label l1, Label l2) {
                         LabelOrder order = mSettingsRepository.getLabelOrder();
+                        boolean desc = order.isDesc();
+
                         switch (order) {
                             case TITLE:
+                                if (desc) {
+                                    return l2.getTitle().compareTo(l1.getTitle());
+                                }
                                 return l1.getTitle().compareTo(l2.getTitle());
 
                             case NOTE_COUNT:
+                                if (desc) {
+                                    return l1.getNoteCount() - l2.getNoteCount() > 0 ? 1 : -1;
+                                }
                                 return l1.getNoteCount() - l2.getNoteCount() > 0 ? -1 : 1;
 
                             case CUSTOM:

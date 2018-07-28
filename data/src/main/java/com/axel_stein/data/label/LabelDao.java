@@ -13,22 +13,31 @@ import java.util.List;
 public interface LabelDao {
 
     @Insert
-    long insert(LabelEntity label);
+    void insert(LabelEntity label);
 
     @Update
     void update(LabelEntity label);
+
+    @Query("UPDATE labels SET title = :title WHERE id = :labelId")
+    void rename(String labelId, String title);
+
+    @Query("UPDATE labels SET views = :views WHERE id = :labelId")
+    void updateViews(String labelId, long views);
+
+    @Query("UPDATE labels SET `order` = :order WHERE id = :labelId")
+    void updateOrder(String labelId, int order);
+
+    @Query("SELECT * FROM labels WHERE id = :id LIMIT 1")
+    @Nullable
+    LabelEntity get(String id);
+
+    @Query("SELECT * FROM labels ORDER BY title")
+    List<LabelEntity> query();
 
     @Delete
     void delete(LabelEntity label);
 
     @Query("DELETE FROM labels")
-    void deleteAll();
-
-    @Query("SELECT * FROM labels WHERE id = :id LIMIT 1")
-    @Nullable
-    LabelEntity get(long id);
-
-    @Query("SELECT * FROM labels ORDER BY title")
-    List<LabelEntity> query();
+    void delete();
 
 }

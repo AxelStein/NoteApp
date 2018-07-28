@@ -3,7 +3,7 @@ package com.axel_stein.domain.interactor.backup;
 import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Backup;
-import com.axel_stein.domain.model.JsonNoteWrapper;
+import com.axel_stein.domain.json_wrapper.NoteWrapper;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteLabelPair;
@@ -60,13 +60,13 @@ public class ImportBackupInteractor {
                 System.out.println("Import backup, version " + backup.getVersion());
 
                 mNoteRepository.deleteAll();
-                mNotebookRepository.deleteAll();
-                mLabelRepository.deleteAll();
+                mNotebookRepository.delete();
+                mLabelRepository.delete();
                 mNoteLabelPairRepository.deleteAll();
 
-                List<JsonNoteWrapper> notes = backup.getNotes();
+                List<NoteWrapper> notes = backup.getNotes();
                 if (notes != null) {
-                    for (JsonNoteWrapper wrapper : notes) {
+                    for (NoteWrapper wrapper : notes) {
                         Note note = wrapper.toNote();
                         if (!NoteValidator.isValid(note)) {
                             System.out.println("Error: note is not valid = " + note);

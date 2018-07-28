@@ -4,6 +4,11 @@
     <string name="app_version_title">Version</string>
     <string name="guest">Guest</string>
     <string name="user_activity">Manage account</string>
+    <string name="notebook_all">All</string>
+    <string name="notebook_starred">Starred</string>
+    <string name="template_notebook_counter">%1$d notebooks</string>
+    <string name="template_label_counter">%1$d labels</string>
+    <string name="template_note_counter">%1$d notes</string>
 
     <!--Actions-->
     <string name="action_settings">Settings</string>
@@ -32,14 +37,6 @@
     <string name="action_discard">Discard</string>
     <string name="action_check_labels">Check labels</string>
     <string name="action_save">Save</string>
-    <string name="action_sort_by">Sort by</string>
-    <string name="action_sort_title">Title</string>
-    <string name="action_sort_relevance">Use frequency</string>
-    <string name="action_sort_created_newest_first">Created (newest first)</string>
-    <string name="action_sort_created_oldest_first">Created (oldest first)</string>
-    <string name="action_sort_updated_newest_first">Updated (newest first)</string>
-    <string name="action_sort_updated_oldest_first">Updated (oldest first)</string>
-    <string name="action_sort_note_count">Note count</string>
     <string name="action_menu">Menu</string>
     <string name="action_done">Done</string>
     <string name="action_keep_editing">Keep editing</string>
@@ -53,13 +50,21 @@
     <string name="action_add_backup">Add backup</string>
     <string name="action_manage_notebooks">Manage notebooks</string>
     <string name="action_select">Select</string>
-    <string name="action_sort_custom">Custom</string>
     <string name="action_home">Home</string>
     <string name="action_inbox">Inbox</string>
     <string name="action_clear">Clear</string>
     <string name="action_pin_note">Pin note</string>
     <string name="action_note_info">Note info</string>
     <string name="action_sign_out">Sign Out</string>
+    <string name="action_change_color">Change color</string>
+
+    <string name="action_sort_by">Sort by</string>
+    <string name="action_sort_title">Title</string>
+    <string name="action_sort_views">Views</string>
+    <string name="action_sort_created">Created</string>
+    <string name="action_sort_modified">Modified</string>
+    <string name="action_sort_note_count">Note count</string>
+    <string name="action_sort_custom">Custom</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
@@ -130,7 +135,7 @@
     <string name="empty_search">No matching notes</string>
     <string name="empty_trash">No notes in trash</string>
     <string name="empty_backup">No backups found</string>
-    <string name="empty_home">No notes yet</string>
+    <string name="empty_inbox">No notes yet</string>
     <string name="empty_label_list">No labels yet</string>
     <string name="empty_notebook_list">No notebooks yet</string>
 

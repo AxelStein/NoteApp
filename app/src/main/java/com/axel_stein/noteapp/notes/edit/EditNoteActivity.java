@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.notes.edit;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class EditNoteActivity extends BaseActivity {
 
@@ -90,6 +92,7 @@ public class EditNoteActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,23 +120,23 @@ public class EditNoteActivity extends BaseActivity {
         } else {
             Intent intent = getIntent();
             String id = intent.getStringExtra(EXTRA_NOTE_ID);
-            final long notebook = intent.getLongExtra(EXTRA_NOTEBOOK_ID, 0);
-            final long label = intent.getLongExtra(EXTRA_LABEL_ID, 0);
+            final String notebookId = intent.getStringExtra(EXTRA_NOTEBOOK_ID);
+            final String labelId = intent.getStringExtra(EXTRA_LABEL_ID);
 
             mGetNoteInteractor.execute(id)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<Note>() {
                         @Override
-                        public void accept(Note note) throws Exception {
+                        public void accept(Note note) {
                             mPresenter = new EditNotePresenter(note);
                             setPresenterListener();
 
                             if (!note.hasId()) {
-                                if (notebook > 0) {
-                                    note.setNotebook(notebook);
+                                if (notEmpty(notebookId)) {
+                                    note.setNotebookId(notebookId);
                                 }
-                                if (label > 0) {
-                                    note.addLabel(label);
+                                if (notEmpty(labelId)) {
+                                    note.addLabel(labelId);
                                 }
                             }
 
@@ -147,7 +150,7 @@ public class EditNoteActivity extends BaseActivity {
                         }
                     }, new Consumer<Throwable>() {
                         @Override
-                        public void accept(Throwable throwable) throws Exception {
+                        public void accept(Throwable throwable) {
                             throwable.printStackTrace();
                             EventBusHelper.showMessage(R.string.error);
                         }

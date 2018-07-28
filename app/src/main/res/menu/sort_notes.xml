@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_sort_title"
+        android:checkable="true"
+        android:title="@string/action_sort_title"/>
+
+    <item
+        android:id="@+id/menu_sort_views"
+        android:checkable="true"
+        android:title="@string/action_sort_views"/>
+
+    <item
+        android:id="@+id/menu_sort_created"
+        android:checkable="true"
+        android:title="@string/action_sort_created"/>
+
+    <item
+        android:id="@+id/menu_sort_modified"
+        android:checkable="true"
+        android:title="@string/action_sort_modified"/>
+
+</menu>

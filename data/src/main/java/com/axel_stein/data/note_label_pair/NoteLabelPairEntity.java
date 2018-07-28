@@ -16,7 +16,7 @@ public class NoteLabelPairEntity {
     private String noteId;
 
     @ColumnInfo(name = "label_id")
-    private long labelId;
+    private String labelId;
 
     @ColumnInfo(name = "entity_trash")
     private boolean trash;
@@ -26,7 +26,7 @@ public class NoteLabelPairEntity {
     }
 
     @Ignore
-    public NoteLabelPairEntity(String noteId, long labelId, boolean trash) {
+    public NoteLabelPairEntity(String noteId, String labelId, boolean trash) {
         this.noteId = noteId;
         this.labelId = labelId;
         this.trash = trash;
@@ -40,11 +40,11 @@ public class NoteLabelPairEntity {
         this.id = id;
     }
 
-    public long getLabelId() {
+    public String getLabelId() {
         return labelId;
     }
 
-    public void setLabelId(long labelId) {
+    public void setLabelId(String labelId) {
         this.labelId = labelId;
     }
 

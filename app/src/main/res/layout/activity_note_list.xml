@@ -2,15 +2,70 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_note_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <include layout="@layout/layout_toolbar"/>
+
+        <RelativeLayout
+            android:id="@+id/sort_panel"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="-1dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.axel_stein.noteapp.views.IconTextView
+                android:id="@+id/text_item_counter"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignRight="@+id/text_sort"
+                android:layout_alignEnd="@+id/text_sort"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="?android:attr/textColorSecondary"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp" />
+
+            <com.axel_stein.noteapp.views.IconTextView
+                android:id="@+id/text_sort"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                tools:text="Modified"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="?android:attr/textColorSecondary"
+                app:iconRight="@drawable/ic_arrow_upward_white_18dp"
+                app:iconRightTint="?android:attr/textColorSecondary"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp" />
+
+        </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 

@@ -47,7 +47,7 @@ public class DeleteLabelInteractor {
                 mLabelRepository.delete(label);
                 mNoteLabelPairRepository.delete(label);
 
-                mDriveSyncRepository.notifyLabelsChanged(mLabelRepository.query());
+                mDriveSyncRepository.labelDeleted(label);
                 mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());

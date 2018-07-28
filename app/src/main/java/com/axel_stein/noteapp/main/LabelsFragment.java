@@ -30,6 +30,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ViewUtil.setText;
 
+@Deprecated
 public class LabelsFragment extends Fragment implements ScrollableFragment {
 
     private ItemListener mListener = new ItemListener() {

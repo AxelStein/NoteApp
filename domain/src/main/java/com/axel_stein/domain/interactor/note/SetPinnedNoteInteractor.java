@@ -4,10 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.DriveSyncRepository;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -17,30 +15,36 @@ import io.reactivex.schedulers.Schedulers;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
-public class TrashNoteInteractor {
+public class SetPinnedNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
-
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
+    private NoteRepository mRepository;
 
     @NonNull
     private DriveSyncRepository mDriveSyncRepository;
 
-    public TrashNoteInteractor(@NonNull NoteRepository n, @NonNull NoteLabelPairRepository l, @NonNull DriveSyncRepository d) {
-        mNoteRepository = requireNonNull(n);
-        mNoteLabelPairRepository = requireNonNull(l);
+    public SetPinnedNoteInteractor(@NonNull NoteRepository r, @NonNull DriveSyncRepository d) {
+        mRepository = requireNonNull(r);
         mDriveSyncRepository = requireNonNull(d);
     }
 
-    public Completable execute(@NonNull final Note note) {
-        List<Note> notes = new ArrayList<>();
-        notes.add(note);
-        return execute(notes);
+    public Completable execute(@NonNull final Note note, final boolean pinned) {
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                if (!isValid(note)) {
+                    throw new IllegalArgumentException("notes is not valid");
+                }
+
+                mRepository.setPinned(note, pinned);
+                note.setPinned(pinned);
+
+                mDriveSyncRepository.notePinned(note, pinned);
+            }
+        }).subscribeOn(Schedulers.io());
     }
 
-    public Completable execute(@NonNull final List<Note> notes) {
+    public Completable execute(@NonNull final List<Note> notes, final boolean pinned) {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -48,14 +52,13 @@ public class TrashNoteInteractor {
                     throw new IllegalArgumentException("notes is not valid");
                 }
 
-                mNoteRepository.trash(notes);
+                mRepository.setPinned(notes, pinned);
 
                 for (Note note : notes) {
-                    mNoteLabelPairRepository.trash(note);
-                    mDriveSyncRepository.notifyNoteChanged(mNoteRepository.get(note.getId()));
+                    note.setPinned(pinned);
                 }
 
-                mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
+                mDriveSyncRepository.notesPinned(notes, pinned);
             }
         }).subscribeOn(Schedulers.io());
     }

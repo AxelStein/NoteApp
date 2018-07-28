@@ -17,11 +17,12 @@ public class TrashNotesPresenter extends NotesPresenter {
 
     public TrashNotesPresenter() {
         App.getAppComponent().inject(this);
+        setSortPanelEnabled(false);
     }
 
     @Override
     protected void load() {
-        mInteractor.queryTrash()
+        mInteractor.queryTrashed()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }

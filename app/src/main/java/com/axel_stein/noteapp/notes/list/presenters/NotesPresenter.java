@@ -1,17 +1,22 @@
 package com.axel_stein.noteapp.notes.list.presenters;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+import android.util.SparseArray;
+import android.view.MenuItem;
+
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
-import com.axel_stein.domain.interactor.note.PinNoteInteractor;
-import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
-import com.axel_stein.domain.interactor.note.SetNotebookInteractor;
-import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
-import com.axel_stein.domain.interactor.note.UnpinNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.model.NoteCache;
+import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
@@ -41,10 +46,10 @@ import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public abstract class NotesPresenter implements NotesContract.Presenter, SingleObserver<List<Note>> {
 
-    protected View mView;
+    private View mView;
 
     @Inject
-    TrashNoteInteractor mTrashNoteInteractor;
+    SetTrashedNoteInteractor mSetTrashedNoteInteractor;
 
     @Inject
     DeleteNoteInteractor mDeleteNoteInteractor;
@@ -56,19 +61,13 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     QueryLabelInteractor mQueryLabelInteractor;
 
     @Inject
-    SetNotebookInteractor mSetNotebookInteractor;
+    SetNotebookNoteInteractor mSetNotebookInteractor;
 
     @Inject
     SetLabelsInteractor mSetLabelsInteractor;
 
     @Inject
-    RestoreNoteInteractor mRestoreNoteInteractor;
-
-    @Inject
-    PinNoteInteractor mPinNoteInteractor;
-
-    @Inject
-    UnpinNoteInteractor mUnpinNoteInteractor;
+    SetPinnedNoteInteractor mSetPinnedNoteInteractor;
 
     @Inject
     AppSettingsRepository mSettings;
@@ -78,6 +77,8 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Nullable
     private HashMap<String, Boolean> mCheckedItems;
+
+    private boolean mSortPanelEnabled = true;
 
     @Override
     public void onCreateView(View view) {
@@ -124,7 +125,37 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     public void onSuccess(@NonNull List<Note> notes) {
         if (mView != null) {
             mView.setNotes(notes);
+
+            mView.showSortPanel(mSortPanelEnabled && notes != null && notes.size() > 0);
+            if (notes != null) {
+                mView.setSortPanelCounterText(notes.size());
+            }
+
+            int textRes = 0;
+
+            NoteOrder order = mSettings.getNotesOrder();
+            switch (order) {
+                case TITLE:
+                    textRes = R.string.action_sort_title;
+                    break;
+
+                case VIEWS:
+                    textRes = R.string.action_sort_views;
+                    break;
+
+                case CREATED:
+                    textRes = R.string.action_sort_created;
+                    break;
+
+                case MODIFIED:
+                    textRes = R.string.action_sort_modified;
+                    break;
+            }
+
+            mView.setSortTitle(textRes);
+            mView.setSortIndicator(order.isDesc(), true);
         }
+
         mNotes = notes;
         stopCheckMode();
     }
@@ -251,14 +282,14 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<List<Notebook>>() {
                             @Override
-                            public void accept(List<Notebook> notebooks) throws Exception {
+                            public void accept(List<Notebook> notebooks) {
                                 if (mView != null) {
                                     mView.showSelectNotebookView(notebooks);
                                 }
                             }
                         }, new Consumer<Throwable>() {
                             @Override
-                            public void accept(Throwable throwable) throws Exception {
+                            public void accept(Throwable throwable) {
                                 throwable.printStackTrace();
                                 EventBusHelper.showMessage(R.string.error);
                             }
@@ -270,7 +301,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<List<Label>>() {
                             @Override
-                            public void accept(List<Label> labels) throws Exception {
+                            public void accept(List<Label> labels) {
                                 if (mView != null) {
                                     if (labels.size() == 0) {
                                         EventBusHelper.showMessage(R.string.msg_label_empty);
@@ -281,7 +312,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                             }
                         }, new Consumer<Throwable>() {
                             @Override
-                            public void accept(Throwable throwable) throws Exception {
+                            public void accept(Throwable throwable) {
                                 throwable.printStackTrace();
                                 EventBusHelper.showMessage(R.string.error);
                             }
@@ -335,6 +366,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         pin(list);
     }
 
+    @SuppressLint("CheckResult")
     protected void pin(final List<Note> notes) {
         boolean pin = false;
         for (Note note : notes) {
@@ -345,17 +377,11 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         }
 
         final boolean result = pin;
-
-        Completable c;
-        if (pin) {
-            c = mPinNoteInteractor.execute(notes);
-        } else {
-            c = mUnpinNoteInteractor.execute(notes);
-        }
+        Completable c = mSetPinnedNoteInteractor.execute(notes, result);
         c.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         int msg;
                         if (notes.size() == 1) {
                             msg = result ? R.string.msg_note_pinned : R.string.msg_note_unpinned;
@@ -368,7 +394,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
@@ -379,15 +405,16 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         moveToTrash(makeList(note));
     }
 
+    @SuppressLint("CheckResult")
     protected void moveToTrash(final List<Note> notes) {
         if (notes == null) {
             return;
         }
-        mTrashNoteInteractor.execute(notes)
+        mSetTrashedNoteInteractor.execute(notes, true)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         int msg = notes.size() == 1 ? R.string.msg_note_trashed : R.string.msg_notes_trashed;
                         EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
                             @Override
@@ -401,7 +428,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
@@ -412,15 +439,16 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         restore(makeList(note));
     }
 
+    @SuppressLint("CheckResult")
     protected void restore(final List<Note> notes) {
         if (notes == null) {
             return;
         }
-        mRestoreNoteInteractor.execute(notes)
+        mSetTrashedNoteInteractor.execute(notes, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         int msg = notes.size() == 1 ? R.string.msg_note_restored : R.string.msg_notes_restored;
                         EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
                             @Override
@@ -434,7 +462,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
@@ -449,13 +477,14 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         onNotebookSelectedImpl(notebook);
     }
 
+    @SuppressLint("CheckResult")
     private void onNotebookSelectedImpl(Notebook notebook) {
         final List<Note> notes = getCheckedNotes();
         mSetNotebookInteractor.execute(notes, notebook.getId())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         stopCheckMode();
 
                         int msg = notes.size() == 1 ? R.string.msg_note_updated : R.string.msg_notes_updated;
@@ -464,21 +493,22 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
-    public void onLabelsChecked(List<Long> labels) {
+    public void onLabelsChecked(List<String> labels) {
         final List<Note> notes = getCheckedNotes();
         mSetLabelsInteractor.execute(notes, labels)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         stopCheckMode();
 
                         int msg = notes.size() == 1 ? R.string.msg_note_updated : R.string.msg_notes_updated;
@@ -487,7 +517,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
@@ -529,6 +559,61 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     @Override
     public void forceUpdate() {
         loadImpl();
+    }
+
+    protected void setSortPanelEnabled(boolean enabled) {
+        mSortPanelEnabled = enabled;
+    }
+
+    @Override
+    public void onSortTitleClick() {
+        mSettings.toggleNoteDescOrder();
+        updateNotesSort();
+    }
+
+    @Override
+    public void onSortTitleLongClick() {
+        if (mView != null) {
+            mView.showSortDialog(menuItemFromOrder(mSettings.getNotesOrder()));
+        }
+    }
+
+    @Override
+    public void onSortMenuItemClick(MenuItem item) {
+        mSettings.setNotesOrder(orderFromMenuItem(item));
+        updateNotesSort();
+    }
+
+    private void updateNotesSort() {
+        NoteCache.invalidate();
+        EventBusHelper.updateNoteList();
+        if (mView != null) {
+            mView.scrollToTop();
+        }
+    }
+
+    private NoteOrder orderFromMenuItem(MenuItem item) {
+        if (item == null) {
+            return null;
+        }
+        SparseArray<NoteOrder> sparseArray = new SparseArray<>();
+        sparseArray.put(R.id.menu_sort_title, NoteOrder.TITLE);
+        sparseArray.put(R.id.menu_sort_views, NoteOrder.VIEWS);
+        sparseArray.put(R.id.menu_sort_created, NoteOrder.CREATED);
+        sparseArray.put(R.id.menu_sort_modified, NoteOrder.MODIFIED);
+        return sparseArray.get(item.getItemId());
+    }
+
+    private int menuItemFromOrder(NoteOrder order) {
+        if (order == null) {
+            return -1;
+        }
+        HashMap<NoteOrder, Integer> map = new HashMap<>();
+        map.put(NoteOrder.TITLE, R.id.menu_sort_title);
+        map.put(NoteOrder.VIEWS, R.id.menu_sort_views);
+        map.put(NoteOrder.CREATED, R.id.menu_sort_created);
+        map.put(NoteOrder.MODIFIED, R.id.menu_sort_modified);
+        return map.get(order);
     }
 
 }

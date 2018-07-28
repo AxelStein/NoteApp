@@ -38,9 +38,8 @@ public class UpdateLabelInteractor {
                     throw new IllegalArgumentException("label is not valid");
                 }
                 mRepository.update(label);
-                mDriveSyncRepository.notifyLabelsChanged(mRepository.query());
+                mDriveSyncRepository.labelUpdated(label);
             }
         }).subscribeOn(Schedulers.io());
     }
-
 }

@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@Deprecated
 public class ViewNoteFragment extends BaseFragment {
 
     @BindView(R.id.text_title)
@@ -202,12 +203,12 @@ public class ViewNoteFragment extends BaseFragment {
             KeyboardUtil.show(mTextTitle);
         }
 
-        mTrash = note.isTrash();
+        mTrash = note.isTrashed();
         mUpdate = note.getId() > 0;
 
         long date = System.currentTimeMillis();
         if (note.getId() > 0) {
-            date = note.getModified();
+            date = note.getModifiedDate();
         }
         mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), date));
 

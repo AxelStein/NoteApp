@@ -29,7 +29,7 @@ public class EmptyTrashInteractor {
      * Removes notes in trash
      */
     public Completable emptyTrash() {
-        return mQueryInteractor.queryTrash()
+        return mQueryInteractor.queryTrashed()
                 .flatMapCompletable(new Function<List<Note>, CompletableSource>() {
                     @Override
                     public CompletableSource apply(@io.reactivex.annotations.NonNull List<Note> notes) throws Exception {

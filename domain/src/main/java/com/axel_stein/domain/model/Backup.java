@@ -1,5 +1,6 @@
 package com.axel_stein.domain.model;
 
+import com.axel_stein.domain.json_wrapper.NoteWrapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +12,7 @@ public class Backup {
 
     private int version = 1;
 
-    private List<JsonNoteWrapper> notes;
+    private List<NoteWrapper> notes;
 
     private List<Notebook> notebooks;
 
@@ -27,14 +28,14 @@ public class Backup {
         return version;
     }
 
-    public List<JsonNoteWrapper> getNotes() {
+    public List<NoteWrapper> getNotes() {
         return notes;
     }
 
     public void setNotes(List<Note> notes) {
         this.notes = new ArrayList<>();
         for (Note n : notes) {
-            this.notes.add(new JsonNoteWrapper(n));
+            this.notes.add(new NoteWrapper(n));
         }
     }
 

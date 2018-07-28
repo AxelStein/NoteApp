@@ -9,7 +9,7 @@ public class NoteLabelPair {
     private String noteId;
 
     @JsonProperty("label_id")
-    private long labelId;
+    private String labelId;
 
     private boolean trash;
 
@@ -18,7 +18,7 @@ public class NoteLabelPair {
     }
 
     @JsonIgnore
-    public NoteLabelPair(String noteId, long labelId, boolean trash) {
+    public NoteLabelPair(String noteId, String labelId, boolean trash) {
         this.noteId = noteId;
         this.labelId = labelId;
         this.trash = trash;
@@ -32,11 +32,11 @@ public class NoteLabelPair {
         this.noteId = noteId;
     }
 
-    public long getLabelId() {
+    public String getLabelId() {
         return labelId;
     }
 
-    public void setLabelId(long labelId) {
+    public void setLabelId(String labelId) {
         this.labelId = labelId;
     }
 

@@ -23,7 +23,7 @@ public class NotebookNotesPresenter extends NotesPresenter {
 
     @Override
     protected void load() {
-        mInteractor.execute(mNotebook)
+        mInteractor.query(mNotebook)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }

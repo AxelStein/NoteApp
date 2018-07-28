@@ -4,7 +4,7 @@ import com.axel_stein.domain.model.Notebook;
 
 import java.util.List;
 
-import static com.axel_stein.domain.utils.TextUtil.isEmpty;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class NotebookValidator {
 
@@ -16,9 +16,9 @@ public class NotebookValidator {
         if (notebook == null) {
             return false;
         }
-        boolean validTitle = !isEmpty(notebook.getTitle());
+        boolean validTitle = notEmpty(notebook.getTitle());
         if (checkId) {
-            return validTitle && notebook.getId() > 0;
+            return validTitle && notEmpty(notebook.getId());
         }
         return validTitle;
     }

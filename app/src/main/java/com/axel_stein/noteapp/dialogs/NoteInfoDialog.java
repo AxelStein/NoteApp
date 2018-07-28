@@ -54,11 +54,11 @@ public class NoteInfoDialog extends AppCompatDialogFragment {
             return null;
         }
 
-        String created = mNote.getCreated().toString();
-        String modified = mNote.getModified().toString();
+        String created = mNote.getCreatedDate().toString();
+        String modified = mNote.getModifiedDate().toString();
         // fixme
-        //String created = DateFormatter.formatDateTime(getContext(), mNote.getCreated());
-        //String modified = DateFormatter.formatDateTime(getContext(), mNote.getModified());
+        //String created = DateFormatter.formatDateTime(getContext(), mNote.getCreatedDate());
+        //String modified = DateFormatter.formatDateTime(getContext(), mNote.getModifiedDate());
         int charCount = mNote.getContent() == null ? 0 : mNote.getContent().length();
 
         return getString(R.string.msg_note_info, created, modified, charCount);

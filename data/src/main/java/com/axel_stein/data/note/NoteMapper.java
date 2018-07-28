@@ -17,12 +17,15 @@ class NoteMapper {
         note.setId(entity.getId());
         note.setTitle(entity.getTitle());
         note.setContent(entity.getContent());
-        note.setNotebook(entity.getNotebook());
-        note.setRelevance(entity.getRelevance());
-        note.setCreated(entity.getCreated());
-        note.setModified(entity.getModified());
-        note.setTrash(entity.isTrash());
+        note.setNotebookId(entity.getNotebookId());
+        note.setViews(entity.getViews());
+        note.setTrashed(entity.isTrashed());
+        note.setTrashedDate(entity.getTrashedDate());
         note.setPinned(entity.isPinned());
+        note.setStarred(entity.isStarred());
+        note.setCreatedDate(entity.getCreatedDate());
+        note.setModifiedDate(entity.getModifiedDate());
+        note.setDriveId(entity.getDriveId());
         return note;
     }
 
@@ -34,12 +37,15 @@ class NoteMapper {
         entity.setId(note.getId());
         entity.setTitle(note.getTitle());
         entity.setContent(note.getContent());
-        entity.setNotebook(note.getNotebook());
-        entity.setRelevance(note.getRelevance());
-        entity.setCreated(note.getCreated());
-        entity.setModified(note.getModified());
-        entity.setTrash(note.isTrash());
+        entity.setNotebookId(note.getNotebookId());
+        entity.setViews(note.getViews());
+        entity.setTrashed(note.isTrashed());
+        entity.setTrashedDate(note.getTrashedDate());
         entity.setPinned(note.isPinned());
+        entity.setStarred(note.isStarred());
+        entity.setCreatedDate(note.getCreatedDate());
+        entity.setModifiedDate(note.getModifiedDate());
+        entity.setDriveId(note.getDriveId());
         return entity;
     }
 

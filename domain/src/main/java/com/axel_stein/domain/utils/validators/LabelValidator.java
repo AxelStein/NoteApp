@@ -5,6 +5,7 @@ import com.axel_stein.domain.model.Label;
 import java.util.List;
 
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class LabelValidator {
 
@@ -16,9 +17,9 @@ public class LabelValidator {
         if (label == null) {
             return false;
         }
-        boolean validTitle = !isEmpty(label.getTitle());
+        boolean validTitle = notEmpty(label.getTitle());
         if (checkId) {
-            return validTitle && label.getId() > 0;
+            return validTitle && notEmpty(label.getId());
         }
         return validTitle;
     }
@@ -35,14 +36,14 @@ public class LabelValidator {
         return true;
     }
 
-    public static boolean isValidIds(List<Long> labelIds) {
+    public static boolean isValidIds(List<String> labelIds) {
         if (labelIds == null) {
             return false;
         }
         for (int i = 0, count = labelIds.size(); i < count; i++) {
             if (labelIds.get(i) == null) {
                 return false;
-            } else if (labelIds.get(i) <= 0) {
+            } else if (isEmpty(labelIds.get(i))) {
                 return false;
             }
         }

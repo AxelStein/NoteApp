@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,14 +34,14 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
     private String mNegativeButtonText;
     private int mNegativeButtonTextRes;
     private List<Notebook> mNotebooks;
-    private long mSelectedNotebookId;
+    private String mSelectedNotebookId;
     private OnNotebookCheckedListener mListener;
 
-    public static void launch(Fragment fragment, List<Notebook> notebooks, long selectedNotebook) {
+    public static void launch(Fragment fragment, List<Notebook> notebooks, String selectedNotebook) {
         CheckNotebookDialog dialog = new CheckNotebookDialog();
         dialog.setTitle(R.string.title_select_notebook);
         dialog.setNegativeButtonText(R.string.action_cancel);
-        dialog.setNotebooks(fragment.getContext(), notebooks, selectedNotebook);
+        dialog.setNotebooks(notebooks, selectedNotebook);
         dialog.setTargetFragment(fragment, 0);
         dialog.show(fragment.getFragmentManager(), null);
     }
@@ -61,11 +62,11 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         mNegativeButtonTextRes = negativeButtonTextRes;
     }
 
-    public void setNotebooks(Context context, List<Notebook> notebooks, long selectedNotebookId) {
+    public void setNotebooks(List<Notebook> notebooks, String selectedNotebookId) {
         checkNotNull(notebooks);
 
         mNotebooks = new ArrayList<>(notebooks);
-        mNotebooks.add(0, Notebook.from(context.getString(R.string.action_inbox)));
+        mNotebooks.add(0, Notebook.inbox());
 
         this.mSelectedNotebookId = selectedNotebookId;
     }
@@ -117,7 +118,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         Adapter adapter = new Adapter(new OnNotebookCheckedListener() {
             @Override
             public void onNotebookChecked(Notebook notebook) {
-                if (notebook.getId() == 0) { // this is Inbox
+                if (notebook.getId().equals(Notebook.ID_INBOX)) {
                     notebook = null;
                 }
                 mListener.onNotebookChecked(notebook);
@@ -142,14 +143,14 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
 
     private static class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private List<Notebook> mItems;
-        private long mSelectedNotebookId;
+        private String mSelectedNotebookId;
         private OnNotebookCheckedListener mListener;
 
         Adapter(OnNotebookCheckedListener l) {
             mListener = l;
         }
 
-        public void setItems(List<Notebook> items, long selectedNotebookId) {
+        public void setItems(List<Notebook> items, String selectedNotebookId) {
             this.mItems = items;
             this.mSelectedNotebookId = selectedNotebookId;
             notifyDataSetChanged();
@@ -184,12 +185,12 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Notebook notebook = mItems.get(position);
             holder.mTitle.setText(notebook.getTitle());
-            holder.mTitle.setIconLeft(notebook.getId() == 0 ? R.drawable.ic_inbox_white_24dp : R.drawable.ic_book_white_24dp);
 
-            boolean selected = mSelectedNotebookId == notebook.getId();
-            int icon = selected ? R.drawable.ic_radio_button_checked_white_24dp : R.drawable.ic_radio_button_unchecked_white_24dp;
+            int icon = notebook.getIconRes();
+            holder.mTitle.setIconLeft(icon != 0 ? icon : R.drawable.ic_book_white_24dp);
 
-            holder.mChecked.setImageResource(icon);
+            boolean selected = TextUtils.equals(mSelectedNotebookId, notebook.getId());
+            holder.mChecked.setImageResource(selected ? R.drawable.ic_radio_button_checked_white_24dp : R.drawable.ic_radio_button_unchecked_white_24dp);
             holder.mChecked.setSelected(selected);
         }
 

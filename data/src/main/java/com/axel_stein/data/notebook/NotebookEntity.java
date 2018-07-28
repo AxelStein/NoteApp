@@ -3,12 +3,16 @@ package com.axel_stein.data.notebook;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import org.joda.time.DateTime;
 
 @Entity(tableName = "notebooks")
 public class NotebookEntity {
 
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @PrimaryKey
+    @NonNull
+    private String id = "";
 
     @ColumnInfo
     private String title;
@@ -16,11 +20,27 @@ public class NotebookEntity {
     @ColumnInfo
     private int order;
 
-    public long getId() {
+    @ColumnInfo
+    private long views;
+
+    @ColumnInfo
+    private String color;
+
+    @ColumnInfo
+    private DateTime createdDate;
+
+    @ColumnInfo
+    private DateTime modifiedDate;
+
+    @ColumnInfo
+    private String driveId;
+
+    @NonNull
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -38,6 +58,46 @@ public class NotebookEntity {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public long getViews() {
+        return views;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public DateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(DateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public DateTime getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public String getDriveId() {
+        return driveId;
+    }
+
+    public void setDriveId(String driveId) {
+        this.driveId = driveId;
     }
 
 }

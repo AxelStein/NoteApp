@@ -40,6 +40,7 @@ import com.axel_stein.noteapp.notes.list.NotesFragment;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.BottomMenuView;
+import com.axel_stein.noteapp.views.IconTextView;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -52,7 +53,7 @@ import butterknife.ButterKnife;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements SortPanelListener {
 
     private static final int REQUEST_CODE_SIGN_IN = 100;
     private static final String TAG_FRAGMENT = "TAG_FRAGMENT";
@@ -81,6 +82,15 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.user_loading_indicator)
     View mUserLoadingIndicator;
+
+    @BindView(R.id.sort_panel)
+    View mSortPanel;
+
+    @BindView(R.id.text_item_counter)
+    TextView mTextCounter;
+
+    @BindView(R.id.text_sort)
+    IconTextView mSortTitle;
 
     @Inject
     AppSettingsRepository mAppSettings;
@@ -235,7 +245,7 @@ public class MainActivity extends BaseActivity {
 
         switch (id) {
             case R.id.action_home: {
-                fragment = new HomeFragment();
+                fragment = new InboxFragment();
                 break;
             }
 
@@ -362,6 +372,21 @@ public class MainActivity extends BaseActivity {
         if (savedInstanceState != null) {
             ViewUtil.show(savedInstanceState.getBoolean(TAG_SHOW_FAB, true), mFAB);
         }
+    }
+
+    @Override
+    public View getSortPanel() {
+        return mSortPanel;
+    }
+
+    @Override
+    public TextView getCounter() {
+        return mTextCounter;
+    }
+
+    @Override
+    public IconTextView getSortTitle() {
+        return mSortTitle;
     }
 
 }

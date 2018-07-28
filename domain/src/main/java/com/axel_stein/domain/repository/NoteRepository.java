@@ -15,52 +15,59 @@ public interface NoteRepository {
 
     void update(@NonNull Note note);
 
-    void updateNotebook(String noteId, long notebookId);
+    void setNotebook(String noteId, String notebookId);
+
+    void setNotebook(@NonNull List<Note> notes, String notebookId);
+
+    void setInbox(@NonNull Notebook notebook);
+
+    void setPinned(@NonNull Note note, boolean pinned);
+
+    void setPinned(@NonNull List<Note> notes, boolean pinned);
+
+    void setStarred(@NonNull Note note, boolean starred);
+
+    void setStarred(@NonNull List<Note> notes, boolean starred);
+
+    void setTrashed(@NonNull Note note, boolean trashed);
+
+    void updateViews(@NonNull Note note, long views);
 
     void delete(@NonNull Note note);
+
+    void deleteNotebook(@NonNull Notebook notebook);
+
+    void deleteAll();
 
     @Nullable
     Note get(String id);
 
     long count(@NonNull Notebook notebook);
 
-    void setNotebook(@NonNull List<Note> notes, long notebookId);
-
-    void trash(@NonNull List<Note> notes);
-
-    void restore(@NonNull List<Note> notes);
-
-    void pin(@NonNull List<Note> notes);
-
-    void unpin(@NonNull List<Note> notes);
-
-    void deleteNotebook(@NonNull Notebook notebook);
-
-    void setHome(@NonNull Notebook notebook);
+    @NonNull
+    List<Note> queryAll();
 
     @NonNull
-    List<Note> query();
+    List<Note> queryAllTrashed();
 
     @NonNull
-    List<Note> queryHome();
+    List<Note> queryInbox();
 
     @NonNull
-    List<Note> query(@NonNull Notebook notebook);
-
-    List<Note> query(@NonNull Notebook notebook, boolean includeTrash);
+    List<Note> queryStarred();
 
     @NonNull
-    List<Note> query(@NonNull Label label);
+    List<Note> queryTrashed();
 
-    /**
-     * @param query not null and not empty
-     */
+    @NonNull
+    List<Note> queryNotebook(@NonNull Notebook notebook);
+
+    List<Note> queryNotebookTrashed(@NonNull Notebook notebook);
+
+    @NonNull
+    List<Note> queryLabel(@NonNull Label label);
+
     @NonNull
     List<Note> search(@NonNull String query);
-
-    @NonNull
-    List<Note> queryTrash();
-
-    void deleteAll();
 
 }

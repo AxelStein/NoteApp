@@ -29,7 +29,7 @@ public class GetNotebookInteractor {
      * @throws IllegalStateException if notebook == null, id <= 0 or title is empty
      */
     @Nullable
-    public Single<Notebook> execute(final long id) {
+    public Single<Notebook> execute(final String id) {
         return Single.fromCallable(new Callable<Notebook>() {
             @Override
             public Notebook call() throws Exception {

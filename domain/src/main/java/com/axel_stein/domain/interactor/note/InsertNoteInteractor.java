@@ -47,11 +47,11 @@ public class InsertNoteInteractor {
                 }
 
                 DateTime created = new DateTime();
-                note.setCreated(created);
-                note.setModified(created);
+                note.setCreatedDate(created);
+                note.setModifiedDate(created);
 
                 mRepository.insert(note);
-                mDriveSyncRepository.notifyNoteChanged(note);
+                mDriveSyncRepository.noteCreated(note);
             }
         })
         .andThen(mSetLabelsInteractor.execute(note, note.getLabels()))

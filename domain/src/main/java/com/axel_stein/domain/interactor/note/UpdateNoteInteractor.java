@@ -40,10 +40,10 @@ public class UpdateNoteInteractor {
                 if (!validateBeforeUpdate(note)) {
                     throw new IllegalArgumentException("note is note valid");
                 }
-                note.setModified(new DateTime());
+                note.setModifiedDate(new DateTime());
 
                 mRepository.update(note);
-                mDriveSyncRepository.notifyNoteChanged(note);
+                mDriveSyncRepository.noteUpdated(note);
             }
         })
         .subscribeOn(Schedulers.io());

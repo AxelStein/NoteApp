@@ -12,20 +12,18 @@ public interface NoteLabelPairRepository {
 
     void insert(NoteLabelPair pair);
 
+    void setTrashed(@NonNull Note note, boolean trashed);
+
+    List<NoteLabelPair> query();
+
+    List<String> queryLabels(@NonNull Note note);
+
+    long count(@NonNull Label label);
+
     void delete(@NonNull Label label);
 
     void delete(@NonNull Note note);
 
-    void trash(@NonNull Note note);
-
-    void restore(@NonNull Note note);
-
-    List<NoteLabelPair> query();
-
-    List<Long> queryLabelsOfNote(@NonNull Note note);
-
     void deleteAll();
-
-    long count(@NonNull Label label);
 
 }

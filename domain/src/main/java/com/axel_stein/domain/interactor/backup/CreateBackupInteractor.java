@@ -44,7 +44,7 @@ public class CreateBackupInteractor {
             @Override
             public String call() throws Exception {
                 Backup backup = new Backup();
-                backup.setNotes(mNoteRepository.query());
+                backup.setNotes(mNoteRepository.queryAll());
                 backup.setNotebooks(mNotebookRepository.query());
                 backup.setLabels(mLabelRepository.query());
                 backup.setNoteLabelPairs(mNoteLabelPairRepository.query());

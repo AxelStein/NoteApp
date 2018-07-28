@@ -26,7 +26,7 @@ public class GetLabelInteractor {
      * @param id label`s id
      * @throws IllegalStateException if label is null, id <= 0 or title is empty
      */
-    public Single<Label> execute(final long id) {
+    public Single<Label> execute(final String id) {
         return Single.fromCallable(new Callable<Label>() {
             @Override
             public Label call() throws Exception {

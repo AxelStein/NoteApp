@@ -52,13 +52,13 @@ public class DeleteNotebookInteractor {
             .andThen(Completable.fromAction(new Action() {
                 @Override
                 public void run() {
-                    mNoteRepository.setHome(notebook);
+                    mNoteRepository.setInbox(notebook);
                 }
             }))
             .andThen(Completable.fromAction(new Action() {
                 @Override
                 public void run() {
-                    mDriveSyncRepository.notifyNotebooksChanged(mNotebookRepository.query());
+                    mDriveSyncRepository.notebookDeleted(notebook);
                 }
             }))
             .subscribeOn(Schedulers.io());

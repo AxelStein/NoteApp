@@ -31,7 +31,7 @@ public class SetLabelsInteractor {
         mDriveSyncRepository = requireNonNull(d);
     }
 
-    public Completable execute(@NonNull final Note note, @Nullable final List<Long> labelIds) {
+    public Completable execute(@NonNull final Note note, @Nullable final List<String> labelIds) {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -52,7 +52,7 @@ public class SetLabelsInteractor {
     /**
      * @throws IllegalArgumentException if note`s id is 0 or label`s id is 0
      */
-    public Completable execute(@NonNull final List<Note> notes, @Nullable final List<Long> labelIds) {
+    public Completable execute(@NonNull final List<Note> notes, @Nullable final List<String> labelIds) {
         return Completable.fromAction(new Action() {
             @Override
             public void run() throws Exception {
@@ -75,13 +75,13 @@ public class SetLabelsInteractor {
         }).subscribeOn(Schedulers.io());
     }
 
-    private void setLabelsImpl(Note note, final List<Long> labels) {
+    private void setLabelsImpl(Note note, final List<String> labels) {
         note.setLabels(labels);
         mRepository.delete(note);
 
         if (labels != null) {
-            for (long l : labels) {
-                mRepository.insert(new NoteLabelPair(note.getId(), l, note.isTrash()));
+            for (String l : labels) {
+                mRepository.insert(new NoteLabelPair(note.getId(), l, note.isTrashed()));
             }
         }
     }

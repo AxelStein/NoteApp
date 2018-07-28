@@ -4,6 +4,11 @@
     <string name="app_version_title">Версия</string>
     <string name="guest">Гость</string>
     <string name="user_activity">Управление аккаунтом</string>
+    <string name="notebook_all">Все</string>
+    <string name="notebook_starred">Помеченные</string>
+    <string name="template_notebook_counter">%1$d блокнотов</string>
+    <string name="template_label_counter">%1$d меток</string>
+    <string name="template_note_counter">%1$d заметок</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -33,14 +38,6 @@
     <string name="action_check_labels">Выделить метки</string>
     <string name="action_save">Сохранить</string>
     <string name="action_menu">Меню</string>
-    <string name="action_sort_by">Сортировать по</string>
-    <string name="action_sort_title">Названию</string>
-    <string name="action_sort_relevance">Частоте использования</string>
-    <string name="action_sort_created_newest_first">Дате создания (сначала новые)</string>
-    <string name="action_sort_created_oldest_first">Дате создания (сначала старые)</string>
-    <string name="action_sort_updated_newest_first">Дате обновления (сначала новые)</string>
-    <string name="action_sort_updated_oldest_first">Дате обновления (сначала старые)</string>
-    <string name="action_sort_note_count">Количеству заметок</string>
     <string name="action_done">Готово</string>
     <string name="action_keep_editing">Продолжить редактирование</string>
     <string name="action_fullscreen">Полноэкранный режим</string>
@@ -53,13 +50,21 @@
     <string name="action_add_backup">Добавить резервную копию</string>
     <string name="action_manage_notebooks">Управление блокнотами</string>
     <string name="action_select">Выделить</string>
-    <string name="action_sort_custom">Вручную</string>
     <string name="action_home">Главная</string>
     <string name="action_inbox">Входящие</string>
     <string name="action_clear">Очистить</string>
     <string name="action_pin_note">Прикрепить заметку</string>
     <string name="action_note_info">Информация о заметке</string>
     <string name="action_sign_out">Выйти из аккаунта</string>
+    <string name="action_change_color">Изменить цвет</string>
+
+    <string name="action_sort_by">Сортировать по</string>
+    <string name="action_sort_title">По названию</string>
+    <string name="action_sort_views">По кол-ву просмотров</string>
+    <string name="action_sort_created">По дате создания</string>
+    <string name="action_sort_modified">По дате обновления</string>
+    <string name="action_sort_note_count">По кол-ву заметок</string>
+    <string name="action_sort_custom">Вручную</string>
 
     <!--Pref-->
     <string name="pref_show_add_note_fab">Показывать FAB</string>
@@ -116,7 +121,7 @@
     <string name="empty_search">Заметки не найдены</string>
     <string name="empty_trash">Нет заметок в корзине</string>
     <string name="empty_backup">Резервные копии не найдены</string>
-    <string name="empty_home">Заметки не найдены</string>
+    <string name="empty_inbox">Заметки не найдены</string>
     <string name="empty_label_list">Метки не найдены</string>
     <string name="empty_notebook_list">Блокноты не найдены</string>
 

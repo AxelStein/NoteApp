@@ -13,22 +13,34 @@ import java.util.List;
 public interface NotebookDao {
 
     @Insert
-    long insert(NotebookEntity notebook);
+    void insert(NotebookEntity notebook);
 
     @Update
     void update(NotebookEntity notebook);
+
+    @Query("UPDATE notebooks SET title = :title WHERE id = :notebookId")
+    void rename(String notebookId, String title);
+
+    @Query("UPDATE notebooks SET views = :views WHERE id = :notebookId")
+    void updateViews(String notebookId, long views);
+
+    @Query("UPDATE notebooks SET `order` = :order WHERE id = :notebookId")
+    void updateOrder(String notebookId, int order);
+
+    @Query("UPDATE notebooks SET color = :color WHERE id = :notebookId")
+    void updateColor(String notebookId, String color);
+
+    @Query("SELECT * FROM notebooks WHERE id = :id LIMIT 1")
+    @Nullable
+    NotebookEntity get(String id);
+
+    @Query("SELECT * FROM notebooks ORDER BY title")
+    List<NotebookEntity> query();
 
     @Delete
     void delete(NotebookEntity notebook);
 
     @Query("DELETE FROM notebooks")
-    void deleteAll();
-
-    @Query("SELECT * FROM notebooks WHERE id = :id LIMIT 1")
-    @Nullable
-    NotebookEntity get(long id);
-
-    @Query("SELECT * FROM notebooks")
-    List<NotebookEntity> query();
+    void delete();
 
 }

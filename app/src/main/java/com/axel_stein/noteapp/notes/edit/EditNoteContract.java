@@ -20,9 +20,9 @@ public interface EditNoteContract {
 
         void showMessage(int msg);
 
-        void showSelectNotebookView(List<Notebook> notebooks, long selectedNotebook);
+        void showSelectNotebookView(List<Notebook> notebooks, String selectedNotebook);
 
-        void showCheckLabelsView(List<Label> labels, List<Long> checkedLabels);
+        void showCheckLabelsView(List<Label> labels, List<String> checkedLabels);
 
         void showConfirmDeleteNoteView();
 
@@ -51,7 +51,7 @@ public interface EditNoteContract {
 
         void setNotebook(Notebook notebook);
 
-        void setLabels(List<Long> labels);
+        void setLabels(List<String> labels);
 
         boolean onBackPressed();
 

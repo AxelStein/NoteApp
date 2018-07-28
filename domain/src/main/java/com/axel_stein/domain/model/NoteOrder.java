@@ -4,11 +4,21 @@ import android.support.annotation.Nullable;
 
 public enum NoteOrder {
     TITLE,
-    RELEVANCE,
-    CREATED_NEWEST,
-    CREATED_OLDEST,
-    MODIFIED_NEWEST,
-    MODIFIED_OLDEST;
+    VIEWS,
+    CREATED,
+    MODIFIED,
+    TRASHED;
+
+    private boolean desc;
+
+    @Nullable
+    public static NoteOrder from(int value, boolean desc) {
+        NoteOrder order = fromInt(value);
+        if (order != null) {
+            order.setDesc(desc);
+        }
+        return order;
+    }
 
     @Nullable
     public static NoteOrder fromInt(int x) {
@@ -17,22 +27,27 @@ public enum NoteOrder {
                 return TITLE;
 
             case 1:
-                return RELEVANCE;
+                return VIEWS;
 
             case 2:
-                return CREATED_NEWEST;
+                return CREATED;
 
             case 3:
-                return CREATED_OLDEST;
+                return MODIFIED;
 
             case 4:
-                return MODIFIED_NEWEST;
-
-            case 5:
-                return MODIFIED_OLDEST;
+                return TRASHED;
         }
 
         return null;
+    }
+
+    public boolean isDesc() {
+        return desc;
+    }
+
+    public void setDesc(boolean desc) {
+        this.desc = desc;
     }
 
 }

@@ -23,7 +23,7 @@ public class LabelNotesPresenter extends NotesPresenter {
 
     @Override
     protected void load() {
-        mQueryNoteInteractor.execute(mLabel)
+        mQueryNoteInteractor.query(mLabel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }

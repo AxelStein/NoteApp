@@ -27,6 +27,26 @@ public class SqlNoteLabelPairRepository implements NoteLabelPairRepository {
     }
 
     @Override
+    public void setTrashed(@NonNull Note note, boolean trashed) {
+        mDao.setTrashed(note.getId(), trashed);
+    }
+
+    @Override
+    public List<NoteLabelPair> query() {
+        return map(mDao.query());
+    }
+
+    @Override
+    public List<String> queryLabels(@NonNull Note note) {
+        return mDao.queryLabels(note.getId());
+    }
+
+    @Override
+    public long count(@NonNull Label label) {
+        return mDao.count(label.getId());
+    }
+
+    @Override
     public void delete(@NonNull Label label) {
         mDao.deleteLabel(label.getId());
     }
@@ -37,33 +57,8 @@ public class SqlNoteLabelPairRepository implements NoteLabelPairRepository {
     }
 
     @Override
-    public void trash(@NonNull Note note) {
-        mDao.trash(note.getId());
-    }
-
-    @Override
-    public void restore(@NonNull Note note) {
-        mDao.restore(note.getId());
-    }
-
-    @Override
-    public List<NoteLabelPair> query() {
-        return map(mDao.query());
-    }
-
-    @Override
-    public List<Long> queryLabelsOfNote(@NonNull Note note) {
-        return mDao.queryLabelsOfNote(note.getId());
-    }
-
-    @Override
     public void deleteAll() {
         mDao.deleteAll();
-    }
-
-    @Override
-    public long count(@NonNull Label label) {
-        return mDao.count(label.getId());
     }
 
 }

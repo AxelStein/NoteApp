@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.notes.list;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
+@Deprecated
 public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfirmListener {
 
     private static final String TAG_EMPTY_TRASH = "TAG_EMPTY_TRASH";
@@ -114,12 +116,13 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
         dialog.show(getSupportFragmentManager(), TAG_EMPTY_TRASH);
     }
 
+    @SuppressLint("CheckResult")
     private void emptyTrash() {
         mEmptyTrashInteractor.emptyTrash()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         mPresenter = new TrashNotesPresenter();
                         if (mFragment != null) {
                             mFragment.setPresenter(mPresenter);
@@ -128,7 +131,7 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });

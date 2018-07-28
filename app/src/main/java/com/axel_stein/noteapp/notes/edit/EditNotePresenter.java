@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.notes.edit;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -7,12 +8,10 @@ import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
 import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
-import com.axel_stein.domain.interactor.note.PinNoteInteractor;
-import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
-import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
-import com.axel_stein.domain.interactor.note.UnpinNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
-import com.axel_stein.domain.interactor.note.UpdateNoteNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -46,10 +45,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     UpdateNoteInteractor mUpdateNoteInteractor;
 
     @Inject
-    TrashNoteInteractor mTrashNoteInteractor;
-
-    @Inject
-    RestoreNoteInteractor mRestoreNoteInteractor;
+    SetTrashedNoteInteractor mSetTrashedNoteInteractor;
 
     @Inject
     DeleteNoteInteractor mDeleteNoteInteractor;
@@ -61,16 +57,13 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     QueryLabelInteractor mQueryLabelInteractor;
 
     @Inject
-    UpdateNoteNotebookInteractor mUpdateNoteNotebookInteractor;
+    SetNotebookNoteInteractor mSetNotebookNoteInteractor;
 
     @Inject
     SetLabelsInteractor mSetLabelsInteractor;
 
     @Inject
-    PinNoteInteractor mPinNoteInteractor;
-
-    @Inject
-    UnpinNoteInteractor mUnpinNoteInteractor;
+    SetPinnedNoteInteractor mSetPinnedNoteInteractor;
 
     private Note mNote;
     private Note mSrcNote;
@@ -261,6 +254,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
         }
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void delete() {
         mSaving = true;
@@ -270,7 +264,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         mSaving = false;
                         if (mView != null) {
                             mView.callFinish();
@@ -280,7 +274,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
 
                         mSaving = false;
@@ -293,6 +287,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void actionPinNote() {
         if (!mNote.hasId()) {
@@ -311,15 +306,11 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
         Completable c;
         final boolean result = !mNote.isPinned();
-        if (mNote.isPinned()) {
-            c = mUnpinNoteInteractor.execute(mNote);
-        } else {
-            c = mPinNoteInteractor.execute(mNote);
-        }
+        c = mSetPinnedNoteInteractor.execute(mNote, result);
         c.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         mSrcNote.setPinned(result);
 
                         if (mView != null) {
@@ -331,8 +322,11 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
+                        if (mView != null) {
+                            mView.showMessage(R.string.error);
+                        }
                     }
                 });
     }
@@ -347,7 +341,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
     private void setNotebookImpl(final Notebook notebook) {
         if (mNote.hasId()) {
-            mUpdateNoteNotebookInteractor.execute(mNote.getId(), notebook.getId())
+            mSetNotebookNoteInteractor.execute(mNote, notebook.getId())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new CompletableObserver() {
                         @Override
@@ -382,7 +376,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void setLabels(final List<Long> labels) {
+    public void setLabels(final List<String> labels) {
         if (mNote.hasId()) {
             mSetLabelsInteractor.execute(mNote, labels)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -428,6 +422,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
         restore(mNote);
     }
 
+    @SuppressLint("CheckResult")
     private void moveToTrash(final Note note) {
         if (note == null) {
             return;
@@ -436,11 +431,11 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
         mSaving = true;
         setEditableImpl(false);
 
-        mTrashNoteInteractor.execute(note)
+        mSetTrashedNoteInteractor.execute(note, true)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         mSaving = false;
                         if (mView != null) {
                             mView.callFinish();
@@ -456,7 +451,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
 
                         mSaving = false;
@@ -469,6 +464,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 });
     }
 
+    @SuppressLint("CheckResult")
     private void restore(final Note note) {
         if (note == null) {
             return;
@@ -477,11 +473,11 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
         mSaving = true;
         setEditableImpl(false);
 
-        mRestoreNoteInteractor.execute(note)
+        mSetTrashedNoteInteractor.execute(note, false)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         mSaving = false;
                         if (mView != null) {
                             mView.callFinish();
@@ -496,7 +492,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
 
                         mSaving = false;
@@ -509,20 +505,25 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void actionSelectNotebook() {
         mQueryNotebookInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Notebook>>() {
                     @Override
-                    public void accept(List<Notebook> notebooks) throws Exception {
+                    public void accept(List<Notebook> notebooks) {
                         if (mView != null) {
-                            mView.showSelectNotebookView(notebooks, mNote.getNotebook());
+                            String notebookId = mNote.getNotebookId();
+                            if (notebookId == null) {
+                                notebookId = Notebook.ID_INBOX;
+                            }
+                            mView.showSelectNotebookView(notebooks, notebookId);
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         if (mView != null) {
                             mView.showMessage(R.string.error);
@@ -531,13 +532,14 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void actionCheckLabels() {
         mQueryLabelInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Label>>() {
                     @Override
-                    public void accept(List<Label> labels) throws Exception {
+                    public void accept(List<Label> labels) {
                         if (mView != null) {
                             if (labels.size() == 0) {
                                 mView.showMessage(R.string.msg_label_empty);
@@ -548,7 +550,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
                         if (mView != null) {
                             mView.showMessage(R.string.error);
