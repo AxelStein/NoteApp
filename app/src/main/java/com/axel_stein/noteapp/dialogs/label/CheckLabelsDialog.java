@@ -86,8 +86,23 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
             }
         }
 
-        for (int i = 0; i < labels.size(); i++) {
-            Label label = labels.get(i);
+        Collections.sort(mItems, new Comparator<Label>() {
+            @Override
+            public int compare(Label l1, Label l2) {
+                boolean ch1 = isTrue(map.get(l1.getId()));
+                boolean ch2 = isTrue(map.get(l2.getId()));
+
+                if (ch1 && !ch2) {
+                    return -1;
+                } else if (!ch1 && ch2) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+
+        for (int i = 0; i < mItems.size(); i++) {
+            Label label = mItems.get(i);
             if (checkedLabelIds != null) {
                 String id = label.getId();
                 mCheckedPositions[i] = isTrue(map.get(id));

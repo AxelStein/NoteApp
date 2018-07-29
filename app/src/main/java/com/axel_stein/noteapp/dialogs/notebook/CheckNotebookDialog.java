@@ -24,6 +24,8 @@ import com.axel_stein.noteapp.utils.ResourceUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
@@ -67,6 +69,21 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
 
         mNotebooks = new ArrayList<>(notebooks);
         mNotebooks.add(0, Notebook.inbox());
+
+        Collections.sort(mNotebooks, new Comparator<Notebook>() {
+            @Override
+            public int compare(Notebook n1, Notebook n2) {
+                boolean ch1 = n1.getId() == selectedNotebookId;
+                boolean ch2 = n2.getId() == selectedNotebookId;
+
+                if (ch1 && !ch2) {
+                    return -1;
+                } else if (!ch1 && ch2) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
 
         this.mSelectedNotebookId = selectedNotebookId;
     }
