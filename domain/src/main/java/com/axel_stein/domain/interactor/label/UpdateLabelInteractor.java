@@ -6,6 +6,8 @@ import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.LabelRepository;
 
+import org.joda.time.DateTime;
+
 import io.reactivex.Completable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
@@ -37,6 +39,9 @@ public class UpdateLabelInteractor {
                 if (!isValid(label)) {
                     throw new IllegalArgumentException("label is not valid");
                 }
+
+                label.setModifiedDate(new DateTime());
+
                 mRepository.update(label);
                 mDriveSyncRepository.labelUpdated(label);
             }

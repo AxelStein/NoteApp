@@ -95,7 +95,11 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String backup) {
-                        String fileName = "notes_" + new SimpleDateFormat("dd-MM-yyyy-kkmm", Locale.ROOT).format(new Date());
+                        String date = new SimpleDateFormat("dd-MM-yyyy-kkmm", Locale.ROOT).format(new Date());
+                        String ext = "json";
+
+                        String fileName = String.format("notes_%s.%s", date, ext);
+
                         File dir = mContext.getFilesDir();
                         File file = writeToFile(dir, fileName, backup);
 
@@ -128,8 +132,10 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                     public void onComplete() {
                         if (mView != null) {
                             mView.dismissImportDialog();
-                            mView.showMessage(R.string.msg_import_success);
                             EventBusHelper.updateNoteList(false, true);
+                            EventBusHelper.recreate();
+                            // fixme
+                            EventBusHelper.showMessage(R.string.msg_import_success, 1000);
                         }
                     }
 

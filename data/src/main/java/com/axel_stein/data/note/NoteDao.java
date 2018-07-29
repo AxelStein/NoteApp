@@ -96,4 +96,10 @@ public interface NoteDao {
     @Query("SELECT * FROM notes WHERE trashed = 0 AND (title LIKE :query OR content LIKE :query)")
     List<NoteEntity> search(String query);
 
+    @Query("SELECT * FROM notes WHERE trashed = 0 AND title LIKE :query ORDER BY views DESC")
+    List<NoteEntity> searchByTitle(String query);
+
+    @Query("SELECT * FROM notes WHERE trashed = 0 AND content LIKE :query ORDER BY views DESC")
+    List<NoteEntity> searchByContent(String query);
+
 }

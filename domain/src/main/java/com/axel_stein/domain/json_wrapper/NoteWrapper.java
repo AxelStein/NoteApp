@@ -2,6 +2,7 @@ package com.axel_stein.domain.json_wrapper;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.utils.TextUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.joda.time.DateTime;
 
@@ -15,6 +16,7 @@ public class NoteWrapper {
 
     private String content;
 
+    @JsonProperty("notebook_id")
     private String notebookId;
 
     private long views;
@@ -25,39 +27,45 @@ public class NoteWrapper {
 
     private boolean trashed;
 
+    @JsonProperty("trashed_date")
     private String trashedDate;
 
+    @JsonProperty("created_date")
     private String createdDate;
 
+    @JsonProperty("modified_date")
     private String modifiedDate;
 
+    @JsonProperty("drive_id")
     private String driveId;
 
-    public NoteWrapper(Note note) {
-        id = note.getId();
-        notebookId = note.getNotebookId();
-        views = note.getViews();
-        trashed = note.isTrashed();
-        title = note.getTitle();
-        content = note.getContent();
-        pinned = note.isPinned();
-        starred = note.isStarred();
-        driveId = note.getDriveId();
+    public static NoteWrapper fromNote(Note note) {
+        NoteWrapper wrapper = new NoteWrapper();
+        wrapper.id = note.getId();
+        wrapper.notebookId = note.getNotebookId();
+        wrapper.views = note.getViews();
+        wrapper.trashed = note.isTrashed();
+        wrapper.title = note.getTitle();
+        wrapper.content = note.getContent();
+        wrapper.pinned = note.isPinned();
+        wrapper.starred = note.isStarred();
+        wrapper.driveId = note.getDriveId();
 
         DateTime t = note.getTrashedDate();
         if (t != null) {
-            trashedDate = t.toString();
+            wrapper.trashedDate = t.toString();
         }
 
         DateTime c = note.getCreatedDate();
         if (c != null) {
-            createdDate = c.toString();
+            wrapper.createdDate = c.toString();
         }
 
         DateTime m = note.getModifiedDate();
         if (m != null) {
-            modifiedDate = m.toString();
+            wrapper.modifiedDate = m.toString();
         }
+        return wrapper;
     }
 
     public Note toNote() {

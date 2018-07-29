@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
@@ -38,6 +37,7 @@ import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.IconTextView;
 import com.axel_stein.noteapp.views.LinedEditText;
 import com.axel_stein.noteapp.views.SearchPanel;
 
@@ -77,22 +77,14 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @BindView(R.id.edit_content)
     LinedEditText mEditContent;
 
-    /*
-    @BindView(R.id.text_date)
-    TextView mTextDate;
-
-    @BindView(R.id.text_update)
-    TextView mTextUpdate;
-    */
-
     @Nullable
     SearchPanel mSearchPanel;
 
     @Nullable
     Toolbar mToolbar;
 
-    @Inject
-    QueryNotebookInteractor mQueryNotebookInteractor;
+    @Nullable
+    IconTextView mNotebookView;
 
     @Inject
     AppSettingsRepository mAppSettings;
@@ -105,7 +97,8 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     private boolean mViewCreated;
     private boolean mTrash;
     private boolean mUpdate;
-    private boolean mPinned;
+    //private boolean mPinned;
+    //private boolean mStarred;
     private boolean mEditable;
     private boolean mEditViewsFocusable = true;
     private List<Integer> mIndexes;
@@ -296,8 +289,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mSearchPanel = null;
         mEditTitle = null;
         mEditContent = null;
-        //mTextDate = null;
-        //mTextUpdate = null;
+        mNotebookView = null;
         mViewCreated = false;
         mMenu = null;
         mScrollView = null;
@@ -314,7 +306,7 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         mMenu = menu;
         MenuUtil.enable(mMenu, mEditable);
 
-        MenuUtil.show(mMenu, !mTrash, R.id.menu_pin_note);
+        MenuUtil.show(mMenu, !mTrash, R.id.menu_pin_note, R.id.menu_star_note);
         MenuUtil.show(mMenu, !mTrash && mUpdate, R.id.menu_move_to_trash, R.id.menu_duplicate);
         MenuUtil.show(mMenu, mUpdate, R.id.menu_note_info);
         MenuUtil.show(mMenu, !mTrash, R.id.menu_select_notebook, R.id.menu_labels, R.id.menu_share, R.id.menu_search);
@@ -325,7 +317,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        setNotePinned(mPinned);
+        if (mPresenter != null) {
+            setNotePinned(mPresenter.isPinned());
+            setNoteStarred(mPresenter.isStarred());
+        }
     }
 
     @Override
@@ -337,6 +332,10 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
         switch (item.getItemId()) {
             case R.id.menu_pin_note:
                 mPresenter.actionPinNote();
+                break;
+
+            case R.id.menu_star_note:
+                mPresenter.actionStarNote();
                 break;
 
             case R.id.menu_select_notebook:
@@ -436,27 +435,22 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
             KeyboardUtil.show(mEditTitle);
         }
 
-        mPinned = note.isPinned();
+        //mPinned = note.isPinned();
+        //mStarred = note.isStarred();
         mTrash = note.isTrashed();
         mUpdate = note.hasId();
 
-        /*
-        long date;
-        if (note.getId() == 0) {
-            date = System.currentTimeMillis();
-            ViewUtil.hide(mTextUpdate);
-        } else {
-            date = note.getCreatedDate();
-            mTextUpdate.setText(DateFormatter.formatDateTime(getContext(), note.getModifiedDate()));
-        }
-        mTextDate.setText(DateFormatter.formatDateTime(getContext(), date));
-        */
-
-        ViewUtil.enable(!mTrash, mEditTitle, mEditContent);
+        ViewUtil.enable(!mTrash, mEditTitle, mEditContent, mNotebookView);
 
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
+    }
+
+    @Override
+    public void setNotebookTitle(String notebook) {
+        ViewUtil.show(!isEmpty(notebook), mNotebookView);
+        ViewUtil.setText(mNotebookView, notebook);
     }
 
     @Override
@@ -532,6 +526,19 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
     }
 
     @Override
+    public void setNoteStarred(boolean starred) {
+        if (mMenu != null) {
+            int colorAttr = starred ? R.attr.noteStarColor : R.attr.menuItemTintColor;
+
+            MenuItem item = mMenu.findItem(R.id.menu_star_note);
+            if (item != null) {
+                item.setIcon(starred ? R.drawable.ic_star_white_24dp : R.drawable.ic_star_border_white_24dp);
+            }
+            MenuUtil.tintAttr(getContext(), item, colorAttr);
+        }
+    }
+
+    @Override
     public void onConfirm(String tag) {
         switch (tag) {
             case TAG_DELETE_NOTE:
@@ -574,4 +581,19 @@ public class EditNoteFragment extends BaseFragment implements EditNoteContract.V
             mPresenter.setLabels(labels);
         }
     }
+
+    public void setNotebookView(IconTextView view) {
+        mNotebookView = view;
+        if (mNotebookView != null) {
+            mNotebookView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mPresenter != null) {
+                        mPresenter.actionSelectNotebook();
+                    }
+                }
+            });
+        }
+    }
+
 }

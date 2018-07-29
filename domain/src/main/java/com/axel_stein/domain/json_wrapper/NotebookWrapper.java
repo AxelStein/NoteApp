@@ -2,6 +2,7 @@ package com.axel_stein.domain.json_wrapper;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.utils.TextUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.joda.time.DateTime;
 
@@ -13,38 +14,47 @@ public class NotebookWrapper {
 
     private String title;
 
+    private String color;
+
     private int order;
 
     private long views;
 
+    @JsonProperty("created_date")
     private String createdDate;
 
+    @JsonProperty("modified_date")
     private String modifiedDate;
 
+    @JsonProperty("drive_id")
     private String driveId;
 
-    public NotebookWrapper(Notebook notebook) {
-        id = notebook.getId();
-        title = notebook.getTitle();
-        order = notebook.getOrder();
-        views = notebook.getViews();
-        driveId = notebook.getDriveId();
+    public static NotebookWrapper fromNotebook(Notebook notebook) {
+        NotebookWrapper wrapper = new NotebookWrapper();
+        wrapper.id = notebook.getId();
+        wrapper.title = notebook.getTitle();
+        wrapper.color = notebook.getColor();
+        wrapper.order = notebook.getOrder();
+        wrapper.views = notebook.getViews();
+        wrapper.driveId = notebook.getDriveId();
 
         DateTime c = notebook.getCreatedDate();
         if (c != null) {
-            createdDate = c.toString();
+            wrapper.createdDate = c.toString();
         }
 
         DateTime m = notebook.getModifiedDate();
         if (m != null) {
-            modifiedDate = m.toString();
+            wrapper.modifiedDate = m.toString();
         }
+        return wrapper;
     }
 
     public Notebook toNotebook() {
         Notebook notebook = new Notebook();
         notebook.setId(TextUtil.isEmpty(id) ? UUID.randomUUID().toString() : id);
         notebook.setTitle(title);
+        notebook.setColor(color);
         notebook.setOrder(order);
         notebook.setViews(views);
         notebook.setCreatedDate(TextUtil.isEmpty(createdDate) ? new DateTime() : DateTime.parse(createdDate));
@@ -108,4 +118,11 @@ public class NotebookWrapper {
         this.driveId = driveId;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
 }

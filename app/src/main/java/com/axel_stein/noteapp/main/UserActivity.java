@@ -14,7 +14,7 @@ import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.base.SwipeBaseActivity;
 import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 import com.axel_stein.noteapp.google_drive.OnSignOutListener;
 import com.axel_stein.noteapp.google_drive.UserData;
@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UserActivity extends BaseActivity {
+public class UserActivity extends SwipeBaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;

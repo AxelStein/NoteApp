@@ -2,6 +2,7 @@ package com.axel_stein.domain.json_wrapper;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.utils.TextUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.joda.time.DateTime;
 
@@ -17,28 +18,33 @@ public class LabelWrapper {
 
     private long views;
 
+    @JsonProperty("created_date")
     private String createdDate;
 
+    @JsonProperty("modified_date")
     private String modifiedDate;
 
+    @JsonProperty("drive_id")
     private String driveId;
 
-    public LabelWrapper(Label label) {
-        id = label.getId();
-        title = label.getTitle();
-        order = label.getOrder();
-        views = label.getViews();
-        driveId = label.getDriveId();
+    public static LabelWrapper fromLabel(Label label) {
+        LabelWrapper wrapper = new LabelWrapper();
+        wrapper.id = label.getId();
+        wrapper.title = label.getTitle();
+        wrapper.order = label.getOrder();
+        wrapper.views = label.getViews();
+        wrapper.driveId = label.getDriveId();
 
         DateTime c = label.getCreatedDate();
         if (c != null) {
-            createdDate = c.toString();
+            wrapper.createdDate = c.toString();
         }
 
         DateTime m = label.getModifiedDate();
         if (m != null) {
-            modifiedDate = m.toString();
+            wrapper.modifiedDate = m.toString();
         }
+        return wrapper;
     }
 
     public Label toLabel() {

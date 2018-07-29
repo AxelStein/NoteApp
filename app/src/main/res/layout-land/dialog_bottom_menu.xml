@@ -47,6 +47,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:visibility="gone"
             android:background="?android:attr/listDivider" />
 
     </LinearLayout>
@@ -57,7 +58,6 @@
         app:layoutManager="android.support.v7.widget.GridLayoutManager"
         app:spanCount="2"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

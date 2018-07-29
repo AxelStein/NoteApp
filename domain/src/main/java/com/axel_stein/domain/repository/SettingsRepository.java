@@ -22,4 +22,8 @@ public interface SettingsRepository {
 
     void setShowNotesContent(boolean show);
 
+    String exportSettings();
+
+    void importSettings(String json);
+
 }

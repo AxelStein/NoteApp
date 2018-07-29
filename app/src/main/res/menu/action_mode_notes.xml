@@ -17,6 +17,13 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/menu_star_note"
+        android:icon="@drawable/ic_star_white_24dp"
+        android:title="@string/action_star_note"
+
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/menu_move_to_trash"
         android:icon="@drawable/ic_delete_white_24dp"
         android:title="@string/action_move_to_trash"

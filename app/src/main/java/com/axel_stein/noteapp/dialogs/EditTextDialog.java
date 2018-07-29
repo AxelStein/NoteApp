@@ -129,7 +129,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
         builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onTextCommit(mEditText.getText().toString());
+                onTextCommit(mEditText.getText().toString().trim());
             }
         });
         builder.setNegativeButton(getResourceText(mNegativeButtonText, mNegativeButtonTextRes), new DialogInterface.OnClickListener() {
@@ -164,7 +164,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
         mEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String text = s.toString();
+                String text = s.toString().trim();
 
                 boolean empty = text.length() == 0;
                 boolean lessThanMaxLength = text.length() <= mTextInputLayout.getCounterMaxLength();

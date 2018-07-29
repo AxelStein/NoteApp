@@ -21,15 +21,15 @@ import android.widget.TextView;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.label.UpdateOrderLabelInteractor;
+import com.axel_stein.domain.interactor.label.UpdateViewsLabelInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.LabelCache;
 import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.ScrollableFragment;
-import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
+import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.label.DeleteLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.RenameLabelDialog;
 import com.axel_stein.noteapp.main.NoteListActivity;
@@ -53,7 +53,10 @@ import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
 import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 import static com.axel_stein.noteapp.utils.ViewUtil.setText;
 
-public class LabelManagerFragment extends Fragment implements LabelManagerContract.View, BottomMenuDialog.OnMenuItemClickListener {
+public class LabelManagerFragment extends Fragment implements LabelManagerContract.View,
+        BottomMenuDialog.OnMenuItemClickListener,
+        ScrollableFragment {
+
     private static final String TAG_ITEM_LABEL = "com.axel_stein.noteapp.label_manager.TAG_ITEM_LABEL";
     private static final String TAG_SORT_LABELS = "com.axel_stein.noteapp.label_manager.TAG_SORT_LABELS";
 
@@ -95,6 +98,9 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     @Inject
     UpdateOrderLabelInteractor mOrderInteractor;
 
+    @Inject
+    UpdateViewsLabelInteractor mViewsLabelInteractor;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,9 +131,6 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mPresenter.onCreateView(this);
-
-
         FragmentActivity activity = getActivity();
         if (activity != null && activity instanceof SortPanelListener) {
             SortPanelListener l = (SortPanelListener) activity;
@@ -140,6 +143,7 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
                     mAppSettings.toggleLabelDescOrder();
                     LabelCache.invalidate();
                     EventBusHelper.updateDrawer();
+                    scrollToTop();
                 }
             });
             mSortTitle.setOnLongClickListener(new View.OnLongClickListener() {
@@ -150,6 +154,8 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
                 }
             });
         }
+
+        mPresenter.onCreateView(this);
 
         return view;
     }
@@ -191,6 +197,7 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
     private void launchSortDialog() {
         BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
+        builder.setTitle(getString(R.string.action_sort));
         builder.setMenuRes(R.menu.sort_labels);
         builder.setChecked(menuItemFromOrder(mAppSettings.getLabelOrder()));
         builder.show(this, TAG_SORT_LABELS);
@@ -229,6 +236,8 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
 
         LabelCache.invalidate();
         EventBusHelper.updateDrawer();
+
+        scrollToTop();
     }
 
     private int menuItemFromOrder(LabelOrder order) {
@@ -290,7 +299,8 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     }
 
     private void setSortPanelCounterText(int labelCount) {
-        ViewUtil.setText(mTextCounter, getString(R.string.template_label_counter, labelCount));
+        String s = getResources().getQuantityString(R.plurals.template_label_counter, labelCount, labelCount);
+        ViewUtil.setText(mTextCounter, s);
     }
 
     @Override
@@ -322,6 +332,7 @@ public class LabelManagerFragment extends Fragment implements LabelManagerContra
     @Override
     public void startNoteListActivity(Label label) {
         NoteListActivity.launch(getContext(), label);
+        mViewsLabelInteractor.execute(label).subscribe();
     }
 
     @Subscribe

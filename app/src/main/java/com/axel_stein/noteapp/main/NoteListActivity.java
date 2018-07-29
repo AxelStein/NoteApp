@@ -4,36 +4,35 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.axel_stein.domain.interactor.label.UpdateViewsLabelInteractor;
-import com.axel_stein.domain.interactor.notebook.UpdateViewsNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.base.SwipeBaseActivity;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesFragment;
 import com.axel_stein.noteapp.notes.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.notes.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
+import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 
 import org.greenrobot.eventbus.Subscribe;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +40,7 @@ import butterknife.ButterKnife;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
 import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
 
-public class NoteListActivity extends BaseActivity implements SortPanelListener {
+public class NoteListActivity extends SwipeBaseActivity implements SortPanelListener {
     private static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.main.EXTRA_NOTEBOOK_ID";
     private static final String EXTRA_NOTEBOOK_TITLE = "com.axel_stein.noteapp.main.EXTRA_NOTEBOOK_TITLE";
     private static final String EXTRA_NOTEBOOK_EDITABLE = "com.axel_stein.noteapp.main.EXTRA_NOTEBOOK_EDITABLE";
@@ -88,16 +87,9 @@ public class NoteListActivity extends BaseActivity implements SortPanelListener 
     @Nullable
     private Label mLabel;
 
-    @Inject
-    UpdateViewsNotebookInteractor mViewsNotebookInteractor;
-
-    @Inject
-    UpdateViewsLabelInteractor mViewsLabelInteractor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.getAppComponent().inject(this);
         setContentView(R.layout.activity_note_list);
 
         Intent intent = getIntent();
@@ -106,14 +98,10 @@ public class NoteListActivity extends BaseActivity implements SortPanelListener 
             mNotebook.setId(intent.getStringExtra(EXTRA_NOTEBOOK_ID));
             mNotebook.setTitle(intent.getStringExtra(EXTRA_NOTEBOOK_TITLE));
             mNotebook.setEditable(intent.getBooleanExtra(EXTRA_NOTEBOOK_EDITABLE, true));
-
-            mViewsNotebookInteractor.execute(mNotebook).subscribe();
         } else if (intent.hasExtra(EXTRA_LABEL_ID)) {
             mLabel = new Label();
             mLabel.setId(intent.getStringExtra(EXTRA_LABEL_ID));
             mLabel.setTitle(intent.getStringExtra(EXTRA_LABEL_TITLE));
-
-            mViewsLabelInteractor.execute(mLabel).subscribe();
         }
 
         App.getAppComponent().inject(this);
@@ -142,7 +130,8 @@ public class NoteListActivity extends BaseActivity implements SortPanelListener 
 
         if (fragment == null) {
             fragment = new NotesFragment();
-            fragment.showBottomPadding(true);
+            fragment.setPaddingTop(8);
+            fragment.setPaddingBottom(88);
 
             int msg = 0;
             if (mNotebook != null) {
@@ -177,15 +166,6 @@ public class NoteListActivity extends BaseActivity implements SortPanelListener 
                 }
             }
         });
-    }
-
-    private void setToolbarScrollFlags(boolean scroll) {
-        int flags = scroll ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0;
-
-        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
-        params.setScrollFlags(flags);
-
-        mAppBar.requestLayout();
     }
 
     private void setTitle(String title) {
@@ -330,6 +310,29 @@ public class NoteListActivity extends BaseActivity implements SortPanelListener 
     @Override
     public IconTextView getSortTitle() {
         return mSortTitle;
+    }
+
+    @Override
+    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+        setToolbarScrollFlags(false);
+        ViewUtil.show(false, mSortPanel);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
+        super.onSupportActionModeFinished(mode);
+        setToolbarScrollFlags(true);
+        ViewUtil.show(true, mSortPanel);
+    }
+
+    private void setToolbarScrollFlags(boolean scroll) {
+        int flags = scroll ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0;
+
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
+        params.setScrollFlags(flags);
+
+        mAppBar.requestLayout();
     }
 
 }

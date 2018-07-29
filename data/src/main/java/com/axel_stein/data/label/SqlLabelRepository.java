@@ -20,7 +20,9 @@ public class SqlLabelRepository implements LabelRepository {
 
     @Override
     public void insert(@NonNull Label label) {
-        label.setId(UUID.randomUUID().toString());
+        if (!label.hasId()) {
+            label.setId(UUID.randomUUID().toString());
+        }
         mDao.insert(LabelMapper.map(label));
     }
 

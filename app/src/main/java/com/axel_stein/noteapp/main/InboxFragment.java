@@ -23,7 +23,8 @@ public class InboxFragment extends NotesFragment {
         setHasOptionsMenu(true);
         setPresenter(new InboxNotesPresenter());
         setEmptyMsg(getString(R.string.empty_inbox));
-        showBottomPadding(true);
+        setPaddingTop(8);
+        setPaddingBottom(88);
     }
 
 }

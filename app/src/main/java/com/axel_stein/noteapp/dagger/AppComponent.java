@@ -2,6 +2,7 @@ package com.axel_stein.noteapp.dagger;
 
 import com.axel_stein.noteapp.backup.BackupPresenter;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.base.SwipeBaseActivity;
 import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.DeleteLabelDialog;
 import com.axel_stein.noteapp.dialogs.label.RenameLabelDialog;
@@ -14,7 +15,6 @@ import com.axel_stein.noteapp.label_manager.LabelManagerPresenter;
 import com.axel_stein.noteapp.main.InboxFragment;
 import com.axel_stein.noteapp.main.LabelsFragment;
 import com.axel_stein.noteapp.main.MainActivity;
-import com.axel_stein.noteapp.main.NoteListActivity;
 import com.axel_stein.noteapp.main.NotebooksFragment;
 import com.axel_stein.noteapp.main.TrashFragment;
 import com.axel_stein.noteapp.main.UserActivity;
@@ -71,8 +71,6 @@ public interface AppComponent {
 
     void inject(BaseActivity activity);
 
-    void inject(NoteListActivity activity);
-
     void inject(EditNoteActivity activity);
 
     void inject(TrashNotesPresenter presenter);
@@ -112,5 +110,7 @@ public interface AppComponent {
     void inject(SettingsPresenter presenter);
 
     void inject(UserActivity activity);
+
+    void inject(SwipeBaseActivity activity);
 
 }

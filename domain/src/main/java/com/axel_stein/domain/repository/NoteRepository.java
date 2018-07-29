@@ -70,4 +70,10 @@ public interface NoteRepository {
     @NonNull
     List<Note> search(@NonNull String query);
 
+    @NonNull
+    List<Note> searchByTitle(@NonNull String query);
+
+    @NonNull
+    List<Note> searchByContent(@NonNull String query);
+
 }

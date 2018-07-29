@@ -6,6 +6,7 @@
     <attr name="editTextLineColor" format="color|reference"/>
     <attr name="keepScreenOnColor" format="color|reference"/>
     <attr name="notePinColor" format="color|reference"/>
+    <attr name="noteStarColor" format="color|reference"/>
     <attr name="searchSelectorColor" format="color|reference"/>
     <attr name="searchSelectorCurrentColor" format="color|reference"/>
     <attr name="toolbarPopupTheme" format="reference"/>

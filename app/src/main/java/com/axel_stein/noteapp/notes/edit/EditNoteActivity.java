@@ -23,9 +23,10 @@ import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.base.SwipeBaseActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.axel_stein.noteapp.views.IconTextView;
 import com.axel_stein.noteapp.views.SearchPanel;
 
 import javax.inject.Inject;
@@ -38,7 +39,7 @@ import io.reactivex.functions.Consumer;
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
-public class EditNoteActivity extends BaseActivity {
+public class EditNoteActivity extends SwipeBaseActivity {
 
     public static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
 
@@ -55,6 +56,9 @@ public class EditNoteActivity extends BaseActivity {
 
     @BindView(R.id.search_panel)
     SearchPanel mSearchPanel;
+
+    @BindView(R.id.notebook)
+    IconTextView mNotebookView;
 
     @Inject
     GetNoteInteractor mGetNoteInteractor;
@@ -115,6 +119,7 @@ public class EditNoteActivity extends BaseActivity {
         if (fragment != null) {
             mEditNoteFragment = (EditNoteFragment) fragment;
             mEditNoteFragment.setSearchPanel(mToolbar, mSearchPanel);
+            mEditNoteFragment.setNotebookView(mNotebookView);
             mPresenter = (EditNotePresenter) mEditNoteFragment.getPresenter();
             setPresenterListener();
         } else {
@@ -142,6 +147,7 @@ public class EditNoteActivity extends BaseActivity {
 
                             mEditNoteFragment = new EditNoteFragment();
                             mEditNoteFragment.setSearchPanel(mToolbar, mSearchPanel);
+                            mEditNoteFragment.setNotebookView(mNotebookView);
                             mEditNoteFragment.setPresenter(mPresenter);
 
                             setFragment(mEditNoteFragment, "fragment");

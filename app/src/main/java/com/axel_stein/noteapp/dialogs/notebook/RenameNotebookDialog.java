@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.dialogs.notebook;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -67,6 +68,7 @@ public class RenameNotebookDialog extends EditTextDialog {
         return dialog;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +104,7 @@ public class RenameNotebookDialog extends EditTextDialog {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onTextCommit(final String text) {
         mNotebook.setTitle(text);

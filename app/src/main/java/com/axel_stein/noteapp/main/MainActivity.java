@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -108,11 +107,12 @@ public class MainActivity extends BaseActivity implements SortPanelListener {
         EventBusHelper.subscribe(this);
 
         setSupportActionBar(mToolbar);
-
+        /*
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
+        */
 
         boolean nightMode = mAppSettings.nightMode();
         mBottomNavigation.setItemIconTintList(ContextCompat.getColorStateList(this,
@@ -178,7 +178,8 @@ public class MainActivity extends BaseActivity implements SortPanelListener {
             }
         });
 
-        setUserData(mGoogleDrive.isSignedIn() ? mGoogleDrive.getUserData() : null);
+        ViewUtil.hide(mUserPanel);
+        //setUserData(mGoogleDrive.isSignedIn() ? mGoogleDrive.getUserData() : null);
     }
 
     private void setUserData(UserData user) {

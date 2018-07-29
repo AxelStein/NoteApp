@@ -16,6 +16,7 @@ import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
 public class SetStarredNoteInteractor {
+
     @NonNull
     private NoteRepository mRepository;
 
@@ -34,6 +35,8 @@ public class SetStarredNoteInteractor {
                 if (!isValid(note)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
+
+                note.setStarred(starred);
 
                 mRepository.setStarred(note, starred);
                 mDriveSyncRepository.noteStarred(note, starred);

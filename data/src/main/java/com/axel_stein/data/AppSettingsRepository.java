@@ -49,6 +49,7 @@ public class AppSettingsRepository implements SettingsRepository {
         mPassword = getPassword();
     }
 
+    @Override
     public void importSettings(String json) {
         try {
             JSONObject object = new JSONObject(json);
@@ -63,14 +64,15 @@ public class AppSettingsRepository implements SettingsRepository {
             enableContentCharCounter(object.optBoolean(PREF_CONTENT_CHAR_COUNTER));
             setPrefFontSize(object.optString(PREF_FONT_SIZE));
 
-            setNotesOrder(NoteOrder.fromInt(object.optInt(PREF_NOTES_ORDER)));
+            setNotesOrder(NoteOrder.from(object.optInt(PREF_NOTES_ORDER), object.optBoolean(PREF_NOTES_ORDER_DESC)));
             setNotebookOrder(NotebookOrder.from(object.optInt(PREF_NOTEBOOK_ORDER), object.optBoolean(PREF_NOTEBOOK_ORDER_DESC)));
-            setLabelOrder(LabelOrder.fromInt(object.optInt(PREF_LABEL_ORDER)));
+            setLabelOrder(LabelOrder.from(object.optInt(PREF_LABEL_ORDER), object.optBoolean(PREF_LABEL_ORDER_DESC)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    @Override
     public String exportSettings() {
         JSONObject object = new JSONObject();
 
@@ -85,7 +87,9 @@ public class AppSettingsRepository implements SettingsRepository {
             object.put(PREF_CONTENT_CHAR_COUNTER, contentCharCounterEnabled());
             object.put(PREF_FONT_SIZE, getPrefFontSize());
 
-            object.put(PREF_NOTES_ORDER, getNotesOrder().ordinal());
+            NoteOrder order = getNotesOrder();
+            object.put(PREF_NOTES_ORDER, order.ordinal());
+            object.put(PREF_NOTEBOOK_ORDER_DESC, order.isDesc());
 
             NotebookOrder notebookOrder = getNotebookOrder();
             object.put(PREF_NOTEBOOK_ORDER, notebookOrder.ordinal());

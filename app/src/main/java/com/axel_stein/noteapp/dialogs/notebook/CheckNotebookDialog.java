@@ -67,14 +67,16 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
     public void setNotebooks(List<Notebook> notebooks, String selectedNotebookId) {
         checkNotNull(notebooks);
 
+        mSelectedNotebookId = selectedNotebookId;
+
         mNotebooks = new ArrayList<>(notebooks);
         mNotebooks.add(0, Notebook.inbox());
 
         Collections.sort(mNotebooks, new Comparator<Notebook>() {
             @Override
             public int compare(Notebook n1, Notebook n2) {
-                boolean ch1 = n1.getId() == selectedNotebookId;
-                boolean ch2 = n2.getId() == selectedNotebookId;
+                boolean ch1 = n1.getId().equals(mSelectedNotebookId);
+                boolean ch2 = n2.getId().equals(mSelectedNotebookId);
 
                 if (ch1 && !ch2) {
                     return -1;
@@ -84,8 +86,6 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
                 return 0;
             }
         });
-
-        this.mSelectedNotebookId = selectedNotebookId;
     }
 
     @Override

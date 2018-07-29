@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.base.SwipeBaseActivity;
 import com.axel_stein.noteapp.notes.list.presenters.SearchNotesPresenter;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
@@ -33,10 +33,12 @@ import org.greenrobot.eventbus.Subscribe;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends SwipeBaseActivity {
 
     private static final String BUNDLE_SEARCH_HAS_FOCUS = "BUNDLE_SEARCH_HAS_FOCUS";
     private static final String BUNDLE_CURRENT_QUERY = "BUNDLE_CURRENT_QUERY";
+
+    private static final int SEARCH_INPUT_DELAY = 600;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -74,12 +76,13 @@ public class SearchActivity extends BaseActivity {
         }
 
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentByTag("fragment");
+        Fragment fragment = fm.findFragmentByTag("fragment_search");
         if (fragment == null) {
             mFragment = new NotesFragment();
             mFragment.setEmptyMsg(getString(R.string.empty_search));
-            mFragment.showBottomPadding(false);
-            setFragment(mFragment, "fragment");
+            mFragment.setPaddingTop(8);
+            mFragment.setPaddingBottom(8);
+            setFragment(mFragment, "fragment_search");
         } else {
             mFragment = (NotesFragment) fragment;
         }
@@ -115,7 +118,7 @@ public class SearchActivity extends BaseActivity {
                     mCurrentQuery = s.toString();
 
                     handler.removeCallbacks(mSearchTask);
-                    handler.postDelayed(mSearchTask, 500);
+                    handler.postDelayed(mSearchTask, SEARCH_INPUT_DELAY);
 
                     boolean empty = TextUtils.isEmpty(s);
                     ViewUtil.show(!empty, mButtonClear);

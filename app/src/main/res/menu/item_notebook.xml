@@ -9,7 +9,8 @@
     <item
         android:id="@+id/menu_change_color"
         android:icon="@drawable/ic_palette_white_24dp"
-        android:title="@string/action_change_color"/>
+        android:title="@string/action_change_color"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_delete"

@@ -23,6 +23,8 @@ import com.axel_stein.noteapp.utils.ResourceUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -79,7 +81,7 @@ public class CheckLabelsDialog extends AppCompatDialogFragment {
         mItems = checkNotNull(labels);
         mCheckedPositions = new boolean[labels.size()];
 
-        HashMap<String, Boolean> map = new HashMap<>();
+        final HashMap<String, Boolean> map = new HashMap<>();
         if (checkedLabelIds != null) {
             for (String id : checkedLabelIds) {
                 map.put(id, true);

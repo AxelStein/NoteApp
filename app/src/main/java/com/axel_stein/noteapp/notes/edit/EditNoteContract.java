@@ -37,6 +37,11 @@ public interface EditNoteContract {
         void setNotePinned(boolean pinned);
 
         void showNoteInfo(Note note);
+
+        void setNoteStarred(boolean starred);
+
+        void setNotebookTitle(String notebook);
+
     }
 
     interface Presenter {
@@ -87,6 +92,13 @@ public interface EditNoteContract {
         void addOnNoteChangedListener(OnNoteChangedListener l);
 
         void actionNoteInfo();
+
+        void actionStarNote();
+
+        boolean isPinned();
+
+        boolean isStarred();
+
     }
 
     interface OnNoteChangedListener {

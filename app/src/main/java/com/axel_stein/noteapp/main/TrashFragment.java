@@ -44,7 +44,8 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
 
         setPresenter(new TrashNotesPresenter());
         setEmptyMsg(getString(R.string.empty_trash));
-        showBottomPadding(false);
+        setPaddingTop(8);
+        setPaddingBottom(8);
     }
 
     @Override
@@ -70,6 +71,7 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuUtil.show(menu, !mEmptyList, R.id.menu_empty_trash);
+        MenuUtil.show(menu, false, R.id.menu_sort);
     }
 
     @Override

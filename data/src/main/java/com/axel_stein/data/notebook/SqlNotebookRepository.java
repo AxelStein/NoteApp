@@ -20,7 +20,9 @@ public class SqlNotebookRepository implements NotebookRepository {
 
     @Override
     public void insert(@NonNull Notebook notebook) {
-        notebook.setId(UUID.randomUUID().toString());
+        if (!notebook.hasId()) {
+            notebook.setId(UUID.randomUUID().toString());
+        }
         mDao.insert(NotebookMapper.map(notebook));
     }
 

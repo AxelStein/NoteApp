@@ -7,6 +7,7 @@ import com.axel_stein.domain.repository.LabelRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
+import com.axel_stein.domain.repository.SettingsRepository;
 
 import java.util.concurrent.Callable;
 
@@ -29,14 +30,19 @@ public class CreateBackupInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
+    @NonNull
+    private SettingsRepository mSettingsRepository;
+
     public CreateBackupInteractor(@NonNull NoteRepository noteRepository,
                                   @NonNull NotebookRepository notebookRepository,
                                   @NonNull LabelRepository labelRepository,
-                                  @NonNull NoteLabelPairRepository noteLabelPairRepository) {
+                                  @NonNull NoteLabelPairRepository noteLabelPairRepository,
+                                  @NonNull SettingsRepository settingsRepository) {
         mNoteRepository = requireNonNull(noteRepository);
         mNotebookRepository = requireNonNull(notebookRepository);
         mLabelRepository = requireNonNull(labelRepository);
         mNoteLabelPairRepository = requireNonNull(noteLabelPairRepository);
+        mSettingsRepository = requireNonNull(settingsRepository);
     }
 
     public Single<String> execute() {
@@ -44,10 +50,11 @@ public class CreateBackupInteractor {
             @Override
             public String call() throws Exception {
                 Backup backup = new Backup();
-                backup.setNotes(mNoteRepository.queryAll());
-                backup.setNotebooks(mNotebookRepository.query());
-                backup.setLabels(mLabelRepository.query());
+                backup.setSourceNotes(mNoteRepository.queryAllTrashed());
+                backup.setSourceNotebooks(mNotebookRepository.query());
+                backup.setSourceLabels(mLabelRepository.query());
                 backup.setNoteLabelPairs(mNoteLabelPairRepository.query());
+                backup.setJsonSettings(mSettingsRepository.exportSettings());
                 return backup.toJson();
             }
         }).subscribeOn(Schedulers.io());

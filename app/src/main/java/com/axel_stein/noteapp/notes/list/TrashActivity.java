@@ -75,7 +75,7 @@ public class TrashActivity extends BaseActivity implements ConfirmDialog.OnConfi
             mFragment = new NotesFragment();
             mFragment.setPresenter(mPresenter);
             mFragment.setEmptyMsg(getString(R.string.empty_trash));
-            mFragment.showBottomPadding(false);
+            //mFragment.showBottomPadding(false);
             setFragment(mFragment, TAG_FRAGMENT);
         } else {
             mFragment = (NotesFragment) fragment;

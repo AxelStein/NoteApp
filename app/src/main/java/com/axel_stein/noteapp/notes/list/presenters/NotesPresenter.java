@@ -1,7 +1,6 @@
 package com.axel_stein.noteapp.notes.list.presenters;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.MenuItem;
 
@@ -11,6 +10,7 @@ import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
@@ -70,6 +70,9 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     SetPinnedNoteInteractor mSetPinnedNoteInteractor;
 
     @Inject
+    SetStarredNoteInteractor mSetStarredNoteInteractor;
+
+    @Inject
     AppSettingsRepository mSettings;
 
     @Nullable
@@ -88,9 +91,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
         if (mNotes != null) {
             mView.setNotes(mNotes);
+            updateSortPanel(mNotes);
 
             if (hasChecked()) {
-                mView.startCheckMode();
+                startCheckMode();
                 mView.onItemChecked(0, getCheckedCount());
             }
         } else {
@@ -125,39 +129,46 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     public void onSuccess(@NonNull List<Note> notes) {
         if (mView != null) {
             mView.setNotes(notes);
-
-            mView.showSortPanel(mSortPanelEnabled && notes != null && notes.size() > 0);
-            if (notes != null) {
-                mView.setSortPanelCounterText(notes.size());
-            }
-
-            int textRes = 0;
-
-            NoteOrder order = mSettings.getNotesOrder();
-            switch (order) {
-                case TITLE:
-                    textRes = R.string.action_sort_title;
-                    break;
-
-                case VIEWS:
-                    textRes = R.string.action_sort_views;
-                    break;
-
-                case CREATED:
-                    textRes = R.string.action_sort_created;
-                    break;
-
-                case MODIFIED:
-                    textRes = R.string.action_sort_modified;
-                    break;
-            }
-
-            mView.setSortTitle(textRes);
-            mView.setSortIndicator(order.isDesc(), true);
+            updateSortPanel(notes);
         }
 
         mNotes = notes;
         stopCheckMode();
+    }
+
+    private void updateSortPanel(List<Note> notes) {
+        if (mView == null) {
+            return;
+        }
+
+        mView.showSortPanel(mSortPanelEnabled && notes != null && notes.size() > 0);
+        if (notes != null) {
+            mView.setSortPanelCounterText(notes.size());
+        }
+
+        int textRes = 0;
+
+        NoteOrder order = mSettings.getNotesOrder();
+        switch (order) {
+            case TITLE:
+                textRes = R.string.action_sort_title;
+                break;
+
+            case VIEWS:
+                textRes = R.string.action_sort_views;
+                break;
+
+            case CREATED:
+                textRes = R.string.action_sort_created;
+                break;
+
+            case MODIFIED:
+                textRes = R.string.action_sort_modified;
+                break;
+        }
+
+        mView.setSortTitle(textRes);
+        mView.setSortIndicator(order.isDesc(), true);
     }
 
     @Override
@@ -204,7 +215,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         }
 
         if (startCheckMode) {
-            mView.startCheckMode();
+            startCheckMode();
         } else if (mCheckedItems.size() == 0) {
             stopCheckMode();
             return;
@@ -213,10 +224,18 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         mView.onItemChecked(position, getCheckedCount());
     }
 
+    private void startCheckMode() {
+        if (mView != null) {
+            mView.startCheckMode();
+            mView.showSortPanel(false);
+        }
+    }
+
     @Override
     public void stopCheckMode() {
         if (mView != null) {
             mView.stopCheckMode();
+            mView.showSortPanel(mSortPanelEnabled && mNotes != null && mNotes.size() > 0);
         }
         mCheckedItems = null;
     }
@@ -263,6 +282,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
             case R.id.menu_pin_note:
                 pin(getCheckedNotes());
+                break;
+
+            case R.id.menu_star_note:
+                star(getCheckedNotes());
                 break;
 
             case R.id.menu_move_to_trash:
@@ -401,12 +424,45 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 });
     }
 
-    protected void moveToTrash(Note note) {
+    @SuppressLint("CheckResult")
+    protected void star(final List<Note> notes) {
+        boolean star = false;
+        for (Note note : notes) {
+            if (!note.isStarred()) {
+                star = true;
+                break;
+            }
+        }
+
+        final boolean result = star;
+        Completable c = mSetStarredNoteInteractor.execute(notes, result);
+        c.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() {
+                        if (mView != null) {
+                            int count = notes.size();
+                            int plurals = result ? R.plurals.plurals_notes_starred : R.plurals.plurals_notes_unstarred;
+                            String msg = mView.getResources().getQuantityString(plurals, count, count);
+                            EventBusHelper.showMessage(msg);
+                        }
+                        EventBusHelper.updateNoteList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+                        EventBusHelper.showMessage(R.string.error);
+                    }
+                });
+    }
+
+    private void moveToTrash(Note note) {
         moveToTrash(makeList(note));
     }
 
     @SuppressLint("CheckResult")
-    protected void moveToTrash(final List<Note> notes) {
+    private void moveToTrash(final List<Note> notes) {
         if (notes == null) {
             return;
         }
@@ -440,7 +496,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     }
 
     @SuppressLint("CheckResult")
-    protected void restore(final List<Note> notes) {
+    private void restore(final List<Note> notes) {
         if (notes == null) {
             return;
         }
@@ -524,7 +580,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 });
     }
 
-    protected List<Note> getCheckedNotes() {
+    private List<Note> getCheckedNotes() {
         List<Note> notes = new ArrayList<>();
         if (mNotes != null && mCheckedItems != null) {
             for (Note note : mNotes) {

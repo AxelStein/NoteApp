@@ -6,9 +6,27 @@
     <string name="user_activity">Управление аккаунтом</string>
     <string name="notebook_all">Все</string>
     <string name="notebook_starred">Помеченные</string>
-    <string name="template_notebook_counter">%1$d блокнотов</string>
-    <string name="template_label_counter">%1$d меток</string>
-    <string name="template_note_counter">%1$d заметок</string>
+
+    <plurals name="template_note_counter">
+        <item quantity="one">%1$d заметка</item>
+        <item quantity="few">%1$d заметки</item>
+        <item quantity="many">%1$d заметок</item>
+        <item quantity="other">%1$d заметок</item>
+    </plurals>
+
+    <plurals name="template_notebook_counter">
+        <item quantity="one">%1$d блокнот</item>
+        <item quantity="few">%1$d блокнота</item>
+        <item quantity="many">%1$d блокнотов</item>
+        <item quantity="other">%1$d блокнотов</item>
+    </plurals>
+
+    <plurals name="template_label_counter">
+        <item quantity="one">%1$d метка</item>
+        <item quantity="few">%1$d метки</item>
+        <item quantity="many">%1$d меток</item>
+        <item quantity="other">%1$d меток</item>
+    </plurals>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -57,8 +75,11 @@
     <string name="action_note_info">Информация о заметке</string>
     <string name="action_sign_out">Выйти из аккаунта</string>
     <string name="action_change_color">Изменить цвет</string>
+    <string name="action_star_note">Пометить заметку</string>
+    <string name="action_find_in_note">Поиск по заметке</string>
 
     <string name="action_sort_by">Сортировать по</string>
+    <string name="action_sort">Сортировать</string>
     <string name="action_sort_title">По названию</string>
     <string name="action_sort_views">По кол-ву просмотров</string>
     <string name="action_sort_created">По дате создания</string>
@@ -179,10 +200,30 @@
     <string name="msg_security_enabled">Защита включена</string>
     <string name="msg_security_disabled">Защита отключена</string>
     <string name="msg_password_reset_caution">Вы уверены, что хотите сбросить пароль? Все заметки будут удалены навсегда.</string>
+
     <string name="msg_note_pinned">Заметка закреплена</string>
     <string name="msg_note_unpinned">Заметка откреплена</string>
     <string name="msg_notes_pinned">Заметки закреплены</string>
     <string name="msg_notes_unpinned">Заметки откреплены</string>
-    <string name="msg_note_info">Создана: %1$s\n\nОбновлена: %2$s\n\nКоличество символов: %3$d</string>
+
+    <string name="msg_note_starred">Заметка помечена</string>
+    <string name="msg_note_unstarred">Пометка удалена</string>
+
+    <plurals name="plurals_notes_starred">
+        <item quantity="one">Помечена %1$d заметка</item>
+        <item quantity="few">Помечены %1$d заметки</item>
+        <item quantity="many">Помечено %1$d заметок</item>
+        <item quantity="other">Помечено %1$d заметок</item>
+    </plurals>
+
+    <plurals name="plurals_notes_unstarred">
+        <item quantity="one">Удалена %1$d пометка</item>
+        <item quantity="few">Удалены %1$d пометки</item>
+        <item quantity="many">Удалено %1$d пометок</item>
+        <item quantity="other">Удалено %1$d пометок</item>
+    </plurals>
+
+    <string name="msg_note_info">Создана: %1$s\n\nОбновлена: %2$s\n\nПросмотры: %3$d\n\nКоличество символов: %4$d</string>
+    <string name="msg_note_info_trashed">Создана: %1$s\n\nОбновлена: %2$s\n\nВ корзине: %3$s\n\nПросмотры: %4$d\n\nКоличество символов: %5$d</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.notes.list;
 
+import android.content.res.Resources;
 import android.support.annotation.MenuRes;
 import android.view.MenuItem;
 
@@ -45,6 +46,8 @@ public interface NotesContract {
         void setSortIndicator(boolean desc, boolean enable);
 
         void scrollToTop();
+
+        Resources getResources();
     }
 
     interface Presenter {

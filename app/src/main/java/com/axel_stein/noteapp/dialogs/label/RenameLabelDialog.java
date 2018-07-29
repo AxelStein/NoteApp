@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
-import com.axel_stein.domain.interactor.label.RenameLabelInteractor;
+import com.axel_stein.domain.interactor.label.UpdateLabelInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
@@ -30,7 +30,8 @@ public class RenameLabelDialog extends EditTextDialog {
     @Inject
     QueryLabelInteractor mQueryLabelInteractor;
     @Inject
-    RenameLabelInteractor mRenameLabelInteractor;
+    UpdateLabelInteractor mUpdateLabelInteractor;
+
     private Label mLabel;
     private HashMap<String, Boolean> mMap;
 
@@ -73,7 +74,7 @@ public class RenameLabelDialog extends EditTextDialog {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Label>>() {
                     @Override
-                    public void accept(List<Label> labels) throws Exception {
+                    public void accept(List<Label> labels) {
                         if (mMap == null) {
                             mMap = new HashMap<>();
                         } else {
@@ -86,7 +87,7 @@ public class RenameLabelDialog extends EditTextDialog {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
 
                         EventBusHelper.showMessage(R.string.error);
@@ -98,18 +99,19 @@ public class RenameLabelDialog extends EditTextDialog {
     @SuppressLint("CheckResult")
     @Override
     protected void onTextCommit(final String text) {
-        mRenameLabelInteractor.execute(mLabel, text)
+        mLabel.setTitle(text);
+        mUpdateLabelInteractor.execute(mLabel)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         EventBusHelper.showMessage(R.string.msg_label_renamed);
                         EventBusHelper.renameLabel(mLabel);
                         dismiss();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
 
                         EventBusHelper.showMessage(R.string.error);

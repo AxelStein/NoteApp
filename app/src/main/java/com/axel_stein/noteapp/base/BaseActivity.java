@@ -31,6 +31,7 @@ import javax.inject.Inject;
 public class BaseActivity extends AppCompatActivity implements Screen {
 
     protected boolean mHandleHomeButton;
+
     @Inject
     AppSettingsRepository mAppSettings;
 
@@ -132,4 +133,5 @@ public class BaseActivity extends AppCompatActivity implements Screen {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

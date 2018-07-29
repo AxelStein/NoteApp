@@ -1,7 +1,6 @@
 package com.axel_stein.noteapp.notes.list;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +35,7 @@ import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
 import com.axel_stein.noteapp.main.SortPanelListener;
 import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
 import com.axel_stein.noteapp.notes.list.NotesContract.Presenter;
+import com.axel_stein.noteapp.utils.DisplayUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.IconTextView;
@@ -71,6 +71,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     private boolean mNotEmptyList;
 
+    private SortPanelListener mSortPanelListener;
+
     @Nullable
     private Presenter mPresenter;
 
@@ -84,8 +86,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     private boolean mViewCreated;
 
-    private boolean mShowTopPadding = true;
-    private boolean mShowBottomPadding = true;
+    private int mPaddingTop;
+    private int mPaddingBottom;
 
     private NoteItemListener mItemListener = new NoteItemListener() {
         @Override
@@ -172,31 +174,37 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         });
         helper.attachToRecyclerView(mRecyclerView);
 
-        mViewCreated = true;
-
-        if (mPresenter != null) {
-            setPresenter(mPresenter);
-        }
-
         FragmentActivity activity = getActivity();
         if (activity != null && activity instanceof SortPanelListener) {
-            SortPanelListener l = (SortPanelListener) activity;
-            mSortPanel = l.getSortPanel();
-            mTextCounter = l.getCounter();
-            mSortTitle = l.getSortTitle();
+            mSortPanelListener = (SortPanelListener) activity;
+
+            mSortPanel = mSortPanelListener.getSortPanel();
+            mTextCounter = mSortPanelListener.getCounter();
+
+            mSortTitle = mSortPanelListener.getSortTitle();
             mSortTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mPresenter.onSortTitleClick();
+                    if (mPresenter != null) {
+                        mPresenter.onSortTitleClick();
+                    }
                 }
             });
             mSortTitle.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    mPresenter.onSortTitleLongClick();
+                    if (mPresenter != null) {
+                        mPresenter.onSortTitleLongClick();
+                    }
                     return true;
                 }
             });
+        }
+
+        mViewCreated = true;
+
+        if (mPresenter != null) {
+            setPresenter(mPresenter);
         }
 
         return root;
@@ -209,29 +217,20 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         }
     }
 
-    public void showTopPadding(boolean show) {
-        mShowTopPadding = show;
-        updatePadding();
+    public void setPaddingTop(int dp) {
+        mPaddingTop = DisplayUtil.dpToPx(getContext(), dp);
+        //updatePadding();
     }
 
-    public void showBottomPadding(boolean show) {
-        mShowBottomPadding = show;
-        updatePadding();
+    public void setPaddingBottom(int dp) {
+        mPaddingBottom = DisplayUtil.dpToPx(getContext(), dp);
+        //updatePadding();
     }
 
     private void updatePadding() {
-        if (mRecyclerView == null) {
-            return;
+        if (mRecyclerView != null) {
+            mRecyclerView.setPadding(0, mPaddingTop, 0, mPaddingBottom);
         }
-
-        Resources res = getResources();
-        if (res == null) {
-            return;
-        }
-
-        int top = res.getDimensionPixelOffset(R.dimen.note_list_top_padding);
-        int bottom = res.getDimensionPixelOffset(R.dimen.note_list_bottom_padding);
-        mRecyclerView.setPadding(0, mShowTopPadding ? top : 0, 0, mShowBottomPadding ? bottom : 0);
     }
 
     @Override
@@ -239,6 +238,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         mAdapter = null;
         mRecyclerView = null;
         mEmptyView = null;
+        mSortPanelListener = null;
         mSortPanel = null;
         mTextCounter = null;
         mSortTitle = null;
@@ -366,6 +366,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     @Override
     public void showSortDialog(int itemId) {
         BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
+        builder.setTitle(getString(R.string.action_sort));
         builder.setMenuRes(R.menu.sort_notes);
         builder.setChecked(itemId);
         builder.show(this, TAG_SORT_NOTES);
@@ -378,7 +379,8 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
 
     @Override
     public void setSortPanelCounterText(int noteCount) {
-        ViewUtil.setText(mTextCounter, getString(R.string.template_note_counter, noteCount));
+        String s = getResources().getQuantityString(R.plurals.template_note_counter, noteCount, noteCount);
+        ViewUtil.setText(mTextCounter, s);
     }
 
     @Override
@@ -406,8 +408,10 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_notes, menu);
-        MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
+        if (mSortPanelListener != null) {
+            inflater.inflate(R.menu.fragment_notes, menu);
+            MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
+        }
     }
 
     @Override
@@ -539,6 +543,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
         class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
             private ImageView mIcon;
             private ImageView mPin;
+            private ImageView mStar;
             private TextView mNote;
             private TextView mContent;
             private NoteItemListener mListener;
@@ -547,6 +552,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
                 super(itemView);
                 mIcon = itemView.findViewById(R.id.img_icon);
                 mPin = itemView.findViewById(R.id.img_pin);
+                mStar = itemView.findViewById(R.id.img_star);
                 mNote = itemView.findViewById(R.id.text_note);
                 mContent = itemView.findViewById(R.id.text_content);
                 mListener = l;
@@ -575,6 +581,7 @@ public class NotesFragment extends BaseFragment implements NotesContract.View,
                 mContent.setText(content);
 
                 ViewUtil.show(note.isPinned(), mPin);
+                ViewUtil.show(note.isStarred(), mStar);
             }
 
             void setChecked(boolean checkable, boolean checked) {

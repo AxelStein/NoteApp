@@ -1,6 +1,7 @@
 package com.axel_stein.noteapp.dagger;
 
 import com.axel_stein.data.AppBackupFileRepository;
+import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.data.label.SqlLabelRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
 import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
@@ -36,16 +37,18 @@ public class BackupInteractorModule {
     CreateBackupInteractor exportBackup(SqlNoteRepository notes,
                                         SqlNotebookRepository notebooks,
                                         SqlLabelRepository labels,
-                                        SqlNoteLabelPairRepository labelHelper) {
-        return new CreateBackupInteractor(notes, notebooks, labels, labelHelper);
+                                        SqlNoteLabelPairRepository labelHelper,
+                                        AppSettingsRepository settingsRepository) {
+        return new CreateBackupInteractor(notes, notebooks, labels, labelHelper, settingsRepository);
     }
 
     @Provides
     ImportBackupInteractor importBackup(SqlNoteRepository n,
                                         SqlNotebookRepository b,
                                         SqlLabelRepository l,
-                                        SqlNoteLabelPairRepository p) {
-        return new ImportBackupInteractor(n, b, l, p);
+                                        SqlNoteLabelPairRepository p,
+                                        AppSettingsRepository s) {
+        return new ImportBackupInteractor(n, b, l, p, s);
     }
 
     @Provides

@@ -35,6 +35,8 @@ public class GetLabelInteractor {
                     if (!isValid(label)) {
                         throw new IllegalStateException("label is not valid");
                     }
+                } else {
+                    label = new Label();
                 }
                 return label;
             }

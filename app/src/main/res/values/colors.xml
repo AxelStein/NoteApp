@@ -3,6 +3,8 @@
     <color name="window_background_light">@android:color/white</color>
     <color name="window_background_dark">#1D2733</color>
 
+    <color name="color_starred">#f58e57</color>
+
     <color name="color_accent">#00796b</color>
     <color name="color_accent_dark">#62A8E3</color>
 

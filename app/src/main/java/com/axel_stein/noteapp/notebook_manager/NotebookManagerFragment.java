@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.notebook.UpdateOrderNotebookInteractor;
+import com.axel_stein.domain.interactor.notebook.UpdateViewsNotebookInteractor;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.model.NotebookCache;
 import com.axel_stein.domain.model.NotebookOrder;
@@ -28,7 +29,6 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.ScrollableFragment;
-import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
@@ -54,11 +54,13 @@ import static android.support.v7.widget.helper.ItemTouchHelper.DOWN;
 import static android.support.v7.widget.helper.ItemTouchHelper.UP;
 import static com.axel_stein.noteapp.utils.ViewUtil.setText;
 
-public class NotebookManagerFragment extends Fragment implements NotebookManagerContract.View, BottomMenuDialog.OnMenuItemClickListener {
+public class NotebookManagerFragment extends Fragment implements NotebookManagerContract.View,
+        BottomMenuDialog.OnMenuItemClickListener,
+        ScrollableFragment {
+
     private static final String TAG_ITEM_NOTEBOOK = "com.axel_stein.noteapp.notebook_manager.TAG_ITEM_NOTEBOOK";
     private static final String TAG_SORT_NOTEBOOKS = "com.axel_stein.noteapp.notebook_manager.TAG_SORT_NOTEBOOKS";
     private static final int SMART_NOTEBOOK_COUNT = 2;
-public class NotebookManagerFragment extends Fragment implements NotebookManagerContract.View, ScrollableFragment {
 
     private ItemListener mListener = new ItemListener() {
         @Override
@@ -98,6 +100,9 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     @Inject
     UpdateOrderNotebookInteractor mOrderInteractor;
 
+    @Inject
+    UpdateViewsNotebookInteractor mViewsNotebookInteractor;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,8 +133,6 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mPresenter.onCreateView(this);
-
         FragmentActivity activity = getActivity();
         if (activity != null && activity instanceof SortPanelListener) {
             SortPanelListener l = (SortPanelListener) activity;
@@ -142,7 +145,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
                     mAppSettings.toggleNotebookDescOrder();
                     NotebookCache.invalidate();
                     EventBusHelper.updateDrawer();
-
+                    scrollToTop();
                 }
             });
             mSortTitle.setOnLongClickListener(new View.OnLongClickListener() {
@@ -153,6 +156,8 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
                 }
             });
         }
+
+        mPresenter.onCreateView(this);
 
         return view;
     }
@@ -194,6 +199,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
 
     private void launchSortDialog() {
         BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
+        builder.setTitle(getString(R.string.action_sort));
         builder.setMenuRes(R.menu.sort_notebooks);
         builder.setChecked(menuItemFromOrder(mAppSettings.getNotebookOrder()));
         builder.show(this, TAG_SORT_NOTEBOOKS);
@@ -235,6 +241,8 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
 
         NotebookCache.invalidate();
         EventBusHelper.updateDrawer();
+
+        scrollToTop();
     }
 
     private int menuItemFromOrder(NotebookOrder order) {
@@ -296,7 +304,9 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     }
 
     private void setSortPanelCounterText(int notebookCount) {
-        ViewUtil.setText(mTextCounter, getString(R.string.template_notebook_counter, notebookCount-SMART_NOTEBOOK_COUNT));
+        int count = notebookCount - SMART_NOTEBOOK_COUNT;
+        String s = getResources().getQuantityString(R.plurals.template_notebook_counter, count, count);
+        ViewUtil.setText(mTextCounter, s);
     }
 
     @Override
@@ -328,6 +338,7 @@ public class NotebookManagerFragment extends Fragment implements NotebookManager
     @Override
     public void startNoteListActivity(Notebook notebook) {
         NoteListActivity.launch(getContext(), notebook);
+        mViewsNotebookInteractor.execute(notebook).subscribe();
     }
 
     @Subscribe

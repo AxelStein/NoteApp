@@ -6,9 +6,21 @@
     <string name="user_activity">Manage account</string>
     <string name="notebook_all">All</string>
     <string name="notebook_starred">Starred</string>
-    <string name="template_notebook_counter">%1$d notebooks</string>
-    <string name="template_label_counter">%1$d labels</string>
-    <string name="template_note_counter">%1$d notes</string>
+
+    <plurals name="template_note_counter">
+        <item quantity="one">%1$d note</item>
+        <item quantity="other">%1$d notes</item>
+    </plurals>
+
+    <plurals name="template_notebook_counter">
+        <item quantity="one">%1$d notebook</item>
+        <item quantity="other">%1$d notebooks</item>
+    </plurals>
+
+    <plurals name="template_label_counter">
+        <item quantity="one">%1$d label</item>
+        <item quantity="other">%1$d labels</item>
+    </plurals>
 
     <!--Actions-->
     <string name="action_settings">Settings</string>
@@ -57,8 +69,11 @@
     <string name="action_note_info">Note info</string>
     <string name="action_sign_out">Sign Out</string>
     <string name="action_change_color">Change color</string>
+    <string name="action_star_note">Star note</string>
+    <string name="action_find_in_note">Find in note</string>
 
     <string name="action_sort_by">Sort by</string>
+    <string name="action_sort">Sort by</string>
     <string name="action_sort_title">Title</string>
     <string name="action_sort_views">Views</string>
     <string name="action_sort_created">Created</string>
@@ -193,10 +208,28 @@
     <string name="msg_security_enabled">Security enabled</string>
     <string name="msg_security_disabled">Security disabled</string>
     <string name="msg_password_reset_caution">Are you sure you want to reset password? All of your notes will be permanently deleted.</string>
+
     <string name="msg_note_pinned">Note pinned</string>
     <string name="msg_note_unpinned">Note unpinned</string>
     <string name="msg_notes_pinned">Notes pinned</string>
     <string name="msg_notes_unpinned">Notes unpinned</string>
-    <string name="msg_note_info">Created: %1$s\n\nModified: %2$s\n\nChar count: %3$d</string>
+
+    <string name="msg_note_starred">Note starred</string>
+    <string name="msg_note_unstarred">Note unstarred</string>
+    <string name="msg_notes_starred">Notes starred</string>
+    <string name="msg_notes_unstarred">Notes unstarred</string>
+
+    <plurals name="plurals_notes_starred">
+        <item quantity="one">%1$d note starred</item>
+        <item quantity="other">%1$d notes starred</item>
+    </plurals>
+
+    <plurals name="plurals_notes_unstarred">
+        <item quantity="one">%1$d note unstarred</item>
+        <item quantity="other">%1$d notes unstarred</item>
+    </plurals>
+
+    <string name="msg_note_info">Created: %1$s\n\nModified: %2$s\n\nViews: %3$d\n\nChar count: %4$d</string>
+    <string name="msg_note_info_trashed">Created: %1$s\n\nModified: %2$s\n\nTrashed: %3$s\n\nViews: %4$d\n\nChar count: %5$d</string>
 
 </resources>

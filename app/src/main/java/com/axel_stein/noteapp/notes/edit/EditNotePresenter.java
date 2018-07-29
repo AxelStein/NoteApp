@@ -10,8 +10,10 @@ import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
+import com.axel_stein.domain.interactor.notebook.GetNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -29,6 +31,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -64,6 +67,12 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
     @Inject
     SetPinnedNoteInteractor mSetPinnedNoteInteractor;
+
+    @Inject
+    SetStarredNoteInteractor mSetStarredNoteInteractor;
+
+    @Inject
+    GetNotebookInteractor mGetNotebookInteractor;
 
     private Note mNote;
     private Note mSrcNote;
@@ -111,7 +120,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     @Override
     public void onCreateView(@NonNull View view) {
         mView = view;
-        mView.setNote(mNote);
+        setNoteOnView(mNote);
         setEditableImpl(mEditable);
     }
 
@@ -221,7 +230,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                 setEditableImpl(true);
 
                 if (mView != null) {
-                    mView.setNote(mNote);
+                    setNoteOnView(mNote);
                     notifyChanged();
                     if (hasId) {
                         mView.showMessage(R.string.msg_note_updated);
@@ -355,6 +364,12 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                             mSrcNote.setNotebook(notebook);
                             if (mView != null) {
                                 mView.showMessage(R.string.msg_note_updated);
+
+                                String title = notebook.getTitle();
+                                if (isEmpty(notebook.getId())) {
+                                    title = Notebook.TITLE_INBOX;
+                                }
+                                mView.setNotebookTitle(title);
                             }
                             EventBusHelper.updateNoteList();
                         }
@@ -623,6 +638,93 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     public void actionNoteInfo() {
         if (mView != null) {
             mView.showNoteInfo(mNote);
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void actionStarNote() {
+        if (!mNote.hasId()) {
+            boolean p = !mNote.isStarred();
+
+            mNote.setStarred(p);
+            mSrcNote.setStarred(p);
+
+            if (mView != null) {
+                mView.setNoteStarred(p);
+            }
+
+            notifyChanged();
+            return;
+        }
+
+        Completable c;
+        final boolean result = !mNote.isStarred();
+        c = mSetStarredNoteInteractor.execute(mNote, result);
+        c.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() {
+                        mSrcNote.setStarred(result);
+
+                        if (mView != null) {
+                            mView.setNoteStarred(result);
+                            mView.showMessage(result ? R.string.msg_note_starred : R.string.msg_note_unstarred);
+                        }
+
+                        EventBusHelper.updateNoteList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+                        if (mView != null) {
+                            mView.showMessage(R.string.error);
+                        }
+                    }
+                });
+
+    }
+
+    @Override
+    public boolean isPinned() {
+        return mNote != null && mNote.isPinned();
+    }
+
+    @Override
+    public boolean isStarred() {
+        return mNote != null && mNote.isStarred();
+    }
+
+    @SuppressLint("CheckResult")
+    private void setNoteOnView(Note note) {
+        if (mView != null) {
+            mView.setNote(note);
+
+            final String notebookId = note.getNotebookId();
+            if (isEmpty(notebookId)) {
+                mView.setNotebookTitle(Notebook.TITLE_INBOX);
+            } else {
+                mGetNotebookInteractor.execute(notebookId).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new SingleObserver<Notebook>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(Notebook notebook) {
+                                if (mView != null) {
+                                    mView.setNotebookTitle(notebook.getTitle());
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
+            }
         }
     }
 

@@ -13,6 +13,7 @@ import com.axel_stein.domain.utils.validators.NotebookValidator;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -172,15 +173,14 @@ public class QueryNoteInteractor {
 
             @Override
             public List<Note> call() {
-                q = requireNonNull(q, "query is null");
-                if (isEmpty(query)) {
-                    throw new IllegalArgumentException("query is empty");
+                if (isEmpty(q)) {
+                    return new ArrayList<>();
                 }
                 q = query.toLowerCase();
 
                 StringBuilder builder = new StringBuilder();
 
-                List<Note> notes = orderImpl(mNoteRepository.search(query), NoteOrder.VIEWS, true);
+                List<Note> notes = orderImpl(mNoteRepository.search(q), NoteOrder.VIEWS, true);
                 for (Note note : notes) {
                     String content = note.getContent();
                     if (content != null) {
@@ -251,6 +251,139 @@ public class QueryNoteInteractor {
                 return notes;
             }
         });
+    }
+
+    @NonNull
+    public Single<List<Note>> searchByTitle(@NonNull final String query) {
+        return single(new Callable<List<Note>>() {
+            private String q = query;
+
+            @Override
+            public List<Note> call() {
+                if (isEmpty(query)) {
+                    return new ArrayList<>();
+                }
+
+                q = query.toLowerCase();
+
+                List<Note> result = mNoteRepository.searchByTitle(q);
+                if (result.size() == 0) {
+                    return searchByContentImpl(q);
+                }
+                if (result.size() > 1) {
+                    Collections.sort(result, new Comparator<Note>() {
+                        @Override
+                        public int compare(Note n1, Note n2) {
+                            String title1 = n1.getTitle().toLowerCase();
+                            String title2 = n2.getTitle().toLowerCase();
+
+                            boolean starts1 = title1.startsWith(q);
+                            boolean starts2 = title2.startsWith(q);
+
+                            if (starts1 && !starts2) {
+                                return -1;
+                            } else if (!starts1 && starts2) {
+                                return 1;
+                            }
+                            return 0;
+                        }
+                    });
+                }
+                return result;
+            }
+        });
+    }
+
+    @NonNull
+    public Single<List<Note>> searchByContent(@NonNull final String query) {
+        return single(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() {
+                return searchByContentImpl(query);
+            }
+        });
+    }
+
+    private List<Note> searchByContentImpl(final String query) {
+        if (isEmpty(query)) {
+            return new ArrayList<>();
+        }
+
+        final String q = query.toLowerCase();
+        List<Note> result = mNoteRepository.searchByContent(q);
+
+        StringBuilder builder = new StringBuilder();
+        for (Note note : result) {
+            String content = note.getContent();
+            if (content == null) {
+                continue;
+            }
+
+            content = content.toLowerCase();
+
+            int start = content.indexOf(q);
+            if (start == 0) {
+                continue;
+            }
+
+            for (int i = start-1; i >= 0; i--) {
+                char c = content.charAt(i);
+                if (c == ' ' || i == 0) {
+                    start = i + (i == 0 ? 0 : 1);
+                    break;
+                }
+            }
+
+            if (start > 0) {
+                builder.append("...");
+            } else { // todo
+                start = 0;
+            }
+
+            int end = start + 128;
+            if (end > content.length()) {
+                end = content.length();
+            }
+            builder.append(content.substring(start, end));
+
+            content = builder.toString();
+
+            if (isEmpty(note.getTitle())) {
+                note.setTitle(content);
+                note.setContent(null);
+            } else {
+                note.setContent(content);
+            }
+            builder.delete(0, builder.length());
+        }
+
+        if (result.size() > 1) {
+            Collections.sort(result, new Comparator<Note>() {
+                @Override
+                public int compare(Note n1, Note n2) {
+                    String content1 = n1.getContent();
+                    String content2 = n2.getContent();
+
+                    if (content1 == null || content2 == null) {
+                        return 0;
+                    }
+
+                    content1 = content1.toLowerCase();
+                    content2 = content2.toLowerCase();
+
+                    boolean starts1 = content1.startsWith(q);
+                    boolean starts2 = content2.startsWith(q);
+
+                    if (starts1 && !starts2) {
+                        return -1;
+                    } else if (!starts1 && starts2) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+        }
+        return result;
     }
 
     private Single<List<Note>> single(Callable<List<Note>> callable) {
@@ -336,7 +469,7 @@ public class QueryNoteInteractor {
             }
         });
 
-        if (!searchFlag) {
+        if (!searchFlag && order != NoteOrder.TRASHED) {
             Collections.sort(list, new Comparator<Note>() {
                 @Override
                 public int compare(Note n1, Note n2) {

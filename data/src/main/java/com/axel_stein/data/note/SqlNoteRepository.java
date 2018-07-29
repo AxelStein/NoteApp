@@ -26,7 +26,9 @@ public class SqlNoteRepository implements NoteRepository {
 
     @Override
     public void insert(@NonNull Note note) {
-        note.setId(UUID.randomUUID().toString());
+        if (!note.hasId()) {
+            note.setId(UUID.randomUUID().toString());
+        }
         mDao.insert(map(note));
     }
 
@@ -165,6 +167,20 @@ public class SqlNoteRepository implements NoteRepository {
     public List<Note> search(@NonNull String query) {
         query = "%" + query + "%";
         return map(mDao.search(query));
+    }
+
+    @NonNull
+    @Override
+    public List<Note> searchByTitle(@NonNull String query) {
+        query = "%" + query + "%";
+        return map(mDao.searchByTitle(query));
+    }
+
+    @NonNull
+    @Override
+    public List<Note> searchByContent(@NonNull String query) {
+        query = "%" + query + "%";
+        return map(mDao.searchByContent(query));
     }
 
 }

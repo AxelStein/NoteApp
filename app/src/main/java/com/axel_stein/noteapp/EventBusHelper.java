@@ -78,16 +78,16 @@ public class EventBusHelper {
         post(new Message(stringRes));
     }
 
+    public static void showMessage(int stringRes, int delay) {
+        post(new Message(stringRes, delay));
+    }
+
     public static void showMessage(int stringRes, int actionNameRes, Runnable action) {
         post(new Message(stringRes, actionNameRes, action));
     }
 
     public static void recreate() {
         post(new Recreate());
-    }
-
-    public static void updateAddNoteFAB() {
-        post(new UpdateAddNoteFAB());
     }
 
     private static void post(@NonNull Object o) {
@@ -202,6 +202,7 @@ public class EventBusHelper {
         private int msgRes;
         private Runnable action;
         private int actionName;
+        private int delay;
 
         public Message(String msg) {
             this.msg = msg;
@@ -209,6 +210,14 @@ public class EventBusHelper {
 
         Message(int msgRes) {
             this.msgRes = msgRes;
+        }
+
+        Message(int msgRes, int delay) {
+            this.msgRes = msgRes;
+            this.delay = delay;
+            if (delay < 0) {
+                this.delay = 0;
+            }
         }
 
         Message(int msgRes, int actionName, Runnable action) {
@@ -227,6 +236,10 @@ public class EventBusHelper {
 
         public int getMsgRes() {
             return msgRes;
+        }
+
+        public int getDelay() {
+            return delay;
         }
 
         public Runnable getAction() {

@@ -1,7 +1,6 @@
 package com.axel_stein.domain.interactor.notebook;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NotebookRepository;
@@ -28,7 +27,6 @@ public class GetNotebookInteractor {
      * @return null, if there is no notebook with requested id
      * @throws IllegalStateException if notebook == null, id <= 0 or title is empty
      */
-    @Nullable
     public Single<Notebook> execute(final String id) {
         return Single.fromCallable(new Callable<Notebook>() {
             @Override
@@ -38,6 +36,8 @@ public class GetNotebookInteractor {
                     if (!isValid(notebook)) {
                         throw new IllegalStateException("notebook is not valid");
                     }
+                } else {
+                    notebook = new Notebook();
                 }
                 return notebook;
             }

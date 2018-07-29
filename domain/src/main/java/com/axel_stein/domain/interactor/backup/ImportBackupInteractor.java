@@ -2,8 +2,10 @@ package com.axel_stein.domain.interactor.backup;
 
 import android.support.annotation.NonNull;
 
-import com.axel_stein.domain.model.Backup;
+import com.axel_stein.domain.json_wrapper.LabelWrapper;
 import com.axel_stein.domain.json_wrapper.NoteWrapper;
+import com.axel_stein.domain.json_wrapper.NotebookWrapper;
+import com.axel_stein.domain.model.Backup;
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteLabelPair;
@@ -12,6 +14,7 @@ import com.axel_stein.domain.repository.LabelRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
+import com.axel_stein.domain.repository.SettingsRepository;
 import com.axel_stein.domain.utils.validators.LabelValidator;
 import com.axel_stein.domain.utils.validators.NoteLabelPairValidator;
 import com.axel_stein.domain.utils.validators.NoteValidator;
@@ -40,14 +43,19 @@ public class ImportBackupInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
+    @NonNull
+    private SettingsRepository mSettingsRepository;
+
     public ImportBackupInteractor(@NonNull NoteRepository n,
                                   @NonNull NotebookRepository b,
                                   @NonNull LabelRepository l,
-                                  @NonNull NoteLabelPairRepository p) {
+                                  @NonNull NoteLabelPairRepository p,
+                                  @NonNull SettingsRepository s) {
         mNoteRepository = requireNonNull(n);
         mNotebookRepository = requireNonNull(b);
         mLabelRepository = requireNonNull(l);
         mNoteLabelPairRepository = requireNonNull(p);
+        mSettingsRepository = requireNonNull(s);
     }
 
     public Completable execute(final String src) {
@@ -78,9 +86,10 @@ public class ImportBackupInteractor {
                     System.out.println("Error: notes not found");
                 }
 
-                List<Notebook> notebooks = backup.getNotebooks();
+                List<NotebookWrapper> notebooks = backup.getNotebooks();
                 if (notebooks != null) {
-                    for (Notebook notebook : notebooks) {
+                    for (NotebookWrapper wrapper : notebooks) {
+                        Notebook notebook = wrapper.toNotebook();
                         if (!NotebookValidator.isValid(notebook)) {
                             System.out.println("Error: notebook is not valid = " + notebook);
                         } else {
@@ -91,9 +100,10 @@ public class ImportBackupInteractor {
                     System.out.println("Error: notebooks not found");
                 }
 
-                List<Label> labels = backup.getLabels();
+                List<LabelWrapper> labels = backup.getLabels();
                 if (labels != null) {
-                    for (Label label : labels) {
+                    for (LabelWrapper wrapper : labels) {
+                        Label label = wrapper.toLabel();
                         if (!LabelValidator.isValid(label)) {
                             System.out.println("Error: label is not valid = " + label);
                         } else {
@@ -116,6 +126,9 @@ public class ImportBackupInteractor {
                 } else {
                     System.out.println("Error: pairs not found");
                 }
+
+                String settings = backup.getJsonSettings();
+                mSettingsRepository.importSettings(settings);
             }
         }).subscribeOn(Schedulers.io());
     }

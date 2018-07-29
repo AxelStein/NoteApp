@@ -7,7 +7,6 @@ import com.axel_stein.domain.interactor.notebook.DeleteNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.GetNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
-import com.axel_stein.domain.interactor.notebook.RenameNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateColorNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateOrderNotebookInteractor;
@@ -50,11 +49,6 @@ class NotebookInteractorModule {
     @Provides
     UpdateOrderNotebookInteractor updateOrder(SqlNotebookRepository n, AppSettingsRepository s, GoogleDriveInteractor d) {
         return new UpdateOrderNotebookInteractor(n, s, d);
-    }
-
-    @Provides
-    RenameNotebookInteractor rename(SqlNotebookRepository n, GoogleDriveInteractor d) {
-        return new RenameNotebookInteractor(n, d);
     }
 
     @Provides

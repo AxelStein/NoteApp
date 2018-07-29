@@ -22,6 +22,8 @@ public class DisplayUtil {
     public static int dpToPx(Context context, int dp) {
         if (context == null) {
             return 0;
+        } else if (dp < 0) {
+            return 0;
         }
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
@@ -29,6 +31,8 @@ public class DisplayUtil {
 
     public static int pxToDp(Context context, int px) {
         if (context == null) {
+            return 0;
+        } else if (px < 0) {
             return 0;
         }
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();

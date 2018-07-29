@@ -11,6 +11,9 @@ import android.support.v7.app.AppCompatDialogFragment;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.utils.DateFormatter;
+
+import org.joda.time.DateTime;
 
 public class NoteInfoDialog extends AppCompatDialogFragment {
 
@@ -54,14 +57,27 @@ public class NoteInfoDialog extends AppCompatDialogFragment {
             return null;
         }
 
-        String created = mNote.getCreatedDate().toString();
-        String modified = mNote.getModifiedDate().toString();
-        // fixme
-        //String created = DateFormatter.formatDateTime(getContext(), mNote.getCreatedDate());
-        //String modified = DateFormatter.formatDateTime(getContext(), mNote.getModifiedDate());
+        String created = null;
+        DateTime createdDate = mNote.getCreatedDate();
+        if (createdDate != null) {
+            created = DateFormatter.formatDateTime(getContext(), createdDate.getMillis());
+        }
+
+        String modified = null;
+        DateTime modifiedDate = mNote.getModifiedDate();
+        if (modifiedDate != null) {
+            modified = DateFormatter.formatDateTime(getContext(), modifiedDate.getMillis());
+        }
         int charCount = mNote.getContent() == null ? 0 : mNote.getContent().length();
 
-        return getString(R.string.msg_note_info, created, modified, charCount);
+        long views = mNote.getViews();
+
+        DateTime trashedDate = mNote.getTrashedDate();
+        if (trashedDate != null) {
+            String trashed = DateFormatter.formatDateTime(getContext(), trashedDate.getMillis());
+            return getString(R.string.msg_note_info_trashed, created, modified, trashed, views, charCount);
+        }
+        return getString(R.string.msg_note_info, created, modified, views, charCount);
     }
 
     public void show(Fragment fragment, String tag) {

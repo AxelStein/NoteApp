@@ -66,8 +66,10 @@ public class Notebook {
 
     private String driveId;
 
+    @JsonIgnore
     private int iconRes;
 
+    @JsonIgnore
     private boolean editable = true;
 
     @JsonIgnore

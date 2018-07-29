@@ -7,7 +7,6 @@ import com.axel_stein.domain.interactor.label.DeleteLabelInteractor;
 import com.axel_stein.domain.interactor.label.GetLabelInteractor;
 import com.axel_stein.domain.interactor.label.InsertLabelInteractor;
 import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
-import com.axel_stein.domain.interactor.label.RenameLabelInteractor;
 import com.axel_stein.domain.interactor.label.UpdateLabelInteractor;
 import com.axel_stein.domain.interactor.label.UpdateOrderLabelInteractor;
 import com.axel_stein.domain.interactor.label.UpdateViewsLabelInteractor;
@@ -47,11 +46,6 @@ class LabelInteractorModule {
     @Provides
     UpdateOrderLabelInteractor updateOrder(SqlLabelRepository r, AppSettingsRepository s, GoogleDriveInteractor d) {
         return new UpdateOrderLabelInteractor(r, s, d);
-    }
-
-    @Provides
-    RenameLabelInteractor rename(SqlLabelRepository r, GoogleDriveInteractor d) {
-        return new RenameLabelInteractor(r, d);
     }
 
     @Provides
