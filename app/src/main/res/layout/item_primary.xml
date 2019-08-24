@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp">
+
+    <com.axel_stein.noteapp.views.IconTextView
+        android:id="@+id/text_view"
+        android:background="?attr/selectableItemBackground"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textSize="14sp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:drawablePadding="32dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        app:iconLeft="@drawable/ic_book"
+        app:iconLeftTint="?android:attr/textColorPrimary"
+        android:textColor="?android:attr/textColorPrimary"
+        tools:ignore="RtlHardcoded"
+        tools:text="Notebook"/>
+
+</FrameLayout>

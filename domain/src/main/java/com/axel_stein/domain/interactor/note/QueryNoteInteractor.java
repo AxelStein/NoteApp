@@ -1,6 +1,6 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -133,6 +133,34 @@ public class QueryNoteInteractor {
     }
 
     /**
+     * @throws NullPointerException     if notebook is null
+     * @throws IllegalArgumentException if notebook`s id is 0
+     */
+    @NonNull
+    public Single<List<Note>> query(@NonNull final String notebookId) {
+        final String key = "notebook_" + notebookId;
+        if (hasKey(key)) {
+            return single(new Callable<List<Note>>() {
+                @Override
+                public List<Note> call() {
+                    return get(key);
+                }
+            });
+        }
+        return single(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() {
+                if (isEmpty(notebookId)) {
+                    throw new IllegalArgumentException("notebook is not valid");
+                }
+                List<Note> notes = orderImpl(mNoteRepository.queryNotebook(notebookId));
+                put(key, notes);
+                return notes;
+            }
+        });
+    }
+
+    /**
      * @throws NullPointerException     if label is null
      * @throws IllegalArgumentException if label`s id is 0
      */
@@ -205,7 +233,7 @@ public class QueryNoteInteractor {
                         if (end > content.length()) {
                             end = content.length();
                         }
-                        builder.append(content.substring(start, end));
+                        builder.append(content, start, end);
 
                         content = builder.toString();
                         note.setContent(content);
@@ -344,7 +372,7 @@ public class QueryNoteInteractor {
             if (end > content.length()) {
                 end = content.length();
             }
-            builder.append(content.substring(start, end));
+            builder.append(content, start, end);
 
             content = builder.toString();
 
@@ -417,6 +445,7 @@ public class QueryNoteInteractor {
                 if (mSettingsRepository.showNotesContent() || searchFlag) {
                     content = content.replace('\n', ' ');
                     content = content.replaceAll(" [ ]+", " ");
+                    content = content.trim();
                     if (!searchFlag && content.length() > 128) {
                         content = content.substring(0, 128);
                     }
@@ -433,6 +462,7 @@ public class QueryNoteInteractor {
             } else {
                 title = title.replace('\n', ' ');
                 title = title.replaceAll(" [ ]+", " ");
+                title = title.trim();
                 note.setTitle(title);
             }
         }

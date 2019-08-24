@@ -1,6 +1,6 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;

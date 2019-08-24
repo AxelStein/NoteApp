@@ -1,7 +1,7 @@
 package com.axel_stein.domain.repository;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -61,6 +61,9 @@ public interface NoteRepository {
 
     @NonNull
     List<Note> queryNotebook(@NonNull Notebook notebook);
+
+    @NonNull
+    List<Note> queryNotebook(@NonNull String notebookId);
 
     List<Note> queryNotebookTrashed(@NonNull Notebook notebook);
 

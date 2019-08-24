@@ -80,6 +80,7 @@
     <string name="action_sort_modified">Modified</string>
     <string name="action_sort_note_count">Note count</string>
     <string name="action_sort_custom">Custom</string>
+    <string name="action_sort_date">Date</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
@@ -90,6 +91,7 @@
     <string name="pref_secure_notes">Secure notes</string>
     <string name="pref_secure_notes_summary">App will require a password</string>
     <string name="pref_export">Export to file</string>
+    <string name="pref_export_drive">Export to Google Drive</string>
     <string name="pref_import">Import from file</string>
     <string name="pref_font_size">Font size</string>
     <string name="pref_font_size_small">Small</string>
@@ -231,5 +233,6 @@
 
     <string name="msg_note_info">Created: %1$s\n\nModified: %2$s\n\nViews: %3$d\n\nChar count: %4$d</string>
     <string name="msg_note_info_trashed">Created: %1$s\n\nModified: %2$s\n\nTrashed: %3$s\n\nViews: %4$d\n\nChar count: %5$d</string>
+    <string name="action_sign_in">Sign In</string>
 
 </resources>

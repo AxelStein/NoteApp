@@ -1,8 +1,9 @@
 package com.axel_stein.data;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
+
+import androidx.room.Database;
+import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.axel_stein.data.label.LabelDao;
 import com.axel_stein.data.label.LabelEntity;

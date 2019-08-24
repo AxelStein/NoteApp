@@ -26,4 +26,8 @@ public interface SettingsRepository {
 
     void importSettings(String json);
 
+    void storeBackupFileDriveId(String id);
+
+    String getBackupFileDriveId();
+
 }

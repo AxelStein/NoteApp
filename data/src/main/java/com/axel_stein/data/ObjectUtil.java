@@ -1,6 +1,6 @@
 package com.axel_stein.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class ObjectUtil {
 

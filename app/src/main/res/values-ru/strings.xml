@@ -225,5 +225,10 @@
 
     <string name="msg_note_info">Создана: %1$s\n\nОбновлена: %2$s\n\nПросмотры: %3$d\n\nКоличество символов: %4$d</string>
     <string name="msg_note_info_trashed">Создана: %1$s\n\nОбновлена: %2$s\n\nВ корзине: %3$s\n\nПросмотры: %4$d\n\nКоличество символов: %5$d</string>
+    <string name="action_sort_date">По дате</string>
+    <string name="msg_notes_starred">Заметка помечена</string>
+    <string name="msg_notes_unstarred">Заметка удалена из помеченных</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="pref_export_drive">Экспорт в Google Drive</string>
 
 </resources>

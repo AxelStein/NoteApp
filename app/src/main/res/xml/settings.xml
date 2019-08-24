@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen
+<androidx.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/pref_category_appearance">
 
-        <SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:key="PREF_NIGHT_MODE"
             android:title="@string/pref_night_mode"/>
 
-        <SwitchPreferenceCompat
+        <androidx.preference.SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="PREF_SHOW_NOTES_CONTENT"
             android:title="@string/pref_show_notes_content"/>
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:key="PREF_SWIPE_LEFT_ACTION"
             android:entries="@array/swipe_action_entries"
             android:defaultValue="swipe_action_none"
@@ -22,7 +22,7 @@
             android:entryValues="@array/swipe_values"
             android:title="@string/pref_swipe_left"/>
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:key="PREF_SWIPE_RIGHT_ACTION"
             android:entries="@array/swipe_action_entries"
             android:defaultValue="swipe_action_none"
@@ -30,22 +30,24 @@
             android:entryValues="@array/swipe_values"
             android:title="@string/pref_swipe_right"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/pref_category_editor">
 
+        <!--
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="PREF_SHOW_NOTE_EDITOR_LINES"
-            android:title="@string/pref_show_note_editor_lines"/>
+            android:title="@string/pref_show_note_editor_lines" />
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="PREF_CONTENT_CHAR_COUNTER"
-            android:title="@string/pref_content_char_counter"/>
+            android:title="@string/pref_content_char_counter" />
+        -->
 
-        <android.support.v7.preference.ListPreference
+        <androidx.preference.ListPreference
             android:key="PREF_FONT_SIZE"
             android:entries="@array/font_sizes"
             android:defaultValue="pref_font_size_default"
@@ -53,7 +55,7 @@
             android:entryValues="@array/font_sizes_values"
             android:title="@string/pref_font_size"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
     <!--
     <android.support.v7.preference.PreferenceCategory
@@ -71,16 +73,20 @@
     </android.support.v7.preference.PreferenceCategory>
     -->
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/pref_category_backup">
 
-        <Preference
+        <androidx.preference.Preference
             android:key="export_file"
             android:title="@string/pref_export"/>
 
-        <Preference
+        <androidx.preference.Preference
             android:key="import_file"
             android:title="@string/pref_import"/>
+
+        <androidx.preference.Preference
+            android:key="export_drive"
+            android:title="@string/pref_export_drive"/>
 
         <!--
         <Preference
@@ -88,20 +94,20 @@
             android:title="@string/pref_backup_manager"/>
         -->
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory
+    <androidx.preference.PreferenceCategory
         android:title="@string/pref_about_app">
 
-        <Preference
+        <androidx.preference.Preference
             android:key="rate_app"
             android:title="@string/pref_rate_app"/>
 
-        <Preference
+        <androidx.preference.Preference
             android:key="app_version"
             android:title="@string/app_name"/>
 
-    </android.support.v7.preference.PreferenceCategory>
+    </androidx.preference.PreferenceCategory>
 
 
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

@@ -3,7 +3,7 @@
     <color name="window_background_light">@android:color/white</color>
     <color name="window_background_dark">#1D2733</color>
 
-    <color name="color_starred">#f58e57</color>
+    <color name="color_starred">@color/text_color_secondary_light</color> <!--#f58e57-->
 
     <color name="color_accent">#00796b</color>
     <color name="color_accent_dark">#62A8E3</color>
@@ -11,21 +11,12 @@
     <color name="text_error_light">#f44336</color>
     <color name="text_error_dark">#f44336</color>
 
-    <color name="keep_screen_on_color_light">#f44336</color>
-    <color name="keep_screen_on_color_dark">#f44336</color>
-
     <color name="text_color_secondary_light">#8a000000</color>
     <color name="text_color_primary_dark">#ffffff</color>
     <color name="text_color_primary_light">#de000000</color>
 
     <color name="edit_text_line_color_light">#22000000</color>
     <color name="edit_text_line_color_dark">#22ffffff</color>
-
-    <color name="search_selector_color_light">#f9a825</color>
-    <color name="search_selector_current_color_light">#e53935</color>
-
-    <color name="search_selector_color_dark">#66f9a825</color>
-    <color name="search_selector_current_color_dark">#66e53935</color>
 
     <color name="selected_notebook_background_color_light">#11000000</color>
     <color name="selected_notebook_background_color_dark">#21ffffff</color>

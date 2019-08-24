@@ -1,6 +1,6 @@
 package com.axel_stein.domain.interactor.backup;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.json_wrapper.LabelWrapper;
 import com.axel_stein.domain.json_wrapper.NoteWrapper;

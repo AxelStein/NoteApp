@@ -1,9 +1,8 @@
 package com.axel_stein.domain.interactor.notebook;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
 
@@ -22,13 +21,9 @@ public class DeleteNotebookInteractor {
     @NonNull
     private NotebookRepository mNotebookRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public DeleteNotebookInteractor(@NonNull NoteRepository n, @NonNull NotebookRepository b, @NonNull DriveSyncRepository d) {
+    public DeleteNotebookInteractor(@NonNull NoteRepository n, @NonNull NotebookRepository b) {
         mNoteRepository = requireNonNull(n);
         mNotebookRepository = requireNonNull(b);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -53,12 +48,6 @@ public class DeleteNotebookInteractor {
                 @Override
                 public void run() {
                     mNoteRepository.setInbox(notebook);
-                }
-            }))
-            .andThen(Completable.fromAction(new Action() {
-                @Override
-                public void run() {
-                    mDriveSyncRepository.notebookDeleted(notebook);
                 }
             }))
             .subscribeOn(Schedulers.io());

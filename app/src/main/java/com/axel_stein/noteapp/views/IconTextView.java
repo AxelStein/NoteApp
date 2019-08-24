@@ -8,22 +8,22 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
+
 import com.axel_stein.noteapp.R;
 
 public class IconTextView extends AppCompatTextView {
-
     private final ForegroundViewImpl mImpl = new ForegroundViewImpl(this);
 
     private int mIconTopTintColor;
@@ -53,10 +53,8 @@ public class IconTextView extends AppCompatTextView {
         init(context, attrs, defStyle);
     }
 
-    private void init(Context context, AttributeSet attrs, int defStyle) {
-        if (mImpl != null) {
-            mImpl.init(context, attrs, defStyle);
-        }
+    protected void init(Context context, AttributeSet attrs, int defStyle) {
+        mImpl.init(context, attrs, defStyle);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconTextView);
 

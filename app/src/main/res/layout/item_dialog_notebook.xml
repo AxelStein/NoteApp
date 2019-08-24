@@ -11,7 +11,7 @@
     <com.axel_stein.noteapp.views.IconTextView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:iconLeft="@drawable/ic_book_white_24dp"
-        app:iconLeftTint="?attr/menuItemTintColor"
+        app:iconLeftTint="@color/text_color_secondary_light"
 
         android:id="@+id/text_title"
         android:layout_weight="1"

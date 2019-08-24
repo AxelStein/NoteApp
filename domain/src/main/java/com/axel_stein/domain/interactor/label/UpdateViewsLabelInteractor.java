@@ -1,9 +1,8 @@
 package com.axel_stein.domain.interactor.label;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.LabelRepository;
 
 import io.reactivex.Completable;
@@ -18,12 +17,8 @@ public class UpdateViewsLabelInteractor {
     @NonNull
     private LabelRepository mRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public UpdateViewsLabelInteractor(@NonNull LabelRepository l, @NonNull DriveSyncRepository d) {
+    public UpdateViewsLabelInteractor(@NonNull LabelRepository l) {
         mRepository = requireNonNull(l);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(final Label label) {
@@ -35,7 +30,6 @@ public class UpdateViewsLabelInteractor {
                 }
 
                 mRepository.updateViews(label, label.incrementViews());
-                mDriveSyncRepository.labelViewed(label);
             }
         }).subscribeOn(Schedulers.io());
     }

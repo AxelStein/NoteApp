@@ -1,6 +1,6 @@
 package com.axel_stein.noteapp;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.LabelCache;
@@ -28,16 +28,11 @@ public class EventBusHelper {
         updateNoteList(true, false);
     }
 
-    public static void updateDrawer() {
-        post(new UpdateDrawer(true, false));
-    }
-
     public static void updateNoteList(boolean saveSelection, boolean click) {
         NoteCache.invalidate();
         NotebookCache.invalidate();
         LabelCache.invalidate();
         post(new UpdateNoteList());
-        post(new UpdateDrawer(saveSelection, click));
     }
 
     public static void addNotebook(Notebook notebook) {
@@ -98,28 +93,7 @@ public class EventBusHelper {
 
     }
 
-    public static class UpdateAddNoteFAB {
-    }
-
     public static class Recreate {
-    }
-
-    public static class UpdateDrawer {
-        private boolean saveSelection;
-        private boolean click;
-
-        UpdateDrawer(boolean saveSelection, boolean click) {
-            this.saveSelection = saveSelection;
-            this.click = click;
-        }
-
-        public boolean saveSelection() {
-            return saveSelection;
-        }
-
-        public boolean click() {
-            return click;
-        }
     }
 
     public static class UpdateNoteList {

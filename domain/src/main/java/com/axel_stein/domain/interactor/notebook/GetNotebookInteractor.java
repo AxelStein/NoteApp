@@ -1,6 +1,6 @@
 package com.axel_stein.domain.interactor.notebook;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NotebookRepository;

@@ -1,7 +1,7 @@
 package com.axel_stein.domain.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.utils.CompareBuilder;
 import com.axel_stein.domain.utils.TextUtil;
@@ -47,6 +47,13 @@ public class Notebook {
         n.title = TITLE_STARRED;
         n.iconRes = ICON_STARRED;
         n.setEditable(false);
+        return n;
+    }
+
+    public static Notebook from(String id, String title) {
+        Notebook n = new Notebook();
+        n.setId(id);
+        n.setTitle(title);
         return n;
     }
 

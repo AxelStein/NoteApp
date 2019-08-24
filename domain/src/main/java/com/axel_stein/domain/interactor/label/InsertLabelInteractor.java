@@ -1,9 +1,8 @@
 package com.axel_stein.domain.interactor.label;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.LabelRepository;
 
 import org.joda.time.DateTime;
@@ -20,12 +19,8 @@ public class InsertLabelInteractor {
     @NonNull
     private LabelRepository mRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public InsertLabelInteractor(@NonNull LabelRepository l, @NonNull DriveSyncRepository d) {
+    public InsertLabelInteractor(@NonNull LabelRepository l) {
         mRepository = requireNonNull(l);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -44,7 +39,6 @@ public class InsertLabelInteractor {
                 label.setModifiedDate(new DateTime());
 
                 mRepository.insert(label);
-                mDriveSyncRepository.labelCreated(label);
             }
         }).subscribeOn(Schedulers.io());
     }

@@ -2,10 +2,17 @@ package com.axel_stein.noteapp;
 
 import android.app.Application;
 
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.dagger.AppComponent;
 import com.axel_stein.noteapp.dagger.AppModule;
 import com.axel_stein.noteapp.dagger.DaggerAppComponent;
+import com.axel_stein.noteapp.google_drive.DriveWorker;
+
+import java.util.concurrent.TimeUnit;
 
 public class App extends Application {
 
@@ -29,6 +36,9 @@ public class App extends Application {
         Notebook.ICON_INBOX = R.drawable.ic_inbox_white_24dp;
 
         sAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+
+        WorkRequest request = new PeriodicWorkRequest.Builder(DriveWorker.class, 1, TimeUnit.DAYS).build();
+        WorkManager.getInstance(this).enqueue(request);
     }
 
 }

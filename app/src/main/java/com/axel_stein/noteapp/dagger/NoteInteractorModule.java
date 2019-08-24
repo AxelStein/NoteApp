@@ -14,7 +14,6 @@ import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
-import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -23,18 +22,18 @@ import dagger.Provides;
 class NoteInteractorModule {
 
     @Provides
-    SetNotebookNoteInteractor updateNotebook(SqlNoteRepository r, GoogleDriveInteractor d) {
-        return new SetNotebookNoteInteractor(r, d);
+    SetNotebookNoteInteractor updateNotebook(SqlNoteRepository r) {
+        return new SetNotebookNoteInteractor(r);
     }
 
     @Provides
-    DeleteNoteInteractor delete(SqlNoteRepository r, SqlNoteLabelPairRepository p, GoogleDriveInteractor d) {
-        return new DeleteNoteInteractor(r, p, d);
+    DeleteNoteInteractor delete(SqlNoteRepository r, SqlNoteLabelPairRepository p) {
+        return new DeleteNoteInteractor(r, p);
     }
 
     @Provides
-    EmptyTrashInteractor emptyTrash(QueryNoteInteractor query, DeleteNoteInteractor delete) {
-        return new EmptyTrashInteractor(query, delete);
+    EmptyTrashInteractor emptyTrash(QueryNoteInteractor q, DeleteNoteInteractor d) {
+        return new EmptyTrashInteractor(q, d);
     }
 
     @Provides
@@ -43,8 +42,8 @@ class NoteInteractorModule {
     }
 
     @Provides
-    InsertNoteInteractor insert(SqlNoteRepository r, SetLabelsInteractor s, GoogleDriveInteractor d) {
-        return new InsertNoteInteractor(r, s, d);
+    InsertNoteInteractor insert(SqlNoteRepository r, SetLabelsInteractor s) {
+        return new InsertNoteInteractor(r, s);
     }
 
     @Provides
@@ -53,28 +52,28 @@ class NoteInteractorModule {
     }
 
     @Provides
-    SetLabelsInteractor setLabels(SqlNoteLabelPairRepository r, GoogleDriveInteractor d) {
-        return new SetLabelsInteractor(r, d);
+    SetLabelsInteractor setLabels(SqlNoteLabelPairRepository r) {
+        return new SetLabelsInteractor(r);
     }
 
     @Provides
-    SetTrashedNoteInteractor trash(SqlNoteRepository r, SqlNoteLabelPairRepository p, GoogleDriveInteractor d) {
-        return new SetTrashedNoteInteractor(r, p, d);
+    SetTrashedNoteInteractor trash(SqlNoteRepository r, SqlNoteLabelPairRepository p) {
+        return new SetTrashedNoteInteractor(r, p);
     }
 
     @Provides
-    UpdateNoteInteractor update(SqlNoteRepository r, GoogleDriveInteractor d) {
-        return new UpdateNoteInteractor(r, d);
+    UpdateNoteInteractor update(SqlNoteRepository r) {
+        return new UpdateNoteInteractor(r);
     }
 
     @Provides
-    SetPinnedNoteInteractor pin(SqlNoteRepository r, GoogleDriveInteractor d) {
-        return new SetPinnedNoteInteractor(r, d);
+    SetPinnedNoteInteractor pin(SqlNoteRepository r) {
+        return new SetPinnedNoteInteractor(r);
     }
 
     @Provides
-    SetStarredNoteInteractor star(SqlNoteRepository r, GoogleDriveInteractor d) {
-        return new SetStarredNoteInteractor(r, d);
+    SetStarredNoteInteractor star(SqlNoteRepository r) {
+        return new SetStarredNoteInteractor(r);
     }
 
 }

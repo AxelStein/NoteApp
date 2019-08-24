@@ -1,7 +1,7 @@
 package com.axel_stein.noteapp.dagger;
 
-import android.arch.persistence.room.Room;
-import android.support.v7.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
+import androidx.room.Room;
 
 import com.axel_stein.data.AppDatabase;
 import com.axel_stein.data.AppSettingsRepository;
@@ -11,7 +11,7 @@ import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
 import com.axel_stein.domain.interactor.ResetInteractor;
 import com.axel_stein.noteapp.App;
-import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
+import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
 
 import javax.inject.Singleton;
 
@@ -36,17 +36,6 @@ public class AppModule {
     @Singleton
     AppDatabase provideDatabase(App app) {
         return Room.databaseBuilder(app, AppDatabase.class, app.getPackageName()).build();
-    }
-
-    @Provides
-    @Singleton
-    GoogleDriveInteractor provideGoogleDriveInteractor(App app,
-                                                       SqlNoteRepository n,
-                                                       SqlNotebookRepository b,
-                                                       SqlLabelRepository l,
-                                                       SqlNoteLabelPairRepository p,
-                                                       AppSettingsRepository s) {
-        return new GoogleDriveInteractor(app, n, b, l, p, s);
     }
 
     @Provides
@@ -84,6 +73,11 @@ public class AppModule {
                                  SqlLabelRepository labels,
                                  SqlNoteLabelPairRepository labelHelper) {
         return new ResetInteractor(notes, notebooks, labels, labelHelper);
+    }
+
+    @Provides
+    DriveServiceHelper provideDriveService(App app, AppSettingsRepository s) {
+        return new DriveServiceHelper(app, s);
     }
 
 }

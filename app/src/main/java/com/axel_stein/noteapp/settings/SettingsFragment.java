@@ -9,19 +9,20 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.FileProvider;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.core.content.FileProvider;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.LoadingDialog;
 import com.axel_stein.noteapp.utils.FileUtil;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.util.List;

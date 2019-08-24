@@ -1,9 +1,8 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
@@ -26,13 +25,9 @@ public class SetTrashedNoteInteractor {
     @NonNull
     private NoteLabelPairRepository mNoteLabelPairRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public SetTrashedNoteInteractor(@NonNull NoteRepository n, @NonNull NoteLabelPairRepository l, @NonNull DriveSyncRepository d) {
+    public SetTrashedNoteInteractor(@NonNull NoteRepository n, @NonNull NoteLabelPairRepository l) {
         mNoteRepository = requireNonNull(n);
         mNoteLabelPairRepository = requireNonNull(l);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(@NonNull final Note note, final boolean trashed) {
@@ -40,9 +35,6 @@ public class SetTrashedNoteInteractor {
             @Override
             public void run() {
                 setTrashedImpl(note, trashed);
-
-                mDriveSyncRepository.noteTrashed(note, trashed);
-                mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -58,9 +50,6 @@ public class SetTrashedNoteInteractor {
                 for (Note note : notes) {
                     setTrashedImpl(note, trashed);
                 }
-
-                mDriveSyncRepository.notesTrashed(notes, trashed);
-                mDriveSyncRepository.notifyNoteLabelPairsChanged(mNoteLabelPairRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

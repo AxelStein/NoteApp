@@ -1,6 +1,6 @@
 package com.axel_stein.domain.repository;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;

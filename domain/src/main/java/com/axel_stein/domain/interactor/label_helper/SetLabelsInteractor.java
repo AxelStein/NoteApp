@@ -1,11 +1,10 @@
 package com.axel_stein.domain.interactor.label_helper;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteLabelPair;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteLabelPairRepository;
 
 import java.util.List;
@@ -23,12 +22,8 @@ public class SetLabelsInteractor {
     @NonNull
     private NoteLabelPairRepository mRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public SetLabelsInteractor(@NonNull NoteLabelPairRepository n, @NonNull DriveSyncRepository d) {
+    public SetLabelsInteractor(@NonNull NoteLabelPairRepository n) {
         mRepository = requireNonNull(n);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(@NonNull final Note note, @Nullable final List<String> labelIds) {
@@ -44,7 +39,6 @@ public class SetLabelsInteractor {
                     }
                 }
                 setLabelsImpl(note, labelIds);
-                mDriveSyncRepository.notifyNoteLabelPairsChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -69,8 +63,6 @@ public class SetLabelsInteractor {
                 for (Note note : notes) {
                     setLabelsImpl(note, labelIds);
                 }
-
-                mDriveSyncRepository.notifyNoteLabelPairsChanged(mRepository.query());
             }
         }).subscribeOn(Schedulers.io());
     }

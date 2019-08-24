@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_pin_note"
-        android:icon="@drawable/ic_pin_white_24dp"
+        android:icon="@drawable/ic_turned_in_not_white_24dp"
         android:title="@string/action_pin_note"
         android:visible="false"
         app:showAsAction="always"/>
@@ -21,7 +21,7 @@
         android:icon="@drawable/ic_label_white_24dp"
         android:title="@string/action_labels"
         android:visible="false"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/menu_restore"
@@ -53,35 +53,16 @@
 
     <item
         android:id="@+id/menu_move_to_trash"
-        android:icon="@drawable/ic_delete_white_24dp"
+        android:icon="@drawable/ic_delete"
         android:title="@string/action_move_to_trash"
         android:visible="false"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_delete"
-        android:icon="@drawable/ic_delete_forever_white_24dp"
+        android:icon="@drawable/ic_delete_forever"
         android:title="@string/action_delete"
         android:visible="false"
         app:showAsAction="ifRoom"/>
-
-    <!---->
-    <item
-        android:id="@+id/menu_keep_screen_on"
-        android:title="@string/action_keep_screen_on"
-        android:icon="@drawable/ic_wb_incandescent_white_24dp"
-        android:visible="false"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_fullscreen"
-        android:title="@string/action_fullscreen"
-        android:icon="@drawable/ic_fullscreen_white_24dp"
-        android:visible="false"
-        app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_note_info"
-        android:title="@string/action_note_info" />
 
 </menu>

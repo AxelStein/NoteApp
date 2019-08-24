@@ -11,7 +11,6 @@ import com.axel_stein.domain.interactor.notebook.UpdateColorNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateOrderNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateViewsNotebookInteractor;
-import com.axel_stein.noteapp.google_drive.GoogleDriveInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,18 +19,18 @@ import dagger.Provides;
 class NotebookInteractorModule {
 
     @Provides
-    InsertNotebookInteractor insert(SqlNotebookRepository repository, GoogleDriveInteractor d) {
-        return new InsertNotebookInteractor(repository, d);
+    InsertNotebookInteractor insert(SqlNotebookRepository repository) {
+        return new InsertNotebookInteractor(repository);
     }
 
     @Provides
-    UpdateNotebookInteractor update(SqlNotebookRepository repository, GoogleDriveInteractor d) {
-        return new UpdateNotebookInteractor(repository, d);
+    UpdateNotebookInteractor update(SqlNotebookRepository repository) {
+        return new UpdateNotebookInteractor(repository);
     }
 
     @Provides
-    DeleteNotebookInteractor delete(SqlNoteRepository n, SqlNotebookRepository b, GoogleDriveInteractor d) {
-        return new DeleteNotebookInteractor(n, b, d);
+    DeleteNotebookInteractor delete(SqlNoteRepository n, SqlNotebookRepository b) {
+        return new DeleteNotebookInteractor(n, b);
     }
 
     @Provides
@@ -47,18 +46,18 @@ class NotebookInteractorModule {
     }
 
     @Provides
-    UpdateOrderNotebookInteractor updateOrder(SqlNotebookRepository n, AppSettingsRepository s, GoogleDriveInteractor d) {
-        return new UpdateOrderNotebookInteractor(n, s, d);
+    UpdateOrderNotebookInteractor updateOrder(SqlNotebookRepository n, AppSettingsRepository s) {
+        return new UpdateOrderNotebookInteractor(n, s);
     }
 
     @Provides
-    UpdateColorNotebookInteractor color(SqlNotebookRepository n, GoogleDriveInteractor d) {
-        return new UpdateColorNotebookInteractor(n, d);
+    UpdateColorNotebookInteractor color(SqlNotebookRepository n) {
+        return new UpdateColorNotebookInteractor(n);
     }
 
     @Provides
-    UpdateViewsNotebookInteractor views(SqlNotebookRepository n, GoogleDriveInteractor d) {
-        return new UpdateViewsNotebookInteractor(n, d);
+    UpdateViewsNotebookInteractor views(SqlNotebookRepository n) {
+        return new UpdateViewsNotebookInteractor(n);
     }
 
 }

@@ -1,8 +1,9 @@
 package com.axel_stein.data;
 
 import android.content.SharedPreferences;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.domain.model.NoteOrder;
@@ -31,6 +32,7 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final String PREF_CONTENT_CHAR_COUNTER = "PREF_CONTENT_CHAR_COUNTER";
 
     private static final String PREF_PASSWORD = "PREF_PASSWORD";
+    private static final String PREF_BACKUP_FILE_DRIVE_ID = "PREF_BACKUP_FILE_DRIVE_ID";
 
     // todo useless
     private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
@@ -70,6 +72,17 @@ public class AppSettingsRepository implements SettingsRepository {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void storeBackupFileDriveId(String id) {
+        mPreferences.edit().putString(PREF_BACKUP_FILE_DRIVE_ID, id).apply();
+    }
+
+    @Nullable
+    @Override
+    public String getBackupFileDriveId() {
+        return mPreferences.getString(PREF_BACKUP_FILE_DRIVE_ID, null);
     }
 
     @Override
@@ -119,8 +132,10 @@ public class AppSettingsRepository implements SettingsRepository {
 
     @Override
     public void setNotesOrder(NoteOrder order) {
-        mPreferences.edit().putInt(PREF_NOTES_ORDER, order.ordinal()).apply();
-        mPreferences.edit().putBoolean(PREF_NOTES_ORDER_DESC, order.isDesc()).apply();
+        if (order != null) {
+            mPreferences.edit().putInt(PREF_NOTES_ORDER, order.ordinal()).apply();
+            mPreferences.edit().putBoolean(PREF_NOTES_ORDER_DESC, order.isDesc()).apply();
+        }
     }
 
     @Override

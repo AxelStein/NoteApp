@@ -2,10 +2,11 @@ package com.axel_stein.noteapp.dialogs.notebook;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
@@ -27,16 +28,16 @@ import io.reactivex.functions.Consumer;
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public class AddNotebookDialog extends EditTextDialog {
-
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
     @Inject
     InsertNotebookInteractor mInsertNotebookInteractor;
+
     private HashMap<String, Boolean> mMap;
 
     public static void launch(AppCompatActivity activity) {
         checkNotNull(activity);
-
         launch(activity.getSupportFragmentManager());
     }
 
@@ -75,7 +76,7 @@ public class AddNotebookDialog extends EditTextDialog {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Notebook>>() {
                     @Override
-                    public void accept(List<Notebook> notebooks) throws Exception {
+                    public void accept(List<Notebook> notebooks) {
                         if (mMap == null) {
                             mMap = new HashMap<>();
                         } else {
@@ -88,7 +89,7 @@ public class AddNotebookDialog extends EditTextDialog {
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
 
                         EventBusHelper.showMessage(R.string.error);
@@ -107,14 +108,14 @@ public class AddNotebookDialog extends EditTextDialog {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         EventBusHelper.showMessage(R.string.msg_notebook_added);
                         EventBusHelper.addNotebook(notebook);
                         dismiss();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(Throwable throwable) {
                         throwable.printStackTrace();
 
                         EventBusHelper.showMessage(R.string.error);

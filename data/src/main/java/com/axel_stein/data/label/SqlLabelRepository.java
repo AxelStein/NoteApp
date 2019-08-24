@@ -1,7 +1,7 @@
 package com.axel_stein.data.label;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.repository.LabelRepository;

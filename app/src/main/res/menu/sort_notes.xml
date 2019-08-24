@@ -12,13 +12,8 @@
         android:title="@string/action_sort_views"/>
 
     <item
-        android:id="@+id/menu_sort_created"
-        android:checkable="true"
-        android:title="@string/action_sort_created"/>
-
-    <item
         android:id="@+id/menu_sort_modified"
         android:checkable="true"
-        android:title="@string/action_sort_modified"/>
+        android:title="@string/action_sort_date"/>
 
 </menu>

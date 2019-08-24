@@ -4,14 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -20,9 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomMenuDialog extends BottomSheetDialogFragment {
     private String mTitle;
@@ -86,6 +89,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         textTitle.setText(mTitle);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Menu menu = MenuUtil.inflateMenuFromResource(recyclerView, mMenuRes);
         if (mItemsVisibility != null) {
@@ -116,7 +120,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         });
 
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        if (layoutManager != null && layoutManager instanceof GridLayoutManager) {
+        if (layoutManager instanceof GridLayoutManager) {
             GridLayoutManager grid = (GridLayoutManager) layoutManager;
             if (adapter.getItemCount() <= 4) {
                 grid.setSpanCount(1);
@@ -165,11 +169,11 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             return this;
         }
 
-        public Builder setChecked(int itemId) {
-            return setChecked(itemId, true);
+        public Builder addChecked(int itemId) {
+            return addChecked(itemId, true);
         }
 
-        public Builder setChecked(int itemId, boolean checked) {
+        public Builder addChecked(int itemId, boolean checked) {
             if (mCheckedItems == null) {
                 mCheckedItems = new SparseBooleanArray();
             }
@@ -186,6 +190,16 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             dialog.mItemsVisibility = mItemsVisibility;
             dialog.setTargetFragment(fragment, 0);
             dialog.show(fragment.getFragmentManager(), tag);
+        }
+
+        public void show(FragmentManager manager, String tag) {
+            BottomMenuDialog dialog = new BottomMenuDialog();
+            dialog.mTitle = mTitle;
+            dialog.mMenuRes = mMenuRes;
+            dialog.mData = mData;
+            dialog.mCheckedItems = mCheckedItems;
+            dialog.mItemsVisibility = mItemsVisibility;
+            dialog.show(manager, tag);
         }
 
     }

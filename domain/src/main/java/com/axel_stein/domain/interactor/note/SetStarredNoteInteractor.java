@@ -1,9 +1,8 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.List;
@@ -20,12 +19,8 @@ public class SetStarredNoteInteractor {
     @NonNull
     private NoteRepository mRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public SetStarredNoteInteractor(@NonNull NoteRepository r, @NonNull DriveSyncRepository d) {
+    public SetStarredNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(@NonNull final Note note, final boolean starred) {
@@ -39,7 +34,6 @@ public class SetStarredNoteInteractor {
                 note.setStarred(starred);
 
                 mRepository.setStarred(note, starred);
-                mDriveSyncRepository.noteStarred(note, starred);
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -57,8 +51,6 @@ public class SetStarredNoteInteractor {
                 for (Note note : notes) {
                     note.setStarred(starred);
                 }
-
-                mDriveSyncRepository.notesStarred(notes, starred);
             }
         }).subscribeOn(Schedulers.io());
     }

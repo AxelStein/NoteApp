@@ -1,12 +1,14 @@
 package com.axel_stein.noteapp.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
 
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
 import com.axel_stein.domain.model.Note;
@@ -14,9 +16,9 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
-import com.axel_stein.noteapp.notes.list.NotesContract;
-import com.axel_stein.noteapp.notes.list.NotesFragment;
-import com.axel_stein.noteapp.notes.list.presenters.TrashNotesPresenter;
+import com.axel_stein.noteapp.main.list.NotesContract;
+import com.axel_stein.noteapp.main.list.NotesFragment;
+import com.axel_stein.noteapp.main.list.presenters.TrashNotesPresenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 
 import java.util.List;
@@ -42,10 +44,22 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
 
         setHasOptionsMenu(true);
 
-        setPresenter(new TrashNotesPresenter());
+        if (mPresenter == null) {
+            setPresenter(new TrashNotesPresenter());
+        }
         setEmptyMsg(getString(R.string.empty_trash));
         setPaddingTop(8);
-        setPaddingBottom(8);
+        setPaddingBottom(88);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Activity activity = getActivity();
+        if (activity instanceof OnTitleChangeListener) {
+            OnTitleChangeListener mListener = (OnTitleChangeListener) activity;
+            mListener.onTitleChange(getString(R.string.action_trash));
+        }
     }
 
     @Override
@@ -65,6 +79,7 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_trash, menu);
         MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
+        //MenuUtil.tintMenuIconsColorRes(getContext(), menu, R.color.text_color_primary_light);
     }
 
     @Override
@@ -76,10 +91,9 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_empty_trash:
-                confirmEmptyTrashDialog();
-                return true;
+        if (item.getItemId() == R.id.menu_empty_trash) {
+            confirmEmptyTrashDialog();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -91,16 +105,16 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
         dialog.setPositiveButtonText(R.string.action_empty_trash);
         dialog.setNegativeButtonText(R.string.action_cancel);
         dialog.setTargetFragment(this, 0);
-        dialog.show(getFragmentManager(), TAG_EMPTY_TRASH);
+        if (getFragmentManager() != null) {
+            dialog.show(getFragmentManager(), TAG_EMPTY_TRASH);
+        }
     }
 
     @Override
     public void onConfirm(String tag) {
         if (tag != null) {
-            switch (tag) {
-                case TAG_EMPTY_TRASH:
-                    emptyTrash();
-                    break;
+            if (TAG_EMPTY_TRASH.equals(tag)) {
+                emptyTrash();
             }
         }
     }

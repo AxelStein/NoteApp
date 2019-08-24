@@ -1,7 +1,7 @@
 package com.axel_stein.data.note;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
@@ -149,6 +149,12 @@ public class SqlNoteRepository implements NoteRepository {
     @Override
     public List<Note> queryNotebook(@NonNull Notebook notebook) {
         return map(mDao.queryNotebook(notebook.getId()));
+    }
+
+    @NonNull
+    @Override
+    public List<Note> queryNotebook(@NonNull String notebookId) {
+        return map(mDao.queryNotebook(notebookId));
     }
 
     @Override

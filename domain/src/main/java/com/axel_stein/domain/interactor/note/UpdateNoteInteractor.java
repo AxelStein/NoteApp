@@ -1,9 +1,8 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import org.joda.time.DateTime;
@@ -20,12 +19,8 @@ public class UpdateNoteInteractor {
     @NonNull
     private NoteRepository mRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public UpdateNoteInteractor(@NonNull NoteRepository r, @NonNull DriveSyncRepository d) {
+    public UpdateNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     /**
@@ -43,7 +38,6 @@ public class UpdateNoteInteractor {
                 note.setModifiedDate(new DateTime());
 
                 mRepository.update(note);
-                mDriveSyncRepository.noteUpdated(note);
             }
         })
         .subscribeOn(Schedulers.io());

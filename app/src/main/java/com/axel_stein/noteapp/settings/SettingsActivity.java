@@ -2,29 +2,26 @@ package com.axel_stein.noteapp.settings;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.base.SwipeBaseActivity;
+import com.axel_stein.noteapp.base.BaseActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+public class SettingsActivity extends BaseActivity {
 
-public class SettingsActivity extends SwipeBaseActivity {
-
-    @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        ButterKnife.bind(this);
+        mToolbar = findViewById(R.id.toolbar);
         EventBusHelper.subscribe(this);
 
         setSupportActionBar(mToolbar);
@@ -61,7 +58,8 @@ public class SettingsActivity extends SwipeBaseActivity {
 
     @Subscribe
     public void onRecreate(EventBusHelper.Recreate e) {
-        recreate();
+        // todo recreate();
+        finish();
     }
 
     @Override

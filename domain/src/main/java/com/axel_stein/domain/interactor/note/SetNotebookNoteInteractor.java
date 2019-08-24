@@ -1,9 +1,8 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.List;
@@ -20,12 +19,8 @@ public class SetNotebookNoteInteractor {
     @NonNull
     private NoteRepository mRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public SetNotebookNoteInteractor(@NonNull NoteRepository r, @NonNull DriveSyncRepository d) {
+    public SetNotebookNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(final Note note, final String notebookId) {
@@ -33,9 +28,7 @@ public class SetNotebookNoteInteractor {
             @Override
             public void run() {
                 requireNonNull(note);
-
                 mRepository.setNotebook(note.getId(), notebookId);
-                mDriveSyncRepository.noteNotebookChanged(note);
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -50,12 +43,7 @@ public class SetNotebookNoteInteractor {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
-
                 mRepository.setNotebook(notes, notebookId);
-
-                for (Note note : notes) {
-                    mDriveSyncRepository.noteNotebookChanged(note);
-                }
             }
         }).subscribeOn(Schedulers.io());
     }

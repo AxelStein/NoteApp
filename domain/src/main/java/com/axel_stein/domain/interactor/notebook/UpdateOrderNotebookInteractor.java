@@ -1,10 +1,9 @@
 package com.axel_stein.domain.interactor.notebook;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.model.NotebookOrder;
-import com.axel_stein.domain.repository.DriveSyncRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
@@ -25,13 +24,9 @@ public class UpdateOrderNotebookInteractor {
     @NonNull
     private SettingsRepository mSettingsRepository;
 
-    @NonNull
-    private DriveSyncRepository mDriveSyncRepository;
-
-    public UpdateOrderNotebookInteractor(@NonNull NotebookRepository n, @NonNull SettingsRepository s, @NonNull DriveSyncRepository d) {
+    public UpdateOrderNotebookInteractor(@NonNull NotebookRepository n, @NonNull SettingsRepository s) {
         mRepository = requireNonNull(n);
         mSettingsRepository = requireNonNull(s);
-        mDriveSyncRepository = requireNonNull(d);
     }
 
     public Completable execute(final List<Notebook> notebooks) {
@@ -49,7 +44,6 @@ public class UpdateOrderNotebookInteractor {
                     notebook.setOrder(i);
 
                     mRepository.updateOrder(notebook, i);
-                    mDriveSyncRepository.notebookOrderChanged(notebook);
                 }
             }
         }).subscribeOn(Schedulers.io());
