@@ -1,13 +1,10 @@
 package com.axel_stein.data;
 
 import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
-import com.axel_stein.domain.model.LabelOrder;
 import com.axel_stein.domain.model.NoteOrder;
-import com.axel_stein.domain.model.NotebookOrder;
 import com.axel_stein.domain.repository.SettingsRepository;
 
 import org.json.JSONException;
@@ -15,28 +12,12 @@ import org.json.JSONObject;
 
 public class AppSettingsRepository implements SettingsRepository {
     public static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
-    public static final String PREF_NOTES_ORDER_DESC = "PREF_NOTES_ORDER_DESC";
-
-    public static final String PREF_NOTEBOOK_ORDER = "PREF_NOTEBOOK_ORDER";
-    public static final String PREF_NOTEBOOK_ORDER_DESC = "PREF_NOTEBOOK_ORDER_DESC";
-
-    public static final String PREF_LABEL_ORDER = "PREF_LABEL_ORDER";
-    public static final String PREF_LABEL_ORDER_DESC = "PREF_LABEL_ORDER_DESC";
-
     public static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
     public static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
     public static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
-    public static final String PREF_SHOW_NOTE_EDITOR_LINES = "PREF_SHOW_NOTE_EDITOR_LINES";
     public static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
     public static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
-    public static final String PREF_CONTENT_CHAR_COUNTER = "PREF_CONTENT_CHAR_COUNTER";
-
-    private static final String PREF_PASSWORD = "PREF_PASSWORD";
     private static final String PREF_BACKUP_FILE_DRIVE_ID = "PREF_BACKUP_FILE_DRIVE_ID";
-
-    // todo useless
-    private static final String PREF_SHOW_EXIT_FULLSCREEN_MSG = "PREF_SHOW_EXIT_FULLSCREEN_MSG";
-    private static final String PREF_SHOW_ADD_NOTE_FAB = "PREF_SHOW_ADD_NOTE_FAB";
 
     public static final int SWIPE_ACTION_NONE = 0;
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
@@ -44,11 +25,9 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final int SWIPE_ACTION_PIN = 3;
 
     private SharedPreferences mPreferences;
-    private String mPassword; // fixme
 
     public AppSettingsRepository(SharedPreferences preferences) {
         mPreferences = preferences;
-        mPassword = getPassword();
     }
 
     @Override
@@ -62,13 +41,9 @@ public class AppSettingsRepository implements SettingsRepository {
             setPrefSwipeLeftAction(object.optString(PREF_SWIPE_LEFT_ACTION));
             setPrefSwipeRightAction(object.optString(PREF_SWIPE_RIGHT_ACTION));
 
-            setShowNoteEditorLines(object.optBoolean(PREF_SHOW_NOTE_EDITOR_LINES));
-            enableContentCharCounter(object.optBoolean(PREF_CONTENT_CHAR_COUNTER));
             setPrefFontSize(object.optString(PREF_FONT_SIZE));
 
-            setNotesOrder(NoteOrder.from(object.optInt(PREF_NOTES_ORDER), object.optBoolean(PREF_NOTES_ORDER_DESC)));
-            setNotebookOrder(NotebookOrder.from(object.optInt(PREF_NOTEBOOK_ORDER), object.optBoolean(PREF_NOTEBOOK_ORDER_DESC)));
-            setLabelOrder(LabelOrder.from(object.optInt(PREF_LABEL_ORDER), object.optBoolean(PREF_LABEL_ORDER_DESC)));
+            setNotesOrder(NoteOrder.from(object.optInt(PREF_NOTES_ORDER)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -96,21 +71,10 @@ public class AppSettingsRepository implements SettingsRepository {
             object.put(PREF_SWIPE_LEFT_ACTION, getPrefSwipeLeftAction());
             object.put(PREF_SWIPE_RIGHT_ACTION, getPrefSwipeRightAction());
 
-            object.put(PREF_SHOW_NOTE_EDITOR_LINES, showNoteEditorLines());
-            object.put(PREF_CONTENT_CHAR_COUNTER, contentCharCounterEnabled());
             object.put(PREF_FONT_SIZE, getPrefFontSize());
 
             NoteOrder order = getNotesOrder();
             object.put(PREF_NOTES_ORDER, order.ordinal());
-            object.put(PREF_NOTEBOOK_ORDER_DESC, order.isDesc());
-
-            NotebookOrder notebookOrder = getNotebookOrder();
-            object.put(PREF_NOTEBOOK_ORDER, notebookOrder.ordinal());
-            object.put(PREF_NOTEBOOK_ORDER_DESC, notebookOrder.isDesc());
-
-            LabelOrder labelOrder = getLabelOrder();
-            object.put(PREF_LABEL_ORDER, labelOrder.ordinal());
-            object.put(PREF_LABEL_ORDER_DESC, labelOrder.isDesc());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -121,69 +85,14 @@ public class AppSettingsRepository implements SettingsRepository {
     @Override
     public NoteOrder getNotesOrder() {
         int order = mPreferences.getInt(PREF_NOTES_ORDER, NoteOrder.TITLE.ordinal());
-        boolean desc = mPreferences.getBoolean(PREF_NOTES_ORDER_DESC, false);
-        return NoteOrder.from(order, desc);
-    }
-
-    public void toggleNoteDescOrder() {
-        boolean desc = mPreferences.getBoolean(PREF_NOTES_ORDER_DESC, false);
-        mPreferences.edit().putBoolean(PREF_NOTES_ORDER_DESC, !desc).apply();
+        return NoteOrder.from(order);
     }
 
     @Override
     public void setNotesOrder(NoteOrder order) {
         if (order != null) {
             mPreferences.edit().putInt(PREF_NOTES_ORDER, order.ordinal()).apply();
-            mPreferences.edit().putBoolean(PREF_NOTES_ORDER_DESC, order.isDesc()).apply();
         }
-    }
-
-    @Override
-    public NotebookOrder getNotebookOrder() {
-        int order = mPreferences.getInt(PREF_NOTEBOOK_ORDER, NotebookOrder.TITLE.ordinal());
-        boolean desc = mPreferences.getBoolean(PREF_NOTEBOOK_ORDER_DESC, false);
-        return NotebookOrder.from(order, desc);
-    }
-
-    @Override
-    public void setNotebookOrder(NotebookOrder order) {
-        mPreferences.edit().putInt(PREF_NOTEBOOK_ORDER, order.ordinal()).apply();
-        mPreferences.edit().putBoolean(PREF_NOTEBOOK_ORDER_DESC, order.isDesc()).apply();
-    }
-
-    public void toggleNotebookDescOrder() {
-        boolean desc = mPreferences.getBoolean(PREF_NOTEBOOK_ORDER_DESC, false);
-        mPreferences.edit().putBoolean(PREF_NOTEBOOK_ORDER_DESC, !desc).apply();
-    }
-
-    @Override
-    public void setLabelOrder(LabelOrder order) {
-        mPreferences.edit().putInt(PREF_LABEL_ORDER, order.ordinal()).apply();
-        mPreferences.edit().putBoolean(PREF_LABEL_ORDER_DESC, order.isDesc()).apply();
-    }
-
-    @Override
-    public LabelOrder getLabelOrder() {
-        int order = mPreferences.getInt(PREF_LABEL_ORDER, LabelOrder.TITLE.ordinal());
-        boolean desc = mPreferences.getBoolean(PREF_LABEL_ORDER_DESC, false);
-        return LabelOrder.from(order, desc);
-    }
-
-    public void toggleLabelDescOrder() {
-        boolean desc = mPreferences.getBoolean(PREF_LABEL_ORDER_DESC, false);
-        mPreferences.edit().putBoolean(PREF_LABEL_ORDER_DESC, !desc).apply();
-    }
-
-    public boolean showAddNoteFAB() {
-        return mPreferences.getBoolean(PREF_SHOW_ADD_NOTE_FAB, true);
-    }
-
-    public boolean showNoteEditorLines() {
-        return mPreferences.getBoolean(PREF_SHOW_NOTE_EDITOR_LINES, false);
-    }
-
-    private void setShowNoteEditorLines(boolean show) {
-        mPreferences.edit().putBoolean(PREF_SHOW_NOTE_EDITOR_LINES, show).apply();
     }
 
     @Override
@@ -196,24 +105,12 @@ public class AppSettingsRepository implements SettingsRepository {
         mPreferences.edit().putBoolean(PREF_SHOW_NOTES_CONTENT, show).apply();
     }
 
-    public void setNightMode(boolean nightMode) {
+    private void setNightMode(boolean nightMode) {
         mPreferences.edit().putBoolean(PREF_NIGHT_MODE, nightMode).apply();
     }
 
     public boolean nightMode() {
         return mPreferences.getBoolean(PREF_NIGHT_MODE, false);
-    }
-
-    public void setShowExitFullscreenMessage(boolean show) {
-        mPreferences.edit().putBoolean(PREF_SHOW_EXIT_FULLSCREEN_MSG, show).apply();
-    }
-
-    public boolean showExitFullscreenMessage() {
-        boolean result = mPreferences.getBoolean(PREF_SHOW_EXIT_FULLSCREEN_MSG, true);
-        if (result) {
-            setShowExitFullscreenMessage(false);
-        }
-        return result;
     }
 
     private void setPrefFontSize(String size) {
@@ -247,24 +144,6 @@ public class AppSettingsRepository implements SettingsRepository {
         }
 
         return baseSize;
-    }
-
-    public void setPassword(@Nullable String password) {
-        mPassword = password;
-        mPreferences.edit().putString(PREF_PASSWORD, password).apply();
-    }
-
-    public boolean checkPassword(@Nullable String password) {
-        return password != null && mPassword != null && TextUtils.equals(password, mPassword);
-    }
-
-    public boolean showPasswordInput() {
-        return !TextUtils.isEmpty(mPassword);
-    }
-
-    @Nullable
-    private String getPassword() {
-        return mPreferences.getString(PREF_PASSWORD, null);
     }
 
     public boolean hasSwipeLeftAction() {
@@ -315,14 +194,6 @@ public class AppSettingsRepository implements SettingsRepository {
             }
         }
         return SWIPE_ACTION_NONE;
-    }
-
-    public boolean contentCharCounterEnabled() {
-        return mPreferences.getBoolean(PREF_CONTENT_CHAR_COUNTER, true);
-    }
-
-    public void enableContentCharCounter(boolean enable) {
-        mPreferences.edit().putBoolean(PREF_CONTENT_CHAR_COUNTER, enable).apply();
     }
 
 }

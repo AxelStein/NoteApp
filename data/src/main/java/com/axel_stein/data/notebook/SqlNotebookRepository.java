@@ -37,21 +37,6 @@ public class SqlNotebookRepository implements NotebookRepository {
     }
 
     @Override
-    public void updateViews(@NonNull Notebook notebook, long views) {
-        mDao.updateViews(notebook.getId(), views);
-    }
-
-    @Override
-    public void updateOrder(@NonNull Notebook notebook, int order) {
-        mDao.updateOrder(notebook.getId(), order);
-    }
-
-    @Override
-    public void updateColor(@NonNull Notebook notebook, String color) {
-        mDao.updateColor(notebook.getId(), color);
-    }
-
-    @Override
     @Nullable
     public Notebook get(String id) {
         return NotebookMapper.map(mDao.get(id));
@@ -69,8 +54,8 @@ public class SqlNotebookRepository implements NotebookRepository {
     }
 
     @Override
-    public void delete() {
-        mDao.delete();
+    public void deleteAll() {
+        mDao.deleteAll();
     }
 
 }

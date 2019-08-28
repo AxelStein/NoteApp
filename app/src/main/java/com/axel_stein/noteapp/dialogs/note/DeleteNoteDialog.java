@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.dialogs.note;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -91,6 +92,7 @@ public class DeleteNoteDialog extends ConfirmDialog {
         App.getAppComponent().inject(this);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onConfirm() {
         dismiss();

@@ -9,35 +9,22 @@ import org.joda.time.DateTime;
 import java.util.UUID;
 
 public class NoteWrapper {
-
     private String id;
-
     private String title;
-
     private String content;
+    private long views;
+    private boolean pinned;
+    private boolean starred;
+    private boolean trashed;
 
     @JsonProperty("notebook_id")
     private String notebookId;
 
-    private long views;
-
-    private boolean pinned;
-
-    private boolean starred;
-
-    private boolean trashed;
-
     @JsonProperty("trashed_date")
     private String trashedDate;
 
-    @JsonProperty("created_date")
-    private String createdDate;
-
     @JsonProperty("modified_date")
     private String modifiedDate;
-
-    @JsonProperty("drive_id")
-    private String driveId;
 
     public static NoteWrapper fromNote(Note note) {
         NoteWrapper wrapper = new NoteWrapper();
@@ -49,16 +36,10 @@ public class NoteWrapper {
         wrapper.content = note.getContent();
         wrapper.pinned = note.isPinned();
         wrapper.starred = note.isStarred();
-        wrapper.driveId = note.getDriveId();
 
         DateTime t = note.getTrashedDate();
         if (t != null) {
             wrapper.trashedDate = t.toString();
-        }
-
-        DateTime c = note.getCreatedDate();
-        if (c != null) {
-            wrapper.createdDate = c.toString();
         }
 
         DateTime m = note.getModifiedDate();
@@ -79,7 +60,6 @@ public class NoteWrapper {
         note.setStarred(starred);
         note.setTrashed(trashed);
         note.setTrashedDate(TextUtil.isEmpty(trashedDate) ? new DateTime() : DateTime.parse(trashedDate));
-        note.setCreatedDate(TextUtil.isEmpty(createdDate) ? new DateTime() : DateTime.parse(createdDate));
         note.setModifiedDate(TextUtil.isEmpty(modifiedDate) ? new DateTime() : DateTime.parse(modifiedDate));
         return note;
     }
@@ -124,22 +104,6 @@ public class NoteWrapper {
         this.starred = starred;
     }
 
-    public String getTrashedDate() {
-        return trashedDate;
-    }
-
-    public void setTrashedDate(String trashedDate) {
-        this.trashedDate = trashedDate;
-    }
-
-    public String getDriveId() {
-        return driveId;
-    }
-
-    public void setDriveId(String driveId) {
-        this.driveId = driveId;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -154,14 +118,6 @@ public class NoteWrapper {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
     }
 
     public String getModifiedDate() {

@@ -93,7 +93,6 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
         if (account != null) {
-            //mDriveResourceClient = Drive.getDriveResourceClient(mContext, account);
             ViewUtil.show(mTextUserName, mTextUserEmail);
             ViewUtil.hide(mTextSignIn);
 
@@ -105,7 +104,6 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
             ViewUtil.hide(mTextUserName, mTextUserEmail);
             ViewUtil.show(mTextSignIn);
         }
-
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

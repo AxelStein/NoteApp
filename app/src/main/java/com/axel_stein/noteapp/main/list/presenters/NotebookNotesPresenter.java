@@ -1,7 +1,6 @@
 package com.axel_stein.noteapp.main.list.presenters;
 
 import com.axel_stein.domain.interactor.note.QueryNoteInteractor;
-import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 
 import javax.inject.Inject;
@@ -16,13 +15,6 @@ public class NotebookNotesPresenter extends NotesPresenter {
     QueryNoteInteractor mInteractor;
 
     private String mNotebookId;
-
-    public NotebookNotesPresenter(Notebook notebook) {
-        App.getAppComponent().inject(this);
-        if (notebook != null) {
-            mNotebookId = notebook.getId();
-        }
-    }
 
     public NotebookNotesPresenter(String notebookId) {
         App.getAppComponent().inject(this);

@@ -22,16 +22,12 @@
         <item name="menuItemTintColor">@color/text_color_primary_light</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="checkBoxTint">@color/checkbox_tint_light</item>
-        <item name="editTextLineColor">@color/edit_text_line_color_light</item>
-        <item name="notePinColor">@color/color_accent</item>
-        <item name="noteStarColor">@color/color_starred</item>
         <item name="selectedNotebookBackgroundColor">@color/selected_notebook_background_color_light</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogLight</item>
         <item name="appBarColor">#E0E0E0</item> <!--#E0E0E0-->
         <item name="appBarIcon">@drawable/ic_menu_black_24dp</item>
         <item name="appBarFabIcon">@drawable/ic_create_white_24dp</item>
-        <item name="selectedItemBackgroundColor">#E0E0E0</item>
-        <!--<item name="textColorError">@color/text_error_light</item>-->
+        <item name="selectedItemBackgroundColor">@color/selected_item_bg_color_light</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -50,17 +46,13 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogDark</item>
         <item name="checkBoxTint">@color/checkbox_tint_dark</item>
-        <item name="editTextLineColor">@color/edit_text_line_color_dark</item>
-        <item name="notePinColor">@color/color_accent_dark</item>
-        <item name="noteStarColor">@color/color_starred</item>
         <item name="selectedNotebookBackgroundColor">@color/selected_notebook_background_color_dark</item>
         <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat</item>
         <item name="alertDialogTheme">@style/DialogThemeDark</item>
         <item name="appBarColor">?attr/colorPrimary</item> <!--#485E79-->
         <item name="appBarIcon">@drawable/ic_menu_white_24dp</item>
         <item name="appBarFabIcon">@drawable/ic_create_black_24dp</item>
-        <item name="selectedItemBackgroundColor">#3362A8E3</item>
-        <!--<item name="textColorError">@color/text_error_dark</item>-->
+        <item name="selectedItemBackgroundColor">@color/selected_item_bg_color_dark</item>
     </style>
 
     <style name="DialogThemeDark" parent="Theme.AppCompat.Dialog.Alert">

@@ -20,13 +20,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
-import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
 import com.axel_stein.noteapp.main.edit.EditNoteContract.Presenter;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
@@ -45,11 +43,9 @@ import static android.text.TextUtils.isEmpty;
 
 public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         ConfirmDialog.OnConfirmListener,
-        CheckNotebookDialog.OnNotebookCheckedListener,
-        CheckLabelsDialog.OnLabelCheckedListener {
+        CheckNotebookDialog.OnNotebookCheckedListener {
 
     private static final String TAG_SAVE_NOTE = "TAG_SAVE_NOTE";
-
     private static final String TAG_DELETE_NOTE = "TAG_DELETE_NOTE";
 
     private EditText mEditTitle;
@@ -196,10 +192,6 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
                 mPresenter.actionSelectNotebook();
                 break;
 
-            case R.id.menu_labels:
-                mPresenter.actionCheckLabels();
-                break;
-
             case R.id.menu_move_to_trash:
                 mPresenter.actionMoveToTrash();
                 break;
@@ -217,7 +209,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
                 break;
 
             case R.id.menu_duplicate:
-                mPresenter.actionDuplicate(getString(R.string.copy));
+                mPresenter.actionDuplicate(getString(R.string.action_copy));
                 break;
         }
 
@@ -350,11 +342,6 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     }
 
     @Override
-    public void showCheckLabelsView(List<Label> labels, List<String> checkedLabels) {
-        CheckLabelsDialog.launch(this, labels, checkedLabels);
-    }
-
-    @Override
     public void showConfirmDeleteNoteView() {
         ConfirmDialog dialog = new ConfirmDialog();
         dialog.setTitle(R.string.title_delete_note);
@@ -410,13 +397,6 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     public void onNotebookChecked(Notebook notebook) {
         if (mPresenter != null) {
             mPresenter.setNotebook(notebook);
-        }
-    }
-
-    @Override
-    public void onLabelsChecked(List<String> labels) {
-        if (mPresenter != null) {
-            mPresenter.setLabels(labels);
         }
     }
 

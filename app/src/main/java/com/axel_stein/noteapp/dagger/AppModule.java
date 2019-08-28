@@ -5,11 +5,8 @@ import androidx.room.Room;
 
 import com.axel_stein.data.AppDatabase;
 import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.data.label.SqlLabelRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
-import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
-import com.axel_stein.domain.interactor.ResetInteractor;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
 
@@ -40,18 +37,6 @@ public class AppModule {
 
     @Provides
     @Singleton
-    SqlLabelRepository provideLabelRepository(AppDatabase db) {
-        return new SqlLabelRepository(db.labelDao());
-    }
-
-    @Provides
-    @Singleton
-    SqlNoteLabelPairRepository provideLabelHelperRepository(AppDatabase db) {
-        return new SqlNoteLabelPairRepository(db.labelHelperDao());
-    }
-
-    @Provides
-    @Singleton
     SqlNotebookRepository provideNotebookRepository(AppDatabase db) {
         return new SqlNotebookRepository(db.notebookDao());
     }
@@ -65,14 +50,6 @@ public class AppModule {
     @Provides
     AppSettingsRepository provideSettings(App app) {
         return new AppSettingsRepository(PreferenceManager.getDefaultSharedPreferences(app));
-    }
-
-    @Provides
-    ResetInteractor provideReset(SqlNoteRepository notes,
-                                 SqlNotebookRepository notebooks,
-                                 SqlLabelRepository labels,
-                                 SqlNoteLabelPairRepository labelHelper) {
-        return new ResetInteractor(notes, notebooks, labels, labelHelper);
     }
 
     @Provides

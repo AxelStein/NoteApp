@@ -1,9 +1,6 @@
 package com.axel_stein.noteapp.dagger;
 
 import com.axel_stein.noteapp.base.BaseActivity;
-import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
-import com.axel_stein.noteapp.dialogs.label.DeleteLabelDialog;
-import com.axel_stein.noteapp.dialogs.label.RenameLabelDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
@@ -18,7 +15,6 @@ import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.edit.EditNoteFragment;
 import com.axel_stein.noteapp.main.edit.EditNotePresenter;
 import com.axel_stein.noteapp.main.list.presenters.InboxNotesPresenter;
-import com.axel_stein.noteapp.main.list.presenters.LabelNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.NotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.SearchNotesPresenter;
@@ -32,9 +28,8 @@ import dagger.Component;
 
 @Singleton
 @Component(modules = {
-        AppModule.class, LabelInteractorModule.class,
-        NotebookInteractorModule.class, NoteInteractorModule.class,
-        BackupInteractorModule.class
+        AppModule.class, NotebookInteractorModule.class,
+        NoteInteractorModule.class, BackupInteractorModule.class
 })
 
 public interface AppComponent {
@@ -49,12 +44,6 @@ public interface AppComponent {
 
     void inject(DeleteNotebookDialog dialog);
 
-    void inject(AddLabelDialog dialog);
-
-    void inject(RenameLabelDialog dialog);
-
-    void inject(DeleteLabelDialog dialog);
-
     void inject(MainActivity activity);
 
     void inject(BaseActivity activity);
@@ -64,8 +53,6 @@ public interface AppComponent {
     void inject(TrashNotesPresenter presenter);
 
     void inject(SearchNotesPresenter presenter);
-
-    void inject(LabelNotesPresenter presenter);
 
     void inject(EditNotePresenter presenter);
 

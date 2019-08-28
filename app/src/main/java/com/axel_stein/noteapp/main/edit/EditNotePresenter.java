@@ -1,13 +1,10 @@
 package com.axel_stein.noteapp.main.edit;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.axel_stein.domain.interactor.label.QueryLabelInteractor;
-import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
@@ -17,7 +14,6 @@ import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
 import com.axel_stein.domain.interactor.notebook.GetNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
@@ -59,13 +55,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     QueryNotebookInteractor mQueryNotebookInteractor;
 
     @Inject
-    QueryLabelInteractor mQueryLabelInteractor;
-
-    @Inject
     SetNotebookNoteInteractor mSetNotebookNoteInteractor;
-
-    @Inject
-    SetLabelsInteractor mSetLabelsInteractor;
 
     @Inject
     SetPinnedNoteInteractor mSetPinnedNoteInteractor;
@@ -388,43 +378,6 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     }
 
     @Override
-    public void setLabels(final List<String> labels) {
-        if (mNote.hasId()) {
-            mSetLabelsInteractor.execute(mNote, labels)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CompletableObserver() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-                            mNote.setLabels(labels);
-                            mSrcNote.setLabels(labels);
-                            if (mView != null) {
-                                mView.showMessage(R.string.msg_note_updated);
-                            }
-                            EventBusHelper.updateNoteList();
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                            if (mView != null) {
-                                mView.showMessage(R.string.error);
-                            }
-                        }
-                    });
-        } else {
-            mNote.setLabels(labels);
-            mSrcNote.setLabels(labels);
-
-            notifyChanged();
-        }
-    }
-
-    @Override
     public void actionMoveToTrash() {
         moveToTrash(mNote);
     }
@@ -531,33 +484,6 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                                 notebookId = Notebook.ID_INBOX;
                             }
                             mView.showSelectNotebookView(notebooks, notebookId);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
-                        if (mView != null) {
-                            mView.showMessage(R.string.error);
-                        }
-                    }
-                });
-    }
-
-    @SuppressLint("CheckResult")
-    @Override
-    public void actionCheckLabels() {
-        mQueryLabelInteractor.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Label>>() {
-                    @Override
-                    public void accept(List<Label> labels) {
-                        if (mView != null) {
-                            if (labels.size() == 0) {
-                                mView.showMessage(R.string.msg_label_empty);
-                            } else {
-                                mView.showCheckLabelsView(labels, mNote.getLabels());
-                            }
                         }
                     }
                 }, new Consumer<Throwable>() {

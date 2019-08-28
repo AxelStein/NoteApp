@@ -2,7 +2,6 @@ package com.axel_stein.domain.interactor.note;
 
 import androidx.annotation.NonNull;
 
-import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.NoteRepository;
 
@@ -20,12 +19,8 @@ public class InsertNoteInteractor {
     @NonNull
     private NoteRepository mRepository;
 
-    @NonNull
-    private SetLabelsInteractor mSetLabelsInteractor;
-
-    public InsertNoteInteractor(@NonNull NoteRepository r, @NonNull SetLabelsInteractor s) {
+    public InsertNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);
-        mSetLabelsInteractor = requireNonNull(s);
     }
 
     /**
@@ -36,19 +31,16 @@ public class InsertNoteInteractor {
     public Completable execute(@NonNull final Note note) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!validateBeforeInsert(note)) {
                     throw new IllegalArgumentException("note is not valid");
                 }
 
-                DateTime created = new DateTime();
-                note.setCreatedDate(created);
-                note.setModifiedDate(created);
+                note.setModifiedDate(new DateTime());
 
                 mRepository.insert(note);
             }
         })
-        .andThen(mSetLabelsInteractor.execute(note, note.getLabels()))
         .subscribeOn(Schedulers.io());
     }
 

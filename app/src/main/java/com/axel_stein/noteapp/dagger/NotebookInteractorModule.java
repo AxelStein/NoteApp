@@ -7,10 +7,7 @@ import com.axel_stein.domain.interactor.notebook.DeleteNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.GetNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
-import com.axel_stein.domain.interactor.notebook.UpdateColorNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
-import com.axel_stein.domain.interactor.notebook.UpdateOrderNotebookInteractor;
-import com.axel_stein.domain.interactor.notebook.UpdateViewsNotebookInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,21 +40,6 @@ class NotebookInteractorModule {
                                   SqlNoteRepository noteRepository,
                                   AppSettingsRepository appSettingsRepository) {
         return new QueryNotebookInteractor(repository, noteRepository, appSettingsRepository);
-    }
-
-    @Provides
-    UpdateOrderNotebookInteractor updateOrder(SqlNotebookRepository n, AppSettingsRepository s) {
-        return new UpdateOrderNotebookInteractor(n, s);
-    }
-
-    @Provides
-    UpdateColorNotebookInteractor color(SqlNotebookRepository n) {
-        return new UpdateColorNotebookInteractor(n);
-    }
-
-    @Provides
-    UpdateViewsNotebookInteractor views(SqlNotebookRepository n) {
-        return new UpdateViewsNotebookInteractor(n);
     }
 
 }

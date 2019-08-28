@@ -5,7 +5,6 @@ import android.view.MenuItem;
 
 import androidx.annotation.MenuRes;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 
@@ -28,11 +27,9 @@ public interface NotesContract {
 
         void stopCheckMode();
 
-        void showNote(Note note, android.view.View view);
+        void showNote(Note note);
 
         void showSelectNotebookView(List<Notebook> notebooks);
-
-        void showCheckLabelsView(List<Label> labels);
 
         void showConfirmDeleteDialog(List<Note> notes);
 
@@ -51,7 +48,7 @@ public interface NotesContract {
 
         void forceUpdate();
 
-        void onNoteClick(int pos, Note note, android.view.View view);
+        void onNoteClick(int pos, Note note);
 
         boolean onNoteLongClick(int pos, Note note);
 
@@ -73,8 +70,6 @@ public interface NotesContract {
         void onActionItemClicked(int itemId);
 
         void onNotebookSelected(Notebook notebook);
-
-        void onLabelsChecked(List<String> labels);
 
         void stopCheckMode();
 

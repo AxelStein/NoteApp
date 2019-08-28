@@ -3,9 +3,6 @@
     <attr name="selectedItemBackgroundColor" format="color|reference"/>
     <attr name="menuItemTintColor" format="color|reference"/>
     <attr name="checkBoxTint" format="color|reference"/>
-    <attr name="editTextLineColor" format="color|reference"/>
-    <attr name="notePinColor" format="color|reference"/>
-    <attr name="noteStarColor" format="color|reference"/>
     <attr name="toolbarPopupTheme" format="reference"/>
     <attr name="selectedNotebookBackgroundColor" format="color|reference"/>
     <attr name="appBarColor" format="color|reference"/>

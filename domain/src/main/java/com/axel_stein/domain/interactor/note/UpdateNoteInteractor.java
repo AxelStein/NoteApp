@@ -31,7 +31,7 @@ public class UpdateNoteInteractor {
     public Completable execute(@NonNull final Note note) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!validateBeforeUpdate(note)) {
                     throw new IllegalArgumentException("note is note valid");
                 }

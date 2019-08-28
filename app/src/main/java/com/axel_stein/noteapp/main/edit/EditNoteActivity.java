@@ -1,13 +1,11 @@
 package com.axel_stein.noteapp.main.edit;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,9 +16,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
@@ -38,7 +34,6 @@ import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 public class EditNoteActivity extends BaseActivity {
     public static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
     public static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.EXTRA_NOTEBOOK_ID";
-    public static final String EXTRA_LABEL_ID = "com.axel_stein.noteapp.EXTRA_LABEL_ID";
 
     Toolbar mToolbar;
     IconTextView mNotebookView;
@@ -53,26 +48,9 @@ public class EditNoteActivity extends BaseActivity {
     private EditNotePresenter mPresenter;
     private EditNoteFragment mEditNoteFragment;
 
-    public static void launch(Context context) {
-        Intent intent = new Intent(context, EditNoteActivity.class);
-        context.startActivity(intent);
-    }
-
-    public static void launch(Context context, @Nullable Notebook notebook) {
-        Intent intent = new Intent(context, EditNoteActivity.class);
-        intent.putExtra(EXTRA_NOTEBOOK_ID, notebook == null ? null : notebook.getId());
-        context.startActivity(intent);
-    }
-
     public static void launch(Context context, @Nullable String notebookId) {
         Intent intent = new Intent(context, EditNoteActivity.class);
         intent.putExtra(EXTRA_NOTEBOOK_ID, notebookId);
-        context.startActivity(intent);
-    }
-
-    public static void launch(Context context, Label label) {
-        Intent intent = new Intent(context, EditNoteActivity.class);
-        intent.putExtra(EXTRA_LABEL_ID, label.getId());
         context.startActivity(intent);
     }
 
@@ -80,17 +58,6 @@ public class EditNoteActivity extends BaseActivity {
         Intent intent = new Intent(context, EditNoteActivity.class);
         intent.putExtra(EXTRA_NOTE_ID, note.getId());
         context.startActivity(intent);
-    }
-
-    public static void launch(Activity activity, @NonNull Note note, View view) {
-        /*
-        todo
-        Intent intent = new Intent(activity, EditNoteActivity.class);
-        intent.putExtra(EXTRA_NOTE_ID, note.getId());
-        Bundle options = ActivityOptionsCompat.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
-        ActivityCompat.startActivity(activity, intent, options);
-        */
-        launch(activity, note);
     }
 
     @SuppressLint("CheckResult")
@@ -122,7 +89,6 @@ public class EditNoteActivity extends BaseActivity {
             Intent intent = getIntent();
             String id = intent.getStringExtra(EXTRA_NOTE_ID);
             final String notebookId = intent.getStringExtra(EXTRA_NOTEBOOK_ID);
-            final String labelId = intent.getStringExtra(EXTRA_LABEL_ID);
 
             mGetNoteInteractor.execute(id)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -135,9 +101,6 @@ public class EditNoteActivity extends BaseActivity {
                             if (!note.hasId()) {
                                 if (notEmpty(notebookId)) {
                                     note.setNotebookId(notebookId);
-                                }
-                                if (notEmpty(labelId)) {
-                                    note.addLabel(labelId);
                                 }
                             }
 

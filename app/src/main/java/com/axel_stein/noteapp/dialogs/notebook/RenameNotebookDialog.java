@@ -31,8 +31,10 @@ public class RenameNotebookDialog extends EditTextDialog {
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
     @Inject
     UpdateNotebookInteractor mUpdateNotebookInteractor;
+
     private Notebook mNotebook;
     private HashMap<String, Boolean> mMap;
 

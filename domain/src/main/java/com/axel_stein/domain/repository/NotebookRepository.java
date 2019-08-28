@@ -15,12 +15,6 @@ public interface NotebookRepository {
 
     void rename(@NonNull Notebook notebook, String title);
 
-    void updateViews(@NonNull Notebook notebook, long views);
-
-    void updateOrder(@NonNull Notebook notebook, int order);
-
-    void updateColor(@NonNull Notebook notebook, String color);
-
     @Nullable
     Notebook get(String id);
 
@@ -29,6 +23,6 @@ public interface NotebookRepository {
 
     void delete(@NonNull Notebook notebook);
 
-    void delete();
+    void deleteAll();
 
 }

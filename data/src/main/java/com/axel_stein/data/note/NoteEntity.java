@@ -9,7 +9,6 @@ import org.joda.time.DateTime;
 
 @Entity(tableName = "notes")
 public class NoteEntity {
-
     @PrimaryKey
     @NonNull
     private String id = "";
@@ -39,13 +38,7 @@ public class NoteEntity {
     private boolean starred;
 
     @ColumnInfo
-    private DateTime createdDate;
-
-    @ColumnInfo
     private DateTime modifiedDate;
-
-    @ColumnInfo
-    private String driveId;
 
     @NonNull
     public String getId() {
@@ -104,14 +97,6 @@ public class NoteEntity {
         return pinned;
     }
 
-    public DateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(DateTime createdDate) {
-        this.createdDate = createdDate;
-    }
-
     public DateTime getModifiedDate() {
         return modifiedDate;
     }
@@ -134,14 +119,6 @@ public class NoteEntity {
 
     public void setStarred(boolean starred) {
         this.starred = starred;
-    }
-
-    public String getDriveId() {
-        return driveId;
-    }
-
-    public void setDriveId(String driveId) {
-        this.driveId = driveId;
     }
 
 }

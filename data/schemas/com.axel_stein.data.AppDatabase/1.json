@@ -2,67 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2de4b1d90039707535246467af39a1ab",
+    "identityHash": "e634ecc46f59a6d1a3dc1c647a10367c",
     "entities": [
       {
-        "tableName": "labels",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `order` INTEGER NOT NULL, `views` INTEGER NOT NULL, `createdDate` TEXT, `modifiedDate` TEXT, `driveId` TEXT, PRIMARY KEY(`id`))",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "title",
-            "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "order",
-            "columnName": "order",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "views",
-            "columnName": "views",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "createdDate",
-            "columnName": "createdDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "modifiedDate",
-            "columnName": "modifiedDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "driveId",
-            "columnName": "driveId",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "notebooks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `order` INTEGER NOT NULL, `views` INTEGER NOT NULL, `color` TEXT, `createdDate` TEXT, `modifiedDate` TEXT, `driveId` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -75,42 +19,6 @@
             "columnName": "title",
             "affinity": "TEXT",
             "notNull": false
-          },
-          {
-            "fieldPath": "order",
-            "columnName": "order",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "views",
-            "columnName": "views",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "color",
-            "columnName": "color",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "createdDate",
-            "columnName": "createdDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "modifiedDate",
-            "columnName": "modifiedDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "driveId",
-            "columnName": "driveId",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -118,51 +26,13 @@
             "id"
           ],
           "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "note_label_pairs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`entity_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `note_id` TEXT, `label_id` TEXT, `entity_trash` INTEGER NOT NULL)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "entity_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "noteId",
-            "columnName": "note_id",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "labelId",
-            "columnName": "label_id",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "trash",
-            "columnName": "entity_trash",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "entity_id"
-          ],
-          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "notes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `content` TEXT, `notebookId` TEXT, `views` INTEGER NOT NULL, `pinned` INTEGER NOT NULL, `trashed` INTEGER NOT NULL, `trashedDate` TEXT, `starred` INTEGER NOT NULL, `createdDate` TEXT, `modifiedDate` TEXT, `driveId` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `content` TEXT, `notebookId` TEXT, `views` INTEGER NOT NULL, `pinned` INTEGER NOT NULL, `trashed` INTEGER NOT NULL, `trashedDate` TEXT, `starred` INTEGER NOT NULL, `modifiedDate` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -219,20 +89,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "createdDate",
-            "columnName": "createdDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "modifiedDate",
             "columnName": "modifiedDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "driveId",
-            "columnName": "driveId",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -247,9 +105,10 @@
         "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2de4b1d90039707535246467af39a1ab\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e634ecc46f59a6d1a3dc1c647a10367c')"
     ]
   }
 }

@@ -3,7 +3,6 @@ package com.axel_stein.domain.interactor.note;
 import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.concurrent.Callable;
@@ -19,13 +18,8 @@ public class GetNoteInteractor {
     @NonNull
     private NoteRepository mNoteRepository;
 
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
-
-    public GetNoteInteractor(@NonNull NoteRepository noteRepository,
-                             @NonNull NoteLabelPairRepository helperRepository) {
+    public GetNoteInteractor(@NonNull NoteRepository noteRepository) {
         mNoteRepository = requireNonNull(noteRepository);
-        mNoteLabelPairRepository = requireNonNull(helperRepository);
     }
 
     /**
@@ -35,7 +29,7 @@ public class GetNoteInteractor {
     public Single<Note> execute(final String id) {
         return Single.fromCallable(new Callable<Note>() {
             @Override
-            public Note call() throws Exception {
+            public Note call() {
                 Note note = mNoteRepository.get(id);
                 if (note != null) {
                     if (!isValid(note)) {
@@ -43,9 +37,8 @@ public class GetNoteInteractor {
                     }
                     if (!note.isTrashed()) {
                         note.incrementViews();
-                        mNoteRepository.update(note);
+                        mNoteRepository.updateViews(note, note.getViews());
                     }
-                    note.setLabels(mNoteLabelPairRepository.queryLabels(note));
                 } else {
                     note = new Note();
                 }

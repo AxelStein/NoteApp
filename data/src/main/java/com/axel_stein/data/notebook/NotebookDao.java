@@ -21,15 +21,6 @@ public interface NotebookDao {
     @Query("UPDATE notebooks SET title = :title WHERE id = :notebookId")
     void rename(String notebookId, String title);
 
-    @Query("UPDATE notebooks SET views = :views WHERE id = :notebookId")
-    void updateViews(String notebookId, long views);
-
-    @Query("UPDATE notebooks SET `order` = :order WHERE id = :notebookId")
-    void updateOrder(String notebookId, int order);
-
-    @Query("UPDATE notebooks SET color = :color WHERE id = :notebookId")
-    void updateColor(String notebookId, String color);
-
     @Query("SELECT * FROM notebooks WHERE id = :id LIMIT 1")
     @Nullable
     NotebookEntity get(String id);
@@ -41,6 +32,6 @@ public interface NotebookDao {
     void delete(NotebookEntity notebook);
 
     @Query("DELETE FROM notebooks")
-    void delete();
+    void deleteAll();
 
 }

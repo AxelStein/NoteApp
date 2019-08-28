@@ -4,7 +4,6 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.RoomWarnings;
 import androidx.room.Update;
 
 import org.joda.time.DateTime;
@@ -65,14 +64,8 @@ public interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
     NoteEntity get(String id);
 
-    @Query("SELECT COUNT(*) FROM notes WHERE trashed = 0 AND notebookId = :notebookId")
-    long count(String notebookId);
-
-    @Query("SELECT * FROM notes WHERE trashed = 0")
-    List<NoteEntity> queryAll();
-
     @Query("SELECT * FROM notes")
-    List<NoteEntity> queryAllTrashed();
+    List<NoteEntity> queryAll();
 
     @Query("SELECT * FROM notes WHERE notebookId IS NULL AND trashed = 0")
     List<NoteEntity> queryInbox();
@@ -89,17 +82,7 @@ public interface NoteDao {
     @Query("SELECT * FROM notes WHERE notebookId = :notebook")
     List<NoteEntity> queryNotebookTrashed(String notebook);
 
-    @SuppressWarnings(RoomWarnings.CURSOR_MISMATCH)
-    @Query("SELECT * FROM notes JOIN note_label_pairs WHERE trashed = 0 AND notes.id = note_id AND label_id = :labelId")
-    List<NoteEntity> queryLabel(String labelId);
-
     @Query("SELECT * FROM notes WHERE trashed = 0 AND (title LIKE :query OR content LIKE :query)")
     List<NoteEntity> search(String query);
-
-    @Query("SELECT * FROM notes WHERE trashed = 0 AND title LIKE :query ORDER BY views DESC")
-    List<NoteEntity> searchByTitle(String query);
-
-    @Query("SELECT * FROM notes WHERE trashed = 0 AND content LIKE :query ORDER BY views DESC")
-    List<NoteEntity> searchByContent(String query);
 
 }

@@ -28,13 +28,6 @@ public class SearchNotesPresenter extends NotesPresenter {
             mInteractor.search(mQuery)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this);
-
-            /*
-            todo
-            mInteractor.searchByTitle(mQuery)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this);
-            */
         }
     }
 }

@@ -35,18 +35,6 @@
     <androidx.preference.PreferenceCategory
         android:title="@string/pref_category_editor">
 
-        <!--
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="PREF_SHOW_NOTE_EDITOR_LINES"
-            android:title="@string/pref_show_note_editor_lines" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:key="PREF_CONTENT_CHAR_COUNTER"
-            android:title="@string/pref_content_char_counter" />
-        -->
-
         <androidx.preference.ListPreference
             android:key="PREF_FONT_SIZE"
             android:entries="@array/font_sizes"
@@ -87,12 +75,6 @@
         <androidx.preference.Preference
             android:key="export_drive"
             android:title="@string/pref_export_drive"/>
-
-        <!--
-        <Preference
-            android:key="backup_manager"
-            android:title="@string/pref_backup_manager"/>
-        -->
 
     </androidx.preference.PreferenceCategory>
 

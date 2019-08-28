@@ -39,7 +39,7 @@ public class SetNotebookNoteInteractor {
     public Completable execute(@NonNull final List<Note> notes, final String notebookId) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }

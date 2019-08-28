@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NotebookRepository;
 
-import org.joda.time.DateTime;
-
 import io.reactivex.Completable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
@@ -35,8 +33,6 @@ public class UpdateNotebookInteractor {
                 if (!isValid(notebook)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
-
-                notebook.setModifiedDate(new DateTime());
                 mRepository.update(notebook);
             }
         }).subscribeOn(Schedulers.io());

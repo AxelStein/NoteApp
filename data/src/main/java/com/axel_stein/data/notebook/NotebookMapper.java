@@ -14,12 +14,6 @@ class NotebookMapper {
         Notebook notebook = new Notebook();
         notebook.setId(entity.getId());
         notebook.setTitle(entity.getTitle());
-        notebook.setOrder(entity.getOrder());
-        notebook.setViews(entity.getViews());
-        notebook.setColor(entity.getColor());
-        notebook.setCreatedDate(entity.getCreatedDate());
-        notebook.setModifiedDate(entity.getModifiedDate());
-        notebook.setDriveId(entity.getDriveId());
         return notebook;
     }
 
@@ -30,12 +24,6 @@ class NotebookMapper {
         NotebookEntity entity = new NotebookEntity();
         entity.setId(notebook.getId());
         entity.setTitle(notebook.getTitle());
-        entity.setOrder(notebook.getOrder());
-        entity.setViews(notebook.getViews());
-        entity.setColor(notebook.getColor());
-        entity.setCreatedDate(notebook.getCreatedDate());
-        entity.setModifiedDate(notebook.getModifiedDate());
-        entity.setDriveId(notebook.getDriveId());
         return entity;
     }
 

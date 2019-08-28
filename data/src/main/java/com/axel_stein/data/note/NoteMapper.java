@@ -23,9 +23,7 @@ class NoteMapper {
         note.setTrashedDate(entity.getTrashedDate());
         note.setPinned(entity.isPinned());
         note.setStarred(entity.isStarred());
-        note.setCreatedDate(entity.getCreatedDate());
         note.setModifiedDate(entity.getModifiedDate());
-        note.setDriveId(entity.getDriveId());
         return note;
     }
 
@@ -43,9 +41,7 @@ class NoteMapper {
         entity.setTrashedDate(note.getTrashedDate());
         entity.setPinned(note.isPinned());
         entity.setStarred(note.isStarred());
-        entity.setCreatedDate(note.getCreatedDate());
         entity.setModifiedDate(note.getModifiedDate());
-        entity.setDriveId(note.getDriveId());
         return entity;
     }
 

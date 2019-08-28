@@ -32,7 +32,7 @@ public class EmptyTrashInteractor {
         return mQueryInteractor.queryTrashed()
                 .flatMapCompletable(new Function<List<Note>, CompletableSource>() {
                     @Override
-                    public CompletableSource apply(@io.reactivex.annotations.NonNull List<Note> notes) throws Exception {
+                    public CompletableSource apply(@io.reactivex.annotations.NonNull List<Note> notes) {
                         return mDeleteInteractor.execute(notes);
                     }
                 });

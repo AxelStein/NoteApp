@@ -2,14 +2,10 @@ package com.axel_stein.domain.interactor.note;
 
 import androidx.annotation.NonNull;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteOrder;
-import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
-import com.axel_stein.domain.utils.validators.LabelValidator;
-import com.axel_stein.domain.utils.validators.NotebookValidator;
 
 import org.joda.time.DateTime;
 
@@ -40,16 +36,6 @@ public class QueryNoteInteractor {
     public QueryNoteInteractor(@NonNull NoteRepository n, @NonNull SettingsRepository s) {
         mNoteRepository = requireNonNull(n);
         mSettingsRepository = requireNonNull(s);
-    }
-
-    @NonNull
-    public Single<List<Note>> queryAll() {
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() {
-                return orderImpl(mNoteRepository.queryAll());
-            }
-        });
     }
 
     @NonNull
@@ -98,45 +84,6 @@ public class QueryNoteInteractor {
      * @throws IllegalArgumentException if notebook`s id is 0
      */
     @NonNull
-    public Single<List<Note>> query(@NonNull final Notebook notebook) {
-        String id = notebook.getId();
-        if (id != null) {
-            switch (id) {
-                case Notebook.ID_ALL:
-                    return queryAll();
-
-                case Notebook.ID_STARRED: // todo cache
-                    return queryStarred();
-            }
-        }
-
-        final String key = "notebook_" + notebook.getId();
-        if (hasKey(key)) {
-            return single(new Callable<List<Note>>() {
-                @Override
-                public List<Note> call() {
-                    return get(key);
-                }
-            });
-        }
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() {
-                if (!NotebookValidator.isValid(notebook)) {
-                    throw new IllegalArgumentException("notebook is not valid");
-                }
-                List<Note> notes = orderImpl(mNoteRepository.queryNotebook(notebook));
-                put(key, notes);
-                return notes;
-            }
-        });
-    }
-
-    /**
-     * @throws NullPointerException     if notebook is null
-     * @throws IllegalArgumentException if notebook`s id is 0
-     */
-    @NonNull
     public Single<List<Note>> query(@NonNull final String notebookId) {
         final String key = "notebook_" + notebookId;
         if (hasKey(key)) {
@@ -154,34 +101,6 @@ public class QueryNoteInteractor {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
                 List<Note> notes = orderImpl(mNoteRepository.queryNotebook(notebookId));
-                put(key, notes);
-                return notes;
-            }
-        });
-    }
-
-    /**
-     * @throws NullPointerException     if label is null
-     * @throws IllegalArgumentException if label`s id is 0
-     */
-    @NonNull
-    public Single<List<Note>> query(@NonNull final Label label) {
-        final String key = "label_" + label.getId();
-        if (hasKey(key)) {
-            return single(new Callable<List<Note>>() {
-                @Override
-                public List<Note> call() {
-                    return get(key);
-                }
-            });
-        }
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() {
-                if (!LabelValidator.isValid(label)) {
-                    throw new IllegalArgumentException("label is not valid");
-                }
-                List<Note> notes = orderImpl(mNoteRepository.queryLabel(label));
                 put(key, notes);
                 return notes;
             }
@@ -246,8 +165,8 @@ public class QueryNoteInteractor {
                 Collections.sort(notes, new Comparator<Note>() {
                     @Override
                     public int compare(Note n1, Note n2) {
-                        n1 = requireNonNull(n1, "note1 is null");
-                        n2 = requireNonNull(n2, "note2 is null");
+                        requireNonNull(n1, "note1 is null");
+                        requireNonNull(n2, "note2 is null");
 
                         String title1 = n1.getTitle().toLowerCase();
                         String title2 = n2.getTitle().toLowerCase();
@@ -281,139 +200,6 @@ public class QueryNoteInteractor {
         });
     }
 
-    @NonNull
-    public Single<List<Note>> searchByTitle(@NonNull final String query) {
-        return single(new Callable<List<Note>>() {
-            private String q = query;
-
-            @Override
-            public List<Note> call() {
-                if (isEmpty(query)) {
-                    return new ArrayList<>();
-                }
-
-                q = query.toLowerCase();
-
-                List<Note> result = mNoteRepository.searchByTitle(q);
-                if (result.size() == 0) {
-                    return searchByContentImpl(q);
-                }
-                if (result.size() > 1) {
-                    Collections.sort(result, new Comparator<Note>() {
-                        @Override
-                        public int compare(Note n1, Note n2) {
-                            String title1 = n1.getTitle().toLowerCase();
-                            String title2 = n2.getTitle().toLowerCase();
-
-                            boolean starts1 = title1.startsWith(q);
-                            boolean starts2 = title2.startsWith(q);
-
-                            if (starts1 && !starts2) {
-                                return -1;
-                            } else if (!starts1 && starts2) {
-                                return 1;
-                            }
-                            return 0;
-                        }
-                    });
-                }
-                return result;
-            }
-        });
-    }
-
-    @NonNull
-    public Single<List<Note>> searchByContent(@NonNull final String query) {
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() {
-                return searchByContentImpl(query);
-            }
-        });
-    }
-
-    private List<Note> searchByContentImpl(final String query) {
-        if (isEmpty(query)) {
-            return new ArrayList<>();
-        }
-
-        final String q = query.toLowerCase();
-        List<Note> result = mNoteRepository.searchByContent(q);
-
-        StringBuilder builder = new StringBuilder();
-        for (Note note : result) {
-            String content = note.getContent();
-            if (content == null) {
-                continue;
-            }
-
-            content = content.toLowerCase();
-
-            int start = content.indexOf(q);
-            if (start == 0) {
-                continue;
-            }
-
-            for (int i = start-1; i >= 0; i--) {
-                char c = content.charAt(i);
-                if (c == ' ' || i == 0) {
-                    start = i + (i == 0 ? 0 : 1);
-                    break;
-                }
-            }
-
-            if (start > 0) {
-                builder.append("...");
-            } else { // todo
-                start = 0;
-            }
-
-            int end = start + 128;
-            if (end > content.length()) {
-                end = content.length();
-            }
-            builder.append(content, start, end);
-
-            content = builder.toString();
-
-            if (isEmpty(note.getTitle())) {
-                note.setTitle(content);
-                note.setContent(null);
-            } else {
-                note.setContent(content);
-            }
-            builder.delete(0, builder.length());
-        }
-
-        if (result.size() > 1) {
-            Collections.sort(result, new Comparator<Note>() {
-                @Override
-                public int compare(Note n1, Note n2) {
-                    String content1 = n1.getContent();
-                    String content2 = n2.getContent();
-
-                    if (content1 == null || content2 == null) {
-                        return 0;
-                    }
-
-                    content1 = content1.toLowerCase();
-                    content2 = content2.toLowerCase();
-
-                    boolean starts1 = content1.startsWith(q);
-                    boolean starts2 = content2.startsWith(q);
-
-                    if (starts1 && !starts2) {
-                        return -1;
-                    } else if (!starts1 && starts2) {
-                        return 1;
-                    }
-                    return 0;
-                }
-            });
-        }
-        return result;
-    }
-
     private Single<List<Note>> single(Callable<List<Note>> callable) {
         return Single.fromCallable(callable)
                 .subscribeOn(Schedulers.io());
@@ -422,7 +208,7 @@ public class QueryNoteInteractor {
     @NonNull
     private List<Note> orderImpl(@NonNull List<Note> list) {
         NoteOrder order = mSettingsRepository.getNotesOrder();
-        order = requireNonNull(order, "order is null");
+        requireNonNull(order, "order is null");
         return orderImpl(list, order, false);
     }
 
@@ -437,9 +223,7 @@ public class QueryNoteInteractor {
             throw new IllegalStateException("list is not valid");
         }
 
-        // set labels
         for (Note note : list) {
-            // todo note.setLabels(mNoteLabelPairRepository.queryLabels(note));
             String content = note.getContent();
             if (!isEmpty(content)) {
                 if (mSettingsRepository.showNotesContent() || searchFlag) {
@@ -470,29 +254,21 @@ public class QueryNoteInteractor {
         Collections.sort(list, new Comparator<Note>() {
             @Override
             public int compare(Note n1, Note n2) {
-                n1 = requireNonNull(n1, "note1 is null");
-                n2 = requireNonNull(n2, "note2 is null");
-
-                boolean desc = order.isDesc();
+                requireNonNull(n1, "note1 is null");
+                requireNonNull(n2, "note2 is null");
 
                 switch (order) {
                     case TITLE:
-                        if (desc) {
-                            return n2.getTitle().compareTo(n1.getTitle());
-                        }
                         return n1.getTitle().compareTo(n2.getTitle());
 
                     case VIEWS:
-                        return compareViews(n1.getViews(), n2.getViews(), desc);
-
-                    case CREATED:
-                        return compareDates(n1.getCreatedDate(), n2.getCreatedDate(), desc);
+                        return compareViews(n1.getViews(), n2.getViews());
 
                     case MODIFIED:
-                        return compareDates(n1.getCreatedDate(), n2.getCreatedDate(), desc);
+                        return compareDates(n1.getModifiedDate(), n2.getModifiedDate());
 
                     case TRASHED:
-                        return compareDates(n1.getTrashedDate(), n2.getTrashedDate(), false);
+                        return compareDates(n1.getTrashedDate(), n2.getTrashedDate());
                 }
 
                 return 0;
@@ -503,8 +279,8 @@ public class QueryNoteInteractor {
             Collections.sort(list, new Comparator<Note>() {
                 @Override
                 public int compare(Note n1, Note n2) {
-                    n1 = requireNonNull(n1, "note1 is null");
-                    n2 = requireNonNull(n2, "note2 is null");
+                    requireNonNull(n1, "note1 is null");
+                    requireNonNull(n2, "note2 is null");
 
                     boolean p1 = n1.isPinned();
                     boolean p2 = n2.isPinned();
@@ -522,35 +298,28 @@ public class QueryNoteInteractor {
         return list;
     }
 
-    private int compareDates(DateTime d1, DateTime d2, boolean desc) {
+    private int compareDates(DateTime d1, DateTime d2) {
         if (d1 == null || d2 == null) {
             return 0;
         }
-        /*
-        else if (d2 == null) {
-            return desc ? 1 : -1;
-        } else if (d1 == null) {
-            return desc ? -1 : 1;
-        }
-        */
 
         if (d1.isEqual(d2)) {
             return 0;
         } else if (d1.isAfter(d2)) {
-            return desc ? 1 : -1;
+            return -1;
         } else {
-            return desc ? -1 : 1;
+            return 1;
         }
     }
 
-    private int compareViews(long r1, long r2, boolean desc) {
+    private int compareViews(long r1, long r2) {
         long d = r1 - r2;
         if (d == 0) {
             return 0;
         } else if (d > 0) {
-            return desc ? 1 : -1;
+            return -1;
         } else {
-            return desc ? -1 : 1;
+            return 1;
         }
     }
 

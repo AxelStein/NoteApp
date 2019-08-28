@@ -1,6 +1,5 @@
 package com.axel_stein.domain.model;
 
-import com.axel_stein.domain.json_wrapper.LabelWrapper;
 import com.axel_stein.domain.json_wrapper.NoteWrapper;
 import com.axel_stein.domain.json_wrapper.NotebookWrapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,16 +11,11 @@ import java.util.List;
 
 public class Backup {
 
-    private int version = 2;
+    private final int version = 2;
 
     private List<NoteWrapper> notes;
 
     private List<NotebookWrapper> notebooks;
-
-    private List<LabelWrapper> labels;
-
-    @JsonProperty("note_label_pairs")
-    private List<NoteLabelPair> noteLabelPairs;
 
     @JsonProperty("settings")
     private String jsonSettings;
@@ -53,25 +47,6 @@ public class Backup {
         for (Notebook notebook : notebooks) {
             this.notebooks.add(NotebookWrapper.fromNotebook(notebook));
         }
-    }
-
-    public List<LabelWrapper> getLabels() {
-        return labels;
-    }
-
-    public void setSourceLabels(List<Label> labels) {
-        this.labels = new ArrayList<>();
-        for (Label label : labels) {
-            this.labels.add(LabelWrapper.fromLabel(label));
-        }
-    }
-
-    public List<NoteLabelPair> getNoteLabelPairs() {
-        return noteLabelPairs;
-    }
-
-    public void setNoteLabelPairs(List<NoteLabelPair> noteLabelPairs) {
-        this.noteLabelPairs = noteLabelPairs;
     }
 
     public void setJsonSettings(String json) {

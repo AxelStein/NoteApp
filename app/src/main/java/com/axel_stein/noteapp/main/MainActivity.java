@@ -120,7 +120,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                                 .fromIcon(R.drawable.ic_inbox));
                         builder.addItem(new PrimaryItem()
                                 .fromId(ID_STARRED)
-                                .fromTitle(R.string.notebook_starred)
+                                .fromTitle(R.string.action_starred)
                                 .fromIcon(R.drawable.ic_star_border));
 
                         for (Notebook notebook : notebooks) {
@@ -293,17 +293,17 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     @Override
-    public void onUserPanelClick(MainMenuDialog dialog) {
-        if (!mDriveServiceHelper.isSignedIn()) {
-            dialog.dismiss();
-            startActivityForResult(mDriveServiceHelper.requestSignInIntent(), REQUEST_CODE_SIGN_IN);
+    public void onTitleChange(String title) {
+        if (mTextViewTitle != null) {
+            mTextViewTitle.setText(title);
         }
     }
 
     @Override
-    public void onTitleChange(String title) {
-        if (mTextViewTitle != null) {
-            mTextViewTitle.setText(title);
+    public void onUserPanelClick(MainMenuDialog dialog) {
+        if (!mDriveServiceHelper.isSignedIn()) {
+            dialog.dismiss();
+            startActivityForResult(mDriveServiceHelper.requestSignInIntent(), REQUEST_CODE_SIGN_IN);
         }
     }
 

@@ -3,7 +3,6 @@ package com.axel_stein.domain.interactor.note;
 import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.List;
@@ -20,12 +19,8 @@ public class DeleteNoteInteractor {
     @NonNull
     private NoteRepository mRepository;
 
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
-
-    public DeleteNoteInteractor(@NonNull NoteRepository r, @NonNull NoteLabelPairRepository p) {
+    public DeleteNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);
-        mNoteLabelPairRepository = requireNonNull(p);
     }
 
     /**
@@ -36,7 +31,7 @@ public class DeleteNoteInteractor {
     public Completable execute(@NonNull final Note note) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(note)) {
                     throw new IllegalArgumentException("note is not valid");
                 }
@@ -52,7 +47,7 @@ public class DeleteNoteInteractor {
     public Completable execute(@NonNull final List<Note> notes) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
@@ -65,7 +60,6 @@ public class DeleteNoteInteractor {
 
     private void deleteImpl(Note note) {
         mRepository.delete(note);
-        mNoteLabelPairRepository.delete(note);
     }
 
 }

@@ -20,13 +20,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
-import com.axel_stein.noteapp.dialogs.label.CheckLabelsDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
 import com.axel_stein.noteapp.main.edit.EditNoteActivity;
@@ -44,7 +42,7 @@ import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
 public class NotesFragment extends Fragment implements NotesContract.View,
         CheckNotebookDialog.OnNotebookCheckedListener,
-        CheckLabelsDialog.OnLabelCheckedListener,
+
         ScrollableFragment,
         BottomMenuDialog.OnMenuItemClickListener {
 
@@ -71,9 +69,9 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
     private NoteItemListener mItemListener = new NoteItemListener() {
         @Override
-        public void onNoteClick(int pos, Note note, View view) {
+        public void onNoteClick(int pos, Note note) {
             if (mPresenter != null) {
-                mPresenter.onNoteClick(pos, note, view);
+                mPresenter.onNoteClick(pos, note);
             }
         }
 
@@ -83,7 +81,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         }
     };
 
-    public void setEmptyMsg(String emptyMsg) {
+    protected void setEmptyMsg(String emptyMsg) {
         mEmptyMsg = emptyMsg;
         updateEmptyView();
     }
@@ -163,12 +161,12 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         return root;
     }
 
-    public void setPaddingTop(int dp) {
+    protected void setPaddingTop(int dp) {
         mPaddingTop = DisplayUtil.dpToPx(getContext(), dp);
         //updatePadding();
     }
 
-    public void setPaddingBottom(int dp) {
+    protected void setPaddingBottom(int dp) {
         mPaddingBottom = DisplayUtil.dpToPx(getContext(), dp);
         //updatePadding();
     }
@@ -285,19 +283,13 @@ public class NotesFragment extends Fragment implements NotesContract.View,
     }
 
     @Override
-    public void showNote(Note note, View view) {
-        // todo EditNoteActivity.launch(getContext(), note);
-        EditNoteActivity.launch(getActivity(), note, view);
+    public void showNote(Note note) {
+        EditNoteActivity.launch(getContext(), note);
     }
 
     @Override
     public void showSelectNotebookView(List<Notebook> notebooks) {
         CheckNotebookDialog.launch(this, notebooks, null);
-    }
-
-    @Override
-    public void showCheckLabelsView(List<Label> labels) {
-        CheckLabelsDialog.launch(this, labels, null);
     }
 
     @Override
@@ -324,13 +316,6 @@ public class NotesFragment extends Fragment implements NotesContract.View,
     public void onNotebookChecked(Notebook notebook) {
         if (mPresenter != null) {
             mPresenter.onNotebookSelected(notebook);
-        }
-    }
-
-    @Override
-    public void onLabelsChecked(List<String> labels) {
-        if (mPresenter != null) {
-            mPresenter.onLabelsChecked(labels);
         }
     }
 
@@ -372,7 +357,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
     interface NoteItemListener {
 
-        void onNoteClick(int pos, Note note, View view);
+        void onNoteClick(int pos, Note note);
 
         boolean onNoteLongClick(int pos, Note note);
 
@@ -452,7 +437,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
                         if (!onLongClick(v)) {
                             int pos = getAdapterPosition();
                             if (checkAdapterPosition()) {
-                                mListener.onNoteClick(pos, getItem(pos), itemView);
+                                mListener.onNoteClick(pos, getItem(pos));
                             }
                         }
                     }
@@ -488,7 +473,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
             public void onClick(View view) {
                 int pos = getAdapterPosition();
                 if (checkAdapterPosition()) {
-                    mListener.onNoteClick(pos, getItem(pos), view);
+                    mListener.onNoteClick(pos, getItem(pos));
                 }
             }
 

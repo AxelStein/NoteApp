@@ -2,8 +2,6 @@ package com.axel_stein.noteapp.dagger;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
-import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
-import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
@@ -27,8 +25,8 @@ class NoteInteractorModule {
     }
 
     @Provides
-    DeleteNoteInteractor delete(SqlNoteRepository r, SqlNoteLabelPairRepository p) {
-        return new DeleteNoteInteractor(r, p);
+    DeleteNoteInteractor delete(SqlNoteRepository r) {
+        return new DeleteNoteInteractor(r);
     }
 
     @Provides
@@ -37,13 +35,13 @@ class NoteInteractorModule {
     }
 
     @Provides
-    GetNoteInteractor get(SqlNoteRepository r, SqlNoteLabelPairRepository p) {
-        return new GetNoteInteractor(r, p);
+    GetNoteInteractor get(SqlNoteRepository r) {
+        return new GetNoteInteractor(r);
     }
 
     @Provides
-    InsertNoteInteractor insert(SqlNoteRepository r, SetLabelsInteractor s) {
-        return new InsertNoteInteractor(r, s);
+    InsertNoteInteractor insert(SqlNoteRepository r) {
+        return new InsertNoteInteractor(r);
     }
 
     @Provides
@@ -52,13 +50,8 @@ class NoteInteractorModule {
     }
 
     @Provides
-    SetLabelsInteractor setLabels(SqlNoteLabelPairRepository r) {
-        return new SetLabelsInteractor(r);
-    }
-
-    @Provides
-    SetTrashedNoteInteractor trash(SqlNoteRepository r, SqlNoteLabelPairRepository p) {
-        return new SetTrashedNoteInteractor(r, p);
+    SetTrashedNoteInteractor trash(SqlNoteRepository r) {
+        return new SetTrashedNoteInteractor(r);
     }
 
     @Provides

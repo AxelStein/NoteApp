@@ -3,7 +3,6 @@ package com.axel_stein.data.note;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NoteRepository;
@@ -110,21 +109,10 @@ public class SqlNoteRepository implements NoteRepository {
         return map(mDao.get(id));
     }
 
-    @Override
-    public long count(@NonNull Notebook notebook) {
-        return mDao.count(notebook.getId());
-    }
-
     @NonNull
     @Override
     public List<Note> queryAll() {
         return map(mDao.queryAll());
-    }
-
-    @NonNull
-    @Override
-    public List<Note> queryAllTrashed() {
-        return map(mDao.queryAllTrashed());
     }
 
     @NonNull
@@ -147,25 +135,8 @@ public class SqlNoteRepository implements NoteRepository {
 
     @NonNull
     @Override
-    public List<Note> queryNotebook(@NonNull Notebook notebook) {
-        return map(mDao.queryNotebook(notebook.getId()));
-    }
-
-    @NonNull
-    @Override
     public List<Note> queryNotebook(@NonNull String notebookId) {
         return map(mDao.queryNotebook(notebookId));
-    }
-
-    @Override
-    public List<Note> queryNotebookTrashed(@NonNull Notebook notebook) {
-        return map(mDao.queryNotebookTrashed(notebook.getId()));
-    }
-
-    @NonNull
-    @Override
-    public List<Note> queryLabel(@NonNull Label label) {
-        return map(mDao.queryLabel(label.getId()));
     }
 
     @NonNull
@@ -173,20 +144,6 @@ public class SqlNoteRepository implements NoteRepository {
     public List<Note> search(@NonNull String query) {
         query = "%" + query + "%";
         return map(mDao.search(query));
-    }
-
-    @NonNull
-    @Override
-    public List<Note> searchByTitle(@NonNull String query) {
-        query = "%" + query + "%";
-        return map(mDao.searchByTitle(query));
-    }
-
-    @NonNull
-    @Override
-    public List<Note> searchByContent(@NonNull String query) {
-        query = "%" + query + "%";
-        return map(mDao.searchByContent(query));
     }
 
 }

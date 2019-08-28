@@ -40,7 +40,7 @@ public class StarredFragment extends NotesFragment {
         Activity activity = getActivity();
         if (activity instanceof OnTitleChangeListener) {
             OnTitleChangeListener mListener = (OnTitleChangeListener) activity;
-            mListener.onTitleChange(getString(R.string.notebook_starred));
+            mListener.onTitleChange(getString(R.string.action_starred));
         }
     }
 

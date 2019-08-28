@@ -2,7 +2,6 @@ package com.axel_stein.noteapp.main.edit;
 
 import androidx.annotation.NonNull;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 
@@ -21,8 +20,6 @@ public interface EditNoteContract {
         void showMessage(int msg);
 
         void showSelectNotebookView(List<Notebook> notebooks, String selectedNotebook);
-
-        void showCheckLabelsView(List<Label> labels, List<String> checkedLabels);
 
         void showConfirmDeleteNoteView();
 
@@ -50,8 +47,6 @@ public interface EditNoteContract {
 
         void setNotebook(Notebook notebook);
 
-        void setLabels(List<String> labels);
-
         boolean onBackPressed();
 
         /**
@@ -70,8 +65,6 @@ public interface EditNoteContract {
         void actionPinNote();
 
         void actionSelectNotebook();
-
-        void actionCheckLabels();
 
         void actionMoveToTrash();
 

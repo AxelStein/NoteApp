@@ -3,7 +3,6 @@ package com.axel_stein.domain.interactor.note;
 import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import org.joda.time.DateTime;
@@ -22,12 +21,8 @@ public class SetTrashedNoteInteractor {
     @NonNull
     private NoteRepository mNoteRepository;
 
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
-
-    public SetTrashedNoteInteractor(@NonNull NoteRepository n, @NonNull NoteLabelPairRepository l) {
+    public SetTrashedNoteInteractor(@NonNull NoteRepository n) {
         mNoteRepository = requireNonNull(n);
-        mNoteLabelPairRepository = requireNonNull(l);
     }
 
     public Completable execute(@NonNull final Note note, final boolean trashed) {
@@ -63,7 +58,6 @@ public class SetTrashedNoteInteractor {
         note.setTrashedDate(trashed ? new DateTime() : null);
 
         mNoteRepository.setTrashed(note, trashed);
-        mNoteLabelPairRepository.setTrashed(note, trashed);
     }
 
 }

@@ -2,8 +2,6 @@ package com.axel_stein.noteapp;
 
 import androidx.annotation.NonNull;
 
-import com.axel_stein.domain.model.Label;
-import com.axel_stein.domain.model.LabelCache;
 import com.axel_stein.domain.model.NoteCache;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.model.NotebookCache;
@@ -25,13 +23,8 @@ public class EventBusHelper {
     }
 
     public static void updateNoteList() {
-        updateNoteList(true, false);
-    }
-
-    public static void updateNoteList(boolean saveSelection, boolean click) {
         NoteCache.invalidate();
         NotebookCache.invalidate();
-        LabelCache.invalidate();
         post(new UpdateNoteList());
     }
 
@@ -48,21 +41,6 @@ public class EventBusHelper {
     public static void deleteNotebook(Notebook notebook) {
         NotebookCache.invalidate();
         post(new DeleteNotebook(notebook));
-    }
-
-    public static void addLabel(Label label) {
-        LabelCache.invalidate();
-        post(new AddLabel(label));
-    }
-
-    public static void renameLabel(Label label) {
-        LabelCache.invalidate();
-        post(new RenameLabel(label));
-    }
-
-    public static void deleteLabel(Label label) {
-        LabelCache.invalidate();
-        post(new DeleteLabel(label));
     }
 
     public static void showMessage(String string) {
@@ -90,7 +68,6 @@ public class EventBusHelper {
     }
 
     public static class SignOutEvent {
-
     }
 
     public static class Recreate {
@@ -132,42 +109,6 @@ public class EventBusHelper {
 
         public Notebook getNotebook() {
             return notebook;
-        }
-    }
-
-    public static class AddLabel {
-        private Label label;
-
-        AddLabel(Label label) {
-            this.label = label;
-        }
-
-        public Label getLabel() {
-            return label;
-        }
-    }
-
-    public static class RenameLabel {
-        private Label label;
-
-        RenameLabel(Label label) {
-            this.label = label;
-        }
-
-        public Label getLabel() {
-            return label;
-        }
-    }
-
-    public static class DeleteLabel {
-        private Label label;
-
-        DeleteLabel(Label label) {
-            this.label = label;
-        }
-
-        public Label getLabel() {
-            return label;
         }
     }
 

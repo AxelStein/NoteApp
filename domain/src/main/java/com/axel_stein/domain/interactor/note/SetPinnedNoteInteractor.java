@@ -26,7 +26,7 @@ public class SetPinnedNoteInteractor {
     public Completable execute(@NonNull final Note note, final boolean pinned) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(note)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
@@ -39,7 +39,7 @@ public class SetPinnedNoteInteractor {
     public Completable execute(@NonNull final List<Note> notes, final boolean pinned) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }

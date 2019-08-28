@@ -37,12 +37,4 @@
 
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/menu_check_labels"
-        android:icon="@drawable/ic_label_white_24dp"
-        android:title="@string/action_labels"
-
-        android:visible="false"
-        app:showAsAction="ifRoom" />
-
 </menu>

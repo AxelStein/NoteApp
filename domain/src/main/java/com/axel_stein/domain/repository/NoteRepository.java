@@ -3,7 +3,6 @@ package com.axel_stein.domain.repository;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 
@@ -42,13 +41,8 @@ public interface NoteRepository {
     @Nullable
     Note get(String id);
 
-    long count(@NonNull Notebook notebook);
-
     @NonNull
     List<Note> queryAll();
-
-    @NonNull
-    List<Note> queryAllTrashed();
 
     @NonNull
     List<Note> queryInbox();
@@ -60,23 +54,9 @@ public interface NoteRepository {
     List<Note> queryTrashed();
 
     @NonNull
-    List<Note> queryNotebook(@NonNull Notebook notebook);
-
-    @NonNull
     List<Note> queryNotebook(@NonNull String notebookId);
-
-    List<Note> queryNotebookTrashed(@NonNull Notebook notebook);
-
-    @NonNull
-    List<Note> queryLabel(@NonNull Label label);
 
     @NonNull
     List<Note> search(@NonNull String query);
-
-    @NonNull
-    List<Note> searchByTitle(@NonNull String query);
-
-    @NonNull
-    List<Note> searchByContent(@NonNull String query);
 
 }
