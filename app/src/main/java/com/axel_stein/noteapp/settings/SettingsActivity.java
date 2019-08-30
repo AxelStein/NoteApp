@@ -58,7 +58,6 @@ public class SettingsActivity extends BaseActivity {
 
     @Subscribe
     public void onRecreate(EventBusHelper.Recreate e) {
-        // todo recreate();
         finish();
     }
 

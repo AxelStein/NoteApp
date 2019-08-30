@@ -12,7 +12,6 @@ import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
 import com.axel_stein.noteapp.settings.SettingsContract.View;
 
 import java.io.File;
@@ -25,6 +24,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
+import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
 
 public class SettingsPresenter implements SettingsContract.Presenter {
@@ -37,9 +37,6 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
     @Inject
     AppSettingsRepository mSettings;
-
-    @Inject
-    DriveServiceHelper mDriveServiceHelper;
 
     private View mView;
     private Context mContext;
@@ -72,10 +69,6 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                 createBackup();
                 break;
 
-            case "export_drive":
-                exportDrive();
-                break;
-
             case "import_file":
                 if (mView != null) {
                     mView.startImportFileActivity();
@@ -91,45 +84,14 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     }
 
     @SuppressLint("CheckResult")
-    private void exportDrive() {
-        mCreateBackupInteractor.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String backup) {
-                        String fileName = "backup.json";
-
-                        File dir = mContext.getFilesDir();
-                        File file = writeToFile(dir, fileName, backup);
-
-                        mDriveServiceHelper.upload(file);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
-                        showMessage(R.string.error);
-                    }
-                });
-    }
-
-    @SuppressLint("CheckResult")
     private void createBackup() {
         mCreateBackupInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String backup) {
-                        //String date = new SimpleDateFormat("dd-MM-yyyy-kkmm", Locale.ROOT).format(new Date());
-                        //String ext = "json";
-
-                        //String fileName = String.format("notes_%s.%s", date, ext);
-                        String fileName = "backup.json";
-
                         File dir = mContext.getFilesDir();
-                        File file = writeToFile(dir, fileName, backup);
-
-                        //mDriveServiceHelper.upload(file);
+                        File file = writeToFile(dir, BACKUP_FILE_NAME, backup);
                         if (mView != null) {
                             mView.startExportFileActivity(file);
                         }

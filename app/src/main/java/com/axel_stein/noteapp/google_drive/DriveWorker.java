@@ -9,8 +9,18 @@ import androidx.work.WorkerParameters;
 
 import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
 import com.axel_stein.noteapp.App;
+import com.axel_stein.noteapp.utils.FileUtil;
+
+import org.joda.time.LocalDate;
+
+import java.io.File;
+import java.io.IOException;
 
 import javax.inject.Inject;
+
+
+import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
+import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
 
 public class DriveWorker extends Worker {
 
@@ -29,44 +39,31 @@ public class DriveWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        /*
         File dir = getApplicationContext().getFilesDir();
-        File[] files = dir.listFiles();
-        for (File file : files) {
-            //file.getName();
-            //file.lastModified();
+        File backupFile = FileUtil.findFile(dir, BACKUP_FILE_NAME);
+        if (backupFile != null) {
+            LocalDate date = new LocalDate(backupFile.lastModified());
+            LocalDate today = new LocalDate();
+            if (!date.equals(today)) {
+                return uploadBackup();
+            } else {
+                return Result.success();
+            }
+        } else {
+            return uploadBackup();
         }
-        */
+    }
 
-        // find file
-        // check last modified date
-        // if date is not today -> create backup if error -> retry
-        // check network
-        // if true -> upload else -> retry
-        //     if uploaded -> result success
-        //     else retry
-
-        /*
-        mCreateBackupInteractor.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String backup) {
-                        String fileName = "backup.json";
-
-                        File dir = getApplicationContext().getFilesDir();
-                        File file = writeToFile(dir, fileName, backup);
-
-                        mDriveServiceHelper.upload(file);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                });
-        */
-        return Result.success();
+    private Result uploadBackup() {
+        File dir = getApplicationContext().getFilesDir();
+        File backupFile = writeToFile(dir, BACKUP_FILE_NAME, mCreateBackupInteractor.executeSync());
+        try {
+            mDriveServiceHelper.uploadBackupSync(backupFile);
+            return Result.success();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Result.retry();
     }
 
 }

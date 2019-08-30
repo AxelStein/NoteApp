@@ -72,9 +72,11 @@
             android:key="import_file"
             android:title="@string/pref_import"/>
 
+        <!--
         <androidx.preference.Preference
             android:key="export_drive"
             android:title="@string/pref_export_drive"/>
+        -->
 
     </androidx.preference.PreferenceCategory>
 

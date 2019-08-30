@@ -1,7 +1,11 @@
 package com.axel_stein.noteapp;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
+import androidx.preference.PreferenceManager;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
@@ -30,8 +34,19 @@ public class App extends Application {
 
         sAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
 
-        WorkRequest request = new PeriodicWorkRequest.Builder(DriveWorker.class, 1, TimeUnit.DAYS).build();
-        WorkManager.getInstance(this).enqueue(request);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!preferences.contains("drive_work_id")) {
+            Constraints constraints = new Constraints.Builder()
+                    .setRequiresBatteryNotLow(true)
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build();
+
+            WorkRequest request = new PeriodicWorkRequest.Builder(DriveWorker.class, 1, TimeUnit.DAYS)
+                    .setConstraints(constraints).build();
+            WorkManager.getInstance(this).enqueue(request);
+
+            preferences.edit().putString("drive_work_id", request.getId().toString()).apply();
+        }
     }
 
 }

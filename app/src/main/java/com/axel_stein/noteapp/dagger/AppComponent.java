@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.dagger;
 
+import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
@@ -11,6 +12,7 @@ import com.axel_stein.noteapp.main.MainActivity;
 import com.axel_stein.noteapp.main.NotebookNotesFragment;
 import com.axel_stein.noteapp.main.StarredFragment;
 import com.axel_stein.noteapp.main.TrashFragment;
+import com.axel_stein.noteapp.main.UserActivity;
 import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.edit.EditNoteFragment;
 import com.axel_stein.noteapp.main.edit.EditNotePresenter;
@@ -48,6 +50,8 @@ public interface AppComponent {
 
     void inject(BaseActivity activity);
 
+    void inject(UserActivity activity);
+
     void inject(EditNoteActivity activity);
 
     void inject(TrashNotesPresenter presenter);
@@ -75,5 +79,7 @@ public interface AppComponent {
     void inject(NotebookNotesFragment fragment);
 
     void inject(DriveWorker worker);
+
+    void inject(App app);
 
 }

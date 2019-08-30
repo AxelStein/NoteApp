@@ -155,5 +155,9 @@
     </plurals>
 
     <string name="action_sign_in">Sign In</string>
+    <string name="pref_import_drive">Import from Google Drive</string>
+    <string name="last_synced">Last synced:</string>
+    <string name="auto_sync">Auto sync</string>
+    <string name="msg_export_success">Import completed</string>
 
 </resources>

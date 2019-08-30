@@ -373,6 +373,10 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
             mNote.setNotebook(notebook);
             mSrcNote.setNotebook(notebook);
 
+            if (mView != null) {
+                mView.setNotebookTitle(notebook.getTitle());
+            }
+
             notifyChanged();
         }
     }
@@ -621,7 +625,8 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
             if (isEmpty(notebookId)) {
                 mView.setNotebookTitle(Notebook.TITLE_INBOX);
             } else {
-                mGetNotebookInteractor.execute(notebookId).observeOn(AndroidSchedulers.mainThread())
+                mGetNotebookInteractor.execute(notebookId)
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new SingleObserver<Notebook>() {
                             @Override
                             public void onSubscribe(Disposable d) {

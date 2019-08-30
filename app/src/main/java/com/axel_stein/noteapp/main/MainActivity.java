@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.view.ActionMode;
 
 import com.axel_stein.data.AppSettingsRepository;
+import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
@@ -66,6 +67,9 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
     @Inject
     DriveServiceHelper mDriveServiceHelper;
+
+    @Inject
+    ImportBackupInteractor mImportBackupInteractor;
 
     private BottomAppBar mAppBar;
     private FloatingActionButton mFabCreateNote;
@@ -302,9 +306,11 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     @Override
     public void onUserPanelClick(MainMenuDialog dialog) {
         if (!mDriveServiceHelper.isSignedIn()) {
-            dialog.dismiss();
             startActivityForResult(mDriveServiceHelper.requestSignInIntent(), REQUEST_CODE_SIGN_IN);
+        } else {
+            startActivity(new Intent(this, UserActivity.class));
         }
+        dialog.dismiss();
     }
 
     @Override
@@ -322,6 +328,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
                     @Override
                     public void onSuccess(GoogleSignInAccount googleAccount) {
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

@@ -1,5 +1,9 @@
 package com.axel_stein.noteapp.utils;
 
+import android.util.Log;
+
+import androidx.annotation.Nullable;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +13,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
+import static com.axel_stein.domain.utils.TextUtil.isEmpty;
+
 public class FileUtil {
+
+    @Nullable
+    public static File findFile(File dir, String fileName) {
+        if (isEmpty(fileName)) {
+            Log.e("TAG", "fileName is empty");
+        }
+        if (dir != null && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            for (File f : files) {
+                if (f.getName().contentEquals(fileName)) {
+                    return f;
+                }
+            }
+        } else {
+            Log.e("TAG", "dir is null or not directory");
+        }
+        return null;
+    }
 
     public static File writeToFile(File dir, String fileName, String data) {
         File file = new File(dir, fileName);

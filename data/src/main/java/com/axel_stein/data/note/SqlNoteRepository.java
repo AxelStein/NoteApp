@@ -7,8 +7,6 @@ import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NoteRepository;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -75,7 +73,6 @@ public class SqlNoteRepository implements NoteRepository {
 
     @Override
     public void setTrashed(@NonNull Note note, boolean trashed) {
-        note.setTrashedDate(trashed ? new DateTime() : null);
         mDao.setTrashed(note.getId(), trashed, note.getTrashedDate());
     }
 

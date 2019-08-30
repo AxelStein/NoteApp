@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AppSettingsRepository implements SettingsRepository {
+    public static final String BACKUP_FILE_NAME = "backup.json";
     public static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
     public static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
     public static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
@@ -58,6 +59,10 @@ public class AppSettingsRepository implements SettingsRepository {
     @Override
     public String getBackupFileDriveId() {
         return mPreferences.getString(PREF_BACKUP_FILE_DRIVE_ID, null);
+    }
+
+    public void removeBackupFileDriveId() {
+        mPreferences.edit().remove(PREF_BACKUP_FILE_DRIVE_ID).apply();
     }
 
     @Override

@@ -9,6 +9,8 @@ import androidx.core.util.Pair;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.utils.DateFormatter;
+import com.axel_stein.noteapp.utils.FileUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,12 +28,17 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
+import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 /**
  * A utility for performing read/write operations on Drive files via the REST API and opening a
@@ -63,6 +70,26 @@ public class DriveServiceHelper {
         return client.getSignInIntent();
     }
 
+    public void signOut(OnSuccessListener<Void> l) {
+        GoogleSignInOptions signInOptions =
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA), new Scope(DriveScopes.DRIVE_FILE))
+                        .build();
+        GoogleSignInClient client = GoogleSignIn.getClient(mContext, signInOptions);
+        client.signOut().addOnSuccessListener(l).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mSettings.removeBackupFileDriveId();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     private boolean setupDriveService() {
         if (mDriveService == null) {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(mContext);
@@ -86,33 +113,105 @@ public class DriveServiceHelper {
     }
 
     // ByteArrayContent contentStream = ByteArrayContent.fromString("text/plain", data);
-    public void upload(final java.io.File file) {
+    public void uploadBackup(final java.io.File file, OnSuccessListener<String> l) {
         Tasks.call(Executors.newSingleThreadExecutor(), new Callable<String>() {
             @Override
             public String call() throws Exception {
-                Log.e("TAG", "upload " + file.getName());
-                File metadata = new File().setMimeType("text/plain").setName(file.getName());
-                FileContent content = new FileContent("text/plain", file);
-                File uploadedFile;
-                if (setupDriveService()) {
-                    String id = mSettings.getBackupFileDriveId();
-                    if (isEmpty(id)) {
-                        metadata.setParents(Collections.singletonList("appDataFolder"));
-                        uploadedFile = mDriveService.files().create(metadata, content).setFields("id").execute();
-                    } else {
-                        uploadedFile = mDriveService.files().update(id, metadata, content).execute();
-                    }
-                    return uploadedFile.getId();
+                uploadBackupSync(file);
+                return mSettings.getBackupFileDriveId();
+            }
+        }).addOnSuccessListener(l).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void uploadBackupSync(final java.io.File file) throws IOException {
+        Log.e("TAG", "upload " + file.getName());
+
+        File metadata = new File().setMimeType("text/plain").setName(file.getName());
+        FileContent content = new FileContent("text/plain", file);
+        File uploadedFile;
+        if (setupDriveService()) {
+            String id = mSettings.getBackupFileDriveId();
+            if (isEmpty(id)) {
+                id = fetchBackupFileId();
+            }
+            if (isEmpty(id)) {
+                metadata.setParents(Collections.singletonList("appDataFolder"));
+                uploadedFile = mDriveService.files().create(metadata, content).setFields("id").execute();
+            } else {
+                uploadedFile = mDriveService.files().update(id, metadata, content).execute();
+            }
+
+            mSettings.storeBackupFileDriveId(uploadedFile.getId());
+
+            Log.e("TAG", "file uploaded " + id);
+        }
+    }
+
+    private String fetchBackupFileId() {
+        FileList result;
+        try {
+            result = mDriveService.files()
+                    .list()
+                    .setQ(String.format("name = '%s'", BACKUP_FILE_NAME))
+                    .execute();
+            List<File> files = result.getFiles();
+            if (files != null && files.size() > 0) {
+                return files.get(0).getId();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public void getModifiedDate(final Context context, OnSuccessListener<String> l) {
+        Tasks.call(Executors.newSingleThreadExecutor(), new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                String id = mSettings.getBackupFileDriveId();
+                if (isEmpty(id)) {
+                    id = fetchBackupFileId();
+                }
+                if (notEmpty(id)) {
+                    File f = mDriveService.files().get(id).setFields("modifiedTime").execute();
+                    return DateFormatter.formatDateTime(context, f.getModifiedTime().getValue());
                 }
                 return null;
             }
-        }).addOnSuccessListener(new OnSuccessListener<String>() {
+        }).addOnSuccessListener(l).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onSuccess(String id) {
-                Log.e("TAG", "file uploaded " + id);
-                mSettings.storeBackupFileDriveId(id);
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        });
+    }
+
+    public void downloadBackup(OnSuccessListener<String> l) {
+        Tasks.call(Executors.newSingleThreadExecutor(), new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                String id = mSettings.getBackupFileDriveId();
+                if (isEmpty(id)) {
+                    id = fetchBackupFileId();
+                }
+                if (notEmpty(id)) {
+                    java.io.File dir = mContext.getFilesDir();
+                    java.io.File localBackup = new java.io.File(dir, BACKUP_FILE_NAME);
+
+                    FileOutputStream fop = new FileOutputStream(localBackup);
+                    mDriveService.files().get(id).executeMediaAndDownloadTo(fop);
+                    fop.flush();
+                    fop.close();
+                    return FileUtil.getStringFromFile(localBackup);
+                }
+                return null;
+            }
+        }).addOnSuccessListener(l).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 e.printStackTrace();
