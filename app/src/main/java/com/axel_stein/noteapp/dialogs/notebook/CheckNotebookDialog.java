@@ -210,7 +210,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
             holder.mTitle.setText(notebook.getTitle());
 
             int icon = notebook.getIconRes();
-            holder.mTitle.setIconLeft(icon != 0 ? icon : R.drawable.ic_book_white_24dp);
+            holder.mTitle.setIconLeft(icon != 0 ? icon : R.drawable.ic_book);
 
             boolean selected = TextUtils.equals(mSelectedNotebookId, notebook.getId());
             holder.mChecked.setImageResource(selected ? R.drawable.ic_radio_button_checked_white_24dp : R.drawable.ic_radio_button_unchecked_white_24dp);

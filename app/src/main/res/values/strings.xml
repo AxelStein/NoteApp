@@ -63,6 +63,7 @@
     <string name="pref_swipe_action_trash_restore">Trash / Restore</string>
     <string name="pref_swipe_action_delete">Delete</string>
     <string name="pref_swipe_action_pin">Pin / Unpin</string>
+    <string name="pref_swipe_action_star">Star / Unstar</string>
     <string name="pref_category_editor">Note editor</string>
 
     <string-array name="font_sizes">
@@ -75,8 +76,9 @@
     <string-array name="swipe_action_entries">
         <item>@string/pref_swipe_action_none</item>
         <item>@string/pref_swipe_action_trash_restore</item>
-        <item>@string/pref_swipe_action_delete</item>
         <item>@string/pref_swipe_action_pin</item>
+        <item>@string/pref_swipe_action_star</item>
+        <!--<item>@string/pref_swipe_action_delete</item>-->
     </string-array>
 
     <!--Errors-->
@@ -158,6 +160,6 @@
     <string name="pref_import_drive">Import from Google Drive</string>
     <string name="last_synced">Last synced:</string>
     <string name="auto_sync">Auto sync</string>
-    <string name="msg_export_success">Import completed</string>
+    <string name="msg_export_success">Export completed</string>
 
 </resources>

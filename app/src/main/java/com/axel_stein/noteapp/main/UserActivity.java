@@ -19,6 +19,7 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
+import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -35,12 +36,11 @@ import javax.inject.Inject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
-import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
 
 public class UserActivity extends BaseActivity {
@@ -103,8 +103,6 @@ public class UserActivity extends BaseActivity {
         });
 
         mTextLastSync = findViewById(R.id.text_last_sync);
-        ViewUtil.hide(mTextLastSync);
-
         updateLastSyncTime();
     }
 
@@ -117,9 +115,14 @@ public class UserActivity extends BaseActivity {
     private void exportDrive() {
         mCreateBackupInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
+                .subscribe(new SingleObserver<String>() {
                     @Override
-                    public void accept(String backup) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(String backup) {
                         File file = writeToFile(getFilesDir(), BACKUP_FILE_NAME, backup);
                         mDriveServiceHelper.uploadBackup(file, new OnSuccessListener<String>() {
                             @Override
@@ -129,10 +132,10 @@ public class UserActivity extends BaseActivity {
                             }
                         });
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
@@ -167,11 +170,11 @@ public class UserActivity extends BaseActivity {
     }
 
     private void updateLastSyncTime() {
-        mDriveServiceHelper.getModifiedDate(this, new OnSuccessListener<String>() {
+        mDriveServiceHelper.getModifiedDate(new OnSuccessListener<Long>() {
             @Override
-            public void onSuccess(String s) {
-                ViewUtil.setText(mTextLastSync, getString(R.string.last_synced) + " " + s);
-                ViewUtil.show(notEmpty(s), mTextLastSync);
+            public void onSuccess(Long val) {
+                String formattedDate = DateFormatter.formatDateTime(UserActivity.this, val);
+                ViewUtil.setText(mTextLastSync, getString(R.string.last_synced) + " " + formattedDate);
             }
         });
     }

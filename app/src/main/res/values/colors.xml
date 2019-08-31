@@ -20,4 +20,8 @@
     <color name="grey_color_primary">#3f525b</color>
     <color name="grey_color_primary_dark">#37474F</color>
     <color name="grey_color_accent">#00796b</color>
+
+    <color name="swipe_action_trash">#FFD32F2F</color>
+    <color name="swipe_action_star">#FF00796B</color>
+    <color name="swipe_action_pin">#FF1976D2</color>
 </resources>

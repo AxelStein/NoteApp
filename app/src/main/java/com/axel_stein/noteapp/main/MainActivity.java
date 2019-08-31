@@ -45,8 +45,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuItemClickListener, OnTitleChangeListener {
     private static final int REQUEST_CODE_SIGN_IN = 1;
@@ -92,9 +94,10 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
             public void onClick(View view) {
                 String id = "";
                 switch (mSelectedItemId) {
-                    case ID_INBOX: break;
-                    case ID_STARRED: break;
-                    case ID_TRASH: break;
+                    case ID_INBOX:
+                    case ID_STARRED:
+                    case ID_TRASH:
+                        break;
                     default: id = mSelectedItemId;
                 }
                 EditNoteActivity.launch(MainActivity.this, id);
@@ -113,9 +116,14 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     private void openMainMenu() {
         mQueryNotebookInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Notebook>>() {
+                .subscribe(new SingleObserver<List<Notebook>>() {
                     @Override
-                    public void accept(List<Notebook> notebooks) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Notebook> notebooks) {
                         MainMenuDialog.Builder builder = new MainMenuDialog.Builder();
                         builder.setSelectedItemId(mSelectedItemId);
                         builder.addItem(new PrimaryItem()
@@ -149,10 +157,10 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
                         builder.show(MainActivity.this, TAG_MAIN_MENU);
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                     }
                 });
     }
@@ -328,7 +336,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
                     @Override
                     public void onSuccess(GoogleSignInAccount googleAccount) {
-
+                        importDrive();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -338,6 +346,34 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                         Log.e("TAG", "Unable to sign in.", exception);
                     }
                 });
+    }
+
+    private void importDrive() {
+        mDriveServiceHelper.downloadBackup(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                mImportBackupInteractor.execute(s)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CompletableObserver() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                EventBusHelper.updateNoteList();
+                                EventBusHelper.recreate();
+                                EventBusHelper.showMessage(R.string.msg_import_success);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
+            }
+        });
     }
 
 

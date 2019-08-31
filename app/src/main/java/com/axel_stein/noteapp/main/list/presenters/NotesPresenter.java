@@ -24,6 +24,7 @@ import com.axel_stein.noteapp.main.list.NotesContract.View;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -283,6 +284,16 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     }
 
     @Override
+    public int getSwipeLeftAction() {
+        return mSettings.getSwipeLeftAction();
+    }
+
+    @Override
+    public int getSwipeRightAction() {
+        return mSettings.getSwipeRightAction();
+    }
+
+    @Override
     public void swipeLeft(Note note) {
         handleSwipeAction(mSettings.getSwipeLeftAction(), note);
     }
@@ -302,12 +313,15 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 break;
 
             case AppSettingsRepository.SWIPE_ACTION_DELETE:
-                delete(note);
+                // todo delete(note);
                 break;
 
             case AppSettingsRepository.SWIPE_ACTION_PIN:
                 pin(note);
                 break;
+
+            case AppSettingsRepository.SWIPE_ACTION_STAR:
+                star(note);
         }
     }
 
@@ -350,6 +364,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
+    }
+
+    private void star(Note note) {
+        star(Collections.singletonList(note));
     }
 
     @SuppressLint("CheckResult")
@@ -560,4 +578,8 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         return map.get(order);
     }
 
+    @Override
+    public boolean isTrash() {
+        return false;
+    }
 }

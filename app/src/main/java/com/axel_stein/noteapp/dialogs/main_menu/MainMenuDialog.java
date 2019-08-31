@@ -111,6 +111,7 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
         view.findViewById(R.id.button_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss();
                 startActivity(new Intent(getContext(), SettingsActivity.class));
             }
         });

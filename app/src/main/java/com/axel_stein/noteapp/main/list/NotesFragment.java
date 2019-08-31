@@ -37,8 +37,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 import static android.text.TextUtils.isEmpty;
-import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
-import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
 public class NotesFragment extends Fragment implements NotesContract.View,
         CheckNotebookDialog.OnNotebookCheckedListener,
@@ -110,46 +108,9 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         updatePadding();
-
         updateEmptyView();
 
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public int getSwipeDirs(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-                if (mPresenter != null) {
-                    int left = mPresenter.hasSwipeLeftAction() ? LEFT : 0;
-                    int right = mPresenter.hasSwipeRightAction() ? RIGHT : 0;
-                    return left | right;
-                }
-                return 0;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int pos = viewHolder.getAdapterPosition();
-                if (mAdapter != null && mPresenter != null) {
-                    switch (direction) {
-                        case LEFT:
-                            mPresenter.swipeLeft(mAdapter.getItem(pos));
-                            break;
-
-                        case RIGHT:
-                            mPresenter.swipeRight(mAdapter.getItem(pos));
-                            break;
-                    }
-                }
-            }
-
-            @Override
-            public boolean isLongPressDragEnabled() {
-                return false;
-            }
-        });
+        ItemTouchHelper helper = new ItemTouchHelper(new SwipeActionCallback(getContext(), mAdapter, mPresenter));
         helper.attachToRecyclerView(mRecyclerView);
 
         mViewCreated = true;
@@ -363,7 +324,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
     }
 
-    private static class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
+    static class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
         private List<Note> mNotes;
         private Presenter mPresenter;
         private NoteItemListener mNoteItemListener;
@@ -462,9 +423,9 @@ public class NotesFragment extends Fragment implements NotesContract.View,
                 if (!checkable) {
                     mIcon.setImageResource(R.drawable.ic_description);
                 } else if (checked) {
-                    mIcon.setImageResource(R.drawable.ic_check_box_white_24dp);
+                    mIcon.setImageResource(R.drawable.ic_check_box);
                 } else {
-                    mIcon.setImageResource(R.drawable.ic_check_box_outline_blank_white_24dp);
+                    mIcon.setImageResource(R.drawable.ic_check_box_outline_blank);
                 }
                 mIcon.setSelected(checkable && checked);
             }

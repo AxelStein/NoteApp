@@ -9,7 +9,6 @@ import androidx.core.util.Pair;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.FileUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -152,36 +151,11 @@ public class DriveServiceHelper {
         }
     }
 
-    private String fetchBackupFileId() {
-        FileList result;
-        try {
-            result = mDriveService.files()
-                    .list()
-                    .setQ(String.format("name = '%s'", BACKUP_FILE_NAME))
-                    .execute();
-            List<File> files = result.getFiles();
-            if (files != null && files.size() > 0) {
-                return files.get(0).getId();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    public void getModifiedDate(final Context context, OnSuccessListener<String> l) {
-        Tasks.call(Executors.newSingleThreadExecutor(), new Callable<String>() {
+    public void getModifiedDate(OnSuccessListener<Long> l) {
+        Tasks.call(Executors.newSingleThreadExecutor(), new Callable<Long>() {
             @Override
-            public String call() throws Exception {
-                String id = mSettings.getBackupFileDriveId();
-                if (isEmpty(id)) {
-                    id = fetchBackupFileId();
-                }
-                if (notEmpty(id)) {
-                    File f = mDriveService.files().get(id).setFields("modifiedTime").execute();
-                    return DateFormatter.formatDateTime(context, f.getModifiedTime().getValue());
-                }
-                return null;
+            public Long call() {
+                return getModifiedDateSync();
             }
         }).addOnSuccessListener(l).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -189,6 +163,22 @@ public class DriveServiceHelper {
                 e.printStackTrace();
             }
         });
+    }
+
+    public long getModifiedDateSync() {
+        String id = mSettings.getBackupFileDriveId();
+        if (isEmpty(id)) {
+            id = fetchBackupFileId();
+        }
+        if (notEmpty(id) && setupDriveService()) {
+            try {
+                File f = mDriveService.files().get(id).setFields("modifiedTime").execute();
+                return f.getModifiedTime().getValue();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return -1;
     }
 
     public void downloadBackup(OnSuccessListener<String> l) {
@@ -199,7 +189,7 @@ public class DriveServiceHelper {
                 if (isEmpty(id)) {
                     id = fetchBackupFileId();
                 }
-                if (notEmpty(id)) {
+                if (notEmpty(id) && setupDriveService()) {
                     java.io.File dir = mContext.getFilesDir();
                     java.io.File localBackup = new java.io.File(dir, BACKUP_FILE_NAME);
 
@@ -217,6 +207,25 @@ public class DriveServiceHelper {
                 e.printStackTrace();
             }
         });
+    }
+
+    private String fetchBackupFileId() {
+        FileList result;
+        try {
+            if (setupDriveService()) {
+                result = mDriveService.files()
+                        .list()
+                        .setQ(String.format("name = '%s'", BACKUP_FILE_NAME))
+                        .execute();
+                List<File> files = result.getFiles();
+                if (files != null && files.size() > 0) {
+                    return files.get(0).getId();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**

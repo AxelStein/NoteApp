@@ -56,6 +56,10 @@ public interface NotesContract {
 
         boolean hasSwipeRightAction();
 
+        int getSwipeLeftAction();
+
+        int getSwipeRightAction();
+
         void swipeLeft(Note note);
 
         void swipeRight(Note note);
@@ -76,6 +80,8 @@ public interface NotesContract {
         void showSortMenu();
 
         void onSortMenuItemClick(MenuItem item);
+
+        boolean isTrash();
 
     }
 

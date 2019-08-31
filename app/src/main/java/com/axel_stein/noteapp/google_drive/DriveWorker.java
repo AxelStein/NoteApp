@@ -9,7 +9,6 @@ import androidx.work.WorkerParameters;
 
 import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
 import com.axel_stein.noteapp.App;
-import com.axel_stein.noteapp.utils.FileUtil;
 
 import org.joda.time.LocalDate;
 
@@ -17,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
-
 
 import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
@@ -39,10 +37,9 @@ public class DriveWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        File dir = getApplicationContext().getFilesDir();
-        File backupFile = FileUtil.findFile(dir, BACKUP_FILE_NAME);
-        if (backupFile != null) {
-            LocalDate date = new LocalDate(backupFile.lastModified());
+        long val = mDriveServiceHelper.getModifiedDateSync();
+        if (val != -1) {
+            LocalDate date = new LocalDate(val);
             LocalDate today = new LocalDate();
             if (!date.equals(today)) {
                 return uploadBackup();

@@ -90,8 +90,8 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
-            tools:ignore="RtlHardcoded"
-            tools:text="Last synchronised: 30 Aug at 17:19" />
+            android:text="@string/last_synced"
+            tools:ignore="RtlHardcoded" />
 
         <com.axel_stein.noteapp.views.IconTextView
             android:id="@+id/text_export_drive"

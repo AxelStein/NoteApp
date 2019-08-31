@@ -9,8 +9,9 @@
     <string-array name="swipe_values">
         <item>swipe_action_none</item>
         <item>swipe_action_trash_restore</item>
-        <item>swipe_action_delete</item>
         <item>swipe_action_pin</item>
+        <item>swipe_action_star</item>
+        <!--<item>swipe_action_delete</item>-->
     </string-array>
     <string name="app_version_number" translatable="false">1.3.7 dev</string>
 </resources>

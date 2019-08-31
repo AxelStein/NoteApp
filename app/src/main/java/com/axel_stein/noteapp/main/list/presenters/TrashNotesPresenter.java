@@ -47,4 +47,9 @@ public class TrashNotesPresenter extends NotesPresenter {
         }
     }
 
+    @Override
+    public boolean isTrash() {
+        return true;
+    }
+
 }

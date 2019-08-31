@@ -24,6 +24,7 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
     public static final int SWIPE_ACTION_DELETE = 2;
     public static final int SWIPE_ACTION_PIN = 3;
+    public static final int SWIPE_ACTION_STAR = 4;
 
     private SharedPreferences mPreferences;
 
@@ -196,6 +197,9 @@ public class AppSettingsRepository implements SettingsRepository {
 
                 case "swipe_action_pin":
                     return SWIPE_ACTION_PIN;
+
+                case "swipe_action_star":
+                    return SWIPE_ACTION_STAR;
             }
         }
         return SWIPE_ACTION_NONE;
