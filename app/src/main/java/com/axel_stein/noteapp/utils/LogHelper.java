@@ -4,31 +4,31 @@ import android.util.Log;
 
 public class LogHelper {
 
-    static void logError(String msg, Exception e) {
+    public static void logError(String msg, Exception e) {
         Log.e("TAG", msg, e);
     }
 
-    static void logVerbose(String msg) {
+    private static void logVerbose(String msg) {
         Log.v("TAG", msg);
     }
 
-    static void logVerbose(String msg, Object... args) {
+    public static void logVerbose(String msg, Object... args) {
         logVerbose(parse(msg, args));
     }
 
-    static void logWarning(String msg) {
+    private static void logWarning(String msg) {
         Log.w("TAG", msg);
     }
 
-    static void logWarning(String msg, Object... args) {
+    public static void logWarning(String msg, Object... args) {
         logWarning(parse(msg, args));
     }
 
-    static void logWtf(String msg) {
+    private static void logWtf(String msg) {
         Log.wtf("TAG", msg);
     }
 
-    static void logWtf(String msg, Object... args) {
+    public static void logWtf(String msg, Object... args) {
         logWtf(parse(msg, args));
     }
 
@@ -36,8 +36,8 @@ public class LogHelper {
         StringBuilder builder = new StringBuilder(msg);
         if (args != null) {
             for (Object o : args) {
-                builder.append(" ");
-                builder.append(String.valueOf(o));
+                builder.append(" : ");
+                builder.append(o);
             }
         }
         return builder.toString();

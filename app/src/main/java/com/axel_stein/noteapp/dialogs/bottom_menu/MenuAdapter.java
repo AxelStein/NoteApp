@@ -15,7 +15,7 @@ import com.axel_stein.noteapp.views.IconTextView;
 import java.util.List;
 
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private List<MenuItem> mItems;
     private OnItemClickListener mOnItemClickListener;
 
@@ -102,7 +102,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
     }
 
     static class ItemViewHolder extends ViewHolder {
-        private IconTextView mTextView;
+        private final IconTextView mTextView;
 
         ItemViewHolder(View view) {
             super(view);

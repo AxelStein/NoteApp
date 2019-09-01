@@ -16,7 +16,7 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class GetNotebookInteractor {
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mNotebookRepository;
 
     public GetNotebookInteractor(@NonNull NotebookRepository notebookRepository) {
         mNotebookRepository = requireNonNull(notebookRepository, "notebookStorage is null");
@@ -30,7 +30,7 @@ public class GetNotebookInteractor {
     public Single<Notebook> execute(final String id) {
         return Single.fromCallable(new Callable<Notebook>() {
             @Override
-            public Notebook call() throws Exception {
+            public Notebook call() {
                 Notebook notebook = mNotebookRepository.get(id);
                 if (notebook != null) {
                     if (!isValid(notebook)) {

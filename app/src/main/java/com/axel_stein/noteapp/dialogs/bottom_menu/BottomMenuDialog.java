@@ -74,6 +74,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         super.onDestroyView();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @SuppressLint("InflateParams")
     @NonNull
     @Override
@@ -139,6 +140,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         void onMenuItemClick(BottomMenuDialog dialog, String tag, MenuItem item);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
         private String mTitle;
         private int mMenuRes;
@@ -173,7 +175,8 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             return addChecked(itemId, true);
         }
 
-        public Builder addChecked(int itemId, boolean checked) {
+        @SuppressWarnings("SameParameterValue")
+        Builder addChecked(int itemId, boolean checked) {
             if (mCheckedItems == null) {
                 mCheckedItems = new SparseBooleanArray();
             }
@@ -189,6 +192,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             dialog.mCheckedItems = mCheckedItems;
             dialog.mItemsVisibility = mItemsVisibility;
             dialog.setTargetFragment(fragment, 0);
+            assert fragment.getFragmentManager() != null;
             dialog.show(fragment.getFragmentManager(), tag);
         }
 

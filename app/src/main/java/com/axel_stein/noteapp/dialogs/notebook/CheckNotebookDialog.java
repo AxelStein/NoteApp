@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.ResourceUtil;
+import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import java.util.List;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
+@SuppressWarnings("SameParameterValue")
 public class CheckNotebookDialog extends AppCompatDialogFragment {
     private String mTitle;
     private int mTitleRes;
@@ -42,10 +44,13 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
     private OnNotebookCheckedListener mListener;
 
     public static void launch(Fragment fragment, List<Notebook> notebooks, String selectedNotebook) {
+        checkNotNull(fragment);
+        checkNotNull(fragment.getContext());
+
         CheckNotebookDialog dialog = new CheckNotebookDialog();
         dialog.setTitle(R.string.title_select_notebook);
         dialog.setNegativeButtonText(R.string.action_cancel);
-        dialog.setNotebooks(notebooks, selectedNotebook);
+        dialog.setNotebooks(fragment.getContext(), notebooks, selectedNotebook);
         dialog.setTargetFragment(fragment, 0);
         if (fragment.getFragmentManager() != null) {
             dialog.show(fragment.getFragmentManager(), null);
@@ -56,7 +61,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         mTitle = title;
     }
 
-    public void setTitle(int titleRes) {
+    private void setTitle(int titleRes) {
         mTitleRes = titleRes;
     }
 
@@ -64,17 +69,23 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         mNegativeButtonText = negativeButtonText;
     }
 
-    public void setNegativeButtonText(int negativeButtonTextRes) {
+    private void setNegativeButtonText(int negativeButtonTextRes) {
         mNegativeButtonTextRes = negativeButtonTextRes;
     }
 
-    private void setNotebooks(List<Notebook> notebooks, String selectedNotebookId) {
+    private void setNotebooks(Context context, List<Notebook> notebooks, String selectedNotebookId) {
         checkNotNull(notebooks);
 
         mSelectedNotebookId = selectedNotebookId;
 
         mNotebooks = new ArrayList<>(notebooks);
         mNotebooks.add(0, Notebook.inbox());
+
+        Notebook add = new Notebook();
+        add.setId(Notebook.ID_ADD);
+        add.setTitle(context.getString(R.string.action_add_notebook));
+        add.setIconRes(R.drawable.ic_add_box);
+        mNotebooks.add(add);
 
         Collections.sort(mNotebooks, new Comparator<Notebook>() {
             @Override
@@ -122,6 +133,8 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        checkNotNull(getContext());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(getResourceText(mTitle, mTitleRes));
         builder.setNegativeButton(getResourceText(mNegativeButtonText, mNegativeButtonTextRes), new DialogInterface.OnClickListener() {
@@ -139,6 +152,11 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         Adapter adapter = new Adapter(new OnNotebookCheckedListener() {
             @Override
             public void onNotebookChecked(Notebook notebook) {
+                if (notebook.getId().equals(Notebook.ID_ADD)) {
+                    dismiss();
+                    AddNotebookDialog.launch(getActivity());
+                    return;
+                }
                 if (notebook.getId().equals(Notebook.ID_INBOX)) {
                     notebook = null;
                 }
@@ -166,7 +184,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
     private static class Adapter extends RecyclerView.Adapter<ViewHolder> {
         private List<Notebook> mItems;
         private String mSelectedNotebookId;
-        private OnNotebookCheckedListener mListener;
+        private final OnNotebookCheckedListener mListener;
 
         Adapter(OnNotebookCheckedListener l) {
             mListener = l;
@@ -212,9 +230,15 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
             int icon = notebook.getIconRes();
             holder.mTitle.setIconLeft(icon != 0 ? icon : R.drawable.ic_book);
 
-            boolean selected = TextUtils.equals(mSelectedNotebookId, notebook.getId());
-            holder.mChecked.setImageResource(selected ? R.drawable.ic_radio_button_checked_white_24dp : R.drawable.ic_radio_button_unchecked_white_24dp);
-            holder.mChecked.setSelected(selected);
+            if (notebook.getId().equals(Notebook.ID_ADD)) {
+                ViewUtil.hide(holder.mChecked);
+            } else {
+                ViewUtil.show(holder.mChecked);
+
+                boolean selected = TextUtils.equals(mSelectedNotebookId, notebook.getId());
+                holder.mChecked.setImageResource(selected ? R.drawable.ic_radio_button_checked_white_24dp : R.drawable.ic_radio_button_unchecked_white_24dp);
+                holder.mChecked.setSelected(selected);
+            }
         }
 
         @Override
@@ -224,8 +248,8 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
-        private IconTextView mTitle;
-        private ImageView mChecked;
+        private final IconTextView mTitle;
+        private final ImageView mChecked;
 
         ViewHolder(View itemView) {
             super(itemView);

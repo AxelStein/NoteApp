@@ -14,7 +14,7 @@ public enum NoteOrder {
     }
 
     @Nullable
-    public static NoteOrder fromInt(int x) {
+    private static NoteOrder fromInt(int x) {
         switch (x) {
             case 0:
                 return TITLE;

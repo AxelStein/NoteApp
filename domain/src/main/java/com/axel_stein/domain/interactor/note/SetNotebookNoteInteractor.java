@@ -17,7 +17,7 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class SetNotebookNoteInteractor {
 
     @NonNull
-    private NoteRepository mRepository;
+    private final NoteRepository mRepository;
 
     public SetNotebookNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);

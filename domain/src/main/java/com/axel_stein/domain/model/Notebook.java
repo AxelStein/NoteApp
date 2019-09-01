@@ -9,10 +9,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Notebook {
     public static final String ID_INBOX = "inbox";
+    public static final String ID_ADD = "add";
     public static String TITLE_INBOX;
     public static int ICON_INBOX;
 
     public static Notebook inbox() {
+        Notebook n = new Notebook();
+        n.setId(ID_INBOX);
+        n.setTitle(TITLE_INBOX);
+        n.iconRes = ICON_INBOX;
+        return n;
+    }
+
+    public static Notebook addNotebook() {
         Notebook n = new Notebook();
         n.setId(ID_INBOX);
         n.setTitle(TITLE_INBOX);
@@ -55,6 +64,10 @@ public class Notebook {
 
     public void setTitle(@Nullable String title) {
         this.title = title;
+    }
+
+    public void setIconRes(int iconRes) {
+        this.iconRes = iconRes;
     }
 
     public int getIconRes() {

@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.model.NotebookCache;
-import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
-import com.axel_stein.domain.repository.SettingsRepository;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -20,20 +18,10 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class QueryNotebookInteractor {
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mNotebookRepository;
 
-    @NonNull
-    private NoteRepository mNoteRepository;
-
-    @NonNull
-    private SettingsRepository mSettingsRepository;
-
-    public QueryNotebookInteractor(@NonNull NotebookRepository notebookRepository,
-                                   @NonNull NoteRepository noteRepository,
-                                   @NonNull SettingsRepository settingsRepository) {
+    public QueryNotebookInteractor(@NonNull NotebookRepository notebookRepository) {
         mNotebookRepository = requireNonNull(notebookRepository);
-        mNoteRepository = requireNonNull(noteRepository);
-        mSettingsRepository = requireNonNull(settingsRepository);
     }
 
     /**

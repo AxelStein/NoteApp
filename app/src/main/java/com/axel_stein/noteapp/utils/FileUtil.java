@@ -64,7 +64,7 @@ public class FileUtil {
         return getStringFromFile(file.getAbsolutePath());
     }
 
-    public static String getStringFromFile(String path) throws Exception {
+    private static String getStringFromFile(String path) throws Exception {
         File file = new File(path);
         FileInputStream stream = new FileInputStream(file);
         String result = convertStreamToString(stream);

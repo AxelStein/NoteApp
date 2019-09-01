@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.axel_stein.noteapp.utils.ResourceUtil;
 
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
+
 public class ConfirmDialog extends AppCompatDialogFragment implements DialogInterface.OnClickListener {
     private String mTitle;
     private int mTitleRes;
@@ -105,6 +107,8 @@ public class ConfirmDialog extends AppCompatDialogFragment implements DialogInte
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        checkNotNull(getContext());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // , R.style.DialogStyle
         builder.setTitle(getText(mTitle, mTitleRes));
         builder.setMessage(getText(mMessage, mMessageRes));
@@ -136,12 +140,12 @@ public class ConfirmDialog extends AppCompatDialogFragment implements DialogInte
 
     public void show(Fragment fragment, String tag) {
         setTargetFragment(fragment, 0);
+        assert fragment.getFragmentManager() != null;
         show(fragment.getFragmentManager(), tag);
     }
 
     public interface OnConfirmListener {
         void onConfirm(String tag);
-
         void onCancel(String tag);
     }
 

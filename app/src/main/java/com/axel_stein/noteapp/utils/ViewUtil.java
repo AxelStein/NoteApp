@@ -73,7 +73,7 @@ public class ViewUtil {
         }
     }
 
-    public static boolean isShown(View view) {
+    private static boolean isShown(View view) {
         return view != null && view.getVisibility() == VISIBLE;
     }
 

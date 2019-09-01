@@ -17,7 +17,7 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class SetPinnedNoteInteractor {
 
     @NonNull
-    private NoteRepository mRepository;
+    private final NoteRepository mRepository;
 
     public SetPinnedNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);

@@ -16,7 +16,7 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class GetNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     public GetNoteInteractor(@NonNull NoteRepository noteRepository) {
         mNoteRepository = requireNonNull(noteRepository);

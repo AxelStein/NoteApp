@@ -1,22 +1,14 @@
 package com.axel_stein.noteapp.views;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
@@ -24,8 +16,6 @@ import androidx.core.content.ContextCompat;
 import com.axel_stein.noteapp.R;
 
 public class IconTextView extends AppCompatTextView {
-    private final ForegroundViewImpl mImpl = new ForegroundViewImpl(this);
-
     private int mIconTopTintColor;
     private int mIconLeftTintColor;
     private int mIconRightTintColor;
@@ -53,9 +43,7 @@ public class IconTextView extends AppCompatTextView {
         init(context, attrs, defStyle);
     }
 
-    protected void init(Context context, AttributeSet attrs, int defStyle) {
-        mImpl.init(context, attrs, defStyle);
-
+    private void init(Context context, AttributeSet attrs, int defStyle) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconTextView);
 
         mIconTopTintColor = a.getColor(R.styleable.IconTextView_iconTopTint, 0);
@@ -168,7 +156,7 @@ public class IconTextView extends AppCompatTextView {
         update();
     }
 
-    public void update() {
+    private void update() {
         if (!mShowIcons) {
             setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             return;
@@ -189,268 +177,6 @@ public class IconTextView extends AppCompatTextView {
         if (icon != null) {
             icon = icon.mutate();
             icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        }
-    }
-
-    /**
-     * Describes how the foreground is positioned.
-     *
-     * @return foreground gravity.
-     * @see #setForegroundGravity(int)
-     */
-    public int getForegroundGravity() {
-        if (mImpl != null) {
-            return mImpl.getForegroundGravity();
-        }
-        return super.getForegroundGravity();
-    }
-
-    /**
-     * Describes how the foreground is positioned. Defaults to START and TOP.
-     *
-     * @param foregroundGravity See {@link android.view.Gravity}
-     * @see #getForegroundGravity()
-     */
-    public void setForegroundGravity(int foregroundGravity) {
-        if (mImpl != null) {
-            mImpl.setForegroundGravity(foregroundGravity);
-        }
-    }
-
-    @Override
-    protected boolean verifyDrawable(@NonNull Drawable who) {
-        return super.verifyDrawable(who) || (mImpl != null && mImpl.verifyDrawable(who));
-    }
-
-    @Override
-    public void jumpDrawablesToCurrentState() {
-        super.jumpDrawablesToCurrentState();
-        if (mImpl != null) {
-            mImpl.jumpDrawablesToCurrentState();
-        }
-    }
-
-    @Override
-    protected void drawableStateChanged() {
-        super.drawableStateChanged();
-        if (mImpl != null) {
-            mImpl.drawableStateChanged();
-        }
-    }
-
-    /**
-     * Returns the drawable used as the foreground of this FrameLayout. The
-     * foreground drawable, if non-null, is always drawn on top of the children.
-     *
-     * @return A Drawable or null if no foreground was set.
-     */
-    public Drawable getForeground() {
-        return mImpl.getForeground();
-    }
-
-    /**
-     * Supply a Drawable that is to be rendered on top of all of the child
-     * views in the frame layout. Any padding in the Drawable will be taken
-     * into account by ensuring that the children are inset to be placed
-     * inside of the padding area.
-     *
-     * @param drawable The Drawable to be drawn on top of the children.
-     */
-    public void setForeground(Drawable drawable) {
-        super.setForeground(drawable);
-        if (mImpl != null) {
-            mImpl.setForeground(drawable);
-        }
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        if (mImpl != null) {
-            mImpl.onLayout(changed);
-        }
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        if (mImpl != null) {
-            mImpl.onSizeChanged();
-        }
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
-        if (mImpl != null) {
-            mImpl.draw(canvas);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        if (mImpl != null) {
-            mImpl.onTouchEvent(e);
-        }
-        return super.onTouchEvent(e);
-    }
-
-    public static class ForegroundViewImpl {
-        private final View mTargetView;
-        private final Rect mSelfBounds = new Rect();
-        private final Rect mOverlayBounds = new Rect();
-        protected boolean mForegroundInPadding = true;
-        boolean mForegroundBoundsChanged = false;
-        private Drawable mForeground;
-        private int mForegroundGravity = Gravity.FILL;
-
-        public ForegroundViewImpl(View targetView) {
-            this.mTargetView = targetView;
-        }
-
-        public void init(Context context, AttributeSet attrs, int defStyle) {
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconTextView, defStyle, 0);
-            mForegroundGravity = a.getInt(R.styleable.IconTextView_foregroundGravity, mForegroundGravity);
-            final Drawable d = a.getDrawable(R.styleable.IconTextView_foreground);
-            if (d != null) {
-                setForeground(d);
-            }
-            mForegroundInPadding = a.getBoolean(R.styleable.IconTextView_foregroundInsidePadding, true);
-            a.recycle();
-        }
-
-        /**
-         * Describes how the foreground is positioned.
-         *
-         * @return foreground gravity.
-         * @see #setForegroundGravity(int)
-         */
-        public int getForegroundGravity() {
-            return mForegroundGravity;
-        }
-
-        /**
-         * Describes how the foreground is positioned. Defaults to START and TOP.
-         *
-         * @param foregroundGravity See {@link android.view.Gravity}
-         * @see #getForegroundGravity()
-         */
-        public void setForegroundGravity(int foregroundGravity) {
-            if (mForegroundGravity != foregroundGravity) {
-                if ((foregroundGravity & Gravity.RELATIVE_HORIZONTAL_GRAVITY_MASK) == 0) {
-                    foregroundGravity |= Gravity.START;
-                }
-                if ((foregroundGravity & Gravity.VERTICAL_GRAVITY_MASK) == 0) {
-                    foregroundGravity |= Gravity.TOP;
-                }
-                mForegroundGravity = foregroundGravity;
-                if (mForegroundGravity == Gravity.FILL && mForeground != null) {
-                    Rect padding = new Rect();
-                    mForeground.getPadding(padding);
-                }
-                mTargetView.requestLayout();
-            }
-        }
-
-        public boolean verifyDrawable(Drawable who) {
-            return who == mForeground;
-        }
-
-        public void jumpDrawablesToCurrentState() {
-            if (mForeground != null) mForeground.jumpToCurrentState();
-        }
-
-        public void drawableStateChanged() {
-            if (mForeground != null && mForeground.isStateful()) {
-                mForeground.setState(mTargetView.getDrawableState());
-            }
-        }
-
-        /**
-         * Returns the drawable used as the foreground of this FrameLayout. The
-         * foreground drawable, if non-null, is always drawn on top of the children.
-         *
-         * @return A Drawable or null if no foreground was set.
-         */
-        public Drawable getForeground() {
-            return mForeground;
-        }
-
-        /**
-         * Supply a Drawable that is to be rendered on top of all of the child
-         * views in the frame layout. Any padding in the Drawable will be taken
-         * into account by ensuring that the children are inset to be placed
-         * inside of the padding area.
-         *
-         * @param drawable The Drawable to be drawn on top of the children.
-         */
-        public void setForeground(Drawable drawable) {
-            if (mForeground != drawable) {
-                if (mForeground != null) {
-                    mForeground.setCallback(null);
-                    mTargetView.unscheduleDrawable(mForeground);
-                }
-                mForeground = drawable;
-                if (drawable != null) {
-                    mTargetView.setWillNotDraw(false);
-                    drawable.setCallback(mTargetView);
-                    if (drawable.isStateful()) {
-                        drawable.setState(mTargetView.getDrawableState());
-                    }
-                    if (mForegroundGravity == Gravity.FILL) {
-                        Rect padding = new Rect();
-                        drawable.getPadding(padding);
-                    }
-                } else {
-                    mTargetView.setWillNotDraw(true);
-                }
-                mTargetView.requestLayout();
-                mTargetView.invalidate();
-            }
-        }
-
-        public void onLayout(boolean changed) {
-            if (changed) {
-                mForegroundBoundsChanged = true;
-            }
-        }
-
-        public void onSizeChanged() {
-            mForegroundBoundsChanged = true;
-        }
-
-        public void draw(Canvas canvas) {
-            if (mForeground != null) {
-                final Drawable foreground = mForeground;
-                if (mForegroundBoundsChanged) {
-                    mForegroundBoundsChanged = false;
-                    final Rect selfBounds = mSelfBounds;
-                    final Rect overlayBounds = mOverlayBounds;
-                    final int w = mTargetView.getRight() - mTargetView.getLeft();
-                    final int h = mTargetView.getBottom() - mTargetView.getTop();
-                    if (mForegroundInPadding) {
-                        selfBounds.set(0, 0, w, h);
-                    } else {
-                        selfBounds.set(mTargetView.getPaddingLeft(), mTargetView.getPaddingTop(),
-                                w - mTargetView.getPaddingRight(), h - mTargetView.getPaddingBottom());
-                    }
-                    Gravity.apply(mForegroundGravity, foreground.getIntrinsicWidth(),
-                            foreground.getIntrinsicHeight(), selfBounds, overlayBounds);
-                    foreground.setBounds(overlayBounds);
-                }
-                foreground.draw(canvas);
-            }
-        }
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        public void onTouchEvent(MotionEvent e) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                if (e.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    if (mForeground != null)
-                        mForeground.setHotspot(e.getX(), e.getY());
-                }
-            }
         }
     }
 

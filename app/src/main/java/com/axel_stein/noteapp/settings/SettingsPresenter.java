@@ -19,10 +19,10 @@ import java.io.File;
 import javax.inject.Inject;
 
 import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
@@ -87,20 +87,24 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     private void createBackup() {
         mCreateBackupInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
+                .subscribe(new SingleObserver<String>() {
                     @Override
-                    public void accept(String backup) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(String backup) {
                         File dir = mContext.getFilesDir();
                         File file = writeToFile(dir, BACKUP_FILE_NAME, backup);
                         if (mView != null) {
                             mView.startExportFileActivity(file);
                         }
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
-                        showMessage(R.string.error);
+                    public void onError(Throwable e) {
+
                     }
                 });
     }
@@ -137,12 +141,6 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                         }
                     }
                 });
-    }
-
-    private void showMessage(int msg) {
-        if (mView != null) {
-            mView.showMessage(msg);
-        }
     }
 
     @Override

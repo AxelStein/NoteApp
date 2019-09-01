@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class FileUtil {
+class FileUtil {
 
     public static boolean rename(File file, String name) {
         File to = new File(file.getParent(), name);

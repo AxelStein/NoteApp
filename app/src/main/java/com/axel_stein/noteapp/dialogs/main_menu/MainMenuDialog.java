@@ -3,7 +3,7 @@ package com.axel_stein.noteapp.dialogs.main_menu;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.settings.SettingsActivity;
 import com.axel_stein.noteapp.utils.ViewUtil;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.squareup.picasso.Picasso;
@@ -31,9 +28,15 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
+
 public class MainMenuDialog extends BottomSheetDialogFragment {
     private List<Item> mItems;
     private String mSelectedItemId;
+    private String mUserName;
+    private String mUserEmail;
+    private Uri mUserPhotoUrl;
     private OnMenuItemClickListener mListener;
 
     @Override
@@ -86,35 +89,29 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
                 }
             }
         });
-        View mTextSignIn = view.findViewById(R.id.text_sign_in);
-        TextView mTextUserName = view.findViewById(R.id.text_user_name);
-        TextView mTextUserEmail = view.findViewById(R.id.text_user_email);
-        CircleImageView mUserPhoto = view.findViewById(R.id.user_photo);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-        if (account != null) {
-            ViewUtil.show(mTextUserName, mTextUserEmail);
-            ViewUtil.hide(mTextSignIn);
-
-            mTextUserName.setText(account.getDisplayName());
-            mTextUserEmail.setText(account.getEmail());
-
-            Picasso.get().load(account.getPhotoUrl()).placeholder(R.drawable.ic_account_circle_36).into(mUserPhoto);
-        } else {
-            ViewUtil.hide(mTextUserName, mTextUserEmail);
-            ViewUtil.show(mTextSignIn);
-        }
-
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         view.findViewById(R.id.button_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dismiss();
-                startActivity(new Intent(getContext(), SettingsActivity.class));
+                if (mListener != null) {
+                    mListener.onSettingsClick(MainMenuDialog.this);
+                }
             }
         });
+
+        TextView mTextUserName = view.findViewById(R.id.text_user_name);
+        TextView mTextUserEmail = view.findViewById(R.id.text_user_email);
+        CircleImageView mViewUserPhoto = view.findViewById(R.id.user_photo);
+
+        ViewUtil.setText(mTextUserName, mUserName);
+        ViewUtil.show(notEmpty(mUserName), mTextUserName);
+
+        ViewUtil.setText(mTextUserEmail, mUserEmail);
+        ViewUtil.show(notEmpty(mUserEmail), mTextUserEmail);
+
+        Picasso.get().load(mUserPhotoUrl).placeholder(R.drawable.ic_account_circle_36).into(mViewUserPhoto);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Adapter adapter = new Adapter(getContext());
         adapter.setItems(mItems);
@@ -130,6 +127,7 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
 
+        checkNotNull(getContext());
         BottomSheetDialog dialog = new BottomSheetDialog(getContext(), getTheme());
         dialog.setContentView(view);
         return dialog;
@@ -138,11 +136,31 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
     public interface OnMenuItemClickListener {
         void onMenuItemClick(MainMenuDialog dialog, PrimaryItem item);
         void onUserPanelClick(MainMenuDialog dialog);
+        void onSettingsClick(MainMenuDialog dialog);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
+        private String mUserName;
+        private String mUserEmail;
+        private Uri mUserPhotoUrl;
         private String mSelectedItemId;
         private List<Item> mItems;
+
+        public Builder setUserName(String name) {
+            mUserName = name;
+            return this;
+        }
+
+        public Builder setUserEmail(String email) {
+            mUserEmail = email;
+            return this;
+        }
+
+        public Builder setUserPhotoUrl(Uri photoUrl) {
+            mUserPhotoUrl = photoUrl;
+            return this;
+        }
 
         public Builder setSelectedItemId(String itemId) {
             mSelectedItemId = itemId;
@@ -165,10 +183,13 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
             show(fragment.getFragmentManager(), tag);
         }
 
-        public void show(FragmentManager manager, String tag) {
+        void show(FragmentManager manager, String tag) {
             MainMenuDialog dialog = new MainMenuDialog();
             dialog.mItems = mItems;
             dialog.mSelectedItemId = mSelectedItemId;
+            dialog.mUserName = mUserName;
+            dialog.mUserEmail = mUserEmail;
+            dialog.mUserPhotoUrl = mUserPhotoUrl;
 
             dialog.show(manager, tag);
         }

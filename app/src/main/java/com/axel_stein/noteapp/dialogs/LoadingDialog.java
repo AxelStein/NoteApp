@@ -29,7 +29,7 @@ public class LoadingDialog extends AppCompatDialogFragment {
         mTitle = title;
     }
 
-    public void setTitle(int titleRes) {
+    private void setTitle(int titleRes) {
         mTitleRes = titleRes;
     }
 
@@ -37,7 +37,7 @@ public class LoadingDialog extends AppCompatDialogFragment {
         mMessage = message;
     }
 
-    public void setMessage(int messageRes) {
+    private void setMessage(int messageRes) {
         mMessageRes = messageRes;
     }
 

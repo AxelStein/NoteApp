@@ -6,6 +6,7 @@ import java.util.List;
 
 import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
+@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class NoteValidator {
 
     public static boolean validateBeforeInsert(Note note) {

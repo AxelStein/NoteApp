@@ -17,7 +17,7 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class DeleteNoteInteractor {
 
     @NonNull
-    private NoteRepository mRepository;
+    private final NoteRepository mRepository;
 
     public DeleteNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);

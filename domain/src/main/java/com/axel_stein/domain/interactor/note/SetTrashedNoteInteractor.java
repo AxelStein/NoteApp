@@ -19,7 +19,7 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class SetTrashedNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     public SetTrashedNoteInteractor(@NonNull NoteRepository n) {
         mNoteRepository = requireNonNull(n);

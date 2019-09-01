@@ -16,13 +16,12 @@ import java.util.List;
 
 class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private final int ITEM_PRIMARY = 0;
-    private final int ITEM_DIVIDER = -1;
 
-    private LayoutInflater mInflater;
+    private final LayoutInflater mInflater;
     private List<Item> mItems;
     private OnItemClickListener mOnItemClickListener;
     private String mSelectedItemId;
-    private int mSelectedColor;
+    private final int mSelectedColor;
 
     Adapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -52,7 +51,7 @@ class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         if (item instanceof PrimaryItem) {
             return ITEM_PRIMARY;
         }
-        return ITEM_DIVIDER;
+        return -1;
     }
 
     @NonNull
@@ -104,7 +103,7 @@ class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
     static class PrimaryItemVH extends ViewHolder {
-        IconTextView mTextView;
+        final IconTextView mTextView;
 
         PrimaryItemVH(View view, final Adapter adapter, final OnItemClickListener l) {
             super(view);

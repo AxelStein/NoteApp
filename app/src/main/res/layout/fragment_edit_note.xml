@@ -59,9 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-
                 android:layout_marginBottom="16dp"
-
                 android:hint="@string/hint_content"
                 android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
                 android:lineSpacingMultiplier="1.5"
@@ -69,8 +67,8 @@
                 android:maxLength="@integer/max_content"
                 android:minHeight="48dp"
                 android:textSize="16sp"
-
-                tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things"/>
+                tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things"
+                android:importantForAutofill="no" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

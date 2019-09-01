@@ -29,24 +29,27 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 @SuppressLint("CheckResult")
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, SettingsContract.View {
     private static final int REQUEST_CODE_PICK_FILE = 110;
 
-    private SettingsPresenter mPresenter = new SettingsPresenter();
+    private final SettingsPresenter mPresenter = new SettingsPresenter();
     private LoadingDialog mDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        checkNotNull(getActivity());
         PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
         mPresenter.onCreate(getActivity());
     }
 
     @Override
     public void onDestroy() {
+        checkNotNull(getActivity());
         PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
     }
@@ -82,6 +85,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void startExportFileActivity(File file) {
+        checkNotNull(getContext());
         Uri fileUri = FileProvider.getUriForFile(getContext(), "com.axel_stein.noteapp.fileprovider", file);
 
         Intent intent = new Intent();
@@ -141,6 +145,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void startRateAppActivity() {
+        checkNotNull(getContext());
         final String packageName = getContext().getPackageName();
 
         try {
@@ -162,29 +167,27 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            case REQUEST_CODE_PICK_FILE:
-                if (data == null) {
-                    return;
-                }
+        if (requestCode == REQUEST_CODE_PICK_FILE) {
+            if (data == null) {
+                return;
+            }
 
-                ContentResolver cr = getContext().getContentResolver();
-                Uri uri = data.getData();
-                if (uri == null) {
-                    Log.e("TAG", "data.getData() = null");
-                    showMessage(R.string.error);
-                    return;
-                }
+            checkNotNull(getContext());
+            ContentResolver cr = getContext().getContentResolver();
+            Uri uri = data.getData();
+            if (uri == null) {
+                Log.e("TAG", "data.getData() = null");
+                showMessage(R.string.error);
+                return;
+            }
 
-                try {
-                    String src = FileUtil.convertStreamToString(cr.openInputStream(uri));
-                    mPresenter.onFileImport(src);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    showMessage(R.string.error);
-                }
-
-                break;
+            try {
+                String src = FileUtil.convertStreamToString(cr.openInputStream(uri));
+                mPresenter.onFileImport(src);
+            } catch (Exception e) {
+                e.printStackTrace();
+                showMessage(R.string.error);
+            }
         }
     }
 

@@ -25,13 +25,13 @@ import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 public class ImportBackupInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mNotebookRepository;
 
     @NonNull
-    private SettingsRepository mSettingsRepository;
+    private final SettingsRepository mSettingsRepository;
 
     public ImportBackupInteractor(@NonNull NoteRepository n,
                                   @NonNull NotebookRepository b,

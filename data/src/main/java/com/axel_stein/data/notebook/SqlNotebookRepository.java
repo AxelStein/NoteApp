@@ -12,7 +12,7 @@ import java.util.UUID;
 public class SqlNotebookRepository implements NotebookRepository {
 
     @NonNull
-    private NotebookDao mDao;
+    private final NotebookDao mDao;
 
     public SqlNotebookRepository(@NonNull NotebookDao dao) {
         mDao = dao;

@@ -2,7 +2,6 @@
     <string name="app_name">Заметки</string>
     <string name="action_copy">копия</string>
     <string name="app_version_title">Версия</string>
-    <string name="action_starred">Помеченные</string>
 
     <!--Actions-->
     <string name="action_settings">Настройки</string>
@@ -34,12 +33,13 @@
     <string name="action_pin_note">Прикрепить заметку</string>
     <string name="action_sign_out">Выйти</string>
     <string name="action_star_note">Пометить заметку</string>
-
-    <string name="action_sort_by">Сортировать по</string>
+    <string name="action_starred">Помеченные</string>
     <string name="action_sort">Сортировать</string>
     <string name="action_sort_title">По названию</string>
     <string name="action_sort_views">По кол-ву просмотров</string>
     <string name="action_sort_created">По дате создания</string>
+    <string name="action_sort_date">По дате</string>
+    <string name="action_sign_in">Войти</string>
 
     <!--Pref-->
     <string name="pref_export">Экспорт в файл</string>
@@ -63,6 +63,8 @@
     <string name="pref_swipe_action_pin">Прикрепить / Открепить</string>
     <string name="pref_swipe_action_star">Отметить / Убрать из отмеченных</string>
     <string name="pref_category_editor">Редактор заметок</string>
+    <string name="pref_export_drive">Экспорт в Google Drive</string>
+    <string name="pref_import_drive">Импорт из Google Drive</string>
 
     <!--Errors-->
     <string name="error">Ошибка</string>
@@ -118,14 +120,15 @@
     <string name="msg_delete_notes">Заметки будут удалены навсегда.</string>
     <string name="msg_note_empty">Заметка пуста</string>
     <string name="msg_note_duplicated">Заметка дублирована</string>
-
     <string name="msg_note_pinned">Заметка закреплена</string>
     <string name="msg_note_unpinned">Заметка откреплена</string>
     <string name="msg_notes_pinned">Заметки закреплены</string>
     <string name="msg_notes_unpinned">Заметки откреплены</string>
-
     <string name="msg_note_starred">Заметка помечена</string>
     <string name="msg_note_unstarred">Пометка удалена</string>
+    <string name="msg_notes_starred">Заметка помечена</string>
+    <string name="msg_notes_unstarred">Заметка удалена из помеченных</string>
+    <string name="msg_export_success">Экспорт завершен</string>
 
     <plurals name="plurals_notes_starred">
         <item quantity="one">Помечена %1$d заметка</item>
@@ -141,14 +144,12 @@
         <item quantity="other">Удалено %1$d пометок</item>
     </plurals>
 
-    <string name="action_sort_date">По дате</string>
-    <string name="msg_notes_starred">Заметка помечена</string>
-    <string name="msg_notes_unstarred">Заметка удалена из помеченных</string>
-    <string name="action_sign_in">Войти</string>
-    <string name="pref_export_drive">Экспорт в Google Drive</string>
-    <string name="pref_import_drive">Импорт из Google Drive</string>
     <string name="last_synced">"Синхронизировано: "</string>
-    <string name="auto_sync">Автоматическая синхронизация</string>
-    <string name="msg_export_success">Экспорт завершен</string>
+    <string name="action_export">Экспорт</string>
+    <string name="msg_export_drive">Все данные на сервере будут замещены. Продолжить?</string>
+    <string name="msg_import_drive">Все данные на устройстве будут замещены. Продолжить?</string>
+    <string name="title_export_drive">Экспорт в Google Drive</string>
+    <string name="title_import_drive">Импорт из Google Drive</string>
+
 
 </resources>

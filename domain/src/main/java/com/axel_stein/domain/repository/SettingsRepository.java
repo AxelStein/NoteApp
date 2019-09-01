@@ -12,10 +12,6 @@ public interface SettingsRepository {
 
     void setShowNotesContent(boolean show);
 
-    void storeBackupFileDriveId(String id);
-
-    String getBackupFileDriveId();
-
     String exportSettings();
 
     void importSettings(String json);

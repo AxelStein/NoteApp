@@ -13,7 +13,7 @@ public class SearchNotesPresenter extends NotesPresenter {
 
     @Inject
     QueryNoteInteractor mInteractor;
-    private String mQuery;
+    private final String mQuery;
 
     public SearchNotesPresenter(String query) {
         App.getAppComponent().inject(this);

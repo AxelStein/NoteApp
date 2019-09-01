@@ -15,10 +15,10 @@ import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 public class EmptyTrashInteractor {
 
     @NonNull
-    private QueryNoteInteractor mQueryInteractor;
+    private final QueryNoteInteractor mQueryInteractor;
 
     @NonNull
-    private DeleteNoteInteractor mDeleteInteractor;
+    private final DeleteNoteInteractor mDeleteInteractor;
 
     public EmptyTrashInteractor(@NonNull QueryNoteInteractor queryInteractor, @NonNull DeleteNoteInteractor deleteInteractor) {
         mQueryInteractor = requireNonNull(queryInteractor);

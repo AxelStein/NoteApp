@@ -25,22 +25,6 @@
             android:tint="?attr/menuItemTintColor"
             android:layout_marginStart="10dp" />
 
-        <TextView
-            android:id="@+id/text_sign_in"
-            android:text="@string/action_sign_in"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="14sp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/button_settings"
-            android:layout_toStartOf="@+id/button_settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="72dp"
-            android:layout_marginStart="72dp"/>
-
         <LinearLayout
             android:layout_toLeftOf="@+id/button_settings"
             android:layout_width="match_parent"
@@ -60,7 +44,6 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="14sp"
-                android:visibility="gone"
                 tools:text="Axel Stein" />
 
             <TextView
@@ -71,7 +54,6 @@
                 android:textSize="12sp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:visibility="gone"
                 tools:text="diefaust1993@gmail.com" />
 
         </LinearLayout>

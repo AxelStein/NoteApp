@@ -2,14 +2,12 @@ package com.axel_stein.noteapp.google_drive;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
+import androidx.annotation.Nullable;
 
-import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.utils.FileUtil;
+import com.axel_stein.noteapp.utils.LogHelper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -19,7 +17,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.http.FileContent;
+import com.google.api.client.http.ByteArrayContent;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
@@ -27,30 +25,25 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
-import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
-/**
- * A utility for performing read/write operations on Drive files via the REST API and opening a
- * file picker UI via Storage Access Framework.
- */
 public class DriveServiceHelper {
-    private Context mContext;
+    private final Context mContext;
     private Drive mDriveService;
-    private AppSettingsRepository mSettings;
 
-    public DriveServiceHelper(Context context, AppSettingsRepository settings) {
+    public DriveServiceHelper(Context context) {
         mContext = context;
-        mSettings = settings;
         setupDriveService();
     }
 
@@ -69,24 +62,14 @@ public class DriveServiceHelper {
         return client.getSignInIntent();
     }
 
-    public void signOut(OnSuccessListener<Void> l) {
+    public void signOut(@NonNull OnSuccessListener<Void> l, @NonNull OnFailureListener f) {
         GoogleSignInOptions signInOptions =
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestEmail()
                         .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA), new Scope(DriveScopes.DRIVE_FILE))
                         .build();
         GoogleSignInClient client = GoogleSignIn.getClient(mContext, signInOptions);
-        client.signOut().addOnSuccessListener(l).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                mSettings.removeBackupFileDriveId();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
-            }
-        });
+        client.signOut().addOnSuccessListener(l).addOnFailureListener(f);
     }
 
     private boolean setupDriveService() {
@@ -111,65 +94,46 @@ public class DriveServiceHelper {
         return false;
     }
 
-    // ByteArrayContent contentStream = ByteArrayContent.fromString("text/plain", data);
-    public void uploadBackup(final java.io.File file, OnSuccessListener<String> l) {
-        Tasks.call(Executors.newSingleThreadExecutor(), new Callable<String>() {
+    public void uploadFile(final String fileName, final String content, @NonNull OnSuccessListener<Void> s, @NonNull OnFailureListener f) {
+        Tasks.call(Executors.newSingleThreadExecutor(), new Callable<Void>() {
             @Override
-            public String call() throws Exception {
-                uploadBackupSync(file);
-                return mSettings.getBackupFileDriveId();
+            public Void call() throws Exception {
+                uploadFileSync(fileName, content);
+                return null;
             }
-        }).addOnSuccessListener(l).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
-            }
-        });
+        }).addOnSuccessListener(s).addOnFailureListener(f);
     }
 
-    public void uploadBackupSync(final java.io.File file) throws IOException {
-        Log.e("TAG", "upload " + file.getName());
+    public void uploadFileSync(String fileName, String content) throws IOException {
+        LogHelper.logVerbose("saveFileSync", fileName);
 
-        File metadata = new File().setMimeType("text/plain").setName(file.getName());
-        FileContent content = new FileContent("text/plain", file);
-        File uploadedFile;
+        File metadata = new File().setName(fileName);
+        ByteArrayContent contentStream = ByteArrayContent.fromString("text/plain", content);
+
         if (setupDriveService()) {
-            String id = mSettings.getBackupFileDriveId();
-            if (isEmpty(id)) {
-                id = fetchBackupFileId();
-            }
+            String id = getFileId(fileName);
+            File file;
             if (isEmpty(id)) {
                 metadata.setParents(Collections.singletonList("appDataFolder"));
-                uploadedFile = mDriveService.files().create(metadata, content).setFields("id").execute();
+                file = mDriveService.files().create(metadata, contentStream).setFields("id").execute();
             } else {
-                uploadedFile = mDriveService.files().update(id, metadata, content).execute();
+                file = mDriveService.files().update(id, metadata, contentStream).execute();
             }
-
-            mSettings.storeBackupFileDriveId(uploadedFile.getId());
-
-            Log.e("TAG", "file uploaded " + id);
+            LogHelper.logVerbose("saveFileSync", fileName, file.getId());
         }
     }
 
-    public void getModifiedDate(OnSuccessListener<Long> l) {
+    public void getFileModifiedDate(final String fileName, @NonNull OnSuccessListener<Long> l, @NonNull OnFailureListener f) {
         Tasks.call(Executors.newSingleThreadExecutor(), new Callable<Long>() {
             @Override
             public Long call() {
-                return getModifiedDateSync();
+                return getFileModifiedDateSync(fileName);
             }
-        }).addOnSuccessListener(l).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
-            }
-        });
+        }).addOnSuccessListener(l).addOnFailureListener(f);
     }
 
-    public long getModifiedDateSync() {
-        String id = mSettings.getBackupFileDriveId();
-        if (isEmpty(id)) {
-            id = fetchBackupFileId();
-        }
+    public Long getFileModifiedDateSync(final String fileName) {
+        String id = getFileId(fileName);
         if (notEmpty(id) && setupDriveService()) {
             try {
                 File f = mDriveService.files().get(id).setFields("modifiedTime").execute();
@@ -178,44 +142,44 @@ public class DriveServiceHelper {
                 e.printStackTrace();
             }
         }
-        return -1;
+        return null;
     }
 
-    public void downloadBackup(OnSuccessListener<String> l) {
+    public void downloadFile(final String fileName, @NonNull OnSuccessListener<String> l, @NonNull OnFailureListener f) {
         Tasks.call(Executors.newSingleThreadExecutor(), new Callable<String>() {
             @Override
             public String call() throws Exception {
-                String id = mSettings.getBackupFileDriveId();
-                if (isEmpty(id)) {
-                    id = fetchBackupFileId();
-                }
-                if (notEmpty(id) && setupDriveService()) {
-                    java.io.File dir = mContext.getFilesDir();
-                    java.io.File localBackup = new java.io.File(dir, BACKUP_FILE_NAME);
-
-                    FileOutputStream fop = new FileOutputStream(localBackup);
-                    mDriveService.files().get(id).executeMediaAndDownloadTo(fop);
-                    fop.flush();
-                    fop.close();
-                    return FileUtil.getStringFromFile(localBackup);
-                }
-                return null;
+                return downloadFileSync(fileName);
             }
-        }).addOnSuccessListener(l).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
-            }
-        });
+        }).addOnSuccessListener(l).addOnFailureListener(f);
     }
 
-    private String fetchBackupFileId() {
-        FileList result;
+    @Nullable
+    private String downloadFileSync(String fileName) throws IOException {
+        LogHelper.logVerbose("downloadFile", fileName);
+
+        String id = getFileId(fileName);
+        if (notEmpty(id) && setupDriveService()) {
+            InputStream is = mDriveService.files().get(id).executeMediaAsInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            return stringBuilder.toString();
+        }
+        return null;
+    }
+
+    @Nullable
+    private String getFileId(String fileName) {
         try {
             if (setupDriveService()) {
-                result = mDriveService.files()
+                FileList result = mDriveService.files()
                         .list()
-                        .setQ(String.format("name = '%s'", BACKUP_FILE_NAME))
+                        .setQ(String.format("name = '%s'", fileName))
                         .execute();
                 List<File> files = result.getFiles();
                 if (files != null && files.size() > 0) {
@@ -225,36 +189,12 @@ public class DriveServiceHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        return null;
     }
 
-    /**
-     * Creates a text file in the user's My Drive folder and returns its file ID.
-     */
     /*
-    public Task<String> createFile() {
-        return Tasks.call(mExecutor, new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                File metadata = new File()
-                        .setParents(Collections.singletonList("root"))
-                        .setMimeType("text/plain")
-                        .setName("Untitled file");
-
-                File googleFile = mDriveService.files().create(metadata).execute();
-                if (googleFile == null) {
-                    throw new IOException("Null result when requesting file creation.");
-                }
-
-                return googleFile.getId();
-            }
-        });
-    }
-    */
-
-    /**
-     * Opens the file identified by {@code fileId} and returns a {@link Pair} of its name and
-     * contents.
+      Opens the file identified by {@code fileId} and returns a {@link Pair} of its name and
+      contents.
      */
     /*
     public Task<Pair<String, String>> readFile(final String fileId) {
@@ -282,8 +222,8 @@ public class DriveServiceHelper {
     }
     */
 
-    /**
-     * Updates the file identified by {@code fileId} with the given {@code name} and {@code
+    /*
+      Updates the file identified by {@code fileId} with the given {@code name} and {@code
      * content}.
      */
     /*
@@ -305,13 +245,13 @@ public class DriveServiceHelper {
     }
     */
 
-    /**
-     * Returns a {@link FileList} containing all the visible files in the user's My Drive.
-     *
-     * <p>The returned list will only contain files visible to this app, i.e. those which were
-     * created by this app. To perform operations on files not created by the app, the project must
-     * request Drive Full Scope in the <a href="https://play.google.com/apps/publish">Google
-     * Developer's Console</a> and be submitted to Google for verification.</p>
+    /*
+      Returns a {@link FileList} containing all the visible files in the user's My Drive.
+
+      <p>The returned list will only contain files visible to this app, i.e. those which were
+      created by this app. To perform operations on files not created by the app, the project must
+      request Drive Full Scope in the <a href="https://play.google.com/apps/publish">Google
+      Developer's Console</a> and be submitted to Google for verification.</p>
      */
     /*
     public Task<FileList> queryFiles() {
@@ -324,8 +264,8 @@ public class DriveServiceHelper {
     }
     */
 
-    /**
-     * Returns an {@link Intent} for opening the Storage Access Framework file picker.
+    /*
+      Returns an {@link Intent} for opening the Storage Access Framework file picker.
      */
     /*
     public Intent createFilePickerIntent() {
@@ -337,9 +277,9 @@ public class DriveServiceHelper {
     }
     */
 
-    /**
-     * Opens the file at the {@code uri} returned by a Storage Access Framework {@link Intent}
-     * created by {@link #createFilePickerIntent()} using the given {@code contentResolver}.
+    /*
+      Opens the file at the {@code uri} returned by a Storage Access Framework {@link Intent}
+      created by {@link #createFilePickerIntent()} using the given {@code contentResolver}.
      */
     /*
     public Task<Pair<String, String>> openFileUsingStorageAccessFramework(

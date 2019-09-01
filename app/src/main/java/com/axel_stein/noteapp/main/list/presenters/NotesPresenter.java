@@ -31,13 +31,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 
 import static com.axel_stein.noteapp.utils.BooleanUtil.isTrue;
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
@@ -255,17 +254,22 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
             case R.id.menu_select_notebook:
                 mQueryNotebookInteractor.execute()
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<List<Notebook>>() {
+                        .subscribe(new SingleObserver<List<Notebook>>() {
                             @Override
-                            public void accept(List<Notebook> notebooks) {
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onSuccess(List<Notebook> notebooks) {
                                 if (mView != null) {
                                     mView.showSelectNotebookView(notebooks);
                                 }
                             }
-                        }, new Consumer<Throwable>() {
+
                             @Override
-                            public void accept(Throwable throwable) {
-                                throwable.printStackTrace();
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
                                 EventBusHelper.showMessage(R.string.error);
                             }
                         });
@@ -303,7 +307,7 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         handleSwipeAction(mSettings.getSwipeRightAction(), note);
     }
 
-    protected void handleSwipeAction(int action, Note note) {
+    void handleSwipeAction(int action, Note note) {
         switch (action) {
             case AppSettingsRepository.SWIPE_ACTION_NONE:
                 break;
@@ -344,9 +348,14 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         final boolean result = pin;
         Completable c = mSetPinnedNoteInteractor.execute(notes, result);
         c.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         int msg;
                         if (notes.size() == 1) {
                             msg = result ? R.string.msg_note_pinned : R.string.msg_note_unpinned;
@@ -357,10 +366,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         EventBusHelper.showMessage(msg);
                         EventBusHelper.updateNoteList();
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
@@ -383,9 +392,14 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         final boolean result = star;
         Completable c = mSetStarredNoteInteractor.execute(notes, result);
         c.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         if (mView != null) {
                             int count = notes.size();
                             int plurals = result ? R.plurals.plurals_notes_starred : R.plurals.plurals_notes_unstarred;
@@ -394,10 +408,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         }
                         EventBusHelper.updateNoteList();
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
@@ -414,9 +428,14 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         }
         mSetTrashedNoteInteractor.execute(notes, true)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         int msg = notes.size() == 1 ? R.string.msg_note_trashed : R.string.msg_notes_trashed;
                         EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
                             @Override
@@ -428,10 +447,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         stopCheckMode();
                         EventBusHelper.updateNoteList();
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
@@ -448,9 +467,14 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         }
         mSetTrashedNoteInteractor.execute(notes, false)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         int msg = notes.size() == 1 ? R.string.msg_note_restored : R.string.msg_notes_restored;
                         EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
                             @Override
@@ -462,10 +486,10 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                         stopCheckMode();
                         EventBusHelper.updateNoteList();
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
@@ -484,19 +508,24 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         final List<Note> notes = getCheckedNotes();
         mSetNotebookInteractor.execute(notes, notebook.getId())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         stopCheckMode();
 
                         int msg = notes.size() == 1 ? R.string.msg_note_updated : R.string.msg_notes_updated;
                         EventBusHelper.showMessage(msg);
                         EventBusHelper.updateNoteList();
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
@@ -514,11 +543,11 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         return notes;
     }
 
-    protected void delete(Note note) {
+    void delete(Note note) {
         delete(makeList(note));
     }
 
-    protected void delete(List<Note> notes) {
+    private void delete(List<Note> notes) {
         if (mView != null) {
             mView.showConfirmDeleteDialog(notes);
         }

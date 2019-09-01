@@ -2,8 +2,6 @@ package com.axel_stein.data;
 
 import android.content.SharedPreferences;
 
-import androidx.annotation.Nullable;
-
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.repository.SettingsRepository;
 
@@ -12,13 +10,12 @@ import org.json.JSONObject;
 
 public class AppSettingsRepository implements SettingsRepository {
     public static final String BACKUP_FILE_NAME = "backup.json";
-    public static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
+    private static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
     public static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
-    public static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
+    private static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
     public static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
-    public static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
-    public static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
-    private static final String PREF_BACKUP_FILE_DRIVE_ID = "PREF_BACKUP_FILE_DRIVE_ID";
+    private static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
+    private static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
 
     public static final int SWIPE_ACTION_NONE = 0;
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
@@ -26,7 +23,7 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final int SWIPE_ACTION_PIN = 3;
     public static final int SWIPE_ACTION_STAR = 4;
 
-    private SharedPreferences mPreferences;
+    private final SharedPreferences mPreferences;
 
     public AppSettingsRepository(SharedPreferences preferences) {
         mPreferences = preferences;
@@ -49,21 +46,6 @@ public class AppSettingsRepository implements SettingsRepository {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void storeBackupFileDriveId(String id) {
-        mPreferences.edit().putString(PREF_BACKUP_FILE_DRIVE_ID, id).apply();
-    }
-
-    @Nullable
-    @Override
-    public String getBackupFileDriveId() {
-        return mPreferences.getString(PREF_BACKUP_FILE_DRIVE_ID, null);
-    }
-
-    public void removeBackupFileDriveId() {
-        mPreferences.edit().remove(PREF_BACKUP_FILE_DRIVE_ID).apply();
     }
 
     @Override

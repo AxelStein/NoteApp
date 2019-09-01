@@ -28,6 +28,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.HashMap;
 
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
+
 // FIXME: 30.07.2017
 public abstract class EditTextDialog extends AppCompatDialogFragment {
     private String mHint;
@@ -89,7 +91,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
         }
     }
 
-    public void setSuggestions(HashMap<String, Boolean> suggestions) {
+    protected void setSuggestions(HashMap<String, Boolean> suggestions) {
         mSuggestions = suggestions;
     }
 
@@ -112,7 +114,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
         super.onDestroyView();
     }
 
-    protected void setError(String error) {
+    private void setError(String error) {
         mTextInputLayout.setError(error);
     }
 
@@ -125,12 +127,17 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        checkNotNull(getContext());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // R.style.DialogStyle
         builder.setTitle(getResourceText(mTitle, mTitleRes));
         builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onTextCommit(mEditText.getText().toString().trim());
+                Editable e = mEditText.getText();
+                if (e != null) {
+                    onTextCommit(e.toString().trim());
+                }
             }
         });
         builder.setNegativeButton(getResourceText(mNegativeButtonText, mNegativeButtonTextRes), new DialogInterface.OnClickListener() {

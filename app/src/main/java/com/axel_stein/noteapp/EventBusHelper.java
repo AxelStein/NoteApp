@@ -67,7 +67,7 @@ public class EventBusHelper {
         EventBus.getDefault().postSticky(o);
     }
 
-    public static class SignOutEvent {
+    static class SignOutEvent {
     }
 
     public static class Recreate {
@@ -77,7 +77,7 @@ public class EventBusHelper {
     }
 
     public static class AddNotebook {
-        private Notebook notebook;
+        private final Notebook notebook;
 
         AddNotebook(Notebook notebook) {
             this.notebook = notebook;
@@ -89,7 +89,7 @@ public class EventBusHelper {
     }
 
     public static class RenameNotebook {
-        private Notebook notebook;
+        private final Notebook notebook;
 
         RenameNotebook(Notebook notebook) {
             this.notebook = notebook;
@@ -101,7 +101,7 @@ public class EventBusHelper {
     }
 
     public static class DeleteNotebook {
-        private Notebook notebook;
+        private final Notebook notebook;
 
         DeleteNotebook(Notebook notebook) {
             this.notebook = notebook;

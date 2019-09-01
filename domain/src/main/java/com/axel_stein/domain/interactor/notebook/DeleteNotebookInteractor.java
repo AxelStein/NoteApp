@@ -16,10 +16,10 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class DeleteNotebookInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mNotebookRepository;
 
     public DeleteNotebookInteractor(@NonNull NoteRepository n, @NonNull NotebookRepository b) {
         mNoteRepository = requireNonNull(n);
@@ -33,7 +33,7 @@ public class DeleteNotebookInteractor {
     public Completable execute(@NonNull final Notebook notebook) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(notebook)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }

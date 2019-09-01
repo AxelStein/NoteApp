@@ -33,6 +33,7 @@ public interface EditNoteContract {
 
         void setNotebookTitle(String notebook);
 
+        void clearFocus();
     }
 
     interface Presenter {

@@ -2,7 +2,7 @@ package com.axel_stein.data;
 
 import androidx.annotation.NonNull;
 
-public class ObjectUtil {
+class ObjectUtil {
 
     /**
      * Ensures that an object reference passed as a parameter to the calling

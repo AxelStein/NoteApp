@@ -8,9 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
@@ -18,19 +20,21 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.dialogs.ConfirmDialog;
+import com.axel_stein.noteapp.dialogs.drive.ConfirmExportDialog;
+import com.axel_stein.noteapp.dialogs.drive.ConfirmImportDialog;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
 import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -41,9 +45,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
-import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
+import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 
-public class UserActivity extends BaseActivity {
+public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfirmListener {
 
     @Inject
     CreateBackupInteractor mCreateBackupInteractor;
@@ -55,6 +59,8 @@ public class UserActivity extends BaseActivity {
     DriveServiceHelper mDriveServiceHelper;
 
     private TextView mTextLastSync;
+
+    private ContentLoadingProgressBar mProgressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +77,7 @@ public class UserActivity extends BaseActivity {
             actionBar.setTitle("");
         }
 
+        mProgressBar = findViewById(R.id.progress_bar);
         TextView mTextUserName = findViewById(R.id.text_user_name);
         TextView mTextUserEmail = findViewById(R.id.text_user_email);
         CircleImageView mUserPhoto = findViewById(R.id.user_photo);
@@ -90,15 +97,14 @@ public class UserActivity extends BaseActivity {
         findViewById(R.id.text_import_drive).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                importDrive();
+                ConfirmImportDialog.launch(UserActivity.this);
             }
         });
 
         findViewById(R.id.text_export_drive).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // todo ConfirmDialog.from(R.string.title_export, 0, R.string.action_export, R.string.action_cancel).show();
-                exportDrive();
+                ConfirmExportDialog.launch(UserActivity.this);
             }
         });
 
@@ -113,6 +119,8 @@ public class UserActivity extends BaseActivity {
 
     @SuppressLint("CheckResult")
     private void exportDrive() {
+        mProgressBar.show();
+
         mCreateBackupInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<String>() {
@@ -122,13 +130,20 @@ public class UserActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void onSuccess(String backup) {
-                        File file = writeToFile(getFilesDir(), BACKUP_FILE_NAME, backup);
-                        mDriveServiceHelper.uploadBackup(file, new OnSuccessListener<String>() {
+                    public void onSuccess(String content) {
+                        mDriveServiceHelper.uploadFile(BACKUP_FILE_NAME, content, new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(String s) {
+                            public void onSuccess(Void v) {
                                 updateLastSyncTime();
+                                mProgressBar.hide();
                                 EventBusHelper.showMessage(R.string.msg_export_success);
+                            }
+                        }, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                e.printStackTrace();
+                                EventBusHelper.showMessage(R.string.error);
+                                mProgressBar.hide();
                             }
                         });
                     }
@@ -136,13 +151,16 @@ public class UserActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
+                        mProgressBar.hide();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });
     }
 
     private void importDrive() {
-        mDriveServiceHelper.downloadBackup(new OnSuccessListener<String>() {
+        mProgressBar.show();
+
+        mDriveServiceHelper.downloadFile(BACKUP_FILE_NAME, new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String s) {
                 mImportBackupInteractor.execute(s)
@@ -158,23 +176,47 @@ public class UserActivity extends BaseActivity {
                                 EventBusHelper.updateNoteList();
                                 EventBusHelper.recreate();
                                 EventBusHelper.showMessage(R.string.msg_import_success);
+                                mProgressBar.hide();
                             }
 
                             @Override
                             public void onError(Throwable e) {
                                 e.printStackTrace();
+                                mProgressBar.hide();
+                                EventBusHelper.showMessage(R.string.error);
                             }
                         });
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                mProgressBar.hide();
+                EventBusHelper.showMessage(R.string.error);
             }
         });
     }
 
     private void updateLastSyncTime() {
-        mDriveServiceHelper.getModifiedDate(new OnSuccessListener<Long>() {
+        mProgressBar.show();
+
+        mDriveServiceHelper.getFileModifiedDate(BACKUP_FILE_NAME, new OnSuccessListener<Long>() {
             @Override
             public void onSuccess(Long val) {
                 String formattedDate = DateFormatter.formatDateTime(UserActivity.this, val);
+                if (isEmpty(formattedDate)) {
+                    formattedDate = "-";
+                }
                 ViewUtil.setText(mTextLastSync, getString(R.string.last_synced) + " " + formattedDate);
+
+                mProgressBar.hide();
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                mProgressBar.hide();
+                ViewUtil.setText(mTextLastSync, getString(R.string.last_synced) + " -");
             }
         });
     }
@@ -193,6 +235,12 @@ public class UserActivity extends BaseActivity {
                 @Override
                 public void onSuccess(Void aVoid) {
                     finish();
+                }
+            }, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    e.printStackTrace();
+                    EventBusHelper.showMessage(R.string.error);
                 }
             });
             return true;
@@ -229,6 +277,24 @@ public class UserActivity extends BaseActivity {
     protected void onDestroy() {
         EventBusHelper.unsubscribe(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onConfirm(String tag) {
+        switch (tag) {
+            case ConfirmExportDialog.TAG:
+                exportDrive();
+                break;
+
+            case ConfirmImportDialog.TAG:
+                importDrive();
+                break;
+        }
+    }
+
+    @Override
+    public void onCancel(String tag) {
+
     }
 
 }

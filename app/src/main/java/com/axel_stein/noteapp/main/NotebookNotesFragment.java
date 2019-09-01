@@ -49,7 +49,6 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBusHelper.subscribe(this);
         App.getAppComponent().inject(this);
         setHasOptionsMenu(true);
 
@@ -89,12 +88,6 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
                         e.printStackTrace();
                     }
                 });
-    }
-
-    @Override
-    public void onDestroy() {
-        EventBusHelper.unsubscribe(this);
-        super.onDestroy();
     }
 
     private void updateNotebook(Notebook notebook) {

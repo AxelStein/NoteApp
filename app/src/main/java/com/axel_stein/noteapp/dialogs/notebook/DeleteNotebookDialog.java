@@ -16,9 +16,9 @@ import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
@@ -66,16 +66,21 @@ public class DeleteNotebookDialog extends ConfirmDialog {
     private void deleteImpl(final Notebook notebook) {
         mDeleteNotebookInteractor.execute(notebook)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         EventBusHelper.showMessage(R.string.msg_notebook_deleted);
                         EventBusHelper.deleteNotebook(notebook);
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });

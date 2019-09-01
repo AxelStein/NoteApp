@@ -29,6 +29,7 @@ import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
 import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.list.SearchActivity;
+import com.axel_stein.noteapp.settings.SettingsActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -49,6 +50,8 @@ import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+
+import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 
 public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuItemClickListener, OnTitleChangeListener {
     private static final int REQUEST_CODE_SIGN_IN = 1;
@@ -81,6 +84,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getAppComponent().inject(this);
         setContentView(R.layout.activity_main);
 
         mAppBar = findViewById(R.id.app_bar);
@@ -103,9 +107,6 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 EditNoteActivity.launch(MainActivity.this, id);
             }
         });
-
-        App.getAppComponent().inject(this);
-        EventBusHelper.subscribe(this);
 
         if (savedInstanceState == null) {
             onMenuItemClick(mSelectedItemId, true);
@@ -155,6 +156,15 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                                 .fromTitle(R.string.action_trash)
                                 .fromIcon(R.drawable.ic_delete));
 
+                        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+                        if (account != null) {
+                            builder.setUserName(account.getDisplayName())
+                                    .setUserEmail(account.getEmail())
+                                    .setUserPhotoUrl(account.getPhotoUrl());
+                        } else {
+                            builder.setUserName(getString(R.string.action_sign_in));
+                        }
+
                         builder.show(MainActivity.this, TAG_MAIN_MENU);
                     }
 
@@ -166,9 +176,15 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStart() {
+        super.onStart();
+        EventBusHelper.subscribe(this);
+    }
+
+    @Override
+    protected void onStop() {
         EventBusHelper.unsubscribe(this);
-        super.onDestroy();
+        super.onStop();
     }
 
     @Subscribe
@@ -209,7 +225,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     @Subscribe
-    public void onNotebookAdded(EventBusHelper.AddNotebook e) {
+    public void onNotebookAdded(final EventBusHelper.AddNotebook e) {
         Notebook notebook = e.getNotebook();
         onMenuItemClick(notebook.getId(), true);
     }
@@ -322,6 +338,12 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     @Override
+    public void onSettingsClick(MainMenuDialog dialog) {
+        dialog.dismiss();
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             if (resultCode == Activity.RESULT_OK && resultData != null) {
@@ -349,7 +371,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     private void importDrive() {
-        mDriveServiceHelper.downloadBackup(new OnSuccessListener<String>() {
+        mDriveServiceHelper.downloadFile(BACKUP_FILE_NAME, new OnSuccessListener<String>() {
             @Override
             public void onSuccess(String s) {
                 mImportBackupInteractor.execute(s)
@@ -372,6 +394,12 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                                 e.printStackTrace();
                             }
                         });
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                EventBusHelper.showMessage(R.string.error);
             }
         });
     }

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
@@ -33,6 +34,8 @@ import com.axel_stein.noteapp.utils.DisplayUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -65,7 +68,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
     private int mPaddingTop;
     private int mPaddingBottom;
 
-    private NoteItemListener mItemListener = new NoteItemListener() {
+    private final NoteItemListener mItemListener = new NoteItemListener() {
         @Override
         public void onNoteClick(int pos, Note note) {
             if (mPresenter != null) {
@@ -91,8 +94,15 @@ public class NotesFragment extends Fragment implements NotesContract.View,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBusHelper.subscribe(this);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBusHelper.unsubscribe(this);
+        super.onDestroy();
     }
 
     @Nullable
@@ -122,6 +132,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         return root;
     }
 
+    @SuppressWarnings("SameParameterValue")
     protected void setPaddingTop(int dp) {
         mPaddingTop = DisplayUtil.dpToPx(getContext(), dp);
         //updatePadding();
@@ -280,8 +291,16 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         }
     }
 
+    @Subscribe
+    public void onNotebookAdded(EventBusHelper.AddNotebook e) {
+        onNotebookChecked(e.getNotebook());
+        if (mPresenter != null) {
+            mPresenter.stopCheckMode();
+        }
+    }
+
     @Nullable
-    public Presenter getPresenter() {
+    protected Presenter getPresenter() {
         return mPresenter;
     }
 
@@ -327,7 +346,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
     static class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder> {
         private List<Note> mNotes;
         private Presenter mPresenter;
-        private NoteItemListener mNoteItemListener;
+        private final NoteItemListener mNoteItemListener;
 
         NoteAdapter(@NonNull NoteItemListener l) {
             mNoteItemListener = l;
@@ -376,12 +395,12 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         }
 
         class NoteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-            private ImageView mIcon;
-            private ImageView mPin;
-            private ImageView mStar;
-            private TextView mTitle;
-            private TextView mContent;
-            private NoteItemListener mListener;
+            private final ImageView mIcon;
+            private final ImageView mPin;
+            private final ImageView mStar;
+            private final TextView mTitle;
+            private final TextView mContent;
+            private final NoteItemListener mListener;
 
             private NoteViewHolder(final View itemView, NoteItemListener l) {
                 super(itemView);
@@ -407,7 +426,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
                 itemView.setOnLongClickListener(this);
             }
 
-            public void setNote(Note note) {
+            void setNote(Note note) {
                 String content = note.getContent();
 
                 ViewUtil.show(!isEmpty(content), mContent);

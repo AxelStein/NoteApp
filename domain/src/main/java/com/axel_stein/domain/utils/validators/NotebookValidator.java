@@ -8,6 +8,7 @@ import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class NotebookValidator {
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isValid(Notebook notebook) {
         return isValid(notebook, true);
     }

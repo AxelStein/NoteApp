@@ -20,10 +20,10 @@ import com.axel_stein.noteapp.utils.DisplayUtil;
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
-public class SwipeActionCallback extends ItemTouchHelper.SimpleCallback {
-    private Context mContext;
-    private NoteAdapter mAdapter;
-    private Presenter mPresenter;
+class SwipeActionCallback extends ItemTouchHelper.SimpleCallback {
+    private final Context mContext;
+    private final NoteAdapter mAdapter;
+    private final Presenter mPresenter;
 
     private Drawable mIconLeft;
     private ColorDrawable mBackgroundLeft;
@@ -129,13 +129,11 @@ public class SwipeActionCallback extends ItemTouchHelper.SimpleCallback {
             background.setBounds(itemView.getLeft(), itemView.getTop(),
                     itemView.getLeft() + ((int) dX),
                     itemView.getBottom());
-            background.draw(c);
         } else if (dX < 0) { // Swiping to the left
             icon = mIconLeft;
             background = mBackgroundLeft;
 
             background.setBounds(itemView.getRight() + ((int) dX), itemView.getTop(), itemView.getRight(), itemView.getBottom());
-            background.draw(c);
         } else if (background != null) { // view is unSwiped
             background.setBounds(0, 0, 0, 0);
         } else {

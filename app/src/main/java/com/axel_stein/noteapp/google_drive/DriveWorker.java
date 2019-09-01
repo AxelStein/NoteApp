@@ -12,13 +12,11 @@ import com.axel_stein.noteapp.App;
 
 import org.joda.time.LocalDate;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
 
 import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
-import static com.axel_stein.noteapp.utils.FileUtil.writeToFile;
 
 public class DriveWorker extends Worker {
 
@@ -37,8 +35,8 @@ public class DriveWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        long val = mDriveServiceHelper.getModifiedDateSync();
-        if (val != -1) {
+        Long val = mDriveServiceHelper.getFileModifiedDateSync(BACKUP_FILE_NAME);
+        if (val != null) {
             LocalDate date = new LocalDate(val);
             LocalDate today = new LocalDate();
             if (!date.equals(today)) {
@@ -52,10 +50,8 @@ public class DriveWorker extends Worker {
     }
 
     private Result uploadBackup() {
-        File dir = getApplicationContext().getFilesDir();
-        File backupFile = writeToFile(dir, BACKUP_FILE_NAME, mCreateBackupInteractor.executeSync());
         try {
-            mDriveServiceHelper.uploadBackupSync(backupFile);
+            mDriveServiceHelper.uploadFileSync(BACKUP_FILE_NAME, mCreateBackupInteractor.executeSync());
             return Result.success();
         } catch (IOException e) {
             e.printStackTrace();

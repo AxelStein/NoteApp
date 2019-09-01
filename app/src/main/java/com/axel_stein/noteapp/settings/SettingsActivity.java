@@ -15,16 +15,14 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class SettingsActivity extends BaseActivity {
 
-    Toolbar mToolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        mToolbar = findViewById(R.id.toolbar);
         EventBusHelper.subscribe(this);
 
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

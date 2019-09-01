@@ -22,8 +22,7 @@ public class ResourceUtil {
         if (res > 0) {
             try {
                 result = context.getResources().getStringArray(res);
-            } catch (Resources.NotFoundException e) {
-                result = array;
+            } catch (Resources.NotFoundException ignored) {
             }
         }
         return result;

@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Backup {
-
-    private final int version = 2;
+    private final int version = 1;
 
     private List<NoteWrapper> notes;
 

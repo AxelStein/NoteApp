@@ -25,9 +25,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConfirmListener {
     private static final String TAG_EMPTY_TRASH = "TAG_EMPTY_TRASH";
@@ -128,18 +128,24 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
     private void emptyTrash() {
         mEmptyTrashInteractor.emptyTrash()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         NotesContract.Presenter presenter = getPresenter();
                         if (presenter != null) {
                             presenter.forceUpdate();
                         }
                         EventBusHelper.showMessage(R.string.msg_trash_empty);
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) {
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });

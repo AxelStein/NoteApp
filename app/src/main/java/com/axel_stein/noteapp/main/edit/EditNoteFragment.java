@@ -23,6 +23,7 @@ import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
+import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
@@ -34,6 +35,8 @@ import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -71,8 +74,8 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         App.getAppComponent().inject(this);
+        EventBusHelper.subscribe(this);
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
@@ -148,6 +151,12 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
             mPresenter.onDestroyView();
         }
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBusHelper.unsubscribe(this);
+        super.onDestroy();
     }
 
     @Override
@@ -278,6 +287,16 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     public void setNotebookTitle(String notebook) {
         ViewUtil.show(!isEmpty(notebook), mNotebookView);
         ViewUtil.setText(mNotebookView, notebook);
+    }
+
+    @Override
+    public void clearFocus() {
+        if (mEditTitle != null) {
+            mEditTitle.clearFocus();
+        }
+        if (mEditContent != null) {
+            mEditContent.clearFocus();
+        }
     }
 
     @Override
@@ -412,6 +431,11 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
                 }
             });
         }
+    }
+
+    @Subscribe
+    public void onNotebookAdded(EventBusHelper.AddNotebook e) {
+        onNotebookChecked(e.getNotebook());
     }
 
 }

@@ -15,7 +15,7 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class UpdateNotebookInteractor {
 
     @NonNull
-    private NotebookRepository mRepository;
+    private final NotebookRepository mRepository;
 
     public UpdateNotebookInteractor(@NonNull NotebookRepository n) {
         mRepository = requireNonNull(n);
@@ -29,7 +29,7 @@ public class UpdateNotebookInteractor {
     public Completable execute(@NonNull final Notebook notebook) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(notebook)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }

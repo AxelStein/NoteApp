@@ -146,7 +146,7 @@ public class MenuUtil {
         }
     }
 
-    public static void show(@Nullable MenuItem item, boolean show) {
+    private static void show(@Nullable MenuItem item, boolean show) {
         if (item != null) {
             item.setVisible(show);
         }
@@ -158,7 +158,7 @@ public class MenuUtil {
         }
     }
 
-    public static void check(@Nullable MenuItem item, boolean checked) {
+    private static void check(@Nullable MenuItem item, boolean checked) {
         if (item != null) {
             item.setChecked(checked);
         }
@@ -202,7 +202,7 @@ public class MenuUtil {
     }
 
     @NonNull
-    public static ArrayList<MenuItem> getGroupMenuItems(Menu menu, int group) {
+    private static ArrayList<MenuItem> getGroupMenuItems(Menu menu, int group) {
         ArrayList<MenuItem> res = new ArrayList<>();
         if (menu != null) {
             ArrayList<MenuItem> items = getVisibleMenuItems(menu);

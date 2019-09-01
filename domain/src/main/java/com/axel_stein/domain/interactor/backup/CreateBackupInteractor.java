@@ -18,13 +18,13 @@ import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 public class CreateBackupInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mNotebookRepository;
 
     @NonNull
-    private SettingsRepository mSettingsRepository;
+    private final SettingsRepository mSettingsRepository;
 
     public CreateBackupInteractor(@NonNull NoteRepository noteRepository,
                                   @NonNull NotebookRepository notebookRepository,

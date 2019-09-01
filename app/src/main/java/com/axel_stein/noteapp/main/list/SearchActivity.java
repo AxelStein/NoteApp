@@ -37,9 +37,8 @@ public class SearchActivity extends BaseActivity {
 
     private static final int SEARCH_INPUT_DELAY = 600;
 
-    Toolbar mToolbar;
-    EditText mEditSearch;
-    ImageButton mButtonClear;
+    private EditText mEditSearch;
+    private ImageButton mButtonClear;
 
     @Nullable
     private NotesFragment mFragment;
@@ -58,11 +57,11 @@ public class SearchActivity extends BaseActivity {
 
         EventBusHelper.subscribe(this);
 
-        mToolbar = findViewById(R.id.toolbar);
         mEditSearch = findViewById(R.id.edit_search);
         mButtonClear = findViewById(R.id.button_clear);
 
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

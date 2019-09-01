@@ -8,6 +8,7 @@ import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,10 +29,10 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class QueryNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     @NonNull
-    private SettingsRepository mSettingsRepository;
+    private final SettingsRepository mSettingsRepository;
 
     public QueryNoteInteractor(@NonNull NoteRepository n, @NonNull SettingsRepository s) {
         mNoteRepository = requireNonNull(n);
@@ -74,6 +75,15 @@ public class QueryNoteInteractor {
         return single(new Callable<List<Note>>() {
             @Override
             public List<Note> call() {
+                List<Note> result = mNoteRepository.queryTrashed();
+                LocalDate today = new LocalDate();
+                for (Note note : result) {
+                    LocalDate date = new LocalDate(note.getTrashedDate());
+                    date = date.plusMonths(1);
+                    if (date.equals(today) || date.isBefore(today)) {
+                        mNoteRepository.delete(note);
+                    }
+                }
                 return trashOrderImpl(mNoteRepository.queryTrashed());
             }
         });

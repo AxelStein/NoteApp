@@ -15,7 +15,7 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class InsertNotebookInteractor {
 
     @NonNull
-    private NotebookRepository mRepository;
+    private final NotebookRepository mRepository;
 
     public InsertNotebookInteractor(@NonNull NotebookRepository n) {
         mRepository = requireNonNull(n);

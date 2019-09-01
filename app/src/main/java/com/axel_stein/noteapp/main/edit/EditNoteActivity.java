@@ -26,17 +26,18 @@ import com.axel_stein.noteapp.views.IconTextView;
 
 import javax.inject.Inject;
 
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class EditNoteActivity extends BaseActivity {
-    public static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
-    public static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.EXTRA_NOTEBOOK_ID";
+    private static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
+    private static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.EXTRA_NOTEBOOK_ID";
 
-    Toolbar mToolbar;
-    IconTextView mNotebookView;
+    private Toolbar mToolbar;
+    private IconTextView mNotebookView;
 
     @Inject
     GetNoteInteractor mGetNoteInteractor;
@@ -92,9 +93,14 @@ public class EditNoteActivity extends BaseActivity {
 
             mGetNoteInteractor.execute(id)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<Note>() {
+                    .subscribe(new SingleObserver<Note>() {
                         @Override
-                        public void accept(Note note) {
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onSuccess(Note note) {
                             mPresenter = new EditNotePresenter(note);
                             setPresenterListener();
 
@@ -112,10 +118,10 @@ public class EditNoteActivity extends BaseActivity {
 
                             handleIntent();
                         }
-                    }, new Consumer<Throwable>() {
+
                         @Override
-                        public void accept(Throwable throwable) {
-                            throwable.printStackTrace();
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
                             EventBusHelper.showMessage(R.string.error);
                         }
                     });

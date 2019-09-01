@@ -17,7 +17,7 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.validateBefor
 public class InsertNoteInteractor {
 
     @NonNull
-    private NoteRepository mRepository;
+    private final NoteRepository mRepository;
 
     public InsertNoteInteractor(@NonNull NoteRepository r) {
         mRepository = requireNonNull(r);

@@ -15,7 +15,7 @@ import static com.axel_stein.data.note.NoteMapper.mapIds;
 
 public class SqlNoteRepository implements NoteRepository {
 
-    private NoteDao mDao;
+    private final NoteDao mDao;
 
     public SqlNoteRepository(@NonNull NoteDao dao) {
         mDao = dao;

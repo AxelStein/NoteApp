@@ -4,7 +4,8 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class LruCache<K, V> {
+@SuppressWarnings("SameReturnValue")
+class LruCache<K, V> {
     private final LinkedHashMap<K, V> map;
 
     /** Size of this cache in units. Not necessarily the number of elements. */
@@ -27,7 +28,7 @@ public class LruCache<K, V> {
             throw new IllegalArgumentException("maxSize <= 0");
         }
         this.maxSize = maxSize;
-        this.map = new LinkedHashMap<K, V>(0, 0.75f, true);
+        this.map = new LinkedHashMap<>(0, 0.75f, true);
     }
 
     /**
@@ -106,6 +107,7 @@ public class LruCache<K, V> {
      *
      * @return the previous value mapped by {@code key}.
      */
+    @SuppressWarnings("UnusedReturnValue")
     public final V put(K key, V value) {
         if (key == null || value == null) {
             throw new NullPointerException("key == null || value == null");
@@ -136,7 +138,7 @@ public class LruCache<K, V> {
      * @param maxSize the maximum size of the cache before returning. May be -1
      *            to evict even 0-sized elements.
      */
-    public void trimToSize(int maxSize) {
+    private void trimToSize(int maxSize) {
         while (true) {
             K key;
             V value;
@@ -187,22 +189,22 @@ public class LruCache<K, V> {
         return previous;
     }
 
-    /**
-     * Called for entries that have been evicted or removed. This method is
-     * invoked when a value is evicted to make space, removed by a call to
-     * {@link #remove}, or replaced by a call to {@link #put}. The default
-     * implementation does nothing.
-     *
-     * <p>The method is called without synchronization: other threads may
-     * access the cache while this method is executing.
-     *
-     * @param evicted true if the entry is being removed to make space, false
+    /*
+      Called for entries that have been evicted or removed. This method is
+      invoked when a value is evicted to make space, removed by a call to
+      {@link #remove}, or replaced by a call to {@link #put}. The default
+      implementation does nothing.
+
+      <p>The method is called without synchronization: other threads may
+      access the cache while this method is executing.
+
+      @param evicted true if the entry is being removed to make space, false
      *     if the removal was caused by a {@link #put} or {@link #remove}.
      * @param newValue the new value for {@code key}, if it exists. If non-null,
      *     this removal was caused by a {@link #put}. Otherwise it was caused by
      *     an eviction or a {@link #remove}.
      */
-    protected void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {}
+    private void entryRemoved(boolean evicted, K key, V oldValue, V newValue) {}
 
     /**
      * Called after a cache miss to compute a value for the corresponding key.
@@ -219,7 +221,7 @@ public class LruCache<K, V> {
      * thread calls {@link #put} while another is creating a value for the same
      * key.
      */
-    protected V create(K key) {
+    private V create(K key) {
         return null;
     }
 
@@ -238,7 +240,7 @@ public class LruCache<K, V> {
      *
      * <p>An entry's size must not change while it is in the cache.
      */
-    protected int sizeOf(K key, V value) {
+    private int sizeOf(K key, V value) {
         return 1;
     }
 
@@ -309,7 +311,7 @@ public class LruCache<K, V> {
      * recently accessed to most recently accessed.
      */
     public synchronized final Map<K, V> snapshot() {
-        return new LinkedHashMap<K, V>(map);
+        return new LinkedHashMap<>(map);
     }
 
     @Override public synchronized final String toString() {
