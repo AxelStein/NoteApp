@@ -1,84 +1,73 @@
 package com.axel_stein.domain.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.utils.CompareBuilder;
-import com.axel_stein.domain.utils.MapComparator;
+import com.axel_stein.domain.utils.TextUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import org.joda.time.DateTime;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 
 public class Note implements Cloneable {
-
-    public static final int MAX_TITLE_LENGTH = 128;
-
-    private long id;
-
-    private long notebook;
-
-    private long relevance;
-
-    private boolean trash;
-
+    private String id;
     private String title;
-
     private String content;
-
-    private long date;
-
-    private long update;
-
+    private String notebookId;
+    private long views;
     private boolean pinned;
+    private boolean starred;
+    private boolean trashed;
+    private DateTime trashedDate;
+    private DateTime modifiedDate;
 
-    @Nullable
-    private HashMap<Long, Boolean> labels;
+    public boolean hasId() {
+        return !TextUtil.isEmpty(id);
+    }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public long getNotebook() {
-        return notebook;
+    public String getNotebookId() {
+        return notebookId;
+    }
+
+    public void setNotebookId(String notebookId) {
+        this.notebookId = notebookId;
     }
 
     public void setNotebook(@NonNull Notebook notebook) {
         requireNonNull(notebook);
-        this.notebook = notebook.getId();
+        this.notebookId = notebook.getId();
     }
 
-    public void setNotebook(long notebook) {
-        this.notebook = notebook;
+    public long getViews() {
+        return views;
     }
 
-    public long getRelevance() {
-        return relevance;
-    }
-
-    public void setRelevance(long relevance) {
-        if (relevance < 0) {
-            throw new IllegalArgumentException("relevance should be >= 0");
+    public void setViews(long views) {
+        if (views < 0) {
+            throw new IllegalArgumentException("views should be >= 0");
         }
-        this.relevance = relevance;
+        this.views = views;
     }
 
-    public void incrementRelevance() {
-        relevance = relevance + 1;
+    public void incrementViews() {
+        this.views++;
     }
 
-    public boolean isTrash() {
-        return trash;
+    public boolean isTrashed() {
+        return trashed;
     }
 
-    public void setTrash(boolean trash) {
-        this.trash = trash;
+    public void setTrashed(boolean trashed) {
+        this.trashed = trashed;
     }
 
     @NonNull
@@ -90,12 +79,6 @@ public class Note implements Cloneable {
     }
 
     public void setTitle(@Nullable String title) {
-        if (title != null) {
-            int length = title.length();
-            if (length > MAX_TITLE_LENGTH) {
-                title = title.substring(0, MAX_TITLE_LENGTH);
-            }
-        }
         this.title = title;
     }
 
@@ -108,108 +91,12 @@ public class Note implements Cloneable {
         this.content = content;
     }
 
-    /**
-     * @throws NullPointerException     if label is null
-     * @throws IllegalArgumentException if label`s id is 0
-     */
-    public void addLabel(@NonNull Label label) {
-        label = requireNonNull(label, "label is null");
-        addLabel(label.getId());
+    public DateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    /**
-     * @throws IllegalArgumentException if label`s id is 0
-     */
-    public void addLabel(long labelId) {
-        if (labelId <= 0) {
-            throw new IllegalArgumentException("labelId is 0");
-        }
-        initLabels().put(labelId, true);
-    }
-
-    /**
-     * @throws NullPointerException     if label is null
-     * @throws IllegalArgumentException if label`s id is 0
-     */
-    public boolean containsLabel(@NonNull Label label) {
-        label = requireNonNull(label, "label is null");
-        return containsLabel(label.getId());
-    }
-
-    /**
-     * @throws IllegalArgumentException if labelId is 0
-     */
-    public boolean containsLabel(long labelId) {
-        if (labelId <= 0) {
-            throw new IllegalArgumentException("labelId is 0");
-        }
-        return initLabels().containsKey(labelId);
-    }
-
-    /**
-     * @throws NullPointerException     if label is null
-     * @throws IllegalArgumentException if label`s id is 0
-     */
-    public void removeLabel(@NonNull Label label) {
-        label = requireNonNull(label, "label is null");
-        removeLabel(label.getId());
-    }
-
-    /**
-     * @throws IllegalArgumentException if labelId is 0
-     */
-    public void removeLabel(long labelId) {
-        if (labelId <= 0) {
-            throw new IllegalArgumentException("labelId is 0");
-        }
-        initLabels().remove(labelId);
-    }
-
-    public void clearLabels() {
-        initLabels().clear();
-    }
-
-    @NonNull
-    private HashMap<Long, Boolean> initLabels() {
-        if (labels == null) {
-            labels = new HashMap<>();
-        }
-        return labels;
-    }
-
-    public long getDate() {
-        return date;
-    }
-
-    public void setDate(long date) {
-        this.date = date;
-    }
-
-    public long getUpdate() {
-        return update;
-    }
-
-    public void setUpdate(long update) {
-        this.update = update;
-    }
-
-    @Nullable
-    public List<Long> getLabels() {
-        if (labels == null || labels.size() == 0) {
-            return null;
-        }
-        List<Long> list = new ArrayList<>();
-        list.addAll(labels.keySet());
-        return list;
-    }
-
-    public void setLabels(@Nullable List<Long> labels) {
-        clearLabels();
-        if (labels != null) {
-            for (long l : labels) {
-                addLabel(l);
-            }
-        }
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public void setPinned(boolean pinned) {
@@ -220,13 +107,26 @@ public class Note implements Cloneable {
         return pinned;
     }
 
+    public DateTime getTrashedDate() {
+        return trashedDate;
+    }
+
+    public void setTrashedDate(DateTime trashedDate) {
+        this.trashedDate = trashedDate;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
+
     public Note copy() {
         Note copy;
         try {
             copy = (Note) clone();
-            if (labels != null) {
-                copy.labels = (HashMap<Long, Boolean>) labels.clone();
-            }
         } catch (Exception ex) {
             copy = new Note();
         }
@@ -235,21 +135,18 @@ public class Note implements Cloneable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof Note) {
+        if (obj instanceof Note) {
             Note note = (Note) obj;
 
             CompareBuilder builder = new CompareBuilder();
             builder.append(id, note.id);
             builder.append(title, note.title);
             builder.append(content, note.content);
-            builder.append(notebook, note.notebook);
-            builder.append(date, note.date);
-            builder.append(update, note.update);
-            builder.append(trash, note.trash);
+            builder.append(notebookId, note.notebookId);
+            builder.append(modifiedDate, note.modifiedDate);
+            builder.append(trashed, note.trashed);
             builder.append(pinned, note.pinned);
-
-            MapComparator<Long, Boolean> mapComparator = new MapComparator<>();
-            builder.append(mapComparator.compare(labels, note.labels));
+            builder.append(starred, note.starred);
 
             return builder.areEqual();
         }
@@ -260,15 +157,16 @@ public class Note implements Cloneable {
     @Override
     public String toString() {
         return "Note{" +
-                "id=" + id +
-                ", notebook=" + notebook +
-                ", relevance=" + relevance +
-                ", trash=" + trash +
-                ", pinned=" + pinned +
+                "id='" + id + '\'' +
                 ", title='" + title + '\'' +
-                ", date=" + date +
-                ", update=" + update +
+                ", content='" + content + '\'' +
+                ", notebookId='" + notebookId + '\'' +
+                ", views=" + views +
+                ", pinned=" + pinned +
+                ", starred=" + starred +
+                ", trashed=" + trashed +
+                ", trashedDate=" + trashedDate +
+                ", modifiedDate=" + modifiedDate +
                 '}';
     }
-
 }

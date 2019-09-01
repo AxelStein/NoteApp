@@ -1,55 +1,59 @@
 package com.axel_stein.domain.model;
 
+import com.axel_stein.domain.json_wrapper.NoteWrapper;
+import com.axel_stein.domain.json_wrapper.NotebookWrapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Backup {
+    private final int version = 1;
 
-    private List<Note> notes;
+    private List<NoteWrapper> notes;
 
-    private List<Notebook> notebooks;
+    private List<NotebookWrapper> notebooks;
 
-    private List<Label> labels;
-
-    @JsonProperty("note_label_pairs")
-    private List<NoteLabelPair> noteLabelPairs;
+    @JsonProperty("settings")
+    private String jsonSettings;
 
     public Backup() {
     }
 
-    public List<Note> getNotes() {
+    public int getVersion() {
+        return version;
+    }
+
+    public List<NoteWrapper> getNotes() {
         return notes;
     }
 
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
+    public void setSourceNotes(List<Note> notes) {
+        this.notes = new ArrayList<>();
+        for (Note note : notes) {
+            this.notes.add(NoteWrapper.fromNote(note));
+        }
     }
 
-    public List<Notebook> getNotebooks() {
+    public List<NotebookWrapper> getNotebooks() {
         return notebooks;
     }
 
-    public void setNotebooks(List<Notebook> notebooks) {
-        this.notebooks = notebooks;
+    public void setSourceNotebooks(List<Notebook> notebooks) {
+        this.notebooks = new ArrayList<>();
+        for (Notebook notebook : notebooks) {
+            this.notebooks.add(NotebookWrapper.fromNotebook(notebook));
+        }
     }
 
-    public List<Label> getLabels() {
-        return labels;
+    public void setJsonSettings(String json) {
+        this.jsonSettings = json;
     }
 
-    public void setLabels(List<Label> labels) {
-        this.labels = labels;
-    }
-
-    public List<NoteLabelPair> getNoteLabelPairs() {
-        return noteLabelPairs;
-    }
-
-    public void setNoteLabelPairs(List<NoteLabelPair> noteLabelPairs) {
-        this.noteLabelPairs = noteLabelPairs;
+    public String getJsonSettings() {
+        return jsonSettings;
     }
 
     public String toJson() throws JsonProcessingException {

@@ -1,11 +1,11 @@
 package com.axel_stein.data.notebook;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -13,22 +13,25 @@ import java.util.List;
 public interface NotebookDao {
 
     @Insert
-    long insert(NotebookEntity notebook);
+    void insert(NotebookEntity notebook);
 
     @Update
     void update(NotebookEntity notebook);
+
+    @Query("UPDATE notebooks SET title = :title WHERE id = :notebookId")
+    void rename(String notebookId, String title);
+
+    @Query("SELECT * FROM notebooks WHERE id = :id LIMIT 1")
+    @Nullable
+    NotebookEntity get(String id);
+
+    @Query("SELECT * FROM notebooks ORDER BY title")
+    List<NotebookEntity> query();
 
     @Delete
     void delete(NotebookEntity notebook);
 
     @Query("DELETE FROM notebooks")
     void deleteAll();
-
-    @Query("SELECT * FROM notebooks WHERE id = :id LIMIT 1")
-    @Nullable
-    NotebookEntity get(long id);
-
-    @Query("SELECT * FROM notebooks")
-    List<NotebookEntity> query();
 
 }

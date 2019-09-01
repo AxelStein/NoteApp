@@ -1,32 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/coordinator_main"
-        android:layout_above="@+id/bottom_navigation"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/app_bar"
+        <com.google.android.material.appbar.AppBarLayout
+            app:elevation="0dp"
+            android:background="?attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <TextView
+                android:id="@+id/text_title"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:text="@string/action_inbox"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="16sp"
+                app:layout_scrollFlags=""
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:title="@string/app_name"
-                app:popupTheme="?attr/toolbarPopupTheme"/>
+                android:layout_height="48dp"/>
 
-        </android.support.design.widget.AppBarLayout>
+            <View
+                android:background="?android:attr/listDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <FrameLayout
             android:id="@+id/content"
@@ -34,105 +44,27 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <View
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow"
-            android:background="@drawable/shadow"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_add_white_24dp"
-            app:borderWidth="0dp"
-            app:elevation="2dp"
-            app:fabSize="normal"/>
-
-    </android.support.design.widget.CoordinatorLayout>
-
-    <View
+    <com.google.android.material.bottomappbar.BottomAppBar
+        app:backgroundTint="?attr/appBarColor"
+        android:id="@+id/app_bar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_above="@+id/bottom_navigation"
-        android:background="@drawable/shadow_bottom"/>
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        app:layout_dodgeInsetEdges="bottom"
+        app:hideOnScroll="true"
+        app:fabCradleMargin="8dp"
+        app:fabCradleRoundedCornerRadius="8dp"
+        app:fabCradleVerticalOffset="4dp"
+        app:navigationIcon="?attr/appBarIcon"/>
 
-    <com.axel_stein.noteapp.views.BottomMenuView
-        tools:ignore="SmallSp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_create_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="?attr/appBarFabIcon"
+        app:layout_anchor="@id/app_bar"/>
 
-        android:id="@+id/bottom_navigation"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:id="@+id/action_home"
-            app:iconTop="@drawable/ic_inbox_white_24dp"
-            app:iconTopTint="?attr/menuItemTintColor"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:gravity="center_horizontal"
-            android:text="@string/action_inbox"
-            android:textSize="11sp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:id="@+id/action_notebooks"
-            app:iconTop="@drawable/ic_book_white_24dp"
-            app:iconTopTint="?attr/menuItemTintColor"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:gravity="center_horizontal"
-            android:text="@string/action_notebooks"
-            android:textSize="11sp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:id="@+id/action_labels"
-            app:iconTop="@drawable/ic_label_white_24dp"
-            app:iconTopTint="?attr/menuItemTintColor"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:gravity="center_horizontal"
-            android:text="@string/action_labels"
-            android:textSize="11sp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-
-        <com.axel_stein.noteapp.views.IconTextView
-            android:id="@+id/action_trash"
-            app:iconTop="@drawable/ic_delete_white_24dp"
-            app:iconTopTint="?attr/menuItemTintColor"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:gravity="center_horizontal"
-            android:text="@string/action_trash"
-            android:textSize="11sp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-
-    </com.axel_stein.noteapp.views.BottomMenuView>
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

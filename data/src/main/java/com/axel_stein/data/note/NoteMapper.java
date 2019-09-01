@@ -1,6 +1,6 @@
 package com.axel_stein.data.note;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.model.Note;
 
@@ -17,12 +17,13 @@ class NoteMapper {
         note.setId(entity.getId());
         note.setTitle(entity.getTitle());
         note.setContent(entity.getContent());
-        note.setNotebook(entity.getNotebook());
-        note.setRelevance(entity.getRelevance());
-        note.setDate(entity.getDate());
-        note.setUpdate(entity.getUpdate());
-        note.setTrash(entity.isTrash());
+        note.setNotebookId(entity.getNotebookId());
+        note.setViews(entity.getViews());
+        note.setTrashed(entity.isTrashed());
+        note.setTrashedDate(entity.getTrashedDate());
         note.setPinned(entity.isPinned());
+        note.setStarred(entity.isStarred());
+        note.setModifiedDate(entity.getModifiedDate());
         return note;
     }
 
@@ -34,12 +35,13 @@ class NoteMapper {
         entity.setId(note.getId());
         entity.setTitle(note.getTitle());
         entity.setContent(note.getContent());
-        entity.setNotebook(note.getNotebook());
-        entity.setRelevance(note.getRelevance());
-        entity.setDate(note.getDate());
-        entity.setUpdate(note.getUpdate());
-        entity.setTrash(note.isTrash());
+        entity.setNotebookId(note.getNotebookId());
+        entity.setViews(note.getViews());
+        entity.setTrashed(note.isTrashed());
+        entity.setTrashedDate(note.getTrashedDate());
         entity.setPinned(note.isPinned());
+        entity.setStarred(note.isStarred());
+        entity.setModifiedDate(note.getModifiedDate());
         return entity;
     }
 
@@ -54,11 +56,11 @@ class NoteMapper {
         return notes;
     }
 
-    static List<Long> mapIds(@Nullable List<Note> notes) {
+    static List<String> mapIds(@Nullable List<Note> notes) {
         if (notes == null) {
             return null;
         }
-        List<Long> ids = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (Note n : notes) {
             ids.add(n.getId());
         }

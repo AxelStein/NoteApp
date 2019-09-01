@@ -1,9 +1,9 @@
 package com.axel_stein.noteapp.utils;
 
 import android.content.Context;
-import android.support.annotation.AttrRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.Nullable;
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.Nullable;
 import android.util.TypedValue;
 
 public class ColorUtil {

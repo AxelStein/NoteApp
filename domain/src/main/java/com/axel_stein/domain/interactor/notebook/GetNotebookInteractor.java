@@ -1,7 +1,6 @@
 package com.axel_stein.domain.interactor.notebook;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NotebookRepository;
@@ -17,7 +16,7 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class GetNotebookInteractor {
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mNotebookRepository;
 
     public GetNotebookInteractor(@NonNull NotebookRepository notebookRepository) {
         mNotebookRepository = requireNonNull(notebookRepository, "notebookStorage is null");
@@ -28,16 +27,17 @@ public class GetNotebookInteractor {
      * @return null, if there is no notebook with requested id
      * @throws IllegalStateException if notebook == null, id <= 0 or title is empty
      */
-    @Nullable
-    public Single<Notebook> execute(final long id) {
+    public Single<Notebook> execute(final String id) {
         return Single.fromCallable(new Callable<Notebook>() {
             @Override
-            public Notebook call() throws Exception {
+            public Notebook call() {
                 Notebook notebook = mNotebookRepository.get(id);
                 if (notebook != null) {
                     if (!isValid(notebook)) {
                         throw new IllegalStateException("notebook is not valid");
                     }
+                } else {
+                    notebook = new Notebook();
                 }
                 return notebook;
             }

@@ -1,14 +1,17 @@
 package com.axel_stein.data.note;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import org.joda.time.DateTime;
 
 @Entity(tableName = "notes")
 public class NoteEntity {
-
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @PrimaryKey
+    @NonNull
+    private String id = "";
 
     @ColumnInfo
     private String title;
@@ -17,28 +20,32 @@ public class NoteEntity {
     private String content;
 
     @ColumnInfo
-    private long notebook;
+    private String notebookId;
 
     @ColumnInfo
-    private long relevance;
-
-    @ColumnInfo
-    private boolean trash;
+    private long views;
 
     @ColumnInfo
     private boolean pinned;
 
     @ColumnInfo
-    private long date;
+    private boolean trashed;
 
     @ColumnInfo
-    private long update;
+    private DateTime trashedDate;
 
-    public long getId() {
+    @ColumnInfo
+    private boolean starred;
+
+    @ColumnInfo
+    private DateTime modifiedDate;
+
+    @NonNull
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -58,28 +65,28 @@ public class NoteEntity {
         this.content = content;
     }
 
-    public long getNotebook() {
-        return notebook;
+    public String getNotebookId() {
+        return notebookId;
     }
 
-    public void setNotebook(long notebook) {
-        this.notebook = notebook;
+    public void setNotebookId(String notebookId) {
+        this.notebookId = notebookId;
     }
 
-    public long getRelevance() {
-        return relevance;
+    public long getViews() {
+        return views;
     }
 
-    public void setRelevance(long relevance) {
-        this.relevance = relevance;
+    public void setViews(long views) {
+        this.views = views;
     }
 
-    public boolean isTrash() {
-        return trash;
+    public boolean isTrashed() {
+        return trashed;
     }
 
-    public void setTrash(boolean trash) {
-        this.trash = trash;
+    public void setTrashed(boolean trashed) {
+        this.trashed = trashed;
     }
 
     public void setPinned(boolean pinned) {
@@ -90,20 +97,28 @@ public class NoteEntity {
         return pinned;
     }
 
-    public long getDate() {
-        return date;
+    public DateTime getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setModifiedDate(DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
-    public long getUpdate() {
-        return update;
+    public DateTime getTrashedDate() {
+        return trashedDate;
     }
 
-    public void setUpdate(long update) {
-        this.update = update;
+    public void setTrashedDate(DateTime trashedDate) {
+        this.trashedDate = trashedDate;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
     }
 
 }

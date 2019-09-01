@@ -1,33 +1,56 @@
 package com.axel_stein.domain.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.axel_stein.domain.utils.CompareBuilder;
+import com.axel_stein.domain.utils.TextUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Notebook {
-    public static final int MAX_TITLE_LENGTH = 128;
+    public static final String ID_INBOX = "inbox";
+    public static final String ID_ADD = "add";
+    public static String TITLE_INBOX;
+    public static int ICON_INBOX;
 
-    public static Notebook from(String title) {
+    public static Notebook inbox() {
         Notebook n = new Notebook();
+        n.setId(ID_INBOX);
+        n.setTitle(TITLE_INBOX);
+        n.iconRes = ICON_INBOX;
+        return n;
+    }
+
+    public static Notebook addNotebook() {
+        Notebook n = new Notebook();
+        n.setId(ID_INBOX);
+        n.setTitle(TITLE_INBOX);
+        n.iconRes = ICON_INBOX;
+        return n;
+    }
+
+    public static Notebook from(String id, String title) {
+        Notebook n = new Notebook();
+        n.setId(id);
         n.setTitle(title);
         return n;
     }
 
-    private long id;
-
+    private String id;
     private String title;
 
     @JsonIgnore
-    private long noteCount;
+    private int iconRes;
 
-    private int order;
+    public boolean hasId() {
+        return !TextUtil.isEmpty(id);
+    }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -40,38 +63,26 @@ public class Notebook {
     }
 
     public void setTitle(@Nullable String title) {
-        if (title != null) {
-            int length = title.length();
-            if (length > MAX_TITLE_LENGTH) {
-                title = title.substring(0, MAX_TITLE_LENGTH);
-            }
-        }
         this.title = title;
     }
 
-    public long getNoteCount() {
-        return noteCount;
+    public void setIconRes(int iconRes) {
+        this.iconRes = iconRes;
     }
 
-    public void setNoteCount(long noteCount) {
-        this.noteCount = noteCount;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
-
-    public int getOrder() {
-        return order;
+    public int getIconRes() {
+        return iconRes;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof Notebook) {
+        if (obj instanceof Notebook) {
             Notebook notebook = (Notebook) obj;
-            return notebook.id == id;
-        }
 
+            CompareBuilder builder = new CompareBuilder();
+            builder.append(id, notebook.id);
+            return builder.areEqual();
+        }
         return false;
     }
 
@@ -80,8 +91,6 @@ public class Notebook {
         return "Notebook{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", noteCount=" + noteCount +
-                ", order=" + order +
                 '}';
     }
 }

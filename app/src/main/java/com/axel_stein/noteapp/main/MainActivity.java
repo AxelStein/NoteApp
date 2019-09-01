@@ -1,180 +1,190 @@
 package com.axel_stein.noteapp.main;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.view.ActionMode;
 
 import com.axel_stein.data.AppSettingsRepository;
+import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
+import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
+import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
-import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.base.BaseActivity;
-import com.axel_stein.noteapp.dialogs.label.AddLabelDialog;
+import com.axel_stein.noteapp.dialogs.main_menu.DividerItem;
+import com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog;
+import com.axel_stein.noteapp.dialogs.main_menu.PrimaryItem;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
-import com.axel_stein.noteapp.label_manager.LabelManagerFragment;
-import com.axel_stein.noteapp.notebook_manager.NotebookManagerFragment;
-import com.axel_stein.noteapp.notes.edit.EditNoteActivity;
-import com.axel_stein.noteapp.notes.list.NotesFragment;
+import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
+import com.axel_stein.noteapp.main.edit.EditNoteActivity;
+import com.axel_stein.noteapp.main.list.SearchActivity;
+import com.axel_stein.noteapp.settings.SettingsActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
-import com.axel_stein.noteapp.views.BottomMenuView;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
-import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS;
-import static android.support.design.widget.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL;
+import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuItemClickListener, OnTitleChangeListener {
+    private static final int REQUEST_CODE_SIGN_IN = 1;
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
-
-    @BindView(R.id.app_bar)
-    AppBarLayout mAppBar;
-
-    @BindView(R.id.bottom_navigation)
-    BottomMenuView mBottomNavigation;
-
-    @BindView(R.id.fab_add)
-    FloatingActionButton mFAB;
-
+    private static final String TAG_MAIN_MENU = "TAG_MAIN_MENU";
     private static final String TAG_FRAGMENT = "TAG_FRAGMENT";
-    private static final String TAG_SHOW_FAB = "TAG_SHOW_FAB";
+    private static final String ID_INBOX = "ID_INBOX";
+    private static final String ID_STARRED = "ID_STARRED";
+    private static final String ID_TRASH = "ID_TRASH";
+    private static final String ID_ADD_NOTEBOOK = "ID_ADD_NOTEBOOK";
+    private static final String BUNDLE_SELECTED_ITEM_ID = "BUNDLE_SELECTED_ITEM_ID";
 
     @Inject
     AppSettingsRepository mAppSettings;
 
+    @Inject
+    QueryNotebookInteractor mQueryNotebookInteractor;
+
+    @Inject
+    DriveServiceHelper mDriveServiceHelper;
+
+    @Inject
+    ImportBackupInteractor mImportBackupInteractor;
+
+    private BottomAppBar mAppBar;
+    private FloatingActionButton mFabCreateNote;
+    private TextView mTextViewTitle;
+    private String mSelectedItemId = ID_INBOX;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getAppComponent().inject(this);
         setContentView(R.layout.activity_main);
 
-        App.getAppComponent().inject(this);
-        ButterKnife.bind(this);
-        EventBusHelper.subscribe(this);
+        mAppBar = findViewById(R.id.app_bar);
+        setSupportActionBar(mAppBar);
 
-        setSupportActionBar(mToolbar);
+        mTextViewTitle = findViewById(R.id.text_title);
 
-        boolean nightMode = mAppSettings.nightMode();
-        mBottomNavigation.setItemIconTintList(ContextCompat.getColorStateList(this,
-                nightMode ? R.color.bottom_navigation_icon_dark : R.color.bottom_navigation_icon_light));
-        mBottomNavigation.setItemTextColor(ContextCompat.getColorStateList(this,
-                nightMode ? R.color.bottom_navigation_text_dark : R.color.bottom_navigation_text_light));
-
-        mBottomNavigation.setItemSelectedListener(new BottomMenuView.OnNavigationItemSelectedListener() {
+        mFabCreateNote = findViewById(R.id.fab_create_note);
+        mFabCreateNote.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNavigationItemSelected(int itemId) {
-                mAppBar.setExpanded(true, true);
-
-                handleBottomMenuClick(itemId);
-            }
-        });
-        mBottomNavigation.setItemReselectedListener(new BottomMenuView.OnNavigationItemReselectedListener() {
-            @Override
-            public void onNavigationItemReselected(int itemId) {
-                mAppBar.setExpanded(true, true);
-
-                if (!hasFragment(TAG_FRAGMENT)) {
-                    handleBottomMenuClick(itemId);
-                } else {
-                    Fragment f = findMainFragment();
-                    if (f != null && f instanceof ScrollableFragment) {
-                        ((ScrollableFragment) f).scrollToTop();
-                    }
+            public void onClick(View view) {
+                String id = "";
+                switch (mSelectedItemId) {
+                    case ID_INBOX:
+                    case ID_STARRED:
+                    case ID_TRASH:
+                        break;
+                    default: id = mSelectedItemId;
                 }
+                EditNoteActivity.launch(MainActivity.this, id);
             }
         });
 
         if (savedInstanceState == null) {
-            mBottomNavigation.setSelectedItemId(R.id.action_home);
+            onMenuItemClick(mSelectedItemId, true);
         }
-
-        mFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (mBottomNavigation.getSelectedItemId()) {
-                    case R.id.action_home:
-                        EditNoteActivity.launch(MainActivity.this);
-                        break;
-
-                    case R.id.action_notebooks:
-                        AddNotebookDialog.launch(MainActivity.this);
-                        break;
-
-                    case R.id.action_labels:
-                        AddLabelDialog.launch(MainActivity.this);
-                        break;
-                }
-            }
-        });
     }
 
-    @Nullable
-    private Fragment findMainFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        return fm.findFragmentByTag(TAG_FRAGMENT);
-    }
+    @SuppressLint("CheckResult")
+    private void openMainMenu() {
+        mQueryNotebookInteractor.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Notebook>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-    private void handleBottomMenuClick(int id) {
-        Fragment f = findMainFragment();
-        if (f != null && f instanceof NotesFragment) {
-            ((NotesFragment) f).stopCheckMode();
-        }
+                    }
 
-        Fragment fragment = null;
-        boolean showFAB = true;
+                    @Override
+                    public void onSuccess(List<Notebook> notebooks) {
+                        MainMenuDialog.Builder builder = new MainMenuDialog.Builder();
+                        builder.setSelectedItemId(mSelectedItemId);
+                        builder.addItem(new PrimaryItem()
+                                .fromId(ID_INBOX)
+                                .fromTitle(R.string.action_inbox)
+                                .fromIcon(R.drawable.ic_inbox));
+                        builder.addItem(new PrimaryItem()
+                                .fromId(ID_STARRED)
+                                .fromTitle(R.string.action_starred)
+                                .fromIcon(R.drawable.ic_star_border));
 
-        switch (id) {
-            case R.id.action_home: {
-                fragment = new HomeFragment();
-                break;
-            }
+                        for (Notebook notebook : notebooks) {
+                            builder.addItem(new PrimaryItem()
+                                    .fromId(notebook.getId())
+                                    .fromTitle(notebook.getTitle())
+                                    .fromIcon(R.drawable.ic_book));
+                        }
 
-            case R.id.action_notebooks:
-                fragment = new NotebookManagerFragment();
-                break;
+                        //builder.addItem(new DividerItem());
+                        builder.addItem(new PrimaryItem()
+                                .fromId(ID_ADD_NOTEBOOK)
+                                .fromTitle(R.string.action_add_notebook)
+                                .fromIcon(R.drawable.ic_add_box)
+                                .fromCheckable(false));
+                        builder.addItem(new DividerItem());
 
-            case R.id.action_labels:
-                fragment = new LabelManagerFragment();
-                break;
+                        builder.addItem(new PrimaryItem()
+                                .fromId(ID_TRASH)
+                                .fromTitle(R.string.action_trash)
+                                .fromIcon(R.drawable.ic_delete));
 
-            case R.id.action_trash:
-                fragment = new TrashFragment();
-                showFAB = false;
-                break;
-        }
+                        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+                        if (account != null) {
+                            builder.setUserName(account.getDisplayName())
+                                    .setUserEmail(account.getEmail())
+                                    .setUserPhotoUrl(account.getPhotoUrl());
+                        } else {
+                            builder.setUserName(getString(R.string.action_sign_in));
+                        }
 
-        if (showFAB) {
-            mFAB.show();
-        } else {
-            mFAB.hide();
-        }
+                        builder.show(MainActivity.this, TAG_MAIN_MENU);
+                    }
 
-        setFragment(fragment, TAG_FRAGMENT);
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStart() {
+        super.onStart();
+        EventBusHelper.subscribe(this);
+    }
+
+    @Override
+    protected void onStop() {
         EventBusHelper.unsubscribe(this);
-        super.onDestroy();
+        super.onStop();
     }
 
     @Subscribe
@@ -214,6 +224,17 @@ public class MainActivity extends BaseActivity {
         recreate();
     }
 
+    @Subscribe
+    public void onNotebookAdded(final EventBusHelper.AddNotebook e) {
+        Notebook notebook = e.getNotebook();
+        onMenuItemClick(notebook.getId(), true);
+    }
+
+    @Subscribe
+    public void onNotebookDeleted(EventBusHelper.DeleteNotebook e) {
+        onMenuItemClick(ID_INBOX, true);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -224,44 +245,22 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                openMainMenu();
+                return true;
+
             case R.id.menu_search:
-                showSearchActivity();
-                break;
-
-            case R.id.menu_settings:
-                showSettingsActivity();
-                break;
+                startActivity(new Intent(this, SearchActivity.class));
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
-        super.onSupportActionModeStarted(mode);
-        setToolbarScrollFlags(false);
-    }
-
-    @Override
-    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
-        super.onSupportActionModeFinished(mode);
-        setToolbarScrollFlags(true);
-    }
-
-    private void setToolbarScrollFlags(boolean scroll) {
-        int flags = scroll ? SCROLL_FLAG_SCROLL | SCROLL_FLAG_ENTER_ALWAYS : 0;
-
-        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
-        params.setScrollFlags(flags);
-
-        mAppBar.requestLayout();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (outState != null) {
-            outState.putBoolean(TAG_SHOW_FAB, ViewUtil.isShown(mFAB));
+            outState.putString(BUNDLE_SELECTED_ITEM_ID, mSelectedItemId);
         }
     }
 
@@ -269,8 +268,141 @@ public class MainActivity extends BaseActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            ViewUtil.show(savedInstanceState.getBoolean(TAG_SHOW_FAB, true), mFAB);
+            mSelectedItemId = savedInstanceState.getString(BUNDLE_SELECTED_ITEM_ID);
         }
     }
+
+    @Override
+    public void onMenuItemClick(MainMenuDialog dialog, PrimaryItem item) {
+        onMenuItemClick(item.getId(), item.isSelectable());
+        dialog.dismiss();
+    }
+
+    private void onMenuItemClick(String itemId, boolean selectable) {
+        if (selectable) {
+            mSelectedItemId = itemId;
+        }
+
+        switch (itemId) {
+            case ID_INBOX:
+                setFragment(new InboxFragment(), TAG_FRAGMENT);
+                break;
+
+            case ID_STARRED:
+                setFragment(new StarredFragment(), TAG_FRAGMENT);
+                break;
+
+            case ID_ADD_NOTEBOOK:
+                AddNotebookDialog.launch(this);
+                break;
+
+            case ID_TRASH:
+                setFragment(new TrashFragment(), TAG_FRAGMENT);
+                break;
+
+            default:
+                NotebookNotesFragment fragment = new NotebookNotesFragment();
+                fragment.setNotebookId(itemId);
+                setFragment(fragment, TAG_FRAGMENT);
+                break;
+        }
+    }
+
+    @Override
+    public void onSupportActionModeStarted(@NonNull ActionMode mode) {
+        super.onSupportActionModeStarted(mode);
+        ViewUtil.hide(mAppBar, mFabCreateNote);
+    }
+
+    @Override
+    public void onSupportActionModeFinished(@NonNull ActionMode mode) {
+        super.onSupportActionModeFinished(mode);
+        ViewUtil.show(mAppBar, mFabCreateNote);
+    }
+
+    @Override
+    public void onTitleChange(String title) {
+        if (mTextViewTitle != null) {
+            mTextViewTitle.setText(title);
+        }
+    }
+
+    @Override
+    public void onUserPanelClick(MainMenuDialog dialog) {
+        if (!mDriveServiceHelper.isSignedIn()) {
+            startActivityForResult(mDriveServiceHelper.requestSignInIntent(), REQUEST_CODE_SIGN_IN);
+        } else {
+            startActivity(new Intent(this, UserActivity.class));
+        }
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onSettingsClick(MainMenuDialog dialog) {
+        dialog.dismiss();
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == REQUEST_CODE_SIGN_IN) {
+            if (resultCode == Activity.RESULT_OK && resultData != null) {
+                handleSignInResult(resultData);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, resultData);
+    }
+
+    private void handleSignInResult(Intent result) {
+        GoogleSignIn.getSignedInAccountFromIntent(result)
+                .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
+                    @Override
+                    public void onSuccess(GoogleSignInAccount googleAccount) {
+                        importDrive();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        showMessage(new EventBusHelper.Message("Unable to sign in.))"));
+                        Log.e("TAG", "Unable to sign in.", exception);
+                    }
+                });
+    }
+
+    private void importDrive() {
+        mDriveServiceHelper.downloadFile(BACKUP_FILE_NAME, new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+                mImportBackupInteractor.execute(s)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CompletableObserver() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                EventBusHelper.updateNoteList();
+                                EventBusHelper.recreate();
+                                EventBusHelper.showMessage(R.string.msg_import_success);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+                        });
+            }
+        }, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                EventBusHelper.showMessage(R.string.error);
+            }
+        });
+    }
+
 
 }

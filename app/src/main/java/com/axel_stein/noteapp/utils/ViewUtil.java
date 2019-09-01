@@ -1,7 +1,7 @@
 package com.axel_stein.noteapp.utils;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -73,7 +73,7 @@ public class ViewUtil {
         }
     }
 
-    public static boolean isShown(View view) {
+    private static boolean isShown(View view) {
         return view != null && view.getVisibility() == VISIBLE;
     }
 

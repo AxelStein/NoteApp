@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="selectedItemBackgroundColor" format="color|reference"/>
     <attr name="menuItemTintColor" format="color|reference"/>
-    <attr name="nightModeButtonTintColor" format="color|reference"/>
     <attr name="checkBoxTint" format="color|reference"/>
-    <attr name="editTextLineColor" format="color|reference"/>
-    <attr name="keepScreenOnColor" format="color|reference"/>
-    <attr name="notePinColor" format="color|reference"/>
-    <attr name="searchSelectorColor" format="color|reference"/>
-    <attr name="searchSelectorCurrentColor" format="color|reference"/>
     <attr name="toolbarPopupTheme" format="reference"/>
     <attr name="selectedNotebookBackgroundColor" format="color|reference"/>
+    <attr name="appBarColor" format="color|reference"/>
+    <attr name="appBarIcon" format="reference"/>
+    <attr name="appBarFabIcon" format="reference"/>
 
     <declare-styleable name="IconTextView">
         <attr name="iconTop" format="reference"/>

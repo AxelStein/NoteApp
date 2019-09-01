@@ -2,21 +2,16 @@ package com.axel_stein.noteapp.dagger;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
-import com.axel_stein.data.note_label_pair.SqlNoteLabelPairRepository;
-import com.axel_stein.data.notebook.SqlNotebookRepository;
-import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
-import com.axel_stein.domain.interactor.note.PinNoteInteractor;
 import com.axel_stein.domain.interactor.note.QueryNoteInteractor;
-import com.axel_stein.domain.interactor.note.RestoreNoteInteractor;
-import com.axel_stein.domain.interactor.note.SetNotebookInteractor;
-import com.axel_stein.domain.interactor.note.TrashNoteInteractor;
-import com.axel_stein.domain.interactor.note.UnpinNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
-import com.axel_stein.domain.interactor.note.UpdateNoteNotebookInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,72 +20,53 @@ import dagger.Provides;
 class NoteInteractorModule {
 
     @Provides
-    UpdateNoteNotebookInteractor updateNotebook(SqlNoteRepository repository) {
-        return new UpdateNoteNotebookInteractor(repository);
+    SetNotebookNoteInteractor updateNotebook(SqlNoteRepository r) {
+        return new SetNotebookNoteInteractor(r);
     }
 
     @Provides
-    DeleteNoteInteractor delete(SqlNoteRepository repository, SqlNoteLabelPairRepository helperRepository) {
-        return new DeleteNoteInteractor(repository, helperRepository);
+    DeleteNoteInteractor delete(SqlNoteRepository r) {
+        return new DeleteNoteInteractor(r);
     }
 
     @Provides
-    EmptyTrashInteractor emptyTrash(QueryNoteInteractor query, DeleteNoteInteractor delete) {
-        return new EmptyTrashInteractor(query, delete);
+    EmptyTrashInteractor emptyTrash(QueryNoteInteractor q, DeleteNoteInteractor d) {
+        return new EmptyTrashInteractor(q, d);
     }
 
     @Provides
-    GetNoteInteractor get(SqlNoteRepository repository,
-                          SqlNoteLabelPairRepository pairRepository,
-                          SqlNotebookRepository notebookRepository) {
-        return new GetNoteInteractor(repository, pairRepository, notebookRepository);
+    GetNoteInteractor get(SqlNoteRepository r) {
+        return new GetNoteInteractor(r);
     }
 
     @Provides
-    InsertNoteInteractor insert(SqlNoteRepository repository, SetLabelsInteractor setLabelsInteractor) {
-        return new InsertNoteInteractor(repository, setLabelsInteractor);
+    InsertNoteInteractor insert(SqlNoteRepository r) {
+        return new InsertNoteInteractor(r);
     }
 
     @Provides
-    QueryNoteInteractor query(SqlNoteRepository repository,
-                              AppSettingsRepository settingsRepository,
-                              SqlNoteLabelPairRepository helperRepository) {
-        return new QueryNoteInteractor(repository, settingsRepository, helperRepository);
+    QueryNoteInteractor query(SqlNoteRepository r, AppSettingsRepository s) {
+        return new QueryNoteInteractor(r, s);
     }
 
     @Provides
-    RestoreNoteInteractor restore(SqlNoteRepository repository, SqlNoteLabelPairRepository noteLabelPairRepository) {
-        return new RestoreNoteInteractor(repository, noteLabelPairRepository);
+    SetTrashedNoteInteractor trash(SqlNoteRepository r) {
+        return new SetTrashedNoteInteractor(r);
     }
 
     @Provides
-    SetLabelsInteractor setLabels(SqlNoteLabelPairRepository repository) {
-        return new SetLabelsInteractor(repository);
+    UpdateNoteInteractor update(SqlNoteRepository r) {
+        return new UpdateNoteInteractor(r);
     }
 
     @Provides
-    SetNotebookInteractor setNotebook(SqlNoteRepository repository) {
-        return new SetNotebookInteractor(repository);
+    SetPinnedNoteInteractor pin(SqlNoteRepository r) {
+        return new SetPinnedNoteInteractor(r);
     }
 
     @Provides
-    TrashNoteInteractor trash(SqlNoteRepository repository, SqlNoteLabelPairRepository noteLabelPairRepository) {
-        return new TrashNoteInteractor(repository, noteLabelPairRepository);
-    }
-
-    @Provides
-    UpdateNoteInteractor update(SqlNoteRepository repository, SetLabelsInteractor setLabelsInteractor) {
-        return new UpdateNoteInteractor(repository, setLabelsInteractor);
-    }
-
-    @Provides
-    PinNoteInteractor pin(SqlNoteRepository repository) {
-        return new PinNoteInteractor(repository);
-    }
-
-    @Provides
-    UnpinNoteInteractor unpin(SqlNoteRepository repository) {
-        return new UnpinNoteInteractor(repository);
+    SetStarredNoteInteractor star(SqlNoteRepository r) {
+        return new SetStarredNoteInteractor(r);
     }
 
 }

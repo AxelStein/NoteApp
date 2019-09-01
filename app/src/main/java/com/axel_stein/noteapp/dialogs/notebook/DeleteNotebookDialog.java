@@ -1,11 +1,11 @@
 package com.axel_stein.noteapp.dialogs.notebook;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.axel_stein.domain.interactor.notebook.DeleteNotebookInteractor;
 import com.axel_stein.domain.model.Notebook;
@@ -14,76 +14,36 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public class DeleteNotebookDialog extends ConfirmDialog {
-
     @Inject
     DeleteNotebookInteractor mDeleteNotebookInteractor;
-    private List<Notebook> mList;
-    private Queue<Notebook> mQueue;
-
-    public static void launch(AppCompatActivity activity, Notebook notebook) {
-        checkNotNull(activity);
-        launch(activity, activity.getSupportFragmentManager(), notebook);
-    }
-
-    public static void launch(AppCompatActivity activity, List<Notebook> notebooks) {
-        checkNotNull(activity);
-        launch(activity, activity.getSupportFragmentManager(), notebooks);
-    }
+    private Notebook mNotebook;
 
     public static void launch(Context context, Fragment fragment, Notebook notebook) {
         checkNotNull(fragment);
 
         DeleteNotebookDialog dialog = createDialog(context, notebook);
         dialog.setTargetFragment(fragment, 0);
-        dialog.show(fragment.getFragmentManager(), null);
-    }
-
-    public static void launch(Context context, FragmentManager manager, Notebook notebook) {
-        checkNotNull(manager);
-        createDialog(context, notebook).show(manager, null);
-    }
-
-    public static void launch(Context context, FragmentManager manager, List<Notebook> notebooks) {
-        checkNotNull(manager);
-        createDialog(context, notebooks).show(manager, null);
+        if (fragment.getFragmentManager() != null) {
+            dialog.show(fragment.getFragmentManager(), null);
+        }
     }
 
     private static DeleteNotebookDialog createDialog(Context context, Notebook notebook) {
         checkNotNull(context);
         checkNotNull(notebook);
 
-        List<Notebook> list = new ArrayList<>();
-        list.add(notebook);
-        return createDialog(context, list);
-    }
-
-    private static DeleteNotebookDialog createDialog(Context context, List<Notebook> notebooks) {
-        checkNotNull(context);
-        checkNotNull(notebooks);
-
         DeleteNotebookDialog dialog = new DeleteNotebookDialog();
-        dialog.mList = notebooks;
-
-        if (notebooks.size() == 1) {
-            Notebook notebook = notebooks.get(0);
-            dialog.setTitle(context.getString(R.string.title_delete_notebook, notebook.getTitle()));
-        } else {
-            dialog.setTitle(R.string.title_delete_notebooks);
-        }
+        dialog.mNotebook = notebook;
+        dialog.setTitle(context.getString(R.string.title_delete_notebook, notebook.getTitle()));
         dialog.setMessage(R.string.msg_delete_notebook);
         dialog.setPositiveButtonText(R.string.action_delete);
         dialog.setNegativeButtonText(R.string.action_cancel);
@@ -98,36 +58,30 @@ public class DeleteNotebookDialog extends ConfirmDialog {
 
     @Override
     protected void onConfirm() {
-        if (mList != null) {
-            mQueue = new LinkedBlockingQueue<>(mList);
-            deleteImpl(mQueue.poll());
-        }
+        deleteImpl(mNotebook);
         dismiss();
     }
 
+    @SuppressLint("CheckResult")
     private void deleteImpl(final Notebook notebook) {
-        if (notebook == null) {
-            return;
-        }
         mDeleteNotebookInteractor.execute(notebook)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() throws Exception {
-                        Notebook next = mQueue.poll();
-                        if (next == null) {
-                            EventBusHelper.showMessage(R.string.msg_notebook_deleted);
-                            EventBusHelper.deleteNotebook(notebook);
-                        } else {
-                            deleteImpl(next);
-                        }
+                    public void onSubscribe(Disposable d) {
+
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
+                    public void onComplete() {
+                        EventBusHelper.showMessage(R.string.msg_notebook_deleted);
+                        EventBusHelper.deleteNotebook(notebook);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
-                        deleteImpl(mQueue.poll());
                     }
                 });
     }

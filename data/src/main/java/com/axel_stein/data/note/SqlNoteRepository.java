@@ -1,30 +1,35 @@
 package com.axel_stein.data.note;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static com.axel_stein.data.note.NoteMapper.map;
 import static com.axel_stein.data.note.NoteMapper.mapIds;
 
 public class SqlNoteRepository implements NoteRepository {
 
-    private NoteDao mDao;
+    private final NoteDao mDao;
 
-    public SqlNoteRepository(NoteDao dao) {
+    public SqlNoteRepository(@NonNull NoteDao dao) {
         mDao = dao;
     }
 
     @Override
-    public long insert(@NonNull Note note) {
-        return mDao.insert(map(note));
+    public void insert(@NonNull Note note) {
+        if (!note.hasId()) {
+            note.setId(UUID.randomUUID().toString());
+        }
+        mDao.insert(map(note));
     }
+
+    /* Update methods */
 
     @Override
     public void update(@NonNull Note note) {
@@ -32,49 +37,55 @@ public class SqlNoteRepository implements NoteRepository {
     }
 
     @Override
-    public void updateNotebook(long noteId, long notebookId) {
-        mDao.updateNotebook(noteId, notebookId);
+    public void setNotebook(String noteId, String notebookId) {
+        mDao.setNotebook(noteId, notebookId);
     }
 
     @Override
-    public void delete(@NonNull Note note) {
-        mDao.delete(map(note));
-    }
-
-    @Nullable
-    @Override
-    public Note get(long id) {
-        return map(mDao.get(id));
-    }
-
-    @Override
-    public long count(@NonNull Notebook notebook) {
-        return mDao.count(notebook.getId());
-    }
-
-    @Override
-    public void setNotebook(@NonNull List<Note> notes, long notebookId) {
+    public void setNotebook(@NonNull List<Note> notes, String notebookId) {
         mDao.setNotebook(mapIds(notes), notebookId);
     }
 
     @Override
-    public void trash(@NonNull List<Note> notes) {
-        mDao.trash(mapIds(notes));
+    public void setInbox(@NonNull Notebook notebook) {
+        mDao.setInbox(notebook.getId());
     }
 
     @Override
-    public void restore(@NonNull List<Note> notes) {
-        mDao.restore(mapIds(notes));
+    public void setPinned(@NonNull Note note, boolean pinned) {
+        mDao.setPinned(note.getId(), pinned);
     }
 
     @Override
-    public void pin(@NonNull List<Note> notes) {
-        mDao.pin(mapIds(notes));
+    public void setPinned(@NonNull List<Note> notes, boolean pinned) {
+        mDao.setPinned(mapIds(notes), pinned);
     }
 
     @Override
-    public void unpin(@NonNull List<Note> notes) {
-        mDao.unpin(mapIds(notes));
+    public void setStarred(@NonNull Note note, boolean starred) {
+        mDao.setStarred(note.getId(), starred);
+    }
+
+    @Override
+    public void setStarred(@NonNull List<Note> notes, boolean starred) {
+        mDao.setStarred(mapIds(notes), starred);
+    }
+
+    @Override
+    public void setTrashed(@NonNull Note note, boolean trashed) {
+        mDao.setTrashed(note.getId(), trashed, note.getTrashedDate());
+    }
+
+    @Override
+    public void updateViews(@NonNull Note note, long views) {
+        mDao.updateViews(note.getId(), views);
+    }
+
+    /* Delete methods */
+
+    @Override
+    public void delete(@NonNull Note note) {
+        mDao.delete(map(note));
     }
 
     @Override
@@ -83,40 +94,46 @@ public class SqlNoteRepository implements NoteRepository {
     }
 
     @Override
-    public void setHome(@NonNull Notebook notebook) {
-        mDao.setHome(notebook.getId());
+    public void deleteAll() {
+        mDao.deleteAll();
+    }
+
+    /* Query methods */
+
+    @Nullable
+    @Override
+    public Note get(String id) {
+        return map(mDao.get(id));
     }
 
     @NonNull
     @Override
-    public List<Note> query() {
-        return map(mDao.query());
+    public List<Note> queryAll() {
+        return map(mDao.queryAll());
     }
 
     @NonNull
     @Override
-    public List<Note> queryHome() {
-        return map(mDao.queryHome());
+    public List<Note> queryInbox() {
+        return map(mDao.queryInbox());
     }
 
     @NonNull
     @Override
-    public List<Note> query(@NonNull Notebook notebook) {
-        return map(mDao.queryNotebook(notebook.getId()));
-    }
-
-    @Override
-    public List<Note> query(@NonNull Notebook notebook, boolean includeTrash) {
-        if (!includeTrash) {
-            return query(notebook);
-        }
-        return map(mDao.queryNotebookTrash(notebook.getId()));
+    public List<Note> queryStarred() {
+        return map(mDao.queryStarred());
     }
 
     @NonNull
     @Override
-    public List<Note> query(@NonNull Label label) {
-        return map(mDao.queryLabel(label.getId()));
+    public List<Note> queryTrashed() {
+        return map(mDao.queryTrashed());
+    }
+
+    @NonNull
+    @Override
+    public List<Note> queryNotebook(@NonNull String notebookId) {
+        return map(mDao.queryNotebook(notebookId));
     }
 
     @NonNull
@@ -124,17 +141,6 @@ public class SqlNoteRepository implements NoteRepository {
     public List<Note> search(@NonNull String query) {
         query = "%" + query + "%";
         return map(mDao.search(query));
-    }
-
-    @NonNull
-    @Override
-    public List<Note> queryTrash() {
-        return map(mDao.queryTrash());
-    }
-
-    @Override
-    public void deleteAll() {
-        mDao.deleteAll();
     }
 
 }

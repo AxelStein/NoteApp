@@ -1,6 +1,6 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
 
@@ -15,10 +15,10 @@ import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 public class EmptyTrashInteractor {
 
     @NonNull
-    private QueryNoteInteractor mQueryInteractor;
+    private final QueryNoteInteractor mQueryInteractor;
 
     @NonNull
-    private DeleteNoteInteractor mDeleteInteractor;
+    private final DeleteNoteInteractor mDeleteInteractor;
 
     public EmptyTrashInteractor(@NonNull QueryNoteInteractor queryInteractor, @NonNull DeleteNoteInteractor deleteInteractor) {
         mQueryInteractor = requireNonNull(queryInteractor);
@@ -29,10 +29,10 @@ public class EmptyTrashInteractor {
      * Removes notes in trash
      */
     public Completable emptyTrash() {
-        return mQueryInteractor.queryTrash()
+        return mQueryInteractor.queryTrashed()
                 .flatMapCompletable(new Function<List<Note>, CompletableSource>() {
                     @Override
-                    public CompletableSource apply(@io.reactivex.annotations.NonNull List<Note> notes) throws Exception {
+                    public CompletableSource apply(@io.reactivex.annotations.NonNull List<Note> notes) {
                         return mDeleteInteractor.execute(notes);
                     }
                 });

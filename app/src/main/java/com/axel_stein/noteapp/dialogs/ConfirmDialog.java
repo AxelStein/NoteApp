@@ -4,18 +4,20 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.axel_stein.noteapp.utils.ResourceUtil;
 
-public class ConfirmDialog extends AppCompatDialogFragment implements DialogInterface.OnClickListener {
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
+public class ConfirmDialog extends AppCompatDialogFragment implements DialogInterface.OnClickListener {
     private String mTitle;
     private int mTitleRes;
     private String mMessage;
@@ -105,6 +107,8 @@ public class ConfirmDialog extends AppCompatDialogFragment implements DialogInte
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        checkNotNull(getContext());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // , R.style.DialogStyle
         builder.setTitle(getText(mTitle, mTitleRes));
         builder.setMessage(getText(mMessage, mMessageRes));
@@ -136,12 +140,12 @@ public class ConfirmDialog extends AppCompatDialogFragment implements DialogInte
 
     public void show(Fragment fragment, String tag) {
         setTargetFragment(fragment, 0);
+        assert fragment.getFragmentManager() != null;
         show(fragment.getFragmentManager(), tag);
     }
 
     public interface OnConfirmListener {
         void onConfirm(String tag);
-
         void onCancel(String tag);
     }
 

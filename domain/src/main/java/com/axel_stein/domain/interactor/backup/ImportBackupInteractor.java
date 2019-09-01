@@ -1,18 +1,15 @@
 package com.axel_stein.domain.interactor.backup;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
+import com.axel_stein.domain.json_wrapper.NoteWrapper;
+import com.axel_stein.domain.json_wrapper.NotebookWrapper;
 import com.axel_stein.domain.model.Backup;
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.model.NoteLabelPair;
 import com.axel_stein.domain.model.Notebook;
-import com.axel_stein.domain.repository.LabelRepository;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
-import com.axel_stein.domain.utils.validators.LabelValidator;
-import com.axel_stein.domain.utils.validators.NoteLabelPairValidator;
+import com.axel_stein.domain.repository.SettingsRepository;
 import com.axel_stein.domain.utils.validators.NoteValidator;
 import com.axel_stein.domain.utils.validators.NotebookValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,25 +25,20 @@ import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 public class ImportBackupInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mNotebookRepository;
 
     @NonNull
-    private LabelRepository mLabelRepository;
+    private final SettingsRepository mSettingsRepository;
 
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
-
-    public ImportBackupInteractor(@NonNull NoteRepository noteRepository,
-                                  @NonNull NotebookRepository notebookRepository,
-                                  @NonNull LabelRepository labelRepository,
-                                  @NonNull NoteLabelPairRepository noteLabelPairRepository) {
-        mNoteRepository = requireNonNull(noteRepository);
-        mNotebookRepository = requireNonNull(notebookRepository);
-        mLabelRepository = requireNonNull(labelRepository);
-        mNoteLabelPairRepository = requireNonNull(noteLabelPairRepository);
+    public ImportBackupInteractor(@NonNull NoteRepository n,
+                                  @NonNull NotebookRepository b,
+                                  @NonNull SettingsRepository s) {
+        mNoteRepository = requireNonNull(n);
+        mNotebookRepository = requireNonNull(b);
+        mSettingsRepository = requireNonNull(s);
     }
 
     public Completable execute(final String src) {
@@ -56,14 +48,15 @@ public class ImportBackupInteractor {
                 ObjectMapper mapper = new ObjectMapper();
                 Backup backup = mapper.readValue(src, Backup.class);
 
+                System.out.println("Import backup, version " + backup.getVersion());
+
                 mNoteRepository.deleteAll();
                 mNotebookRepository.deleteAll();
-                mLabelRepository.deleteAll();
-                mNoteLabelPairRepository.deleteAll();
 
-                List<Note> notes = backup.getNotes();
+                List<NoteWrapper> notes = backup.getNotes();
                 if (notes != null) {
-                    for (Note note : notes) {
+                    for (NoteWrapper wrapper : notes) {
+                        Note note = wrapper.toNote();
                         if (!NoteValidator.isValid(note)) {
                             System.out.println("Error: note is not valid = " + note);
                         } else {
@@ -74,9 +67,10 @@ public class ImportBackupInteractor {
                     System.out.println("Error: notes not found");
                 }
 
-                List<Notebook> notebooks = backup.getNotebooks();
+                List<NotebookWrapper> notebooks = backup.getNotebooks();
                 if (notebooks != null) {
-                    for (Notebook notebook : notebooks) {
+                    for (NotebookWrapper wrapper : notebooks) {
+                        Notebook notebook = wrapper.toNotebook();
                         if (!NotebookValidator.isValid(notebook)) {
                             System.out.println("Error: notebook is not valid = " + notebook);
                         } else {
@@ -87,31 +81,8 @@ public class ImportBackupInteractor {
                     System.out.println("Error: notebooks not found");
                 }
 
-                List<Label> labels = backup.getLabels();
-                if (labels != null) {
-                    for (Label label : labels) {
-                        if (!LabelValidator.isValid(label)) {
-                            System.out.println("Error: label is not valid = " + label);
-                        } else {
-                            mLabelRepository.insert(label);
-                        }
-                    }
-                } else {
-                    System.out.println("Error: labels not found");
-                }
-
-                List<NoteLabelPair> pairs = backup.getNoteLabelPairs();
-                if (pairs != null) {
-                    for (NoteLabelPair pair : pairs) {
-                        if (!NoteLabelPairValidator.isValid(pair)) {
-                            System.out.println("Error: pair is not valid = " + pair);
-                        } else {
-                            mNoteLabelPairRepository.insert(pair);
-                        }
-                    }
-                } else {
-                    System.out.println("Error: pairs not found");
-                }
+                String settings = backup.getJsonSettings();
+                mSettingsRepository.importSettings(settings);
             }
         }).subscribeOn(Schedulers.io());
     }

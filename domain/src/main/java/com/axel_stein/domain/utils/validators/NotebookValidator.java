@@ -4,10 +4,11 @@ import com.axel_stein.domain.model.Notebook;
 
 import java.util.List;
 
-import static com.axel_stein.domain.utils.TextUtil.isEmpty;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class NotebookValidator {
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isValid(Notebook notebook) {
         return isValid(notebook, true);
     }
@@ -16,9 +17,9 @@ public class NotebookValidator {
         if (notebook == null) {
             return false;
         }
-        boolean validTitle = !isEmpty(notebook.getTitle());
+        boolean validTitle = notEmpty(notebook.getTitle());
         if (checkId) {
-            return validTitle && notebook.getId() > 0;
+            return validTitle && notEmpty(notebook.getId());
         }
         return validTitle;
     }

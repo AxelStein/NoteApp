@@ -1,35 +1,32 @@
 package com.axel_stein.domain.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public enum NoteOrder {
     TITLE,
-    RELEVANCE,
-    DATE_NEWEST,
-    DATE_OLDEST,
-    UPDATE_NEWEST,
-    UPDATE_OLDEST;
+    VIEWS,
+    MODIFIED,
+    TRASHED;
 
     @Nullable
-    public static NoteOrder fromInt(int x) {
+    public static NoteOrder from(int value) {
+        return fromInt(value);
+    }
+
+    @Nullable
+    private static NoteOrder fromInt(int x) {
         switch (x) {
             case 0:
                 return TITLE;
 
             case 1:
-                return RELEVANCE;
+                return VIEWS;
 
             case 2:
-                return DATE_NEWEST;
+                return MODIFIED;
 
             case 3:
-                return DATE_OLDEST;
-
-            case 4:
-                return UPDATE_NEWEST;
-
-            case 5:
-                return UPDATE_OLDEST;
+                return TRASHED;
         }
 
         return null;

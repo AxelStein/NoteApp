@@ -1,9 +1,8 @@
 package com.axel_stein.domain.repository;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 
@@ -11,62 +10,53 @@ import java.util.List;
 
 public interface NoteRepository {
 
-    /**
-     * Inserts note into repository
-     *
-     * @param note to insert
-     * @return id of the created note
-     */
-    long insert(@NonNull Note note);
+    void insert(@NonNull Note note);
 
     void update(@NonNull Note note);
 
-    void updateNotebook(long noteId, long notebookId);
+    void setNotebook(String noteId, String notebookId);
+
+    void setNotebook(@NonNull List<Note> notes, String notebookId);
+
+    void setInbox(@NonNull Notebook notebook);
+
+    void setPinned(@NonNull Note note, boolean pinned);
+
+    void setPinned(@NonNull List<Note> notes, boolean pinned);
+
+    void setStarred(@NonNull Note note, boolean starred);
+
+    void setStarred(@NonNull List<Note> notes, boolean starred);
+
+    void setTrashed(@NonNull Note note, boolean trashed);
+
+    void updateViews(@NonNull Note note, long views);
 
     void delete(@NonNull Note note);
 
-    @Nullable
-    Note get(long id);
-
-    long count(@NonNull Notebook notebook);
-
-    void setNotebook(@NonNull List<Note> notes, long notebookId);
-
-    void trash(@NonNull List<Note> notes);
-
-    void restore(@NonNull List<Note> notes);
-
-    void pin(@NonNull List<Note> notes);
-
-    void unpin(@NonNull List<Note> notes);
-
     void deleteNotebook(@NonNull Notebook notebook);
 
-    void setHome(@NonNull Notebook notebook);
+    void deleteAll();
+
+    @Nullable
+    Note get(String id);
 
     @NonNull
-    List<Note> query();
+    List<Note> queryAll();
 
     @NonNull
-    List<Note> queryHome();
+    List<Note> queryInbox();
 
     @NonNull
-    List<Note> query(@NonNull Notebook notebook);
-
-    List<Note> query(@NonNull Notebook notebook, boolean includeTrash);
+    List<Note> queryStarred();
 
     @NonNull
-    List<Note> query(@NonNull Label label);
+    List<Note> queryTrashed();
 
-    /**
-     * @param query not null and not empty
-     */
+    @NonNull
+    List<Note> queryNotebook(@NonNull String notebookId);
+
     @NonNull
     List<Note> search(@NonNull String query);
-
-    @NonNull
-    List<Note> queryTrash();
-
-    void deleteAll();
 
 }

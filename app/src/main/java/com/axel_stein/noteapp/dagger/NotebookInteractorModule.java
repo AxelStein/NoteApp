@@ -1,6 +1,5 @@
 package com.axel_stein.noteapp.dagger;
 
-import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
 import com.axel_stein.domain.interactor.notebook.DeleteNotebookInteractor;
@@ -8,7 +7,6 @@ import com.axel_stein.domain.interactor.notebook.GetNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
-import com.axel_stein.domain.interactor.notebook.UpdateNotebookOrderInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -37,15 +35,8 @@ class NotebookInteractorModule {
     }
 
     @Provides
-    QueryNotebookInteractor query(SqlNotebookRepository repository,
-                                  SqlNoteRepository noteRepository,
-                                  AppSettingsRepository appSettingsRepository) {
-        return new QueryNotebookInteractor(repository, noteRepository, appSettingsRepository);
-    }
-
-    @Provides
-    UpdateNotebookOrderInteractor updateOrder(SqlNotebookRepository repository, AppSettingsRepository settings) {
-        return new UpdateNotebookOrderInteractor(repository, settings);
+    QueryNotebookInteractor query(SqlNotebookRepository repository) {
+        return new QueryNotebookInteractor(repository);
     }
 
 }

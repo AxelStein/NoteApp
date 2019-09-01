@@ -1,5 +1,6 @@
 package com.axel_stein.domain.utils;
 
+@SuppressWarnings("UnusedReturnValue")
 public class CompareBuilder {
     private boolean mResultFalse;
 

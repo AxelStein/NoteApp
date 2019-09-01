@@ -3,9 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.axel_stein.noteapp">
 
-    <!--
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    -->
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".App"
@@ -20,22 +18,14 @@
         tools:replace="android:allowBackup,android:supportsRtl">
 
         <activity
-            android:name=".notes.list.NotesActivity"
-            android:label="@string/app_name"/>
-
-        <activity
-            android:name=".notes.list.TrashActivity"
-            android:label="@string/action_trash"/>
-
-        <activity
-            android:name=".notes.list.SearchActivity"/>
+            android:name=".main.list.SearchActivity"/>
 
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/action_settings"/>
 
         <activity
-            android:name=".notes.edit.EditNoteActivity"
+            android:name=".main.edit.EditNoteActivity"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
@@ -45,16 +35,6 @@
             </intent-filter>
 
         </activity>
-
-        <activity android:name=".notes.view.ViewNoteActivity"/>
-
-        <activity
-            android:label="@string/pref_backup_manager"
-            android:name=".backup.BackupActivity"/>
-
-        <activity
-            android:label="@string/action_manage_notebooks"
-            android:name=".notebook_manager.NotebookManagerActivity"/>
 
         <activity
             android:name=".main.MainActivity"
@@ -66,11 +46,10 @@
             </intent-filter>
 
         </activity>
-
-        <activity android:name=".main.NoteListActivity"/>
+        <activity android:name=".main.UserActivity" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="com.axel_stein.noteapp.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -80,6 +59,11 @@
                 android:resource="@xml/file_paths"/>
 
         </provider>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
 
     </application>
 

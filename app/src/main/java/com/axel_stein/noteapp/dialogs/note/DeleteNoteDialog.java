@@ -1,11 +1,13 @@
 package com.axel_stein.noteapp.dialogs.note;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.model.Note;
@@ -14,14 +16,14 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
@@ -47,10 +49,11 @@ public class DeleteNoteDialog extends ConfirmDialog {
 
         DeleteNoteDialog dialog = createDialog(context, note);
         dialog.setTargetFragment(fragment, 0);
+        assert fragment.getFragmentManager() != null;
         dialog.show(fragment.getFragmentManager(), null);
     }
 
-    public static void launch(Context context, FragmentManager manager, Note note) {
+    private static void launch(Context context, FragmentManager manager, Note note) {
         checkNotNull(manager);
         createDialog(context, note).show(manager, null);
     }
@@ -63,17 +66,14 @@ public class DeleteNoteDialog extends ConfirmDialog {
     private static DeleteNoteDialog createDialog(Context context, Note note) {
         checkNotNull(context);
         checkNotNull(note);
-
-        List<Note> list = new ArrayList<>();
-        list.add(note);
-        return createDialog(context, list);
+        return createDialog(context, Collections.singletonList(note));
     }
 
     private static DeleteNoteDialog createDialog(Context context, List<Note> notes) {
         checkNotNull(context);
         checkNotNull(notes);
 
-        boolean one = notes.size() > 0 && notes.size() == 1;
+        boolean one = notes.size() == 1;
 
         DeleteNoteDialog dialog = new DeleteNoteDialog();
         dialog.mNotes = notes;
@@ -90,22 +90,28 @@ public class DeleteNoteDialog extends ConfirmDialog {
         App.getAppComponent().inject(this);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onConfirm() {
         dismiss();
         mInteractor.execute(mNotes)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         int msg = mNotes.size() == 1 ? R.string.msg_note_deleted : R.string.msg_notes_deleted;
                         EventBusHelper.showMessage(msg);
                         EventBusHelper.updateNoteList();
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBusHelper.showMessage(R.string.error);
                     }
                 });

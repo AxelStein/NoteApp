@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_sort_title"
+        android:checkable="true"
+        android:title="@string/action_sort_title"/>
+
+    <item
+        android:id="@+id/menu_sort_views"
+        android:checkable="true"
+        android:title="@string/action_sort_views"/>
+
+    <item
+        android:id="@+id/menu_sort_modified"
+        android:checkable="true"
+        android:title="@string/action_sort_date"/>
+
+    <item android:title=""/>
+
+    <item
+        android:id="@+id/menu_rename_notebook"
+        android:checkable="false"
+        android:title="@string/action_rename_notebook"/>
+
+    <item
+        android:id="@+id/menu_delete_notebook"
+        android:checkable="false"
+        android:title="@string/action_delete_notebook"/>
+
+</menu>

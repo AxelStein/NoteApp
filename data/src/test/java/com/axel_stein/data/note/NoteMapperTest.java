@@ -32,7 +32,7 @@ public class NoteMapperTest {
         entity = new NoteEntity();
         entity.setId(1);
         entity.setTitle("Test");
-        entity.setNotebook(1);
+        entity.setNotebookId(1);
         assertTrue(isValid(map(entity)));
     }
 
@@ -57,12 +57,12 @@ public class NoteMapperTest {
         note = new Note();
         note.setId(1);
         note.setTitle("Test");
-        note.setNotebook(1);
+        note.setNotebookId(1);
         assertTrue(isValidEntity(map(note)));
     }
 
     private boolean isValidEntity(NoteEntity entity) {
-        return entity != null && entity.getId() > 0 && entity.getNotebook() > 0
+        return entity != null && entity.getId() > 0 && entity.getNotebookId() > 0
                 && !isEmpty(entity.getTitle());
     }
 

@@ -1,17 +1,16 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import com.axel_stein.domain.model.Label;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteOrder;
-import com.axel_stein.domain.model.Notebook;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
-import com.axel_stein.domain.utils.validators.LabelValidator;
-import com.axel_stein.domain.utils.validators.NotebookValidator;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,111 +29,88 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class QueryNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
     @NonNull
-    private SettingsRepository mSettingsRepository;
+    private final SettingsRepository mSettingsRepository;
 
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
-
-    public QueryNoteInteractor(@NonNull NoteRepository noteRepository,
-                               @NonNull SettingsRepository settingsRepository,
-                               @NonNull NoteLabelPairRepository helperRepository) {
-        mNoteRepository = requireNonNull(noteRepository, "noteStorage is null");
-        mSettingsRepository = requireNonNull(settingsRepository, "settingsStorage is null");
-        mNoteLabelPairRepository = requireNonNull(helperRepository, "helperRepository is null");
+    public QueryNoteInteractor(@NonNull NoteRepository n, @NonNull SettingsRepository s) {
+        mNoteRepository = requireNonNull(n);
+        mSettingsRepository = requireNonNull(s);
     }
 
-    /**
-     * @return all notes, including trash
-     */
     @NonNull
-    public Single<List<Note>> executeHome() {
-        final String key = "home";
+    public Single<List<Note>> queryInbox() {
+        final String key = "inbox";
         if (hasKey(key)) {
             return single(new Callable<List<Note>>() {
                 @Override
-                public List<Note> call() throws Exception {
+                public List<Note> call() {
                     return get(key);
                 }
             });
         }
         return single(new Callable<List<Note>>() {
             @Override
-            public List<Note> call() throws Exception {
-                List<Note> notes = orderImpl(mNoteRepository.queryHome());
+            public List<Note> call() {
+                List<Note> notes = orderImpl(mNoteRepository.queryInbox());
                 put(key, notes);
                 return notes;
             }
         });
     }
 
-    /**
-     * @return all notes, including trash
-     */
     @NonNull
-    public Single<List<Note>> execute() {
+    public Single<List<Note>> queryStarred() {
         return single(new Callable<List<Note>>() {
             @Override
-            public List<Note> call() throws Exception {
-                return orderImpl(mNoteRepository.query());
+            public List<Note> call() {
+                return orderImpl(mNoteRepository.queryStarred());
+            }
+        });
+    }
+
+    @NonNull
+    public Single<List<Note>> queryTrashed() {
+        return single(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() {
+                List<Note> result = mNoteRepository.queryTrashed();
+                LocalDate today = new LocalDate();
+                for (Note note : result) {
+                    LocalDate date = new LocalDate(note.getTrashedDate());
+                    date = date.plusMonths(1);
+                    if (date.equals(today) || date.isBefore(today)) {
+                        mNoteRepository.delete(note);
+                    }
+                }
+                return trashOrderImpl(mNoteRepository.queryTrashed());
             }
         });
     }
 
     /**
-     * @return notes in notebook
      * @throws NullPointerException     if notebook is null
      * @throws IllegalArgumentException if notebook`s id is 0
      */
     @NonNull
-    public Single<List<Note>> execute(@NonNull final Notebook notebook) {
-        final String key = "notebook_" + notebook.getId();
+    public Single<List<Note>> query(@NonNull final String notebookId) {
+        final String key = "notebook_" + notebookId;
         if (hasKey(key)) {
             return single(new Callable<List<Note>>() {
                 @Override
-                public List<Note> call() throws Exception {
+                public List<Note> call() {
                     return get(key);
                 }
             });
         }
         return single(new Callable<List<Note>>() {
             @Override
-            public List<Note> call() throws Exception {
-                if (!NotebookValidator.isValid(notebook)) {
+            public List<Note> call() {
+                if (isEmpty(notebookId)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
-                List<Note> notes = orderImpl(mNoteRepository.query(notebook));
-                put(key, notes);
-                return notes;
-            }
-        });
-    }
-
-    /**
-     * @return notes that contain label
-     * @throws NullPointerException     if label is null
-     * @throws IllegalArgumentException if label`s id is 0
-     */
-    @NonNull
-    public Single<List<Note>> execute(@NonNull final Label label) {
-        final String key = "label_" + label.getId();
-        if (hasKey(key)) {
-            return single(new Callable<List<Note>>() {
-                @Override
-                public List<Note> call() throws Exception {
-                    return get(key);
-                }
-            });
-        }
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() throws Exception {
-                if (!LabelValidator.isValid(label)) {
-                    throw new IllegalArgumentException("label is not valid");
-                }
-                List<Note> notes = orderImpl(mNoteRepository.query(label));
+                List<Note> notes = orderImpl(mNoteRepository.queryNotebook(notebookId));
                 put(key, notes);
                 return notes;
             }
@@ -153,16 +129,15 @@ public class QueryNoteInteractor {
             private String q = query;
 
             @Override
-            public List<Note> call() throws Exception {
-                q = requireNonNull(q, "query is null");
-                if (isEmpty(query)) {
-                    throw new IllegalArgumentException("query is empty");
+            public List<Note> call() {
+                if (isEmpty(q)) {
+                    return new ArrayList<>();
                 }
                 q = query.toLowerCase();
 
                 StringBuilder builder = new StringBuilder();
 
-                List<Note> notes = orderImpl(mNoteRepository.search(query), NoteOrder.RELEVANCE, true);
+                List<Note> notes = orderImpl(mNoteRepository.search(q), NoteOrder.VIEWS, true);
                 for (Note note : notes) {
                     String content = note.getContent();
                     if (content != null) {
@@ -187,7 +162,7 @@ public class QueryNoteInteractor {
                         if (end > content.length()) {
                             end = content.length();
                         }
-                        builder.append(content.substring(start, end));
+                        builder.append(content, start, end);
 
                         content = builder.toString();
                         note.setContent(content);
@@ -200,8 +175,8 @@ public class QueryNoteInteractor {
                 Collections.sort(notes, new Comparator<Note>() {
                     @Override
                     public int compare(Note n1, Note n2) {
-                        n1 = requireNonNull(n1, "note1 is null");
-                        n2 = requireNonNull(n2, "note2 is null");
+                        requireNonNull(n1, "note1 is null");
+                        requireNonNull(n2, "note2 is null");
 
                         String title1 = n1.getTitle().toLowerCase();
                         String title2 = n2.getTitle().toLowerCase();
@@ -235,19 +210,6 @@ public class QueryNoteInteractor {
         });
     }
 
-    /**
-     * @return notes in trash
-     */
-    @NonNull
-    public Single<List<Note>> queryTrash() {
-        return single(new Callable<List<Note>>() {
-            @Override
-            public List<Note> call() throws Exception {
-                return orderImpl(mNoteRepository.queryTrash());
-            }
-        });
-    }
-
     private Single<List<Note>> single(Callable<List<Note>> callable) {
         return Single.fromCallable(callable)
                 .subscribeOn(Schedulers.io());
@@ -256,8 +218,13 @@ public class QueryNoteInteractor {
     @NonNull
     private List<Note> orderImpl(@NonNull List<Note> list) {
         NoteOrder order = mSettingsRepository.getNotesOrder();
-        order = requireNonNull(order, "order is null");
+        requireNonNull(order, "order is null");
         return orderImpl(list, order, false);
+    }
+
+    @NonNull
+    private List<Note> trashOrderImpl(@NonNull List<Note> list) {
+        return orderImpl(list, NoteOrder.TRASHED, false);
     }
 
     @NonNull
@@ -266,14 +233,13 @@ public class QueryNoteInteractor {
             throw new IllegalStateException("list is not valid");
         }
 
-        // set labels
         for (Note note : list) {
-            // todo note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
             String content = note.getContent();
             if (!isEmpty(content)) {
                 if (mSettingsRepository.showNotesContent() || searchFlag) {
                     content = content.replace('\n', ' ');
                     content = content.replaceAll(" [ ]+", " ");
+                    content = content.trim();
                     if (!searchFlag && content.length() > 128) {
                         content = content.substring(0, 128);
                     }
@@ -290,6 +256,7 @@ public class QueryNoteInteractor {
             } else {
                 title = title.replace('\n', ' ');
                 title = title.replaceAll(" [ ]+", " ");
+                title = title.trim();
                 note.setTitle(title);
             }
         }
@@ -297,39 +264,33 @@ public class QueryNoteInteractor {
         Collections.sort(list, new Comparator<Note>() {
             @Override
             public int compare(Note n1, Note n2) {
-                n1 = requireNonNull(n1, "note1 is null");
-                n2 = requireNonNull(n2, "note2 is null");
+                requireNonNull(n1, "note1 is null");
+                requireNonNull(n2, "note2 is null");
 
                 switch (order) {
                     case TITLE:
                         return n1.getTitle().compareTo(n2.getTitle());
 
-                    case RELEVANCE:
-                        return compareDates(n1.getRelevance(), n2.getRelevance(), false);
+                    case VIEWS:
+                        return compareViews(n1.getViews(), n2.getViews());
 
-                    case DATE_NEWEST:
-                        return compareDates(n1.getDate(), n2.getDate(), false);
+                    case MODIFIED:
+                        return compareDates(n1.getModifiedDate(), n2.getModifiedDate());
 
-                    case DATE_OLDEST:
-                        return compareDates(n1.getDate(), n2.getDate(), true);
-
-                    case UPDATE_NEWEST:
-                        return compareDates(n1.getUpdate(), n2.getUpdate(), false);
-
-                    case UPDATE_OLDEST:
-                        return compareDates(n1.getUpdate(), n2.getUpdate(), true);
+                    case TRASHED:
+                        return compareDates(n1.getTrashedDate(), n2.getTrashedDate());
                 }
 
                 return 0;
             }
         });
 
-        if (!searchFlag) {
+        if (!searchFlag && order != NoteOrder.TRASHED) {
             Collections.sort(list, new Comparator<Note>() {
                 @Override
                 public int compare(Note n1, Note n2) {
-                    n1 = requireNonNull(n1, "note1 is null");
-                    n2 = requireNonNull(n2, "note2 is null");
+                    requireNonNull(n1, "note1 is null");
+                    requireNonNull(n2, "note2 is null");
 
                     boolean p1 = n1.isPinned();
                     boolean p2 = n2.isPinned();
@@ -347,14 +308,28 @@ public class QueryNoteInteractor {
         return list;
     }
 
-    private int compareDates(long date1, long date2, boolean reverse) {
-        long d = date1 - date2;
+    private int compareDates(DateTime d1, DateTime d2) {
+        if (d1 == null || d2 == null) {
+            return 0;
+        }
+
+        if (d1.isEqual(d2)) {
+            return 0;
+        } else if (d1.isAfter(d2)) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+    private int compareViews(long r1, long r2) {
+        long d = r1 - r2;
         if (d == 0) {
             return 0;
         } else if (d > 0) {
-            return reverse ? 1 : -1;
+            return -1;
         } else {
-            return reverse ? -1 : 1;
+            return 1;
         }
     }
 

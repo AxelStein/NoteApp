@@ -7,27 +7,28 @@
         android:icon="@drawable/ic_select_all_white_24dp"
         android:title="@string/action_select_all"
 
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_pin_note"
-        android:icon="@drawable/ic_pin_white_24dp"
+        android:icon="@drawable/ic_turned_in_not_white_24dp"
         android:title="@string/action_pin_note"
+        android:visible="false"
 
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_restore"
         android:icon="@drawable/ic_restore_white_24dp"
         android:title="@string/action_restore"
 
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_delete"
-        android:icon="@drawable/ic_delete_forever_white_24dp"
+        android:icon="@drawable/ic_delete_forever"
         android:title="@string/action_delete"
 
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
 </menu>

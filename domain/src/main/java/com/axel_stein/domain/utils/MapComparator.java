@@ -3,7 +3,7 @@ package com.axel_stein.domain.utils;
 import java.util.Map;
 import java.util.Set;
 
-public class MapComparator<K, V> {
+class MapComparator<K, V> {
 
     public boolean compare(Map<K, V> a, Map<K, V> b) {
         if (a == null && b == null) {

@@ -9,11 +9,11 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class ZipHelper {
+class ZipHelper { // todo
     private static final int BUFFER = 80000;
 
-    private String[] files;
-    private String zipFile;
+    private final String[] files;
+    private final String zipFile;
 
     public ZipHelper(String[] files, String zipFile) {
         this.files = files;
@@ -27,7 +27,7 @@ public class ZipHelper {
 
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
-            byte data[] = new byte[BUFFER];
+            byte[] data = new byte[BUFFER];
 
             for (String file : files) {
                 Log.d("add:", file);

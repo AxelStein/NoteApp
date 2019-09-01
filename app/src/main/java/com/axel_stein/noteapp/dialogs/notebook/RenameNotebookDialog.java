@@ -1,10 +1,12 @@
 package com.axel_stein.noteapp.dialogs.notebook;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.UpdateNotebookInteractor;
@@ -19,9 +21,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
@@ -29,8 +32,10 @@ public class RenameNotebookDialog extends EditTextDialog {
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
     @Inject
     UpdateNotebookInteractor mUpdateNotebookInteractor;
+
     private Notebook mNotebook;
     private HashMap<String, Boolean> mMap;
 
@@ -45,10 +50,11 @@ public class RenameNotebookDialog extends EditTextDialog {
 
         RenameNotebookDialog dialog = createDialog(notebook);
         dialog.setTargetFragment(fragment, 0);
+        assert fragment.getFragmentManager() != null;
         dialog.show(fragment.getFragmentManager(), null);
     }
 
-    public static void launch(FragmentManager manager, Notebook notebook) {
+    private static void launch(FragmentManager manager, Notebook notebook) {
         checkNotNull(manager);
 
         createDialog(notebook).show(manager, null);
@@ -67,6 +73,7 @@ public class RenameNotebookDialog extends EditTextDialog {
         return dialog;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +85,14 @@ public class RenameNotebookDialog extends EditTextDialog {
 
         mQueryNotebookInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Notebook>>() {
+                .subscribe(new SingleObserver<List<Notebook>>() {
                     @Override
-                    public void accept(List<Notebook> notebooks) throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Notebook> notebooks) {
                         if (mMap == null) {
                             mMap = new HashMap<>();
                         } else {
@@ -91,10 +103,10 @@ public class RenameNotebookDialog extends EditTextDialog {
                         }
                         setSuggestions(mMap);
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
 
                         EventBusHelper.showMessage(R.string.error);
                         dismiss();
@@ -102,22 +114,28 @@ public class RenameNotebookDialog extends EditTextDialog {
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onTextCommit(final String text) {
         mNotebook.setTitle(text);
         mUpdateNotebookInteractor.execute(mNotebook)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         EventBusHelper.showMessage(R.string.msg_notebook_renamed);
                         EventBusHelper.renameNotebook(mNotebook);
                         dismiss();
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
 
                         EventBusHelper.showMessage(R.string.error);
                         dismiss();

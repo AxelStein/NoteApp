@@ -1,10 +1,11 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import com.axel_stein.domain.interactor.label_helper.SetLabelsInteractor;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.NoteRepository;
+
+import org.joda.time.DateTime;
 
 import io.reactivex.Completable;
 import io.reactivex.functions.Action;
@@ -16,14 +17,10 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.validateBefor
 public class InsertNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mRepository;
 
-    @NonNull
-    private SetLabelsInteractor mSetLabelsInteractor;
-
-    public InsertNoteInteractor(@NonNull NoteRepository noteRepository, @NonNull SetLabelsInteractor setLabelsInteractor) {
-        mNoteRepository = requireNonNull(noteRepository, "noteRepository is null");
-        mSetLabelsInteractor = requireNonNull(setLabelsInteractor, "setLabelsInteractor is null");
+    public InsertNoteInteractor(@NonNull NoteRepository r) {
+        mRepository = requireNonNull(r);
     }
 
     /**
@@ -34,17 +31,17 @@ public class InsertNoteInteractor {
     public Completable execute(@NonNull final Note note) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!validateBeforeInsert(note)) {
                     throw new IllegalArgumentException("note is not valid");
                 }
 
-                note.setDate(System.currentTimeMillis());
-                note.setUpdate(note.getDate());
+                note.setModifiedDate(new DateTime());
 
-                note.setId(mNoteRepository.insert(note));
+                mRepository.insert(note);
             }
-        }).andThen(mSetLabelsInteractor.execute(note, note.getLabels())).subscribeOn(Schedulers.io());
+        })
+        .subscribeOn(Schedulers.io());
     }
 
 }

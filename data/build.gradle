@@ -1,16 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -32,7 +31,7 @@ android {
 }
 
 ext {
-    roomVersion = '1.0.0'
+    roomVersion = '1.1.1'
     junitVersion = '4.12'
     espressoVersion = '2.2.2'
 }
@@ -40,13 +39,16 @@ ext {
 dependencies {
 
     // test
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: 'com.google.code.findbugs'
     })
-    testCompile "junit:junit:$junitVersion"
+    testImplementation "junit:junit:$junitVersion"
 
-    compile "android.arch.persistence.room:runtime:$roomVersion"
-    annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
-    compile project(path: ':domain')
+    implementation 'androidx.room:room-runtime:2.1.0'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0'
+    implementation project(path: ':domain')
+
+    implementation "joda-time:joda-time:2.10"
+
 }

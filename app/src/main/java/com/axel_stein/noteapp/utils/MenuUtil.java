@@ -3,15 +3,15 @@ package com.axel_stein.noteapp.utils;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.AttrRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.MenuRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.PopupMenu;
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.MenuRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.PopupMenu;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -146,7 +146,7 @@ public class MenuUtil {
         }
     }
 
-    public static void show(@Nullable MenuItem item, boolean show) {
+    private static void show(@Nullable MenuItem item, boolean show) {
         if (item != null) {
             item.setVisible(show);
         }
@@ -158,7 +158,7 @@ public class MenuUtil {
         }
     }
 
-    public static void check(@Nullable MenuItem item, boolean checked) {
+    private static void check(@Nullable MenuItem item, boolean checked) {
         if (item != null) {
             item.setChecked(checked);
         }
@@ -202,7 +202,7 @@ public class MenuUtil {
     }
 
     @NonNull
-    public static ArrayList<MenuItem> getGroupMenuItems(Menu menu, int group) {
+    private static ArrayList<MenuItem> getGroupMenuItems(Menu menu, int group) {
         ArrayList<MenuItem> res = new ArrayList<>();
         if (menu != null) {
             ArrayList<MenuItem> items = getVisibleMenuItems(menu);

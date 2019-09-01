@@ -1,11 +1,9 @@
 package com.axel_stein.domain.interactor.note;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
-import com.axel_stein.domain.repository.NoteLabelPairRepository;
 import com.axel_stein.domain.repository.NoteRepository;
-import com.axel_stein.domain.repository.NotebookRepository;
 
 import java.util.concurrent.Callable;
 
@@ -18,43 +16,31 @@ import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 public class GetNoteInteractor {
 
     @NonNull
-    private NoteRepository mNoteRepository;
+    private final NoteRepository mNoteRepository;
 
-    @NonNull
-    private NoteLabelPairRepository mNoteLabelPairRepository;
-
-    @NonNull
-    private NotebookRepository mNotebookRepository;
-
-    public GetNoteInteractor(@NonNull NoteRepository noteRepository,
-                             @NonNull NoteLabelPairRepository helperRepository,
-                             @NonNull NotebookRepository notebookRepository) {
+    public GetNoteInteractor(@NonNull NoteRepository noteRepository) {
         mNoteRepository = requireNonNull(noteRepository);
-        mNoteLabelPairRepository = requireNonNull(helperRepository);
-        mNotebookRepository = requireNonNull(notebookRepository);
     }
 
     /**
      * @param id request
      * @throws IllegalStateException if id, notebook or title is empty
      */
-    public Single<Note> execute(final long id) {
+    public Single<Note> execute(final String id) {
         return Single.fromCallable(new Callable<Note>() {
             @Override
-            public Note call() throws Exception {
+            public Note call() {
                 Note note = mNoteRepository.get(id);
                 if (note != null) {
                     if (!isValid(note)) {
                         throw new IllegalStateException("note is not valid");
                     }
-                    if (!note.isTrash()) {
-                        note.incrementRelevance();
-                        mNoteRepository.update(note);
+                    if (!note.isTrashed()) {
+                        note.incrementViews();
+                        mNoteRepository.updateViews(note, note.getViews());
                     }
-                    note.setLabels(mNoteLabelPairRepository.queryLabelsOfNote(note));
                 } else {
                     note = new Note();
-                    //note.setNotebook(mNotebookRepository.query().get(0));
                 }
                 return note;
             }

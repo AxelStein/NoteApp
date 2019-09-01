@@ -1,8 +1,8 @@
 package com.axel_stein.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-public class ObjectUtil {
+class ObjectUtil {
 
     /**
      * Ensures that an object reference passed as a parameter to the calling

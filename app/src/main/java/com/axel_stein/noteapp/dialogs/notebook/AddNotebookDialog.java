@@ -1,10 +1,12 @@
 package com.axel_stein.noteapp.dialogs.notebook;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.axel_stein.domain.interactor.notebook.InsertNotebookInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
@@ -19,9 +21,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
@@ -29,13 +32,14 @@ public class AddNotebookDialog extends EditTextDialog {
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
+
     @Inject
     InsertNotebookInteractor mInsertNotebookInteractor;
+
     private HashMap<String, Boolean> mMap;
 
-    public static void launch(AppCompatActivity activity) {
+    public static void launch(FragmentActivity activity) {
         checkNotNull(activity);
-
         launch(activity.getSupportFragmentManager());
     }
 
@@ -44,10 +48,11 @@ public class AddNotebookDialog extends EditTextDialog {
 
         AddNotebookDialog dialog = createDialog();
         dialog.setTargetFragment(fragment, 0);
+        assert fragment.getFragmentManager() != null;
         dialog.show(fragment.getFragmentManager(), null);
     }
 
-    public static void launch(FragmentManager manager) {
+    private static void launch(FragmentManager manager) {
         createDialog().show(manager, null);
     }
 
@@ -60,6 +65,7 @@ public class AddNotebookDialog extends EditTextDialog {
         return dialog;
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,9 +77,14 @@ public class AddNotebookDialog extends EditTextDialog {
 
         mQueryNotebookInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Notebook>>() {
+                .subscribe(new SingleObserver<List<Notebook>>() {
                     @Override
-                    public void accept(List<Notebook> notebooks) throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Notebook> notebooks) {
                         if (mMap == null) {
                             mMap = new HashMap<>();
                         } else {
@@ -84,17 +95,17 @@ public class AddNotebookDialog extends EditTextDialog {
                         }
                         setSuggestions(mMap);
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
 
+                    @Override
+                    public void onError(Throwable e) {
                         EventBusHelper.showMessage(R.string.error);
+                        e.printStackTrace();
                         dismiss();
                     }
                 });
     }
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onTextCommit(final String text) {
         final Notebook notebook = new Notebook();
@@ -102,19 +113,23 @@ public class AddNotebookDialog extends EditTextDialog {
 
         mInsertNotebookInteractor.execute(notebook)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new CompletableObserver() {
                     @Override
-                    public void run() throws Exception {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
                         EventBusHelper.showMessage(R.string.msg_notebook_added);
                         EventBusHelper.addNotebook(notebook);
                         dismiss();
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
 
+                    @Override
+                    public void onError(Throwable e) {
                         EventBusHelper.showMessage(R.string.error);
+                        e.printStackTrace();
                         dismiss();
                     }
                 });

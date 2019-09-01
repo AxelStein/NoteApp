@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--
     <item
@@ -9,10 +11,10 @@
     -->
 
     <item
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_delete_forever_white_24dp"
         android:id="@+id/menu_empty_trash"
-        android:title="@string/action_empty_trash"/>
+        android:title="@string/action_empty_trash"
+        android:icon="@drawable/ic_delete_forever"
+        app:showAsAction="always"
+        android:visible="false" />
 
 </menu>

@@ -4,13 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,11 +14,21 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.utils.ResourceUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.HashMap;
+
+import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 // FIXME: 30.07.2017
 public abstract class EditTextDialog extends AppCompatDialogFragment {
@@ -88,7 +91,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
         }
     }
 
-    public void setSuggestions(HashMap<String, Boolean> suggestions) {
+    protected void setSuggestions(HashMap<String, Boolean> suggestions) {
         mSuggestions = suggestions;
     }
 
@@ -111,7 +114,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
         super.onDestroyView();
     }
 
-    protected void setError(String error) {
+    private void setError(String error) {
         mTextInputLayout.setError(error);
     }
 
@@ -124,12 +127,17 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        checkNotNull(getContext());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // R.style.DialogStyle
         builder.setTitle(getResourceText(mTitle, mTitleRes));
         builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                onTextCommit(mEditText.getText().toString());
+                Editable e = mEditText.getText();
+                if (e != null) {
+                    onTextCommit(e.toString().trim());
+                }
             }
         });
         builder.setNegativeButton(getResourceText(mNegativeButtonText, mNegativeButtonTextRes), new DialogInterface.OnClickListener() {
@@ -164,7 +172,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
         mEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                String text = s.toString();
+                String text = s.toString().trim();
 
                 boolean empty = text.length() == 0;
                 boolean lessThanMaxLength = text.length() <= mTextInputLayout.getCounterMaxLength();

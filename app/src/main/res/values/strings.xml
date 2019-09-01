@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Notes</string>
-    <string name="default_notebook">Notes</string>
-    <string name="copy">copy</string>
+    <string name="action_copy">copy</string>
     <string name="app_version_title">Version</string>
 
     <!--Actions-->
@@ -10,64 +9,45 @@
     <string name="action_trash">Trash</string>
     <string name="action_empty_trash">Empty trash</string>
     <string name="action_delete">Delete</string>
-    <string name="action_delete_label">Delete label</string>
     <string name="action_search">Search</string>
     <string name="action_move_to_trash">Move to trash</string>
     <string name="action_select_all">Select all</string>
     <string name="action_rename">Rename</string>
-    <string name="action_rename_label">Rename label</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_add">Add</string>
-    <string name="action_add_label">Add label</string>
     <string name="action_ok">OK</string>
-    <string name="action_labels">Labels</string>
-    <string name="action_notebooks">Notebooks</string>
     <string name="action_add_notebook">Add notebook</string>
     <string name="action_rename_notebook">Rename notebook</string>
     <string name="action_delete_notebook">Delete notebook</string>
     <string name="action_add_note">Add note</string>
     <string name="action_share">Share</string>
-    <string name="action_notebook">Notebook</string>
     <string name="action_discard">Discard</string>
-    <string name="action_check_labels">Check labels</string>
-    <string name="action_save">Save</string>
-    <string name="action_sort_by">Sort by</string>
-    <string name="action_sort_title">Title</string>
-    <string name="action_sort_relevance">Use frequency</string>
-    <string name="action_sort_created_newest_first">Created (newest first)</string>
-    <string name="action_sort_created_oldest_first">Created (oldest first)</string>
-    <string name="action_sort_updated_newest_first">Updated (newest first)</string>
-    <string name="action_sort_updated_oldest_first">Updated (oldest first)</string>
-    <string name="action_sort_note_count">Note count</string>
     <string name="action_menu">Menu</string>
     <string name="action_done">Done</string>
     <string name="action_keep_editing">Keep editing</string>
-    <string name="action_fullscreen">Full screen mode</string>
     <string name="action_undo">Undo</string>
-    <string name="action_keep_screen_on">Keep screen on</string>
     <string name="action_duplicate">Duplicate note</string>
-    <string name="action_reset_password">Reset password</string>
-    <string name="action_send">Send</string>
     <string name="action_import">Import</string>
-    <string name="action_add_backup">Add backup</string>
-    <string name="action_manage_notebooks">Manage notebooks</string>
-    <string name="action_select">Select</string>
-    <string name="action_sort_custom">Custom</string>
-    <string name="action_home">Home</string>
     <string name="action_inbox">Inbox</string>
     <string name="action_clear">Clear</string>
     <string name="action_pin_note">Pin note</string>
-    <string name="action_note_info">Note info</string>
+    <string name="action_sign_out">Sign Out</string>
+    <string name="action_star_note">Star note</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_sort">Sort by</string>
+    <string name="action_sort_title">Title</string>
+    <string name="action_sort_views">Views</string>
+    <string name="action_sort_created">Created</string>
+    <string name="action_sort_date">Date</string>
+    <string name="action_starred">Starred</string>
+    <string name="action_export">Export</string>
 
     <!--Pref-->
     <string name="pref_night_mode">Night mode</string>
-    <string name="pref_show_add_note_fab">Show FAB</string>
     <string name="pref_category_appearance">Main screen</string>
-    <string name="pref_category_security">Security</string>
     <string name="pref_category_backup">Backup and import</string>
-    <string name="pref_secure_notes">Secure notes</string>
-    <string name="pref_secure_notes_summary">App will require a password</string>
     <string name="pref_export">Export to file</string>
+    <string name="pref_export_drive">Export to Google Drive</string>
     <string name="pref_import">Import from file</string>
     <string name="pref_font_size">Font size</string>
     <string name="pref_font_size_small">Small</string>
@@ -75,18 +55,17 @@
     <string name="pref_font_size_large">Large</string>
     <string name="pref_font_size_extra_large">Extra large</string>
     <string name="pref_show_notes_content">Show note`s content</string>
-    <string name="pref_backup_manager">Backup manager</string>
     <string name="pref_about_app">About app</string>
     <string name="pref_rate_app">Rate app</string>
-    <string name="pref_show_note_editor_lines">Show lines</string>
     <string name="pref_swipe_left">Swipe left</string>
     <string name="pref_swipe_right">Swipe right</string>
     <string name="pref_swipe_action_none">None</string>
     <string name="pref_swipe_action_trash_restore">Trash / Restore</string>
     <string name="pref_swipe_action_delete">Delete</string>
     <string name="pref_swipe_action_pin">Pin / Unpin</string>
+    <string name="pref_swipe_action_star">Star / Unstar</string>
     <string name="pref_category_editor">Note editor</string>
-    <string name="pref_content_char_counter">Char counter</string>
+    <string name="pref_import_drive">Import from Google Drive</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>
@@ -98,8 +77,9 @@
     <string-array name="swipe_action_entries">
         <item>@string/pref_swipe_action_none</item>
         <item>@string/pref_swipe_action_trash_restore</item>
-        <item>@string/pref_swipe_action_delete</item>
         <item>@string/pref_swipe_action_pin</item>
+        <item>@string/pref_swipe_action_star</item>
+        <!--<item>@string/pref_swipe_action_delete</item>-->
     </string-array>
 
     <!--Errors-->
@@ -107,62 +87,43 @@
     <string name="error_title_required">Title is required</string>
     <string name="error_title_exists">Title already exists</string>
     <string name="error_share">Application not found</string>
-    <string name="error_security_wrong_password">Wrong password</string>
 
     <!--Hints-->
-    <string name="hint_label">Title</string>
     <string name="hint_content">Note</string>
     <string name="hint_title">Title</string>
     <string name="hint_notebook">Title</string>
-    <string name="hint_password">Password</string>
 
     <!--Content description-->
     <string name="content_clear">Clear</string>
-    <string name="content_settings">Settings</string>
-    <string name="content_trash">Trash</string>
-    <string name="content_night_mode">Night mode</string>
 
     <!--Empty msg-->
     <string name="empty_notebook">Notebook is empty</string>
-    <string name="empty_label">No notes with this label yet</string>
     <string name="empty_search">No matching notes</string>
     <string name="empty_trash">No notes in trash</string>
-    <string name="empty_backup">No backups found</string>
-    <string name="empty_home">No notes yet</string>
-    <string name="empty_label_list">No labels yet</string>
-    <string name="empty_notebook_list">No notebooks yet</string>
+    <string name="empty_inbox">No notes yet</string>
 
     <!--Dialog titles-->
     <string name="title_empty_trash">Empty trash?</string>
-    <string name="title_add_label">Add label</string>
-    <string name="title_rename_label">Rename label</string>
-    <string name="title_delete_label">Delete label \'%1$s\'?</string>
     <string name="title_import">Importing…</string>
-    <string name="title_check_labels">Check labels</string>
     <string name="title_rename_notebook">Rename notebook</string>
     <string name="title_delete_notebook">Delete notebook \'%1$s\'?</string>
     <string name="title_delete_notebooks">Delete notebooks?</string>
     <string name="title_add_notebook">Add notebook</string>
     <string name="title_delete_note">Delete note?</string>
     <string name="title_delete_notes">Delete notes?</string>
-    <string name="title_select_notebook">Select notebook</string>
-    <string name="title_save">Save changes?</string>
+    <string name="title_select_notebook">Move to notebook</string>
     <string name="title_discard">Are you sure you want to discard changes?</string>
-    <string name="title_password_setup">Password setup</string>
-    <string name="title_confirm_password">Confirm password</string>
-    <string name="title_password_reset">Password reset</string>
-    <string name="title_note_info">Note info</string>
+    <string name="title_export_drive">Export to Google Drive</string>
+    <string name="title_import_drive">Import from Google Drive</string>
 
     <!--Messages-->
     <string name="msg_wait">Please wait</string>
-    <string name="msg_label_deleted">Label deleted</string>
-    <string name="msg_label_renamed">Label renamed</string>
-    <string name="msg_label_added">Label added</string>
     <string name="msg_trash_empty">Trash is empty</string>
     <string name="msg_import_success">Import completed</string>
     <string name="msg_notebook_added">Notebook added</string>
     <string name="msg_notebook_renamed">Notebook renamed</string>
     <string name="msg_notebook_deleted">Notebook deleted</string>
+    <string name="msg_note_created">Note created</string>
     <string name="msg_note_updated">Note updated</string>
     <string name="msg_notes_updated">Notes updated</string>
     <string name="msg_note_restored">Note restored</string>
@@ -171,24 +132,34 @@
     <string name="msg_notes_trashed">Notes trashed</string>
     <string name="msg_note_deleted">Note deleted</string>
     <string name="msg_notes_deleted">Notes deleted</string>
-    <string name="msg_delete_label">Label will be deleted from all of your notes. Your notes won`t be deleted.</string>
     <string name="msg_delete_notebook">Notebook and notes will be permanently deleted.</string>
     <string name="msg_empty_trash">All notes in trash will be permanently deleted.</string>
     <string name="msg_delete_note">Note will be permanently deleted.</string>
     <string name="msg_delete_notes">Notes will be permanently deleted.</string>
-    <string name="msg_create_notebook">Create notebook first</string>
-    <string name="msg_label_empty">There are no labels to check</string>
     <string name="msg_note_empty">Note is empty</string>
-    <string name="msg_exit_fullscreen">Press back to exit full screen mode</string>
     <string name="msg_note_duplicated">Note duplicated</string>
-    <string name="msg_password_caution">Make sure you can remember your password. Without it, you will not be able to access your notes.</string>
-    <string name="msg_security_enabled">Security enabled</string>
-    <string name="msg_security_disabled">Security disabled</string>
-    <string name="msg_password_reset_caution">Are you sure you want to reset password? All of your notes will be permanently deleted.</string>
+    <string name="msg_export_drive">All data on the server will be replaced. Continue?</string>
+    <string name="msg_import_drive">All data on this device will be replaced. Continue?</string>
     <string name="msg_note_pinned">Note pinned</string>
     <string name="msg_note_unpinned">Note unpinned</string>
     <string name="msg_notes_pinned">Notes pinned</string>
     <string name="msg_notes_unpinned">Notes unpinned</string>
-    <string name="msg_note_info">Created: %1$s\n\nModified: %2$s\n\nChar count: %3$d</string>
+    <string name="msg_note_starred">Note starred</string>
+    <string name="msg_note_unstarred">Note unstarred</string>
+    <string name="msg_notes_starred">Notes starred</string>
+    <string name="msg_notes_unstarred">Notes unstarred</string>
+    <string name="msg_export_success">Export completed</string>
+
+    <plurals name="plurals_notes_starred">
+        <item quantity="one">%1$d note starred</item>
+        <item quantity="other">%1$d notes starred</item>
+    </plurals>
+
+    <plurals name="plurals_notes_unstarred">
+        <item quantity="one">%1$d note unstarred</item>
+        <item quantity="other">%1$d notes unstarred</item>
+    </plurals>
+
+    <string name="last_synced">Last synced:</string>
 
 </resources>

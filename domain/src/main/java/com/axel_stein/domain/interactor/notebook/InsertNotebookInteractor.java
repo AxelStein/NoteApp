@@ -1,6 +1,6 @@
 package com.axel_stein.domain.interactor.notebook;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NotebookRepository;
@@ -15,10 +15,10 @@ import static com.axel_stein.domain.utils.validators.NotebookValidator.isValid;
 public class InsertNotebookInteractor {
 
     @NonNull
-    private NotebookRepository mNotebookRepository;
+    private final NotebookRepository mRepository;
 
-    public InsertNotebookInteractor(@NonNull NotebookRepository notebookRepository) {
-        mNotebookRepository = requireNonNull(notebookRepository, "notebookStorage is null");
+    public InsertNotebookInteractor(@NonNull NotebookRepository n) {
+        mRepository = requireNonNull(n);
     }
 
     /**
@@ -30,11 +30,11 @@ public class InsertNotebookInteractor {
     public Completable execute(@NonNull final Notebook notebook) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 if (!isValid(notebook, false)) {
                     throw new IllegalArgumentException("notebook is not valid");
                 }
-                notebook.setId(mNotebookRepository.insert(notebook));
+                mRepository.insert(notebook);
             }
         }).subscribeOn(Schedulers.io());
     }
