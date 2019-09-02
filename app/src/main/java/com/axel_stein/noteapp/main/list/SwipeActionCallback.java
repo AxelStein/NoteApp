@@ -75,14 +75,14 @@ class SwipeActionCallback extends ItemTouchHelper.SimpleCallback {
     private Drawable getSwipeActionIcon(int action) {
         switch (action) {
             case AppSettingsRepository.SWIPE_ACTION_TRASH_RESTORE:
-                int ic = mPresenter.isTrash() ? R.drawable.ic_restore_white_24dp : R.drawable.ic_delete_white_24dp;
+                int ic = mPresenter.isTrash() ? R.drawable.ic_restore_24dp : R.drawable.ic_delete_24dp;
                 return ContextCompat.getDrawable(mContext, ic);
 
             case AppSettingsRepository.SWIPE_ACTION_PIN:
-                return ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_white_24dp);
+                return ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_24dp);
 
                 case AppSettingsRepository.SWIPE_ACTION_STAR:
-                    return ContextCompat.getDrawable(mContext, R.drawable.ic_star_white_24dp);
+                    return ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_24dp);
         }
         return null;
     }

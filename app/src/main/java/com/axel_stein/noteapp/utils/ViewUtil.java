@@ -1,10 +1,11 @@
 package com.axel_stein.noteapp.utils;
 
 import android.graphics.drawable.Drawable;
-import androidx.annotation.StringRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.StringRes;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;

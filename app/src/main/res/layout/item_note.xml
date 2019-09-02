@@ -14,17 +14,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-
         android:id="@+id/img_icon"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:paddingEnd="32dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="32dp"
         android:paddingStart="16dp"
-        android:src="@drawable/ic_description"
-        android:tint="?android:attr/textColorPrimary"
+        android:src="@drawable/ic_description_24dp"
         android:scaleType="center"
+        android:tint="?attr/checkBoxTint"
         tools:ignore="ContentDescription"/>
 
     <TextView
@@ -39,9 +36,7 @@
         android:layout_height="wrap_content"
 
         android:layout_marginTop="12dp"
-        android:layout_marginLeft="72dp"
         android:layout_marginStart="72dp"
-        android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
 
         android:ellipsize="end"
@@ -55,10 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-
-        android:layout_marginLeft="72dp"
         android:layout_marginStart="72dp"
-        android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:maxLines="1"
@@ -73,10 +65,8 @@
         android:id="@+id/img_starred"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_star_border_18"
-        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_star_border_18dp"
         android:layout_marginEnd="16dp"
-
         android:tint="?attr/colorControlNormal"
         android:visibility="gone"
         tools:visibility="visible"
@@ -89,10 +79,8 @@
         android:id="@+id/img_pin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_bookmark_border_18"
-
+        android:src="@drawable/ic_bookmark_border_18dp"
         android:tint="?attr/colorControlNormal"
         android:visibility="gone"
         tools:visibility="visible"

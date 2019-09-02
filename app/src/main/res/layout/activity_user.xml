@@ -50,7 +50,7 @@
                 android:layout_height="36dp"
                 android:layout_centerVertical="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_account_circle_36"
+                android:src="@drawable/ic_account_circle_36dp"
                 android:tint="?attr/menuItemTintColor"
                 android:layout_marginStart="10dp" />
 
@@ -120,7 +120,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="14sp"
-            app:iconLeft="@drawable/ic_cloud_upload_white_24dp"
+            app:iconLeft="@drawable/ic_cloud_upload_24dp"
             app:iconLeftTint="?android:attr/textColorPrimary"
             tools:ignore="RtlHardcoded" />
 
@@ -140,7 +140,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="14sp"
-            app:iconLeft="@drawable/ic_cloud_download_white_24dp"
+            app:iconLeft="@drawable/ic_cloud_download_24dp"
             app:iconLeftTint="?android:attr/textColorPrimary"
             tools:ignore="RtlHardcoded"
             android:text="@string/pref_import_drive" />

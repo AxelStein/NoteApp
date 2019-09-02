@@ -7,7 +7,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:textColor="?attr/colorAccent"
-    android:textStyle="bold"
+    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
     android:gravity="center_vertical"
     android:maxLines="1"
     android:ellipsize="end"

@@ -108,7 +108,7 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
         ViewUtil.setText(mTextUserEmail, mUserEmail);
         ViewUtil.show(notEmpty(mUserEmail), mTextUserEmail);
 
-        Picasso.get().load(mUserPhotoUrl).placeholder(R.drawable.ic_account_circle_36).into(mViewUserPhoto);
+        Picasso.get().load(mUserPhotoUrl).placeholder(R.drawable.ic_account_circle_36dp).into(mViewUserPhoto);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -15,7 +15,6 @@
     android:maxLines="1"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    app:iconLeft="@drawable/ic_book_white_24dp"
     app:iconLeftTint="?attr/colorControlNormal"
     app:iconRightTint="?attr/colorAccent"
     tools:ignore="RtlHardcoded"

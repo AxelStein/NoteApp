@@ -43,7 +43,6 @@ import static android.text.TextUtils.isEmpty;
 
 public class NotesFragment extends Fragment implements NotesContract.View,
         CheckNotebookDialog.OnNotebookCheckedListener,
-
         ScrollableFragment,
         BottomMenuDialog.OnMenuItemClickListener {
 
@@ -440,11 +439,11 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
             void setChecked(boolean checkable, boolean checked) {
                 if (!checkable) {
-                    mIcon.setImageResource(R.drawable.ic_description);
+                    mIcon.setImageResource(R.drawable.ic_description_24dp);
                 } else if (checked) {
-                    mIcon.setImageResource(R.drawable.ic_check_box);
+                    mIcon.setImageResource(R.drawable.ic_check_box_24dp);
                 } else {
-                    mIcon.setImageResource(R.drawable.ic_check_box_outline_blank);
+                    mIcon.setImageResource(R.drawable.ic_check_box_outline_blank_24dp);
                 }
                 mIcon.setSelected(checkable && checked);
             }

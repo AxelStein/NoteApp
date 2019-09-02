@@ -19,10 +19,8 @@
             android:layout_marginLeft="10dp"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_account_circle_36"
             android:tint="?attr/menuItemTintColor"
+            android:layout_centerVertical="true"
             android:layout_marginStart="10dp" />
 
         <LinearLayout
@@ -63,10 +61,9 @@
             style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
             android:layout_width="56dp"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:contentDescription="@string/content_clear"
-            android:src="@drawable/ic_settings_white_24dp"
+            android:src="@drawable/ic_settings_24dp"
             android:tint="?attr/menuItemTintColor"/>
 
     </RelativeLayout>

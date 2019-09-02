@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -43,6 +42,7 @@ public class AddNotebookDialog extends EditTextDialog {
         launch(activity.getSupportFragmentManager());
     }
 
+    /*
     public static void launch(Fragment fragment) {
         checkNotNull(fragment);
 
@@ -51,6 +51,7 @@ public class AddNotebookDialog extends EditTextDialog {
         assert fragment.getFragmentManager() != null;
         dialog.show(fragment.getFragmentManager(), null);
     }
+    */
 
     private static void launch(FragmentManager manager) {
         createDialog().show(manager, null);

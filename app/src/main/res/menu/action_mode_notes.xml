@@ -4,36 +4,36 @@
 
     <item
         android:id="@+id/menu_select_all"
-        android:icon="@drawable/ic_select_all_white_24dp"
+        android:icon="@drawable/ic_select_all_24dp"
         android:title="@string/action_select_all"
 
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_pin_note"
-        android:icon="@drawable/ic_turned_in_not_white_24dp"
-        android:title="@string/action_pin_note"
-
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_star_note"
-        android:icon="@drawable/ic_star_border_white_24dp"
-        android:title="@string/action_star_note"
-
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/menu_move_to_trash"
-        android:icon="@drawable/ic_delete"
+        android:icon="@drawable/ic_delete_24dp"
         android:title="@string/action_move_to_trash"
 
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/menu_select_notebook"
-        android:icon="@drawable/ic_book"
+        android:icon="@drawable/ic_book_24dp"
         android:title="@string/title_select_notebook"
+
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_pin_note"
+        android:icon="@drawable/ic_bookmark_border_24dp"
+        android:title="@string/action_pin_note"
+
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_star_note"
+        android:icon="@drawable/ic_star_border_24dp"
+        android:title="@string/action_star_note"
 
         app:showAsAction="ifRoom"/>
 

@@ -84,7 +84,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         Notebook add = new Notebook();
         add.setId(Notebook.ID_ADD);
         add.setTitle(context.getString(R.string.action_add_notebook));
-        add.setIconRes(R.drawable.ic_add_box);
+        add.setIconRes(R.drawable.ic_add_box_24dp);
         mNotebooks.add(add);
 
         Collections.sort(mNotebooks, new Comparator<Notebook>() {
@@ -228,7 +228,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
             holder.mTitle.setText(notebook.getTitle());
 
             int icon = notebook.getIconRes();
-            holder.mTitle.setIconLeft(icon != 0 ? icon : R.drawable.ic_book);
+            holder.mTitle.setIconLeft(icon != 0 ? icon : R.drawable.ic_book_24dp);
 
             if (notebook.getId().equals(Notebook.ID_ADD)) {
                 ViewUtil.hide(holder.mChecked);
@@ -236,7 +236,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
                 ViewUtil.show(holder.mChecked);
 
                 boolean selected = TextUtils.equals(mSelectedNotebookId, notebook.getId());
-                holder.mChecked.setImageResource(selected ? R.drawable.ic_radio_button_checked_white_24dp : R.drawable.ic_radio_button_unchecked_white_24dp);
+                holder.mChecked.setImageResource(selected ? R.drawable.ic_radio_button_checked_24dp : R.drawable.ic_radio_button_unchecked_24dp);
                 holder.mChecked.setSelected(selected);
             }
         }

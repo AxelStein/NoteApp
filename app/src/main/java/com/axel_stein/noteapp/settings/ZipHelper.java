@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+@SuppressWarnings("unused")
 class ZipHelper { // todo
     private static final int BUFFER = 80000;
 

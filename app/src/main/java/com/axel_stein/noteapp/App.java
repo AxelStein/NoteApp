@@ -1,7 +1,6 @@
 package com.axel_stein.noteapp;
 
-import android.app.Application;
-
+import androidx.multidex.MultiDexApplication;
 import androidx.work.Constraints;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
@@ -14,7 +13,7 @@ import com.axel_stein.noteapp.dagger.AppModule;
 import com.axel_stein.noteapp.dagger.DaggerAppComponent;
 import com.axel_stein.noteapp.google_drive.DriveWorker;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private static AppComponent sAppComponent;
 
@@ -26,7 +25,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Notebook.TITLE_INBOX = getString(R.string.action_inbox);
-        Notebook.ICON_INBOX = R.drawable.ic_inbox;
+        Notebook.ICON_INBOX = R.drawable.ic_inbox_24dp;
 
         sAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
 

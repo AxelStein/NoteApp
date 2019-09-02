@@ -4,10 +4,10 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.axel_stein.noteapp"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 28
-        versionCode 40
-        versionName "1.4.0"
+        versionCode 41
+        versionName "1.4.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -22,6 +22,7 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+
     lintOptions {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
@@ -88,13 +89,6 @@ dependencies {
     implementation "org.greenrobot:eventbus:3.0.0"
 
     // google drive
-    //def google_version = "17.0.0"
-    //implementation "com.google.android.gms:play-services-auth:$google_version"
-    //implementation "com.google.android.gms:play-services-drive:$google_version"
-    //implementation 'com.google.api-client:google-api-client:1.30.2'
-    //implementation 'com.google.apis:google-api-services-oauth2:v2-rev99-1.21.0'
-    //implementation 'com.google.apis:google-api-services-drive:v3-rev173-1.25.0'
-    //implementation 'com.google.http-client:google-http-client-android:1.32.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.http-client:google-http-client-gson:1.31.0'
     implementation('com.google.api-client:google-api-client-android:1.30.2') {

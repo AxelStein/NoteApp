@@ -23,8 +23,8 @@
             app:popupTheme="?attr/toolbarPopupTheme">
 
             <com.axel_stein.noteapp.views.IconTextView
-                app:iconRight="@drawable/ic_arrow_drop_down_white_24dp"
-                app:iconRightTint="?android:attr/textColorPrimary"
+                app:iconRight="@drawable/ic_arrow_drop_down_24dp"
+                app:iconRightTint="?attr/menuItemTintColor"
 
                 android:id="@+id/notebook"
                 android:layout_width="wrap_content"

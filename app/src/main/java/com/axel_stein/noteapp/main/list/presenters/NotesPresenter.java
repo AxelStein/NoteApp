@@ -497,10 +497,12 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Override
     public void onNotebookSelected(Notebook notebook) {
-        if (notebook == null) {
-            notebook = new Notebook();
+        if (getCheckedCount() > 0) {
+            if (notebook == null) {
+                notebook = new Notebook();
+            }
+            onNotebookSelectedImpl(notebook);
         }
-        onNotebookSelectedImpl(notebook);
     }
 
     @SuppressLint("CheckResult")

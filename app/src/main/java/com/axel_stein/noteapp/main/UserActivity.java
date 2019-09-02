@@ -89,7 +89,7 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
             mTextUserName.setText(account.getDisplayName());
             mTextUserEmail.setText(account.getEmail());
 
-            Picasso.get().load(account.getPhotoUrl()).placeholder(R.drawable.ic_account_circle_36).into(mUserPhoto);
+            Picasso.get().load(account.getPhotoUrl()).placeholder(R.drawable.ic_account_circle_36dp).into(mUserPhoto);
         } else {
             ViewUtil.hide(mTextUserName, mTextUserEmail);
         }

@@ -71,7 +71,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ViewHolder> {
             itemVH.mTextView.setText(item.getTitle());
 
             if (item.isCheckable()) {
-                int icon = item.isChecked() ? R.drawable.ic_done_white_24dp : 0;
+                int icon = item.isChecked() ? R.drawable.ic_done_24dp : 0;
                 itemVH.mTextView.setIconRight(icon);
             } else {
                 itemVH.mTextView.setIconRight(null);

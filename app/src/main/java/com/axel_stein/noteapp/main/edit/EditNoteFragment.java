@@ -245,7 +245,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         if (mMenu != null) {
             MenuItem item = mMenu.findItem(R.id.menu_pin_note);
             if (item != null) {
-                int icon = pinned ? R.drawable.ic_turned_in_white_24dp : R.drawable.ic_turned_in_not_white_24dp;
+                int icon = pinned ? R.drawable.ic_bookmark_24dp : R.drawable.ic_bookmark_border_24dp;
                 item.setIcon(icon);
                 MenuUtil.tintAttr(getContext(), item, R.attr.menuItemTintColor);
             }
@@ -373,13 +373,10 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     @Override
     public void setNoteStarred(boolean starred) {
         if (mMenu != null) {
-            //int colorAttr = starred ? R.attr.noteStarColor : R.attr.menuItemTintColor;
-
             MenuItem item = mMenu.findItem(R.id.menu_star_note);
             if (item != null) {
-                item.setIcon(starred ? R.drawable.ic_star_white_24dp : R.drawable.ic_star_border_white_24dp);
+                item.setIcon(starred ? R.drawable.ic_star_24dp : R.drawable.ic_star_border_24dp);
             }
-            //MenuUtil.tintAttr(getContext(), item, colorAttr);
             MenuUtil.tintAttr(getContext(), item, R.attr.menuItemTintColor);
         }
     }

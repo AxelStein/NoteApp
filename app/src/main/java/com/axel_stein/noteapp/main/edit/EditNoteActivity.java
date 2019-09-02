@@ -3,6 +3,7 @@ package com.axel_stein.noteapp.main.edit;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
+import com.axel_stein.noteapp.utils.ResourceUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 
 import javax.inject.Inject;
@@ -163,8 +165,11 @@ public class EditNoteActivity extends BaseActivity {
                 @Override
                 public void onNoteChanged(boolean changed) {
                     if (mToolbar != null) {
-                        int backIconRes = mNightMode ? R.drawable.ic_arrow_back_white_24dp : R.drawable.ic_arrow_back_black_24dp;
-                        mToolbar.setNavigationIcon(changed ? R.drawable.ic_done_accent_24dp : backIconRes);
+                        Drawable icon = ResourceUtil.getDrawableTinted(EditNoteActivity.this, R.drawable.ic_arrow_back_24dp, R.attr.menuItemTintColor);
+                        if (changed) {
+                            icon = ResourceUtil.getDrawableTinted(EditNoteActivity.this, R.drawable.ic_done_24dp, R.attr.colorAccent);
+                        }
+                        mToolbar.setNavigationIcon(icon);
                     }
                 }
             });

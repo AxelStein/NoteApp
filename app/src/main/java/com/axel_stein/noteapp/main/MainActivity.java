@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.ActionMode;
 
-import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Notebook;
@@ -65,9 +64,6 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     private static final String BUNDLE_SELECTED_ITEM_ID = "BUNDLE_SELECTED_ITEM_ID";
 
     @Inject
-    AppSettingsRepository mAppSettings;
-
-    @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
 
     @Inject
@@ -80,11 +76,13 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     private FloatingActionButton mFabCreateNote;
     private TextView mTextViewTitle;
     private String mSelectedItemId = ID_INBOX;
+    private boolean mStopped;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
+        EventBusHelper.subscribe(this);
         setContentView(R.layout.activity_main);
 
         mAppBar = findViewById(R.id.app_bar);
@@ -113,6 +111,12 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        EventBusHelper.unsubscribe(this);
+        super.onDestroy();
+    }
+
     @SuppressLint("CheckResult")
     private void openMainMenu() {
         mQueryNotebookInteractor.execute()
@@ -130,31 +134,31 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                         builder.addItem(new PrimaryItem()
                                 .fromId(ID_INBOX)
                                 .fromTitle(R.string.action_inbox)
-                                .fromIcon(R.drawable.ic_inbox));
+                                .fromIcon(R.drawable.ic_inbox_24dp));
                         builder.addItem(new PrimaryItem()
                                 .fromId(ID_STARRED)
                                 .fromTitle(R.string.action_starred)
-                                .fromIcon(R.drawable.ic_star_border));
+                                .fromIcon(R.drawable.ic_star_border_24dp));
 
                         for (Notebook notebook : notebooks) {
                             builder.addItem(new PrimaryItem()
                                     .fromId(notebook.getId())
                                     .fromTitle(notebook.getTitle())
-                                    .fromIcon(R.drawable.ic_book));
+                                    .fromIcon(R.drawable.ic_book_24dp));
                         }
 
                         //builder.addItem(new DividerItem());
                         builder.addItem(new PrimaryItem()
                                 .fromId(ID_ADD_NOTEBOOK)
                                 .fromTitle(R.string.action_add_notebook)
-                                .fromIcon(R.drawable.ic_add_box)
+                                .fromIcon(R.drawable.ic_add_box_24dp)
                                 .fromCheckable(false));
                         builder.addItem(new DividerItem());
 
                         builder.addItem(new PrimaryItem()
                                 .fromId(ID_TRASH)
                                 .fromTitle(R.string.action_trash)
-                                .fromIcon(R.drawable.ic_delete));
+                                .fromIcon(R.drawable.ic_delete_24dp));
 
                         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
                         if (account != null) {
@@ -178,12 +182,12 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     @Override
     protected void onStart() {
         super.onStart();
-        EventBusHelper.subscribe(this);
+        mStopped = false;
     }
 
     @Override
     protected void onStop() {
-        EventBusHelper.unsubscribe(this);
+        mStopped = true;
         super.onStop();
     }
 
@@ -279,6 +283,10 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     private void onMenuItemClick(String itemId, boolean selectable) {
+        if (mStopped) {
+            return;
+        }
+
         if (selectable) {
             mSelectedItemId = itemId;
         }
@@ -364,6 +372,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
+                        exception.printStackTrace();
                         showMessage(new EventBusHelper.Message("Unable to sign in.))"));
                         Log.e("TAG", "Unable to sign in.", exception);
                     }
