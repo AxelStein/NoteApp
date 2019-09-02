@@ -34,3 +34,4 @@ secret/
 .externalNativeBuild
 app/release/
 /.idea/
+release/

@@ -13,5 +13,5 @@
         <item>swipe_action_star</item>
         <!--<item>swipe_action_delete</item>-->
     </string-array>
-    <string name="app_version_number" translatable="false">1.4.0</string>
+    <string name="app_version_number" translatable="false">1.4.2</string>
 </resources>
