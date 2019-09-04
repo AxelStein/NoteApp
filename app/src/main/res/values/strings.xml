@@ -161,5 +161,6 @@
     </plurals>
 
     <string name="last_synced">Last synced:</string>
+    <string name="text_auto_sync">Auto sync</string>
 
 </resources>

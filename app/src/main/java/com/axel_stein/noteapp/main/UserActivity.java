@@ -6,14 +6,17 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.ContentLoadingProgressBar;
 
+import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
@@ -58,9 +61,14 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
     @Inject
     DriveServiceHelper mDriveServiceHelper;
 
+    @Inject
+    AppSettingsRepository mSettings;
+
     private TextView mTextLastSync;
 
     private ContentLoadingProgressBar mProgressBar;
+
+    private SwitchCompat mSwitchAutoSync;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +85,14 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
             actionBar.setTitle("");
         }
 
+        mSwitchAutoSync = findViewById(R.id.switch_auto_sync);
+        mSwitchAutoSync.setChecked(mSettings.autoSyncEnabled());
+        mSwitchAutoSync.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean enable) {
+                mSettings.enableAutoSync(enable);
+            }
+        });
         mProgressBar = findViewById(R.id.progress_bar);
         TextView mTextUserName = findViewById(R.id.text_user_name);
         TextView mTextUserEmail = findViewById(R.id.text_user_email);

@@ -1,5 +1,6 @@
 package com.axel_stein.noteapp.dagger;
 
+import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
@@ -78,5 +79,7 @@ public interface AppComponent {
     void inject(NotebookNotesFragment fragment);
 
     void inject(DriveWorker worker);
+
+    void inject(App app);
 
 }

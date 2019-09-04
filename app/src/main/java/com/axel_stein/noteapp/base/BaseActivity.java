@@ -27,7 +27,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         App.getAppComponent().inject(this);
 
-        mNightMode = mAppSettings.nightMode();
+        mNightMode = mAppSettings.nightModeEnabled();
         setTheme(mNightMode ? R.style.AppThemeDark : R.style.AppTheme);
 
         super.onCreate(savedInstanceState);

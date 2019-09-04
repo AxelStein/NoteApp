@@ -150,6 +150,7 @@
     <string name="msg_import_drive">Все данные на устройстве будут замещены. Продолжить?</string>
     <string name="title_export_drive">Экспорт в Google Drive</string>
     <string name="title_import_drive">Импорт из Google Drive</string>
+    <string name="text_auto_sync">Автосинхронизация</string>
 
 
 </resources>

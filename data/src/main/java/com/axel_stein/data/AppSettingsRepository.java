@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 public class AppSettingsRepository implements SettingsRepository {
     public static final String BACKUP_FILE_NAME = "backup.json";
+    private static final String PREF_DRIVE_AUTO_SYNC = "PREF_DRIVE_AUTO_SYNC";
     private static final String PREF_NOTES_ORDER = "PREF_NOTES_ORDER";
     public static final String PREF_NIGHT_MODE = "PREF_NIGHT_MODE";
     private static final String PREF_FONT_SIZE = "PREF_FONT_SIZE";
@@ -36,15 +37,15 @@ public class AppSettingsRepository implements SettingsRepository {
         try {
             JSONObject object = new JSONObject(json);
 
-            setNightMode(object.optBoolean(PREF_NIGHT_MODE));
+            enableNightMode(object.optBoolean(PREF_NIGHT_MODE));
             setShowNotesContent(object.optBoolean(PREF_SHOW_NOTES_CONTENT));
 
             setPrefSwipeLeftAction(object.optString(PREF_SWIPE_LEFT_ACTION));
             setPrefSwipeRightAction(object.optString(PREF_SWIPE_RIGHT_ACTION));
 
             setPrefFontSize(object.optString(PREF_FONT_SIZE));
-
             setNotesOrder(NoteOrder.from(object.optInt(PREF_NOTES_ORDER)));
+            enableAutoSync(object.optBoolean(PREF_DRIVE_AUTO_SYNC, true));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -55,7 +56,7 @@ public class AppSettingsRepository implements SettingsRepository {
         JSONObject object = new JSONObject();
 
         try {
-            object.put(PREF_NIGHT_MODE, nightMode());
+            object.put(PREF_NIGHT_MODE, nightModeEnabled());
             object.put(PREF_SHOW_NOTES_CONTENT, showNotesContent());
 
             object.put(PREF_SWIPE_LEFT_ACTION, getPrefSwipeLeftAction());
@@ -65,6 +66,7 @@ public class AppSettingsRepository implements SettingsRepository {
 
             NoteOrder order = getNotesOrder();
             object.put(PREF_NOTES_ORDER, order.ordinal());
+            object.put(PREF_DRIVE_AUTO_SYNC, autoSyncEnabled());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -95,11 +97,19 @@ public class AppSettingsRepository implements SettingsRepository {
         mPreferences.edit().putBoolean(PREF_SHOW_NOTES_CONTENT, show).apply();
     }
 
-    private void setNightMode(boolean nightMode) {
-        mPreferences.edit().putBoolean(PREF_NIGHT_MODE, nightMode).apply();
+    public void enableAutoSync(boolean enable) {
+        mPreferences.edit().putBoolean(PREF_DRIVE_AUTO_SYNC, enable).apply();
     }
 
-    public boolean nightMode() {
+    public boolean autoSyncEnabled() {
+        return mPreferences.getBoolean(PREF_DRIVE_AUTO_SYNC, true);
+    }
+
+    private void enableNightMode(boolean enable) {
+        mPreferences.edit().putBoolean(PREF_NIGHT_MODE, enable).apply();
+    }
+
+    public boolean nightModeEnabled() {
         return mPreferences.getBoolean(PREF_NIGHT_MODE, false);
     }
 
