@@ -360,12 +360,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                             mSrcNote.setNotebook(notebook);
                             if (mView != null) {
                                 mView.showMessage(R.string.msg_note_updated);
-
-                                String title = notebook.getTitle();
-                                if (isEmpty(notebook.getId())) {
-                                    title = Notebook.TITLE_INBOX;
-                                }
-                                mView.setNotebookTitle(title);
+                                mView.setNotebookTitle(notebook.getTitle());
                             }
                             EventBusHelper.updateNoteList();
                         }
@@ -652,7 +647,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
 
             final String notebookId = note.getNotebookId();
             if (isEmpty(notebookId)) {
-                mView.setNotebookTitle(Notebook.TITLE_INBOX);
+                mView.setNotebookTitle(null);
             } else {
                 mGetNotebookInteractor.execute(notebookId)
                         .observeOn(AndroidSchedulers.mainThread())

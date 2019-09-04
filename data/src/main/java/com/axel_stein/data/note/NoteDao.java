@@ -67,7 +67,7 @@ public interface NoteDao {
     @Query("SELECT * FROM notes")
     List<NoteEntity> queryAll();
 
-    @Query("SELECT * FROM notes WHERE notebookId IS NULL AND trashed = 0")
+    @Query("SELECT * FROM notes WHERE (notebookId IS NULL OR notebookId = '') AND trashed = 0")
     List<NoteEntity> queryInbox();
 
     @Query("SELECT * FROM notes WHERE starred != 0 AND trashed = 0")
@@ -78,9 +78,6 @@ public interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE notebookId = :notebook AND trashed = 0")
     List<NoteEntity> queryNotebook(String notebook);
-
-    @Query("SELECT * FROM notes WHERE notebookId = :notebook")
-    List<NoteEntity> queryNotebookTrashed(String notebook);
 
     @Query("SELECT * FROM notes WHERE trashed = 0 AND (title LIKE :query OR content LIKE :query)")
     List<NoteEntity> search(String query);

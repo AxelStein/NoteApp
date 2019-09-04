@@ -284,9 +284,12 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     }
 
     @Override
-    public void setNotebookTitle(String notebook) {
-        ViewUtil.show(!isEmpty(notebook), mNotebookView);
-        ViewUtil.setText(mNotebookView, notebook);
+    public void setNotebookTitle(String title) {
+        if (isEmpty(title)) {
+            title = getString(R.string.action_inbox);
+        }
+        ViewUtil.show(!isEmpty(title), mNotebookView);
+        ViewUtil.setText(mNotebookView, title);
     }
 
     @Override

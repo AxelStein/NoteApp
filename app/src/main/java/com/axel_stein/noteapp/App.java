@@ -8,7 +8,6 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
 import com.axel_stein.data.AppSettingsRepository;
-import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.noteapp.dagger.AppComponent;
 import com.axel_stein.noteapp.dagger.AppModule;
 import com.axel_stein.noteapp.dagger.DaggerAppComponent;
@@ -30,11 +29,7 @@ public class App extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Notebook.TITLE_INBOX = getString(R.string.action_inbox);
-        Notebook.ICON_INBOX = R.drawable.ic_inbox_24dp;
-
         sAppComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
-
         sAppComponent.inject(this);
         if (mSettings.autoSyncEnabled()) {
             Constraints constraints = new Constraints.Builder()

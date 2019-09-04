@@ -10,31 +10,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Notebook {
     public static final String ID_INBOX = "inbox";
     public static final String ID_ADD = "add";
-    public static String TITLE_INBOX;
-    public static int ICON_INBOX;
-
-    public static Notebook inbox() {
-        Notebook n = new Notebook();
-        n.setId(ID_INBOX);
-        n.setTitle(TITLE_INBOX);
-        n.iconRes = ICON_INBOX;
-        return n;
-    }
-
-    public static Notebook addNotebook() {
-        Notebook n = new Notebook();
-        n.setId(ID_INBOX);
-        n.setTitle(TITLE_INBOX);
-        n.iconRes = ICON_INBOX;
-        return n;
-    }
-
-    public static Notebook from(String id, String title) {
-        Notebook n = new Notebook();
-        n.setId(id);
-        n.setTitle(title);
-        return n;
-    }
 
     private String id;
     private String title;

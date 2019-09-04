@@ -27,10 +27,10 @@ import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.IconTextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import static com.axel_stein.domain.model.Notebook.ID_ADD;
+import static com.axel_stein.domain.utils.TextUtil.notNullString;
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 @SuppressWarnings("SameParameterValue")
@@ -79,28 +79,24 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         mSelectedNotebookId = selectedNotebookId;
 
         mNotebooks = new ArrayList<>(notebooks);
-        mNotebooks.add(0, Notebook.inbox());
+        mNotebooks.add(0, createInboxItem(context));
+        mNotebooks.add(createAddItem(context));
+    }
 
-        Notebook add = new Notebook();
-        add.setId(Notebook.ID_ADD);
-        add.setTitle(context.getString(R.string.action_add_notebook));
-        add.setIconRes(R.drawable.ic_add_box_24dp);
-        mNotebooks.add(add);
+    private Notebook createInboxItem(Context context) {
+        Notebook item = new Notebook();
+        item.setId(Notebook.ID_INBOX);
+        item.setTitle(context.getString(R.string.action_inbox));
+        item.setIconRes(R.drawable.ic_inbox_24dp);
+        return item;
+    }
 
-        Collections.sort(mNotebooks, new Comparator<Notebook>() {
-            @Override
-            public int compare(Notebook n1, Notebook n2) {
-                boolean ch1 = n1.getId().equals(mSelectedNotebookId);
-                boolean ch2 = n2.getId().equals(mSelectedNotebookId);
-
-                if (ch1 && !ch2) {
-                    return -1;
-                } else if (!ch1 && ch2) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
+    private Notebook createAddItem(Context context) {
+        Notebook item = new Notebook();
+        item.setId(ID_ADD);
+        item.setTitle(context.getString(R.string.action_add_notebook));
+        item.setIconRes(R.drawable.ic_add_box_24dp);
+        return item;
     }
 
     @Override
@@ -152,12 +148,17 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
         Adapter adapter = new Adapter(new OnNotebookCheckedListener() {
             @Override
             public void onNotebookChecked(Notebook notebook) {
-                if (notebook.getId().equals(Notebook.ID_ADD)) {
+                String id = notNullString(notebook.getId());
+                if (id.equals(ID_ADD)) {
                     dismiss();
                     AddNotebookDialog.launch(getActivity());
                     return;
                 }
-                if (notebook.getId().equals(Notebook.ID_INBOX)) {
+                if (id.equals(mSelectedNotebookId)) {
+                    dismiss();
+                    return;
+                }
+                if (id.equals(Notebook.ID_INBOX)) {
                     notebook = null;
                 }
                 mListener.onNotebookChecked(notebook);
@@ -230,7 +231,7 @@ public class CheckNotebookDialog extends AppCompatDialogFragment {
             int icon = notebook.getIconRes();
             holder.mTitle.setIconLeft(icon != 0 ? icon : R.drawable.ic_book_24dp);
 
-            if (notebook.getId().equals(Notebook.ID_ADD)) {
+            if (notebook.getId().equals(ID_ADD)) {
                 ViewUtil.hide(holder.mChecked);
             } else {
                 ViewUtil.show(holder.mChecked);

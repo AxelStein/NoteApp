@@ -10,4 +10,11 @@ public class TextUtil {
         return !isEmpty(s);
     }
 
+    public static String notNullString(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s;
+    }
+
 }
