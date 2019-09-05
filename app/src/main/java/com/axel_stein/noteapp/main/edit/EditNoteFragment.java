@@ -174,7 +174,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         MenuUtil.show(mMenu, !mTrash && mUpdate, R.id.menu_move_to_trash, R.id.menu_duplicate);
         MenuUtil.show(mMenu, !mTrash, R.id.menu_select_notebook, R.id.menu_share);
         MenuUtil.show(mMenu, mTrash, R.id.menu_restore);
-        MenuUtil.show(mMenu, mUpdate, R.id.menu_delete);
+        MenuUtil.show(mMenu, mTrash, R.id.menu_delete);
     }
 
     @Override
