@@ -27,7 +27,9 @@ import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.ScrollableFragment;
 import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
-import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
+import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
+import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog;
+import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog.Builder;
 import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.list.NotesContract.Presenter;
 import com.axel_stein.noteapp.utils.DisplayUtil;
@@ -37,16 +39,18 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.text.TextUtils.isEmpty;
 
 public class NotesFragment extends Fragment implements NotesContract.View,
-        CheckNotebookDialog.OnNotebookCheckedListener,
+        SelectNotebookDialog.OnMenuItemClickListener,
         ScrollableFragment,
         BottomMenuDialog.OnMenuItemClickListener {
 
     private static final String TAG_SORT_NOTES = "com.axel_stein.noteapp.notes.list.TAG_SORT_NOTES";
+    private static final String TAG_SELECT_NOTEBOOK = "com.axel_stein.noteapp.notes.list.TAG_SELECT_NOTEBOOK";
 
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
@@ -260,7 +264,15 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
     @Override
     public void showSelectNotebookView(List<Notebook> notebooks) {
-        CheckNotebookDialog.launch(this, notebooks, null);
+        Builder builder = new Builder();
+        builder.setTitle(getString(R.string.title_select_notebook));
+        builder.setAction(getString(R.string.action_new_notebook));
+
+        List<Notebook> items = new ArrayList<>(notebooks);
+        items.add(0, Notebook.from(Notebook.ID_INBOX, getString(R.string.action_inbox)));
+        builder.setItems(items);
+
+        builder.show(this, TAG_SELECT_NOTEBOOK);
     }
 
     @Override
@@ -283,17 +295,10 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         }
     }
 
-    @Override
-    public void onNotebookChecked(Notebook notebook) {
-        if (mPresenter != null) {
-            mPresenter.onNotebookSelected(notebook);
-        }
-    }
-
     @Subscribe
     public void onNotebookAdded(EventBusHelper.AddNotebook e) {
-        onNotebookChecked(e.getNotebook());
         if (mPresenter != null) {
+            mPresenter.onNotebookSelected(e.getNotebook());
             mPresenter.stopCheckMode();
         }
     }
@@ -332,6 +337,20 @@ public class NotesFragment extends Fragment implements NotesContract.View,
             mPresenter.onSortMenuItemClick(item);
         }
         dialog.dismiss();
+    }
+
+    @Override
+    public void onMenuItemClick(SelectNotebookDialog dialog, String tag, Notebook notebook) {
+        dialog.dismiss();
+        if (mPresenter != null) {
+            mPresenter.onNotebookSelected(notebook);
+        }
+    }
+
+    @Override
+    public void onActionClick(SelectNotebookDialog dialog) {
+        dialog.dismiss();
+        AddNotebookDialog.launch(this);
     }
 
     interface NoteItemListener {

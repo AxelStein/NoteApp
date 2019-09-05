@@ -5,17 +5,19 @@ import androidx.annotation.Nullable;
 
 import com.axel_stein.domain.utils.CompareBuilder;
 import com.axel_stein.domain.utils.TextUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Notebook {
     public static final String ID_INBOX = "inbox";
-    public static final String ID_ADD = "add";
+
+    public static Notebook from(String id, String title) {
+        Notebook notebook = new Notebook();
+        notebook.setId(id);
+        notebook.setTitle(title);
+        return notebook;
+    }
 
     private String id;
     private String title;
-
-    @JsonIgnore
-    private int iconRes;
 
     public boolean hasId() {
         return !TextUtil.isEmpty(id);
@@ -39,14 +41,6 @@ public class Notebook {
 
     public void setTitle(@Nullable String title) {
         this.title = title;
-    }
-
-    public void setIconRes(int iconRes) {
-        this.iconRes = iconRes;
-    }
-
-    public int getIconRes() {
-        return iconRes;
     }
 
     @Override

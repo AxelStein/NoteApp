@@ -151,6 +151,7 @@
     <string name="title_export_drive">Экспорт в Google Drive</string>
     <string name="title_import_drive">Импорт из Google Drive</string>
     <string name="text_auto_sync">Автосинхронизация</string>
+    <string name="action_new_notebook">+ Новый блокнот</string>
 
 
 </resources>

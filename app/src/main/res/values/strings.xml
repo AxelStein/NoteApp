@@ -162,5 +162,6 @@
 
     <string name="last_synced">Last synced:</string>
     <string name="text_auto_sync">Auto sync</string>
+    <string name="action_new_notebook">+ New notebook</string>
 
 </resources>

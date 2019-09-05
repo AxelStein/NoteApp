@@ -26,7 +26,9 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
-import com.axel_stein.noteapp.dialogs.notebook.CheckNotebookDialog;
+import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
+import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog;
+import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog.Builder;
 import com.axel_stein.noteapp.main.edit.EditNoteContract.Presenter;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -38,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,10 +49,11 @@ import static android.text.TextUtils.isEmpty;
 
 public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         ConfirmDialog.OnConfirmListener,
-        CheckNotebookDialog.OnNotebookCheckedListener {
+        SelectNotebookDialog.OnMenuItemClickListener {
 
     private static final String TAG_SAVE_NOTE = "TAG_SAVE_NOTE";
     private static final String TAG_DELETE_NOTE = "TAG_DELETE_NOTE";
+    private static final String TAG_SELECT_NOTEBOOK = "TAG_SELECT_NOTEBOOK";
 
     private EditText mEditTitle;
     private EditText mEditContent;
@@ -359,8 +363,17 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     }
 
     @Override
-    public void showSelectNotebookView(List<Notebook> notebooks, String selectedNotebook) {
-        CheckNotebookDialog.launch(this, notebooks, selectedNotebook);
+    public void showSelectNotebookView(List<Notebook> notebooks, String selectedNotebookId) {
+        Builder builder = new Builder();
+        builder.setTitle(getString(R.string.title_select_notebook));
+        builder.setAction(getString(R.string.action_new_notebook));
+
+        List<Notebook> items = new ArrayList<>(notebooks);
+        items.add(0, Notebook.from(Notebook.ID_INBOX, getString(R.string.action_inbox)));
+        builder.setItems(items);
+
+        builder.setSelectedNotebookId(selectedNotebookId);
+        builder.show(this, TAG_SELECT_NOTEBOOK);
     }
 
     @Override
@@ -412,13 +425,6 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         }
     }
 
-    @Override
-    public void onNotebookChecked(Notebook notebook) {
-        if (mPresenter != null) {
-            mPresenter.setNotebook(notebook);
-        }
-    }
-
     void setNotebookView(IconTextView view) {
         mNotebookView = view;
         if (mNotebookView != null) {
@@ -435,7 +441,23 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
 
     @Subscribe
     public void onNotebookAdded(EventBusHelper.AddNotebook e) {
-        onNotebookChecked(e.getNotebook());
+        if (mPresenter != null) {
+            mPresenter.setNotebook(e.getNotebook());
+        }
+    }
+
+    @Override
+    public void onMenuItemClick(SelectNotebookDialog dialog, String tag, Notebook notebook) {
+        dialog.dismiss();
+        if (mPresenter != null) {
+            mPresenter.setNotebook(notebook);
+        }
+    }
+
+    @Override
+    public void onActionClick(SelectNotebookDialog dialog) {
+        dialog.dismiss();
+        AddNotebookDialog.launch(this);
     }
 
 }
