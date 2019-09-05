@@ -8,9 +8,9 @@
     <string name="action_restore">Восстановить</string>
     <string name="action_trash">Корзина</string>
     <string name="action_empty_trash">Очистить корзину</string>
-    <string name="action_delete">Удалить</string>
+    <string name="action_delete">Удалить навсегда</string>
     <string name="action_search">Поиск</string>
-    <string name="action_move_to_trash">Переместить в корзину</string>
+    <string name="action_move_to_trash">Удалить</string>
     <string name="action_select_all">Выделить все</string>
     <string name="action_rename">Переименовать</string>
     <string name="action_cancel">Отмена</string>
@@ -58,7 +58,7 @@
     <string name="pref_swipe_left">Свайп влево</string>
     <string name="pref_swipe_right">Свайп вправо</string>
     <string name="pref_swipe_action_none">Ничего</string>
-    <string name="pref_swipe_action_trash_restore">В корзину / Восстановить</string>
+    <string name="pref_swipe_action_trash_restore">Удалить / Восстановить</string>
     <string name="pref_swipe_action_delete">Удалить</string>
     <string name="pref_swipe_action_pin">Прикрепить / Открепить</string>
     <string name="pref_swipe_action_star">Отметить / Убрать из отмеченных</string>
@@ -93,8 +93,8 @@
     <string name="title_delete_notebook">Удалить блокнот \'%1$s\'?</string>
     <string name="title_delete_notebooks">Удалить блокноты?</string>
     <string name="title_add_notebook">Добавить блокнот</string>
-    <string name="title_delete_note">Удалить заметку?</string>
-    <string name="title_delete_notes">Удалить заметки?</string>
+    <string name="title_delete_note">Удалить заметку навсегда?</string>
+    <string name="title_delete_notes">Удалить заметки навсегда?</string>
     <string name="title_select_notebook">Переместить в блокнот</string>
     <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
 
@@ -110,10 +110,10 @@
     <string name="msg_notes_updated">Заметки обновлены</string>
     <string name="msg_note_restored">Заметка восстановлена</string>
     <string name="msg_notes_restored">Заметки восстановлены</string>
-    <string name="msg_note_trashed">Заметка добавлена в корзину</string>
-    <string name="msg_notes_trashed">Заметки добавлены в корзину</string>
-    <string name="msg_note_deleted">Заметка удалена</string>
-    <string name="msg_notes_deleted">Заметки удалены</string>
+    <string name="msg_note_trashed">Заметка удалена</string>
+    <string name="msg_notes_trashed">Заметки удалены</string>
+    <string name="msg_note_deleted">Заметка удалена навсегда</string>
+    <string name="msg_notes_deleted">Заметки удалены навсегда</string>
     <string name="msg_delete_notebook">Блокнот и заметки будут удалены навсегда.</string>
     <string name="msg_empty_trash">Все заметки в корзине будут удалены навсегда.</string>
     <string name="msg_delete_note">Заметка будет удалена навсегда.</string>
