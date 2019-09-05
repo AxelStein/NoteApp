@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/edit_title"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="0dp"
+
+        android:background="@null"
+        android:hint="@string/hint_title"
+        android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
+        android:maxLength="@integer/max_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        tools:text="10 Best Note Apps for iPhone"/>
+
+    <ImageButton
+        android:id="@+id/button_more_options"
+        style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/content_clear"
+        android:src="@drawable/ic_more_vert_24dp"
+        android:tint="?attr/menuItemTintColor"/>
+
+</LinearLayout>

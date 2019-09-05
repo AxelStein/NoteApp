@@ -162,5 +162,7 @@
 
     <string name="last_synced">Last synced:</string>
     <string name="text_auto_sync">Auto sync</string>
+    <string name="hint_new_item">New item</string>
+    <string name="action_check_list">Check list</string>
 
 </resources>

@@ -3,10 +3,13 @@ package com.axel_stein.noteapp.main.edit;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -128,6 +131,38 @@ public class EditNoteActivity extends BaseActivity {
                         }
                     });
         }
+
+        final View viewMain = findViewById(R.id.coordinator_edit);
+        viewMain.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                viewMain.getWindowVisibleDisplayFrame(r);
+                int screenHeight = viewMain.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+                if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+                    // keyboard is opened
+                    if (!isKeyboardShowing) {
+                        isKeyboardShowing = true;
+                        onKeyboardVisibilityChanged(true);
+                    }
+                }
+                else {
+                    // keyboard is closed
+                    if (isKeyboardShowing) {
+                        isKeyboardShowing = false;
+                        onKeyboardVisibilityChanged(false);
+                    }
+                }
+            }
+        });
+    }
+
+    private boolean isKeyboardShowing = false;
+    private void onKeyboardVisibilityChanged(boolean opened) {
+        if (!opened) {
+            EventBusHelper.hideKeyboard();
+        }
     }
 
     private void handleIntent() {
@@ -177,6 +212,14 @@ public class EditNoteActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStop() {
+        if (mPresenter != null) {
+            mPresenter.onStop();
+        }
+        super.onStop();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.activity_edit_note, menu);
         return super.onCreateOptionsMenu(menu);
@@ -196,7 +239,6 @@ public class EditNoteActivity extends BaseActivity {
             }
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

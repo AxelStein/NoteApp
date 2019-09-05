@@ -1,103 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical">
 
-    <LinearLayout
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
-        android:orientation="vertical"
+    <View
+        android:id="@+id/focus_view"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edit_title"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/check_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        tools:listitem="@layout/item_check_list"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="wrap_content">
 
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-
-            android:background="@null"
-            android:hint="@string/hint_title"
-            android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
-            android:maxLength="@integer/max_title"
-            android:textSize="20sp"
-            android:textStyle="bold"
-
-            tools:text="10 Best Note Apps for iPhone You Can Use"/>
-
-        <View
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:visibility="gone"
-            android:background="?android:attr/listDivider" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="0dp"
-
-            app:counterEnabled="true"
-            app:counterMaxLength="@integer/max_content"
-            app:hintEnabled="false">
-
-            <EditText
-                android:id="@+id/edit_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+
                 android:background="@null"
-                android:layout_marginBottom="16dp"
-                android:hint="@string/hint_content"
+                android:hint="@string/hint_title"
                 android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
-                android:lineSpacingMultiplier="1.5"
-                android:padding="0dp"
-                android:maxLength="@integer/max_content"
-                android:minHeight="48dp"
-                android:textSize="16sp"
-                tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things"
-                android:importantForAutofill="no" />
+                android:maxLength="@integer/max_title"
+                android:textSize="20sp"
+                android:textStyle="bold"
 
-        </com.google.android.material.textfield.TextInputLayout>
+                tools:text="10 Best Note Apps for iPhone You Can Use"/>
 
-        <TextView
-            android:id="@+id/text_date"
-            tools:text="23 oct"
-            android:visibility="gone"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="?attr/menuItemTintColor"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"/>
+            <View
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:visibility="gone"
+                android:background="?android:attr/listDivider" />
 
-        <TextView
-            android:id="@+id/text_update"
-            tools:text="23 oct"
-            android:visibility="gone"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textColor="?attr/menuItemTintColor"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-    </LinearLayout>
+                android:layout_marginTop="12dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="0dp"
 
-</androidx.core.widget.NestedScrollView>
+                app:counterEnabled="true"
+                app:counterMaxLength="@integer/max_content"
+                app:hintEnabled="false">
+
+                <EditText
+                    android:id="@+id/edit_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_marginBottom="16dp"
+                    android:hint="@string/hint_content"
+                    android:inputType="textNoSuggestions|textCapSentences|textMultiLine"
+                    android:lineSpacingMultiplier="1.5"
+                    android:padding="0dp"
+                    android:maxLength="@integer/max_content"
+                    android:minHeight="48dp"
+                    android:textSize="16sp"
+                    tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things"
+                    android:importantForAutofill="no" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/text_date"
+                tools:text="23 oct"
+                android:visibility="gone"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="?attr/menuItemTintColor"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+            <TextView
+                android:id="@+id/text_update"
+                tools:text="23 oct"
+                android:visibility="gone"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="?attr/menuItemTintColor"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

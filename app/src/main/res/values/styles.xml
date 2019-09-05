@@ -79,11 +79,7 @@
     </style>
 
     <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
-        <item name="android:dropDownVerticalOffset">4dp</item>
-        <item name="android:dropDownHorizontalOffset">-4dp</item>
-    </style>
-
-    <style name="NotebookPopupMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <!--<item name="android:dropDownVerticalOffset">4dp</item>-->
         <item name="android:dropDownHorizontalOffset">-4dp</item>
     </style>
 

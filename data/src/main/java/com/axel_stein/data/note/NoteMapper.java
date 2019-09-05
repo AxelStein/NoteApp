@@ -24,6 +24,8 @@ class NoteMapper {
         note.setPinned(entity.isPinned());
         note.setStarred(entity.isStarred());
         note.setModifiedDate(entity.getModifiedDate());
+        note.setCheckList(entity.isCheckList());
+        note.setCheckListJson(entity.getCheckListJson());
         return note;
     }
 
@@ -42,6 +44,8 @@ class NoteMapper {
         entity.setPinned(note.isPinned());
         entity.setStarred(note.isStarred());
         entity.setModifiedDate(note.getModifiedDate());
+        entity.setCheckList(note.isCheckList());
+        entity.setCheckListJson(note.getCheckListJson());
         return entity;
     }
 

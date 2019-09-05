@@ -67,6 +67,12 @@ public class EventBusHelper {
         EventBus.getDefault().postSticky(o);
     }
 
+    public static void hideKeyboard() {
+        post(new HideKeyboard());
+    }
+
+    public static class HideKeyboard {}
+
     static class SignOutEvent {
     }
 

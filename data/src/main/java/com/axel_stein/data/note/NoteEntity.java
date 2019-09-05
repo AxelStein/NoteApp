@@ -40,6 +40,12 @@ public class NoteEntity {
     @ColumnInfo
     private DateTime modifiedDate;
 
+    @ColumnInfo
+    private boolean checkList;
+
+    @ColumnInfo
+    private String checkListJson;
+
     @NonNull
     public String getId() {
         return id;
@@ -121,4 +127,19 @@ public class NoteEntity {
         this.starred = starred;
     }
 
+    public boolean isCheckList() {
+        return checkList;
+    }
+
+    public void setCheckList(boolean checkList) {
+        this.checkList = checkList;
+    }
+
+    public String getCheckListJson() {
+        return checkListJson;
+    }
+
+    public void setCheckListJson(String checkListJson) {
+        this.checkListJson = checkListJson;
+    }
 }

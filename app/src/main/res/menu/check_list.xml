@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+    <item
+        android:id="@+id/menu_hide_checked_items"
+        android:title="Hide checked items"/>
+
+    <item
+        android:id="@+id/menu_show_checked_items"
+        android:title="Show checked items"/>
+    -->
+
+    <item
+        android:id="@+id/menu_remove_checked_items"
+        android:title="Remove checked items"/>
+
+</menu>

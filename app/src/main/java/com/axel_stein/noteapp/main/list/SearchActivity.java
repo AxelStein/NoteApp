@@ -115,7 +115,7 @@ public class SearchActivity extends BaseActivity {
                     handler.postDelayed(mSearchTask, SEARCH_INPUT_DELAY);
 
                     boolean empty = TextUtils.isEmpty(s);
-                    ViewUtil.show(!empty, mButtonClear);
+                    ViewUtil.setVisible(!empty, mButtonClear);
                 }
             }
         };
@@ -157,7 +157,7 @@ public class SearchActivity extends BaseActivity {
             mEditSearch.requestFocus();
         }
 
-        ViewUtil.show(mEditSearch.length() > 0, mButtonClear);
+        ViewUtil.setVisible(mEditSearch.length() > 0, mButtonClear);
     }
 
     @Override

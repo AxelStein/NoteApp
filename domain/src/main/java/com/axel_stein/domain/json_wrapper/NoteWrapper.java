@@ -26,6 +26,12 @@ public class NoteWrapper {
     @JsonProperty("modified_date")
     private String modifiedDate;
 
+    @JsonProperty("check_list")
+    private boolean checkList;
+
+    @JsonProperty("check_list")
+    private String checkListJson;
+
     public static NoteWrapper fromNote(Note note) {
         NoteWrapper wrapper = new NoteWrapper();
         wrapper.id = note.getId();
@@ -36,6 +42,8 @@ public class NoteWrapper {
         wrapper.content = note.getContent();
         wrapper.pinned = note.isPinned();
         wrapper.starred = note.isStarred();
+        wrapper.checkList = note.isCheckList();
+        wrapper.checkListJson = note.getCheckListJson();
 
         DateTime t = note.getTrashedDate();
         if (t != null) {
@@ -61,6 +69,8 @@ public class NoteWrapper {
         note.setTrashed(trashed);
         note.setTrashedDate(TextUtil.isEmpty(trashedDate) ? new DateTime() : DateTime.parse(trashedDate));
         note.setModifiedDate(TextUtil.isEmpty(modifiedDate) ? new DateTime() : DateTime.parse(modifiedDate));
+        note.setCheckList(checkList);
+        note.setCheckListJson(checkListJson);
         return note;
     }
 
@@ -136,4 +146,27 @@ public class NoteWrapper {
         this.pinned = pinned;
     }
 
+    public String getTrashedDate() {
+        return trashedDate;
+    }
+
+    public void setTrashedDate(String trashedDate) {
+        this.trashedDate = trashedDate;
+    }
+
+    public boolean isCheckList() {
+        return checkList;
+    }
+
+    public void setCheckList(boolean checkList) {
+        this.checkList = checkList;
+    }
+
+    public String getCheckListJson() {
+        return checkListJson;
+    }
+
+    public void setCheckListJson(String checkListJson) {
+        this.checkListJson = checkListJson;
+    }
 }
