@@ -79,7 +79,7 @@ public class QueryNoteInteractor {
                 LocalDate today = new LocalDate();
                 for (Note note : result) {
                     LocalDate date = new LocalDate(note.getTrashedDate());
-                    date = date.plusMonths(1);
+                    date = date.plusDays(7);
                     if (date.equals(today) || date.isBefore(today)) {
                         mNoteRepository.delete(note);
                     }
