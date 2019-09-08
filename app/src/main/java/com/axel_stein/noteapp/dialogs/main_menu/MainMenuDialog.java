@@ -103,10 +103,10 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
         CircleImageView mViewUserPhoto = view.findViewById(R.id.user_photo);
 
         ViewUtil.setText(mTextUserName, mUserName);
-        ViewUtil.show(notEmpty(mUserName), mTextUserName);
+        ViewUtil.setVisible(notEmpty(mUserName), mTextUserName);
 
         ViewUtil.setText(mTextUserEmail, mUserEmail);
-        ViewUtil.show(notEmpty(mUserEmail), mTextUserEmail);
+        ViewUtil.setVisible(notEmpty(mUserEmail), mTextUserEmail);
 
         Picasso.get().load(mUserPhotoUrl).placeholder(R.drawable.ic_account_circle_36dp).into(mViewUserPhoto);
 

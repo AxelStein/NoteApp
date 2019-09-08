@@ -171,7 +171,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
             mAdapter.setNotes(list);
         }
 
-        ViewUtil.show(list != null && list.size() == 0, mEmptyView);
+        ViewUtil.setVisible(list != null && list.size() == 0, mEmptyView);
 
         FragmentActivity activity = getActivity();
         if (activity != null) {
@@ -399,11 +399,13 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         @Override
         public void onBindViewHolder(NoteViewHolder holder, int position) {
             Note note = getItem(position);
+            boolean checkList = note.isCheckList();
+
             holder.setNote(note);
             if (mPresenter != null) {
-                holder.setChecked(mPresenter.hasChecked(), mPresenter.isChecked(note));
+                holder.setChecked(mPresenter.hasChecked(), mPresenter.isChecked(note), checkList);
             } else {
-                holder.setChecked(false, false);
+                holder.setChecked(false, false, checkList);
             }
         }
 
@@ -447,18 +449,18 @@ public class NotesFragment extends Fragment implements NotesContract.View,
             void setNote(Note note) {
                 String content = note.getContent();
 
-                ViewUtil.show(!isEmpty(content), mContent);
+                ViewUtil.setVisible(!isEmpty(content), mContent);
 
                 mTitle.setText(note.getTitle());
                 mContent.setText(content);
 
-                ViewUtil.show(note.isPinned(), mPin);
-                ViewUtil.show(note.isStarred(), mStar);
+                ViewUtil.setVisible(note.isPinned(), mPin);
+                ViewUtil.setVisible(note.isStarred(), mStar);
             }
 
-            void setChecked(boolean checkable, boolean checked) {
+            void setChecked(boolean checkable, boolean checked, boolean checkList) {
                 if (!checkable) {
-                    mIcon.setImageResource(R.drawable.ic_description_24dp);
+                    mIcon.setImageResource(checkList ? R.drawable.ic_assignment_24dp : R.drawable.ic_description_24dp);
                 } else if (checked) {
                     mIcon.setImageResource(R.drawable.ic_check_box_24dp);
                 } else {

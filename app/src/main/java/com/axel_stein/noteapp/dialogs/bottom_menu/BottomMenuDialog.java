@@ -84,7 +84,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.dialog_bottom_menu, null);
 
         View layoutTitle = view.findViewById(R.id.layout_title);
-        ViewUtil.show(!TextUtils.isEmpty(mTitle), layoutTitle);
+        ViewUtil.setVisible(!TextUtils.isEmpty(mTitle), layoutTitle);
 
         TextView textTitle = view.findViewById(R.id.text_title);
         textTitle.setText(mTitle);

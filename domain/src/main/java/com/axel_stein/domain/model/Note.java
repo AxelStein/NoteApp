@@ -21,6 +21,8 @@ public class Note implements Cloneable {
     private boolean trashed;
     private DateTime trashedDate;
     private DateTime modifiedDate;
+    private boolean checkList;
+    private String checkListJson;
 
     public boolean hasId() {
         return !TextUtil.isEmpty(id);
@@ -123,6 +125,22 @@ public class Note implements Cloneable {
         this.starred = starred;
     }
 
+    public void setCheckList(boolean checkList) {
+        this.checkList = checkList;
+    }
+
+    public boolean isCheckList() {
+        return checkList;
+    }
+
+    public void setCheckListJson(String checkListJson) {
+        this.checkListJson = checkListJson;
+    }
+
+    public String getCheckListJson() {
+        return checkListJson;
+    }
+
     public Note copy() {
         Note copy;
         try {
@@ -147,6 +165,8 @@ public class Note implements Cloneable {
             builder.append(trashed, note.trashed);
             builder.append(pinned, note.pinned);
             builder.append(starred, note.starred);
+            builder.append(checkList, note.checkList);
+            builder.append(checkListJson, note.checkListJson);
 
             return builder.areEqual();
         }

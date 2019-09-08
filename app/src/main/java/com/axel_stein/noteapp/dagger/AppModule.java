@@ -32,7 +32,9 @@ public class AppModule {
     @Provides
     @Singleton
     AppDatabase provideDatabase(App app) {
-        return Room.databaseBuilder(app, AppDatabase.class, app.getPackageName()).build();
+        return Room.databaseBuilder(app, AppDatabase.class, app.getPackageName())
+                .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3)
+                .build();
     }
 
     @Provides

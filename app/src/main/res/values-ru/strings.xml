@@ -152,6 +152,7 @@
     <string name="title_import_drive">Импорт из Google Drive</string>
     <string name="text_auto_sync">Автосинхронизация</string>
     <string name="action_new_notebook">+ Новый блокнот</string>
-
+    <string name="hint_new_item">Новый элемент списка</string>
+    <string name="action_check_list">Список</string>
 
 </resources>

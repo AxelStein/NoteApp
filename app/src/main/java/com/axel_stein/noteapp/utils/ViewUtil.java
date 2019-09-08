@@ -28,28 +28,18 @@ public class ViewUtil {
     }
 
     public static void show(View... views) {
-        show(true, views);
+        setVisible(true, views);
     }
 
     public static void hide(View... views) {
-        show(false, views);
+        setVisible(false, views);
     }
 
-    public static void show(boolean show, View... views) {
+    public static void setVisible(boolean visible, View... views) {
         if (views != null) {
             for (View v : views) {
                 if (v != null) {
-                    v.setVisibility(show ? VISIBLE : GONE);
-                }
-            }
-        }
-    }
-
-    public static void invisible(boolean show, View... views) {
-        if (views != null) {
-            for (View v : views) {
-                if (v != null) {
-                    v.setVisibility(show ? VISIBLE : View.INVISIBLE);
+                    v.setVisibility(visible ? VISIBLE : GONE);
                 }
             }
         }
@@ -74,12 +64,12 @@ public class ViewUtil {
         }
     }
 
-    private static boolean isShown(View view) {
+    public static boolean isVisible(View view) {
         return view != null && view.getVisibility() == VISIBLE;
     }
 
     public static void toggleShow(View view) {
-        show(!isShown(view), view);
+        setVisible(!isVisible(view), view);
     }
 
 }

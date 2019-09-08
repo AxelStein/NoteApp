@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.noteapp.main.edit.EditNotePresenter.CheckItem;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ public interface EditNoteContract {
     interface View {
 
         void setNote(Note note);
+
+        void setNoteCheckList(Note note, List<CheckItem> items);
 
         void showDiscardChangesView();
 
@@ -34,9 +37,22 @@ public interface EditNoteContract {
         void setNotebookTitle(String notebook);
 
         void clearFocus();
+
+        void showCheckList(List<CheckItem> list);
+
+        void hideCheckList();
+
+        List<CheckItem> getCheckItems();
+
+        void setTitle(String title);
+
+        void setContent(String content);
+
     }
 
     interface Presenter {
+
+        void onStop();
 
         void onCreateView(@NonNull View view);
 
@@ -85,6 +101,7 @@ public interface EditNoteContract {
 
         boolean isStarred();
 
+        void actionCheckList();
     }
 
     interface OnNoteChangedListener {

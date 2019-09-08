@@ -22,6 +22,10 @@ import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.main.edit.EditNoteContract.OnNoteChangedListener;
 import com.axel_stein.noteapp.main.edit.EditNoteContract.View;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 import static android.text.TextUtils.isEmpty;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class EditNotePresenter implements EditNoteContract.Presenter {
 
@@ -104,6 +109,13 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     l.onNoteChanged(!notChanged);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onStop() {
+        if (mNote != null && mNote.isCheckList()) {
+            save();
         }
     }
 
@@ -191,6 +203,15 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     public void save() {
         mSaving = true;
         setEditableImpl(false);
+
+        if (mNote.isCheckList() && mView != null) {
+            List<CheckItem> items = mView.getCheckItems();
+            mNote.setCheckListJson(toJson(items));
+            if (items.size() > 0) {
+                mNote.setTitle(items.get(0).getText());
+            }
+            mNote.setContent(toContentFromCheckList(items));
+        }
 
         Completable completable;
 
@@ -643,7 +664,11 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
     @SuppressLint("CheckResult")
     private void setNoteOnView(Note note) {
         if (mView != null) {
-            mView.setNote(note);
+            if (note.isCheckList()) {
+                mView.setNoteCheckList(note, fromJson(note.getTitle(), note.getCheckListJson()));
+            } else {
+                mView.setNote(note);
+            }
 
             final String notebookId = note.getNotebookId();
             if (isEmpty(notebookId)) {
@@ -672,5 +697,175 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
             }
         }
     }
+
+    @Override
+    public void actionCheckList() {
+        if (mView != null) {
+            if (mNote.isCheckList()) {
+                mNote.setCheckList(false);
+                mNote.setCheckListJson(null);
+
+                mSrcNote.setCheckList(false);
+                mSrcNote.setCheckListJson(null);
+
+                List<CheckItem> items = mView.getCheckItems();
+                if (items.size() > 0) {
+                    mNote.setTitle(items.get(0).getText());
+                }
+                mNote.setContent(toContentFromCheckList(mView.getCheckItems()));
+                mView.setTitle(mNote.getTitle());
+                mView.setContent(mNote.getContent());
+                notifyChanged();
+
+                mView.hideCheckList();
+
+                save();
+            } else {
+                mNote.setCheckList(true);
+                mSrcNote.setCheckList(true);
+
+                mView.showCheckList(checkListFromContent(mNote.getTitle(), mNote.getContent()));
+            }
+        }
+    }
+
+    @NonNull
+    private String toContentFromCheckList(@Nullable List<CheckItem> items) {
+        if (items == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < items.size(); i++) {
+            CheckItem item = items.get(i);
+            if (item.isCheckable()) {
+                builder.append(item.getText());
+                if (i < items.size() - 1) {
+                    builder.append("\n");
+                }
+            }
+        }
+        return builder.toString();
+    }
+
+    @NonNull
+    private List<CheckItem> checkListFromContent(@Nullable String title, @Nullable String content) {
+        content = content == null ? "" : content;
+        List<CheckItem> items = new ArrayList<>();
+        String[] lines = content.split("\n");
+
+        CheckItem titleItem = new CheckItem(title);
+        titleItem.setCheckable(false);
+        items.add(titleItem);
+
+        for (String line : lines) {
+            items.add(new CheckItem(line));
+        }
+
+        if (items.size() == 1) {
+            items.add(new CheckItem());
+        }
+
+        return items;
+    }
+
+    @NonNull
+    private List<CheckItem> fromJson(@Nullable String title, @Nullable String json) {
+        //String list = "[{\"text\":\"milk\",\"checked\":false},{\"text\":\"eggs\",\"checked\":true}]";
+        List<CheckItem> items = new ArrayList<>();
+
+        CheckItem titleItem = new CheckItem(title);
+        titleItem.setCheckable(false);
+        items.add(titleItem);
+
+        if (notEmpty(json)) {
+            try {
+                JSONArray array = new JSONArray(json);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.optJSONObject(i);
+                    CheckItem item = new CheckItem();
+                    item.setText(object.optString("text"));
+                    item.setChecked(object.optBoolean("checked"));
+                    items.add(item);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (items.size() == 1) {
+            items.add(new CheckItem());
+        }
+
+        return items;
+    }
+
+
+    @NonNull
+    private String toJson(@Nullable List<CheckItem> items) {
+        JSONArray array = new JSONArray();
+        if (items != null) {
+            for (CheckItem item : items) {
+                if (item.isCheckable()) {
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("checked", item.isChecked());
+                        object.put("text", item.getText());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    array.put(object);
+                }
+            }
+        }
+        return array.toString();
+    }
+
+    static class CheckItem {
+        private String text;
+        private boolean checked;
+        private boolean checkable = true;
+
+        public CheckItem() {
+        }
+
+        public CheckItem(String text) {
+            this.text = text;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public boolean isChecked() {
+            return checked;
+        }
+
+        public void setChecked(boolean checked) {
+            this.checked = checked;
+        }
+
+        public boolean isCheckable() {
+            return checkable;
+        }
+
+        public void setCheckable(boolean checkable) {
+            this.checkable = checkable;
+        }
+
+        @Override
+        public String toString() {
+            return "CheckItem{" +
+                    "text='" + text + '\'' +
+                    ", checked=" + checked +
+                    ", checkable=" + checkable +
+                    '}';
+        }
+
+    }
+
 
 }
