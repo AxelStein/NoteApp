@@ -81,6 +81,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
     private RecyclerView mCheckRecyclerView;
     private CheckListAdapter mCheckListAdapter;
     private View mScrollView;
+    private View mGlassView;
 
     @Nullable
     private IconTextView mNotebookView;
@@ -115,6 +116,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         View root = inflater.inflate(R.layout.fragment_edit_note, container, false);
 
         mScrollView = root.findViewById(R.id.scroll_view);
+        mGlassView = root.findViewById(R.id.glass_view);
 
         mEditTitle = root.findViewById(R.id.edit_title);
         TextInputLayout mContentInputLayout = root.findViewById(R.id.text_input_content);
@@ -183,6 +185,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         mFocusView = null;
         mCheckRecyclerView = null;
         mScrollView = null;
+        mGlassView = null;
         if (mPresenter != null) {
             mPresenter.onDestroyView();
         }
@@ -316,7 +319,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
         mTrash = note.isTrashed();
         mUpdate = note.hasId();
 
-        ViewUtil.enable(!mTrash, mEditTitle, mEditContent, mNotebookView);
+        ViewUtil.enable(!mTrash, mEditTitle, mEditContent, mNotebookView, mCheckRecyclerView);
 
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
@@ -325,18 +328,11 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
 
     @Override
     public void setNoteCheckList(Note note, List<CheckItem> items) {
-        String title = note.getTitle();
-
-        int selectionTitle = mEditTitle.getSelectionStart();
-        mEditTitle.setText(title);
-        if (selectionTitle > 0) {
-            mEditTitle.setSelection(selectionTitle);
-        }
-
         mTrash = note.isTrashed();
         mUpdate = note.hasId();
 
-        ViewUtil.enable(!mTrash, mEditTitle, mNotebookView);
+        ViewUtil.enable(!mTrash, mNotebookView);
+        ViewUtil.setVisible(mTrash, mGlassView);
 
         showCheckList(items);
 

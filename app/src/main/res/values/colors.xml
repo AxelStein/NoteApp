@@ -24,4 +24,7 @@
     <color name="swipe_action_trash">#FFD32F2F</color>
     <color name="swipe_action_star">#FF00796B</color>
     <color name="swipe_action_pin">#FF1976D2</color>
+
+    <color name="glass_view_color_light">#55ffffff</color>
+    <color name="glass_view_color_dark">#551D2733</color>
 </resources>

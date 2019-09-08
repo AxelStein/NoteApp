@@ -8,6 +8,7 @@
     <attr name="appBarColor" format="color|reference"/>
     <attr name="appBarIcon" format="reference"/>
     <attr name="appBarFabIcon" format="reference"/>
+    <attr name="glassViewColor" format="color|reference"/>
 
     <declare-styleable name="IconTextView">
         <attr name="iconTop" format="reference"/>

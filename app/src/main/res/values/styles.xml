@@ -28,6 +28,7 @@
         <item name="appBarIcon">@drawable/ic_menu_black_24dp</item>
         <item name="appBarFabIcon">@drawable/ic_create_white_24dp</item>
         <item name="selectedItemBackgroundColor">@color/selected_item_bg_color_light</item>
+        <item name="glassViewColor">@color/glass_view_color_light</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
@@ -53,6 +54,7 @@
         <item name="appBarIcon">@drawable/ic_menu_white_24dp</item>
         <item name="appBarFabIcon">@drawable/ic_create_black_24dp</item>
         <item name="selectedItemBackgroundColor">@color/selected_item_bg_color_dark</item>
+        <item name="glassViewColor">@color/glass_view_color_dark</item>
     </style>
 
     <style name="DialogThemeDark" parent="Theme.AppCompat.Dialog.Alert">
