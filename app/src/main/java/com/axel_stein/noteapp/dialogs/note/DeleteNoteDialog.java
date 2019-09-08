@@ -77,7 +77,7 @@ public class DeleteNoteDialog extends ConfirmDialog {
 
         DeleteNoteDialog dialog = new DeleteNoteDialog();
         dialog.mNotes = notes;
-        dialog.setTitle(one ? R.string.title_delete_note : R.string.title_delete_notes);
+        dialog.setTitle(R.string.title_delete_note);
         dialog.setMessage(one ? R.string.msg_delete_note : R.string.msg_delete_notes);
         dialog.setPositiveButtonText(R.string.action_delete);
         dialog.setNegativeButtonText(R.string.action_cancel);

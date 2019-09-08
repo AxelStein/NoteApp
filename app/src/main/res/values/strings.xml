@@ -109,8 +109,7 @@
     <string name="title_delete_notebook">Delete notebook \'%1$s\'?</string>
     <string name="title_delete_notebooks">Delete notebooks?</string>
     <string name="title_add_notebook">Add notebook</string>
-    <string name="title_delete_note">Delete note forever?</string>
-    <string name="title_delete_notes">Delete notes forever?</string>
+    <string name="title_delete_note">Are you sure?</string>
     <string name="title_select_notebook">Move to notebook</string>
     <string name="title_discard">Are you sure you want to discard changes?</string>
     <string name="title_export_drive">Export to Google Drive</string>
@@ -130,8 +129,8 @@
     <string name="msg_notes_restored">Notes restored</string>
     <string name="msg_note_trashed">Note deleted</string>
     <string name="msg_notes_trashed">Notes deleted</string>
-    <string name="msg_note_deleted">Note deleted forever</string>
-    <string name="msg_notes_deleted">Notes deleted forever</string>
+    <string name="msg_note_deleted">Note deleted</string>
+    <string name="msg_notes_deleted">Notes deleted</string>
     <string name="msg_delete_notebook">Notebook and notes will be permanently deleted.</string>
     <string name="msg_empty_trash">All notes in trash will be permanently deleted.</string>
     <string name="msg_delete_note">Note will be permanently deleted.</string>

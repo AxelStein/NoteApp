@@ -8,18 +8,17 @@
     <string name="action_restore">Восстановить</string>
     <string name="action_trash">Корзина</string>
     <string name="action_empty_trash">Очистить корзину</string>
-    <string name="action_delete">Удалить навсегда</string>
+    <string name="action_delete">Удалить</string>
     <string name="action_search">Поиск</string>
     <string name="action_move_to_trash">Удалить</string>
     <string name="action_select_all">Выделить все</string>
     <string name="action_rename">Переименовать</string>
     <string name="action_cancel">Отмена</string>
-    <string name="action_add">Добавить</string>
-    <string name="action_ok">ОК</string>
-    <string name="action_add_notebook">Добавить блокнот</string>
+    <string name="action_add">Создать</string>
+    <string name="action_add_notebook">Создать блокнот</string>
     <string name="action_rename_notebook">Переименовать блокнот</string>
     <string name="action_delete_notebook">Удалить блокнот</string>
-    <string name="action_add_note">Добавить заметку</string>
+    <string name="action_add_note">Создать заметку</string>
     <string name="action_share">Поделиться</string>
     <string name="action_discard">Отклонить</string>
     <string name="action_menu">Меню</string>
@@ -32,12 +31,11 @@
     <string name="action_clear">Очистить</string>
     <string name="action_pin_note">Прикрепить заметку</string>
     <string name="action_sign_out">Выйти</string>
-    <string name="action_star_note">Пометить заметку</string>
-    <string name="action_starred">Помеченные</string>
+    <string name="action_star_note">Отметить заметку</string>
+    <string name="action_starred">Отмеченные</string>
     <string name="action_sort">Сортировать</string>
     <string name="action_sort_title">По названию</string>
     <string name="action_sort_views">По кол-ву просмотров</string>
-    <string name="action_sort_created">По дате создания</string>
     <string name="action_sort_date">По дате</string>
     <string name="action_sign_in">Войти</string>
 
@@ -58,10 +56,10 @@
     <string name="pref_swipe_left">Свайп влево</string>
     <string name="pref_swipe_right">Свайп вправо</string>
     <string name="pref_swipe_action_none">Ничего</string>
-    <string name="pref_swipe_action_trash_restore">Удалить / Восстановить</string>
+    <string name="pref_swipe_action_trash_restore">Удалить</string>
     <string name="pref_swipe_action_delete">Удалить</string>
-    <string name="pref_swipe_action_pin">Прикрепить / Открепить</string>
-    <string name="pref_swipe_action_star">Отметить / Убрать из отмеченных</string>
+    <string name="pref_swipe_action_pin">Прикрепить</string>
+    <string name="pref_swipe_action_star">Отметить</string>
     <string name="pref_category_editor">Редактор заметок</string>
     <string name="pref_export_drive">Экспорт в Google Drive</string>
     <string name="pref_import_drive">Импорт из Google Drive</string>
@@ -91,10 +89,8 @@
     <string name="title_import">Импорт…</string>
     <string name="title_rename_notebook">Переименовать блокнот</string>
     <string name="title_delete_notebook">Удалить блокнот \'%1$s\'?</string>
-    <string name="title_delete_notebooks">Удалить блокноты?</string>
-    <string name="title_add_notebook">Добавить блокнот</string>
-    <string name="title_delete_note">Удалить заметку навсегда?</string>
-    <string name="title_delete_notes">Удалить заметки навсегда?</string>
+    <string name="title_add_notebook">Создать блокнот</string>
+    <string name="title_delete_note">Вы уверены?</string>
     <string name="title_select_notebook">Переместить в блокнот</string>
     <string name="title_discard">Вы уверены, что хотите отклонить изменения?</string>
 
@@ -102,7 +98,7 @@
     <string name="msg_wait">Пожалуйста, подождите</string>
     <string name="msg_trash_empty">Корзина пуста</string>
     <string name="msg_import_success">Импорт завершен</string>
-    <string name="msg_notebook_added">Блокнот добавлен</string>
+    <string name="msg_notebook_added">Блокнот создан</string>
     <string name="msg_notebook_renamed">Блокнот переименован</string>
     <string name="msg_notebook_deleted">Блокнот удален</string>
     <string name="msg_note_created">Заметка создана</string>
@@ -112,36 +108,36 @@
     <string name="msg_notes_restored">Заметки восстановлены</string>
     <string name="msg_note_trashed">Заметка удалена</string>
     <string name="msg_notes_trashed">Заметки удалены</string>
-    <string name="msg_note_deleted">Заметка удалена навсегда</string>
-    <string name="msg_notes_deleted">Заметки удалены навсегда</string>
-    <string name="msg_delete_notebook">Блокнот и заметки будут удалены навсегда.</string>
-    <string name="msg_empty_trash">Все заметки в корзине будут удалены навсегда.</string>
-    <string name="msg_delete_note">Заметка будет удалена навсегда.</string>
-    <string name="msg_delete_notes">Заметки будут удалены навсегда.</string>
+    <string name="msg_note_deleted">Заметка удалена</string>
+    <string name="msg_notes_deleted">Заметки удалены</string>
+    <string name="msg_delete_notebook">Блокнот и заметки будут удалены без возможности восстановления.</string>
+    <string name="msg_empty_trash">Заметки в корзине будут удалены без возможности восстановления.</string>
+    <string name="msg_delete_note">Заметка будет удалена без возможности восстановления.</string>
+    <string name="msg_delete_notes">Заметки будут удалены без возможности восстановления.</string>
     <string name="msg_note_empty">Заметка пуста</string>
     <string name="msg_note_duplicated">Заметка дублирована</string>
     <string name="msg_note_pinned">Заметка закреплена</string>
     <string name="msg_note_unpinned">Заметка откреплена</string>
     <string name="msg_notes_pinned">Заметки закреплены</string>
     <string name="msg_notes_unpinned">Заметки откреплены</string>
-    <string name="msg_note_starred">Заметка помечена</string>
-    <string name="msg_note_unstarred">Пометка удалена</string>
-    <string name="msg_notes_starred">Заметка помечена</string>
-    <string name="msg_notes_unstarred">Заметка удалена из помеченных</string>
+    <string name="msg_note_starred">Заметка отмечена</string>
+    <string name="msg_note_unstarred">Заметка удалена из отмеченных</string>
+    <string name="msg_notes_starred">Заметки отмечена</string>
+    <string name="msg_notes_unstarred">Заметки удалены из отмеченных</string>
     <string name="msg_export_success">Экспорт завершен</string>
 
     <plurals name="plurals_notes_starred">
-        <item quantity="one">Помечена %1$d заметка</item>
-        <item quantity="few">Помечены %1$d заметки</item>
-        <item quantity="many">Помечено %1$d заметок</item>
-        <item quantity="other">Помечено %1$d заметок</item>
+        <item quantity="one">Отмечена %1$d заметка</item>
+        <item quantity="few">Отмечено %1$d заметки</item>
+        <item quantity="many">Отмечено %1$d заметок</item>
+        <item quantity="other">Отмечено %1$d заметок</item>
     </plurals>
 
     <plurals name="plurals_notes_unstarred">
-        <item quantity="one">Удалена %1$d пометка</item>
-        <item quantity="few">Удалены %1$d пометки</item>
-        <item quantity="many">Удалено %1$d пометок</item>
-        <item quantity="other">Удалено %1$d пометок</item>
+        <item quantity="one">%1$d заметка удалена из отмеченных</item>
+        <item quantity="few">%1$d заметки удалены из отмеченных</item>
+        <item quantity="many">%1$d заметок удалено из отмеченных</item>
+        <item quantity="other">%1$d заметок удалено из отмеченных</item>
     </plurals>
 
     <string name="last_synced">"Синхронизировано: "</string>
