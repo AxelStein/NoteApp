@@ -29,7 +29,7 @@ public class NoteWrapper {
     @JsonProperty("check_list")
     private boolean checkList;
 
-    @JsonProperty("check_list")
+    @JsonProperty("check_list_json")
     private String checkListJson;
 
     public static NoteWrapper fromNote(Note note) {
