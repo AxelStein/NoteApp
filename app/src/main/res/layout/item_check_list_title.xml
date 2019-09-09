@@ -15,7 +15,7 @@
         android:minHeight="48dp"
 
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginEnd="16dp"
 
         android:background="@null"
         android:hint="@string/hint_title"
@@ -32,6 +32,7 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:contentDescription="@string/content_clear"
+        android:visibility="gone"
         android:src="@drawable/ic_more_vert_24dp"
         android:tint="?attr/menuItemTintColor"/>
 

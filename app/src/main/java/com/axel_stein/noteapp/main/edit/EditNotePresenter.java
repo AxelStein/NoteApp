@@ -239,11 +239,13 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                     setNoteOnView(mNote);
                     notifyChanged();
                     mView.clearFocus();
+                    /* todo
                     if (hasId) {
                         mView.showMessage(R.string.msg_note_updated);
                     } else {
                         mView.showMessage(R.string.msg_note_created);
                     }
+                    */
                 }
 
                 EventBusHelper.updateNoteList();
