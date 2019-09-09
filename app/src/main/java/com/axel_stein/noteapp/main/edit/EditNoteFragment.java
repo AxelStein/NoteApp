@@ -257,7 +257,7 @@ public class EditNoteFragment extends Fragment implements EditNoteContract.View,
                 break;
 
             case R.id.menu_duplicate:
-                mPresenter.actionDuplicate(getString(R.string.action_copy));
+                mPresenter.actionDuplicate(getString(R.string.text_copy));
                 break;
 
             case R.id.menu_check_list:

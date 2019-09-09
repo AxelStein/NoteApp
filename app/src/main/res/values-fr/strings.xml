@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Notes</string>
+    <string name="app_version_title">Version</string>
+
+    <!--Actions-->
     <string name="action_add">Créer</string>
     <string name="action_add_note">Créer une note</string>
     <string name="action_add_notebook">Créer un carnet</string>
     <string name="action_cancel">Annuler</string>
-    <string name="action_copy">copie</string>
     <string name="action_clear">Nettoyer</string>
     <string name="action_delete">Supprimer</string>
     <string name="action_delete_notebook">Supprimer le carnet</string>
@@ -32,19 +34,35 @@
     <string name="action_sort_views">Vues</string>
     <string name="action_trash">Corbeille</string>
     <string name="action_undo">Annuler</string>
-    <string name="app_version_title">Version</string>
+    <string name="action_remove_checked_items">Supprimer les éléments cochés</string>
+    <string name="action_auto_sync">Synchronisation automatique</string>
+    <string name="action_check_list">Liste</string>
+    <string name="action_inbox">Boîte de réception</string>
+    <string name="action_pin_note">Épingler la note</string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="action_sign_out">Déconnexion</string>
+    <string name="action_star_note">Marquer la note</string>
+    <string name="action_starred">Marquées</string>
+
+    <!--Content description-->
     <string name="content_clear">Nettoyer</string>
-    <string name="empty_inbox">Il n\'y a pas de notes</string>
-    <string name="empty_notebook">Le cahier est vide</string>
-    <string name="empty_trash">Il n\'y a pas de notes dans la corbeille</string>
+
+    <!--Empty msg-->
+    <string name="empty_notes">Il n\'y a pas de notes</string>
+
+    <!--Errors-->
     <string name="error">Erreur</string>
     <string name="error_share">Il n\'y a pas d\'application à envoyer la note</string>
     <string name="error_title_exists">Le titre existe déjà</string>
     <string name="error_title_required">Le titre est obligatoire</string>
+
+    <!--Hints-->
     <string name="hint_content">Note</string>
     <string name="hint_new_item">Nouveau élément de liste</string>
     <string name="hint_notebook">Titre</string>
     <string name="hint_title">Titre</string>
+
+    <!--Messages-->
     <string name="msg_note_created">Note est créée</string>
     <string name="msg_note_deleted">Note est supprimée</string>
     <string name="msg_note_duplicated">Note est dupliquée</string>
@@ -54,28 +72,19 @@
     <string name="msg_note_trashed">Note est supprimée</string>
     <string name="msg_note_unpinned">Note est non épinglée</string>
     <string name="msg_note_updated">Note est mise à jour</string>
-    <string name="action_check_list">Liste</string>
-    <string name="action_inbox">Boîte de réception</string>
-    <string name="action_pin_note">Épingler la note</string>
-    <string name="action_sign_in">Se connecter</string>
-    <string name="action_sign_out">Déconnexion</string>
     <string name="msg_note_starred">Note est marquée</string>
     <string name="msg_note_unstarred">Note est non marquée</string>
-    <string name="action_star_note">Marquer la note</string>
-    <string name="action_starred">Marquées</string>
-    <string name="empty_search">Il n\'y a pas de notes</string>
-    <string name="last_synced">Dernière synchronisation:</string>
     <string name="msg_delete_note">Note sera définitivement supprimée</string>
-    <string name="msg_delete_notebook">Cahier et ses notes seront définitivement supprimés</string>
+    <string name="msg_delete_notebook">Carnet et ses notes seront définitivement supprimés</string>
     <string name="msg_delete_notes">Notes seront définitivement supprimées</string>
     <string name="msg_empty_trash">Toutes les notes placées dans la corbeille seront définitivement supprimées.</string>
     <string name="msg_export_success">Export est terminé</string>
     <string name="msg_import_success">Import est terminé</string>
     <string name="msg_import_drive">Toutes les données sur cet appareil seront remplacées. Continuer?</string>
     <string name="msg_export_drive">Toutes les données sur le serveur seront remplacées. Continuer?</string>
-    <string name="msg_notebook_added">Cahier est créé</string>
-    <string name="msg_notebook_deleted">Cahier est supprimé</string>
-    <string name="msg_notebook_renamed">Cahier est renommé</string>
+    <string name="msg_notebook_added">Carnet est créé</string>
+    <string name="msg_notebook_deleted">Carnet est supprimé</string>
+    <string name="msg_notebook_renamed">Carnet est renommé</string>
     <string name="msg_notes_deleted">Notes sont supprimées</string>
     <string name="msg_notes_pinned">Notes sont épinglées</string>
     <string name="msg_notes_restored">Notes sont restaurées</string>
@@ -86,6 +95,8 @@
     <string name="msg_notes_updated">Notes sont mises à jour</string>
     <string name="msg_trash_empty">Corbeille est vide</string>
     <string name="msg_wait">Veuillez attendre</string>
+
+    <!--Preferences-->
     <string name="pref_about_app">A propos de l\'application</string>
     <string name="pref_category_appearance">Écran principal</string>
     <string name="pref_category_backup">Sauvegarde et importation</string>
@@ -109,15 +120,32 @@
     <string name="pref_swipe_action_trash_restore">Supprimer</string>
     <string name="pref_swipe_left">Glisser à gauche</string>
     <string name="pref_swipe_right">Glisser à droite</string>
-    <string name="text_auto_sync">Synchronisation automatique</string>
+
+    <!--Text-->
+    <string name="text_last_synced">Dernière synchronisation:</string>
+    <string name="text_copy">copie</string>
+
+    <!--Dialog titles-->
     <string name="title_add_notebook">Créer un carnet</string>
     <string name="title_delete_note">Êtes-vous sûr?</string>
-    <string name="title_delete_notebook">Supprimer le cahier \'%1$s\'?</string>
+    <string name="title_delete_notebook">Supprimer le carner \'%1$s\'?</string>
     <string name="title_discard">Êtes-vous sûr de vouloir annuler les modifications?</string>
     <string name="title_empty_trash">Vider la corbeille?</string>
     <string name="title_export_drive">Exporter vers Google Drive</string>
     <string name="title_import_drive">Importer depuis Google Drive</string>
     <string name="title_rename_notebook">Renommer le carnet</string>
-    <string name="title_select_notebook">Déplacer vers le cahier</string>
+    <string name="title_select_notebook">Déplacer vers le carner</string>
     <string name="title_import">Importation…</string>
+
+    <!--Plurals-->
+    <plurals name="plurals_notes_starred">
+        <item quantity="one">%1$d note est marquée</item>
+        <item quantity="other">%1$d notes sont marquées</item>
+    </plurals>
+
+    <plurals name="plurals_notes_unstarred">
+        <item quantity="one">%1$d note est non marquée</item>
+        <item quantity="other">%1$d notes sont non marquées</item>
+    </plurals>
+
 </resources>

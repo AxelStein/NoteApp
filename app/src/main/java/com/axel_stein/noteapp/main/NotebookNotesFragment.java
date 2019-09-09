@@ -56,7 +56,7 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
             setPresenter(new NotebookNotesPresenter(mNotebookId));
         }
 
-        setEmptyMsg(getString(R.string.empty_notebook));
+        setEmptyMsg(getString(R.string.empty_notes));
         setPaddingTop(8);
         setPaddingBottom(88);
     }

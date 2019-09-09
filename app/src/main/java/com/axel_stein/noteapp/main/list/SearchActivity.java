@@ -73,7 +73,7 @@ public class SearchActivity extends BaseActivity {
         Fragment fragment = fm.findFragmentByTag("fragment_search");
         if (fragment == null) {
             mFragment = new NotesFragment();
-            mFragment.setEmptyMsg(getString(R.string.empty_search));
+            mFragment.setEmptyMsg(getString(R.string.empty_notes));
             mFragment.setPaddingTop(8);
             mFragment.setPaddingBottom(8);
             setFragment(mFragment, "fragment_search");

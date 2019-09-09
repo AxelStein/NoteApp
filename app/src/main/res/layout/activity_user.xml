@@ -100,7 +100,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="?android:attr/textColorSecondary"
             android:textSize="14sp"
-            android:text="@string/last_synced"
+            android:text="@string/text_last_synced"
             tools:ignore="RtlHardcoded" />
 
         <androidx.appcompat.widget.SwitchCompat
@@ -112,7 +112,7 @@
             android:textSize="14sp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="@string/text_auto_sync" />
+            android:text="@string/action_auto_sync" />
 
         <com.axel_stein.noteapp.views.IconTextView
             android:id="@+id/text_export_drive"

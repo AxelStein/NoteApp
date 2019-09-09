@@ -29,7 +29,7 @@ public class StarredFragment extends NotesFragment {
         if (mPresenter == null) {
             setPresenter(new StarredNotesPresenter());
         }
-        setEmptyMsg(getString(R.string.empty_inbox));
+        setEmptyMsg(getString(R.string.empty_notes));
         setPaddingTop(8);
         setPaddingBottom(88);
     }

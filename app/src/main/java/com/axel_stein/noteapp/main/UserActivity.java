@@ -223,7 +223,7 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
                 if (isEmpty(formattedDate)) {
                     formattedDate = "-";
                 }
-                ViewUtil.setText(mTextLastSync, getString(R.string.last_synced) + " " + formattedDate);
+                ViewUtil.setText(mTextLastSync, getString(R.string.text_last_synced) + " " + formattedDate);
 
                 mProgressBar.hide();
             }
@@ -232,7 +232,7 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
             public void onFailure(@NonNull Exception e) {
                 e.printStackTrace();
                 mProgressBar.hide();
-                ViewUtil.setText(mTextLastSync, getString(R.string.last_synced) + " -");
+                ViewUtil.setText(mTextLastSync, getString(R.string.text_last_synced) + " -");
             }
         });
     }

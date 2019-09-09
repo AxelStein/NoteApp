@@ -47,7 +47,7 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
         if (mPresenter == null) {
             setPresenter(new TrashNotesPresenter());
         }
-        setEmptyMsg(getString(R.string.empty_trash));
+        setEmptyMsg(getString(R.string.empty_notes));
         setPaddingTop(8);
         setPaddingBottom(88);
     }

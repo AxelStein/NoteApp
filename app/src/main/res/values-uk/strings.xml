@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Нотатки</string>
-    <string name="action_copy">копія</string>
     <string name="app_version_title">Версія</string>
 
     <!--Actions-->
@@ -39,31 +38,17 @@
     <string name="action_sort_views">За кількістю переглядів</string>
     <string name="action_sort_date">По даті</string>
     <string name="action_sign_in">Увійти</string>
+    <string name="action_export">Експорт</string>
+    <string name="action_auto_sync">Автосинхронізація</string>
+    <string name="action_new_notebook">+ Новий блокнот</string>
+    <string name="action_check_list">Список</string>
+    <string name="action_remove_checked_items">Видалити відмічені</string>
 
-    <!--Pref-->
-    <string name="pref_export">Експорт в файл</string>
-    <string name="pref_import">Імпорт з файлу</string>
-    <string name="pref_font_size">Розмір шрифту</string>
-    <string name="pref_font_size_small">Маленький</string>
-    <string name="pref_font_size_default">За замовчуванням</string>
-    <string name="pref_font_size_large">Великий</string>
-    <string name="pref_font_size_extra_large">Найбільший</string>
-    <string name="pref_category_appearance">Головний екран</string>
-    <string name="pref_category_backup">Резервна копія та імпорт</string>
-    <string name="pref_night_mode">Нічний режим</string>
-    <string name="pref_show_notes_content">Показувати вміст замітки</string>
-    <string name="pref_about_app">Про додаток</string>
-    <string name="pref_rate_app">Оцінити додаток</string>
-    <string name="pref_swipe_left">Свайп вліво</string>
-    <string name="pref_swipe_right">Свайп вправо</string>
-    <string name="pref_swipe_action_none">Нічого</string>
-    <string name="pref_swipe_action_trash_restore">Видалити</string>
-    <string name="pref_swipe_action_delete">Видалити</string>
-    <string name="pref_swipe_action_pin">Прикріпити</string>
-    <string name="pref_swipe_action_star">Відмітити</string>
-    <string name="pref_category_editor">Редактор нотаток</string>
-    <string name="pref_export_drive">Експорт в Google Drive</string>
-    <string name="pref_import_drive">Імпорт з Google Drive</string>
+    <!--Content description-->
+    <string name="content_clear">Очистити</string>
+
+    <!--Empty msg-->
+    <string name="empty_notes">Нотатки не знайдені</string>
 
     <!--Errors-->
     <string name="error">Помилка</string>
@@ -75,25 +60,7 @@
     <string name="hint_content">Нотаток</string>
     <string name="hint_title">Назва</string>
     <string name="hint_notebook">Назва</string>
-
-    <!--Content description-->
-    <string name="content_clear">Очистити</string>
-
-    <!--Empty msg-->
-    <string name="empty_notebook">Блокнот порожній</string>
-    <string name="empty_search">Нотатки не знайдені</string>
-    <string name="empty_trash">Немає нотаток в корзині</string>
-    <string name="empty_inbox">Нотатки не знайдені</string>
-
-    <!--Dialog titles-->
-    <string name="title_empty_trash">Очистити корзину?</string>
-    <string name="title_import">Імпорт…</string>
-    <string name="title_rename_notebook">Перейменувати блокнот</string>
-    <string name="title_delete_notebook">Видалити блокнот \'%1$s\'?</string>
-    <string name="title_add_notebook">Створити блокнот</string>
-    <string name="title_delete_note">Ви впевнені?</string>
-    <string name="title_select_notebook">Перемістити в блокнот</string>
-    <string name="title_discard">Ви впевнені, що хочете відхилити зміни?</string>
+    <string name="hint_new_item">Новий елемент списку</string>
 
     <!--Messages-->
     <string name="msg_wait">Будь ласка, зачекайте</string>
@@ -126,7 +93,51 @@
     <string name="msg_notes_starred">Нотатки відмічено</string>
     <string name="msg_notes_unstarred">Нотатки видалено із відмічених</string>
     <string name="msg_export_success">Експорт завершений</string>
+    <string name="msg_export_drive">Всі дані на сервері будуть заміщені. Продовжити?</string>
+    <string name="msg_import_drive">Всі дані на пристрої будуть заміщені. Продовжити?</string>
 
+    <!--Preferences-->
+    <string name="pref_export">Експорт в файл</string>
+    <string name="pref_import">Імпорт з файлу</string>
+    <string name="pref_font_size">Розмір шрифту</string>
+    <string name="pref_font_size_small">Маленький</string>
+    <string name="pref_font_size_default">За замовчуванням</string>
+    <string name="pref_font_size_large">Великий</string>
+    <string name="pref_font_size_extra_large">Найбільший</string>
+    <string name="pref_category_appearance">Головний екран</string>
+    <string name="pref_category_backup">Резервна копія та імпорт</string>
+    <string name="pref_night_mode">Нічний режим</string>
+    <string name="pref_show_notes_content">Показувати вміст замітки</string>
+    <string name="pref_about_app">Про додаток</string>
+    <string name="pref_rate_app">Оцінити додаток</string>
+    <string name="pref_swipe_left">Свайп вліво</string>
+    <string name="pref_swipe_right">Свайп вправо</string>
+    <string name="pref_swipe_action_none">Нічого</string>
+    <string name="pref_swipe_action_trash_restore">Видалити</string>
+    <string name="pref_swipe_action_delete">Видалити</string>
+    <string name="pref_swipe_action_pin">Прикріпити</string>
+    <string name="pref_swipe_action_star">Відмітити</string>
+    <string name="pref_category_editor">Редактор нотаток</string>
+    <string name="pref_export_drive">Експорт в Google Drive</string>
+    <string name="pref_import_drive">Імпорт з Google Drive</string>
+
+    <!--Text-->
+    <string name="text_copy">копія</string>
+    <string name="text_last_synced">"Синхронизировано: "</string>
+
+    <!--Dialog titles-->
+    <string name="title_empty_trash">Очистити корзину?</string>
+    <string name="title_import">Імпорт…</string>
+    <string name="title_rename_notebook">Перейменувати блокнот</string>
+    <string name="title_delete_notebook">Видалити блокнот \'%1$s\'?</string>
+    <string name="title_add_notebook">Створити блокнот</string>
+    <string name="title_delete_note">Ви впевнені?</string>
+    <string name="title_select_notebook">Перемістити в блокнот</string>
+    <string name="title_discard">Ви впевнені, що хочете відхилити зміни?</string>
+    <string name="title_export_drive">Експорт в Google Drive</string>
+    <string name="title_import_drive">Імпорт з Google Drive</string>
+
+    <!--Plurals-->
     <plurals name="plurals_notes_starred">
         <item quantity="one">Відмічено %1$d нотаток</item>
         <item quantity="few">Відмічено %1$d нотатки</item>
@@ -141,14 +152,4 @@
         <item quantity="other">%1$d нотатків видалено із відмічених</item>
     </plurals>
 
-    <string name="last_synced">"Синхронизировано: "</string>
-    <string name="action_export">Експорт</string>
-    <string name="msg_export_drive">Всі дані на сервері будуть заміщені. Продовжити?</string>
-    <string name="msg_import_drive">Всі дані на пристрої будуть заміщені. Продовжити?</string>
-    <string name="title_export_drive">Експорт в Google Drive</string>
-    <string name="title_import_drive">Імпорт з Google Drive</string>
-    <string name="text_auto_sync">Автосинхронізація</string>
-    <string name="action_new_notebook">+ Новий блокнот</string>
-    <string name="hint_new_item">Новий елемент списку</string>
-    <string name="action_check_list">Список</string>
 </resources>

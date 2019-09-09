@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Notes</string>
-    <string name="action_copy">copy</string>
     <string name="app_version_title">Version</string>
 
     <!--Actions-->
@@ -40,46 +39,16 @@
     <string name="action_sort_date">Date</string>
     <string name="action_starred">Starred</string>
     <string name="action_export">Export</string>
+    <string name="action_new_notebook">+ New notebook</string>
+    <string name="action_check_list">Check list</string>
+    <string name="action_remove_checked_items">Remove checked items</string>
+    <string name="action_auto_sync">Auto sync</string>
 
-    <!--Pref-->
-    <string name="pref_night_mode">Night mode</string>
-    <string name="pref_category_appearance">Main screen</string>
-    <string name="pref_category_backup">Backup and import</string>
-    <string name="pref_export">Export to file</string>
-    <string name="pref_export_drive">Export to Google Drive</string>
-    <string name="pref_import">Import from file</string>
-    <string name="pref_font_size">Font size</string>
-    <string name="pref_font_size_small">Small</string>
-    <string name="pref_font_size_default">Default</string>
-    <string name="pref_font_size_large">Large</string>
-    <string name="pref_font_size_extra_large">Extra large</string>
-    <string name="pref_show_notes_content">Show note`s content</string>
-    <string name="pref_about_app">About app</string>
-    <string name="pref_rate_app">Rate app</string>
-    <string name="pref_swipe_left">Swipe left</string>
-    <string name="pref_swipe_right">Swipe right</string>
-    <string name="pref_swipe_action_none">None</string>
-    <string name="pref_swipe_action_trash_restore">Delete</string>
-    <string name="pref_swipe_action_delete">Delete</string> <!--Deprecated-->
-    <string name="pref_swipe_action_pin">Pin</string>
-    <string name="pref_swipe_action_star">Star</string>
-    <string name="pref_category_editor">Note editor</string>
-    <string name="pref_import_drive">Import from Google Drive</string>
+    <!--Content description-->
+    <string name="content_clear">Clear</string>
 
-    <string-array name="font_sizes">
-        <item>@string/pref_font_size_small</item>
-        <item>@string/pref_font_size_default</item>
-        <item>@string/pref_font_size_large</item>
-        <item>@string/pref_font_size_extra_large</item>
-    </string-array>
-
-    <string-array name="swipe_action_entries">
-        <item>@string/pref_swipe_action_none</item>
-        <item>@string/pref_swipe_action_trash_restore</item>
-        <item>@string/pref_swipe_action_pin</item>
-        <item>@string/pref_swipe_action_star</item>
-        <!--<item>@string/pref_swipe_action_delete</item>-->
-    </string-array>
+    <!--Empty msg-->
+    <string name="empty_notes">No notes yet</string>
 
     <!--Errors-->
     <string name="error">Error</string>
@@ -91,27 +60,7 @@
     <string name="hint_content">Note</string>
     <string name="hint_title">Title</string>
     <string name="hint_notebook">Title</string>
-
-    <!--Content description-->
-    <string name="content_clear">Clear</string>
-
-    <!--Empty msg-->
-    <string name="empty_notebook">Notebook is empty</string>
-    <string name="empty_search">No matching notes</string>
-    <string name="empty_trash">No notes in trash</string>
-    <string name="empty_inbox">No notes yet</string>
-
-    <!--Dialog titles-->
-    <string name="title_empty_trash">Empty trash?</string>
-    <string name="title_import">Importing…</string>
-    <string name="title_rename_notebook">Rename notebook</string>
-    <string name="title_delete_notebook">Delete notebook \'%1$s\'?</string>
-    <string name="title_add_notebook">Create notebook</string>
-    <string name="title_delete_note">Are you sure?</string>
-    <string name="title_select_notebook">Move to notebook</string>
-    <string name="title_discard">Are you sure you want to discard changes?</string>
-    <string name="title_export_drive">Export to Google Drive</string>
-    <string name="title_import_drive">Import from Google Drive</string>
+    <string name="hint_new_item">New item</string>
 
     <!--Messages-->
     <string name="msg_wait">Please wait</string>
@@ -147,6 +96,48 @@
     <string name="msg_notes_unstarred">Notes are unstarred</string>
     <string name="msg_export_success">Export completed</string>
 
+    <!--Preferences-->
+    <string name="pref_night_mode">Night mode</string>
+    <string name="pref_category_appearance">Main screen</string>
+    <string name="pref_category_backup">Backup and import</string>
+    <string name="pref_export">Export to file</string>
+    <string name="pref_export_drive">Export to Google Drive</string>
+    <string name="pref_import">Import from file</string>
+    <string name="pref_font_size">Font size</string>
+    <string name="pref_font_size_small">Small</string>
+    <string name="pref_font_size_default">Default</string>
+    <string name="pref_font_size_large">Large</string>
+    <string name="pref_font_size_extra_large">Extra large</string>
+    <string name="pref_show_notes_content">Show note`s content</string>
+    <string name="pref_about_app">About app</string>
+    <string name="pref_rate_app">Rate app</string>
+    <string name="pref_swipe_left">Swipe left</string>
+    <string name="pref_swipe_right">Swipe right</string>
+    <string name="pref_swipe_action_none">None</string>
+    <string name="pref_swipe_action_trash_restore">Delete</string>
+    <string name="pref_swipe_action_delete">Delete</string> <!--Deprecated-->
+    <string name="pref_swipe_action_pin">Pin</string>
+    <string name="pref_swipe_action_star">Star</string>
+    <string name="pref_category_editor">Note editor</string>
+    <string name="pref_import_drive">Import from Google Drive</string>
+
+    <!--Text-->
+    <string name="text_last_synced">Last synced:</string>
+    <string name="text_copy">copy</string>
+
+    <!--Dialog titles-->
+    <string name="title_empty_trash">Empty trash?</string>
+    <string name="title_import">Importing…</string>
+    <string name="title_rename_notebook">Rename notebook</string>
+    <string name="title_delete_notebook">Delete notebook \'%1$s\'?</string>
+    <string name="title_add_notebook">Create notebook</string>
+    <string name="title_delete_note">Are you sure?</string>
+    <string name="title_select_notebook">Move to notebook</string>
+    <string name="title_discard">Are you sure you want to discard changes?</string>
+    <string name="title_export_drive">Export to Google Drive</string>
+    <string name="title_import_drive">Import from Google Drive</string>
+
+    <!--Plurals-->
     <plurals name="plurals_notes_starred">
         <item quantity="one">%1$d note starred</item>
         <item quantity="other">%1$d notes starred</item>
@@ -156,11 +147,5 @@
         <item quantity="one">%1$d note unstarred</item>
         <item quantity="other">%1$d notes unstarred</item>
     </plurals>
-
-    <string name="last_synced">Last synced:</string>
-    <string name="text_auto_sync">Auto sync</string>
-    <string name="action_new_notebook">+ New notebook</string>
-    <string name="hint_new_item">New item</string>
-    <string name="action_check_list">Check list</string>
 
 </resources>

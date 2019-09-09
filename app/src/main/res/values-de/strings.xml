@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Notizen</string>
+    <string name="app_version_title">Version</string>
+
+    <!--Actions-->
     <string name="action_add_note">Notiz erstellen</string>
     <string name="action_add_notebook">Notizbuch erstellen</string>
     <string name="action_add">Erstellen</string>
     <string name="action_cancel">Abbrechen</string>
     <string name="action_check_list">Liste</string>
-    <string name="action_copy">Kopie</string>
     <string name="action_delete">Löschen</string>
     <string name="action_delete_notebook">Notizbuch löschen</string>
     <string name="action_clear">Klären</string>
@@ -39,21 +41,28 @@
     <string name="action_starred">Markiert</string>
     <string name="action_trash">Papierkorb</string>
     <string name="action_undo">Annullieren</string>
-    <string name="app_version_title">Version</string>
+    <string name="action_auto_sync">Automatische Synchronisation</string>
+    <string name="action_remove_checked_items">Löschen markierte Elemente</string>
+
+    <!--Content description-->
     <string name="content_clear">Klären</string>
-    <string name="empty_inbox">Es gibt keine Notizen</string>
-    <string name="empty_notebook">Notizbuch ist leer</string>
-    <string name="empty_search">Es gibt keine Notizen</string>
-    <string name="empty_trash">Papierkorb enthält keine Notizen</string>
+
+    <!--Empty msg-->
+    <string name="empty_notes">Es gibt keine Notizen</string>
+
+    <!--Errors-->
     <string name="error">Fehler</string>
     <string name="error_share">Anwendung zum Teilen nicht gefunden</string>
     <string name="error_title_exists">Titel existiert bereits</string>
     <string name="error_title_required">Titel ist erforderlich</string>
+
+    <!--Hints-->
     <string name="hint_content">Notiz</string>
     <string name="hint_new_item">Listeneintrag</string>
     <string name="hint_notebook">Titel</string>
     <string name="hint_title">Titel</string>
-    <string name="last_synced">Zuletzt synchronisiert:</string>
+
+    <!--Messages-->
     <string name="msg_delete_note">Notiz wird endgültig gelöscht.</string>
     <string name="msg_delete_notebook">Notizbuch und notizen werden endgültig gelöscht.</string>
     <string name="msg_delete_notes">Notizen werden endgültig gelöscht.</string>
@@ -84,9 +93,10 @@
     <string name="msg_notes_updated">Notizen werden aktualisiert</string>
     <string name="msg_trash_empty">Papierkorb ist leer</string>
     <string name="msg_wait">Warten Sie mal, bitte</string>
-    <string name="pref_about_app">Über die App</string>
     <string name="msg_note_unstarred">Notiz wird aus markiert gelöscht</string>
     <string name="msg_notes_unstarred">Notizen werden aus markiert gelöscht</string>
+
+    <!--Preferences-->
     <string name="pref_category_appearance">Hauptbildschirm</string>
     <string name="pref_category_backup">Sichern und importieren</string>
     <string name="pref_category_editor">Editor für Notizen</string>
@@ -109,7 +119,13 @@
     <string name="pref_swipe_action_trash_restore">Löschen</string>
     <string name="pref_swipe_left">Nach links wischen</string>
     <string name="pref_swipe_right">Nach rechts wischen</string>
-    <string name="text_auto_sync">Automatische Synchronisation</string>
+    <string name="pref_about_app">Über die App</string>
+
+    <!--Text-->
+    <string name="text_copy">Kopie</string>
+    <string name="text_last_synced">Zuletzt synchronisiert:</string>
+
+    <!--Dialog titles-->
     <string name="title_add_notebook">Notizbuch erstellen</string>
     <string name="title_delete_note">Sind Sie sicher?</string>
     <string name="title_delete_notebook">Notizbuch \'%1$s\' löschen?</string>
@@ -120,4 +136,16 @@
     <string name="title_rename_notebook">Notizbuch umbenennen</string>
     <string name="title_import">Import…</string>
     <string name="title_select_notebook">Zum Notizbuch verschieben</string>
+
+    <!--Plurals-->
+    <plurals name="plurals_notes_starred">
+        <item quantity="one">%1$d Notiz wird markiert</item>
+        <item quantity="other">%1$d Notizen werden markiert</item>
+    </plurals>
+
+    <plurals name="plurals_notes_unstarred">
+        <item quantity="one">%1$d Notiz wird aus markiert gelöscht</item>
+        <item quantity="other">%1$d Notizen werden aus markiert gelöscht</item>
+    </plurals>
+
 </resources>
