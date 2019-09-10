@@ -85,6 +85,7 @@
         <item name="android:dropDownHorizontalOffset">-4dp</item>
     </style>
 
+    <!--
     <style name="PreferenceCategory">
         <item name="android:layout">@layout/layout_preference_category</item>
         <item name="android:shouldDisableView">false</item>
@@ -107,6 +108,7 @@
         <item name="dropdownPreferenceStyle">@style/Preference.DropDown.Material</item>
         <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList.Material</item>
     </style>
+    -->
 
     <!--
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>

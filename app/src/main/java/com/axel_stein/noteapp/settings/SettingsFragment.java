@@ -4,16 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -25,7 +23,6 @@ import com.axel_stein.noteapp.utils.FileUtil;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
-import java.util.List;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
@@ -72,7 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mPresenter.onCreateView(this);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -97,14 +94,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         // Workaround for Android bug.
         // grantUriPermission also needed for KITKAT,
         // see https://code.google.com/p/android/issues/detail?id=76683
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            List<ResolveInfo> resInfoList = getContext().getPackageManager()
-                    .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-            for (ResolveInfo resolveInfo : resInfoList) {
-                String packageName = resolveInfo.activityInfo.packageName;
-                getContext().grantUriPermission(packageName, fileUri, FLAG_GRANT_READ_URI_PERMISSION);
-            }
-        }
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivity(intent);
         } else {
@@ -160,7 +149,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void setAppVersion(String version) {
         Preference pref = findPreference("app_version");
-        pref.setSummary(version);
+        if (pref != null) {
+            pref.setSummary(version);
+        }
     }
 
     @Override

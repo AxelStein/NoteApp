@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:iconSpaceReserved="false">
 
-    <androidx.preference.PreferenceCategory
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="false"
+        app:allowDividerAbove="false"
         android:title="@string/pref_category_appearance">
 
-        <androidx.preference.SwitchPreferenceCompat
+        <SwitchPreference
+            app:iconSpaceReserved="false"
             android:key="PREF_NIGHT_MODE"
             android:title="@string/pref_night_mode"/>
 
-        <androidx.preference.SwitchPreferenceCompat
+        <SwitchPreference
+            app:iconSpaceReserved="false"
             android:defaultValue="true"
             android:key="PREF_SHOW_NOTES_CONTENT"
             android:title="@string/pref_show_notes_content"/>
 
-        <androidx.preference.ListPreference
+        <ListPreference
+            app:iconSpaceReserved="false"
             android:key="PREF_SWIPE_LEFT_ACTION"
             android:entries="@array/swipe_action_entries"
             android:defaultValue="swipe_action_none"
@@ -22,7 +30,8 @@
             android:entryValues="@array/swipe_values"
             android:title="@string/pref_swipe_left"/>
 
-        <androidx.preference.ListPreference
+        <ListPreference
+            app:iconSpaceReserved="false"
             android:key="PREF_SWIPE_RIGHT_ACTION"
             android:entries="@array/swipe_action_entries"
             android:defaultValue="swipe_action_none"
@@ -30,12 +39,16 @@
             android:entryValues="@array/swipe_values"
             android:title="@string/pref_swipe_right"/>
 
-    </androidx.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <androidx.preference.PreferenceCategory
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="false"
+        app:allowDividerAbove="false"
         android:title="@string/pref_category_editor">
 
-        <androidx.preference.ListPreference
+        <ListPreference
+            app:iconSpaceReserved="false"
             android:key="PREF_FONT_SIZE"
             android:entries="@array/font_sizes"
             android:defaultValue="pref_font_size_default"
@@ -43,55 +56,69 @@
             android:entryValues="@array/font_sizes_values"
             android:title="@string/pref_font_size"/>
 
-    </androidx.preference.PreferenceCategory>
+    </PreferenceCategory>
 
     <!--
     <android.support.v7.preference.PreferenceCategory
+        app:iconSpaceReserved="false"
         android:title="@string/pref_category_security">
 
         <Preference
+            app:iconSpaceReserved="false"
             android:key="secure_notes"
             android:title="@string/pref_secure_notes"
             android:summary="@string/pref_secure_notes_summary"/>
 
         <CheckBoxPreference
+            app:iconSpaceReserved="false"
             android:enabled="false"
             android:title="Unlock with fingerprint"/>
 
     </android.support.v7.preference.PreferenceCategory>
     -->
 
-    <androidx.preference.PreferenceCategory
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="false"
+        app:allowDividerAbove="false"
         android:title="@string/pref_category_backup">
 
-        <androidx.preference.Preference
+        <Preference
+            app:iconSpaceReserved="false"
             android:key="export_file"
             android:title="@string/pref_export"/>
 
-        <androidx.preference.Preference
+        <Preference
+            app:iconSpaceReserved="false"
             android:key="import_file"
             android:title="@string/pref_import"/>
 
         <!--
-        <androidx.preference.Preference
+        <Preference
+            app:iconSpaceReserved="false"
             android:key="export_drive"
             android:title="@string/pref_export_drive"/>
         -->
 
-    </androidx.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-    <androidx.preference.PreferenceCategory
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="false"
+        app:allowDividerAbove="false"
         android:title="@string/pref_about_app">
 
-        <androidx.preference.Preference
+        <Preference
+            app:iconSpaceReserved="false"
             android:key="rate_app"
             android:title="@string/pref_rate_app"/>
 
-        <androidx.preference.Preference
+        <Preference
+            app:iconSpaceReserved="false"
             android:key="app_version"
             android:title="@string/app_name"/>
 
-    </androidx.preference.PreferenceCategory>
+    </PreferenceCategory>
 
 
-</androidx.preference.PreferenceScreen>
+</PreferenceScreen>
