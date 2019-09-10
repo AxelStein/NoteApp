@@ -382,7 +382,7 @@ public class EditNotePresenter implements EditNoteContract.Presenter {
                             mNote.setNotebook(notebook);
                             mSrcNote.setNotebook(notebook);
                             if (mView != null) {
-                                mView.showMessage(R.string.msg_note_updated);
+                                //mView.showMessage(R.string.msg_note_updated);
                                 mView.setNotebookTitle(notebook.getTitle());
                             }
                             EventBusHelper.updateNoteList();

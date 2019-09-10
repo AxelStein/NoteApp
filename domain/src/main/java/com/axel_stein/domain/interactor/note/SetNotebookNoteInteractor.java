@@ -3,6 +3,7 @@ package com.axel_stein.domain.interactor.note;
 import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
+import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NoteRepository;
 
 import java.util.List;
@@ -28,7 +29,8 @@ public class SetNotebookNoteInteractor {
             @Override
             public void run() {
                 requireNonNull(note);
-                mRepository.setNotebook(note.getId(), notebookId);
+                String n = notebookId != null && notebookId.equals(Notebook.ID_INBOX) ? null : notebookId;
+                mRepository.setNotebook(note.getId(), n);
             }
         }).subscribeOn(Schedulers.io());
     }
