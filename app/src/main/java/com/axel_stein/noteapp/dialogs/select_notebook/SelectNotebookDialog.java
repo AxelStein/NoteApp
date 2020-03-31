@@ -30,6 +30,12 @@ import java.util.List;
 import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class SelectNotebookDialog extends BottomSheetDialogFragment {
+    private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
+    private static final String BUNDLE_ACTION = "BUNDLE_ACTION";
+    private static final String BUNDLE_SELECTED_NOTEBOOK_ID = "BUNDLE_SELECTED_NOTEBOOK_ID";
+    private static final String BUNDLE_NOTEBOOK_IDS = "BUNDLE_NOTEBOOK_IDS";
+    private static final String BUNDLE_NOTEBOOK_TITLES = "BUNDLE_NOTEBOOK_TITLES";
+
     private String mTitle;
     private String mAction;
     private List<Notebook> mItems;
@@ -43,7 +49,26 @@ public class SelectNotebookDialog extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_TITLE, mTitle);
+        outState.putString(BUNDLE_ACTION, mAction);
+        outState.putString(BUNDLE_SELECTED_NOTEBOOK_ID, mSelectedNotebookId);
+
+        ArrayList<String> ids = new ArrayList<>();
+        ArrayList<String> titles = new ArrayList<>();
+
+        for (Notebook n : mItems) {
+            ids.add(n.getId());
+            titles.add(n.getTitle());
+        }
+
+        outState.putStringArrayList(BUNDLE_NOTEBOOK_IDS, ids);
+        outState.putStringArrayList(BUNDLE_NOTEBOOK_TITLES, titles);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Fragment fragment = getTargetFragment();
         if (fragment != null) {
@@ -76,6 +101,19 @@ public class SelectNotebookDialog extends BottomSheetDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mTitle = savedInstanceState.getString(BUNDLE_TITLE);
+            mAction = savedInstanceState.getString(BUNDLE_ACTION);
+            mSelectedNotebookId = savedInstanceState.getString(BUNDLE_SELECTED_NOTEBOOK_ID);
+
+            ArrayList<String> ids = savedInstanceState.getStringArrayList(BUNDLE_NOTEBOOK_IDS);
+            ArrayList<String> titles = savedInstanceState.getStringArrayList(BUNDLE_NOTEBOOK_TITLES);
+            mItems = new ArrayList<>();
+            for (int i = 0; i < ids.size(); i++) {
+                mItems.add(Notebook.from(ids.get(i), titles.get(i)));
+            }
+        }
+
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         View view = inflater.inflate(R.layout.dialog_select_notebook, null);
@@ -150,14 +188,6 @@ public class SelectNotebookDialog extends BottomSheetDialogFragment {
 
         public void setAction(String action) {
             this.mAction = action;
-        }
-
-        public Builder addItem(Notebook item) {
-            if (mItems == null) {
-                mItems = new ArrayList<>();
-            }
-            mItems.add(item);
-            return this;
         }
 
         public Builder setItems(List<Notebook> items) {
