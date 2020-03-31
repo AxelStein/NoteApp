@@ -49,7 +49,6 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    /*
     protected boolean hasFragment(String tag) {
         try {
             FragmentManager fm = getSupportFragmentManager();
@@ -62,7 +61,11 @@ public class BaseActivity extends AppCompatActivity {
         }
         return false;
     }
-    */
+
+    protected Fragment getFragment(String tag) {
+        FragmentManager fm = getSupportFragmentManager();
+        return fm.findFragmentByTag(tag);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

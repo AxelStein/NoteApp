@@ -14,7 +14,7 @@ public class NotebookNotesPresenter extends NotesPresenter {
     @Inject
     QueryNoteInteractor mInteractor;
 
-    private String mNotebookId;
+    private String mNotebookId; // fixme
 
     public NotebookNotesPresenter(String notebookId) {
         App.getAppComponent().inject(this);

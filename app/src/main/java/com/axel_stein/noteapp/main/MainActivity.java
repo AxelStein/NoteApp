@@ -63,6 +63,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     private static final String ID_ADD_NOTEBOOK = "ID_ADD_NOTEBOOK";
     private static final String BUNDLE_SELECTED_ITEM_ID = "BUNDLE_SELECTED_ITEM_ID";
     private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
+    private static final String BUNDLE_FRAGMENT = "BUNDLE_FRAGMENT";
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
@@ -103,13 +104,14 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                         break;
                     default: id = mSelectedItemId;
                 }
-                // todo EditNoteActivity.launch(MainActivity.this, id);
                 EditNoteActivity.launch(MainActivity.this, id);
             }
         });
 
         if (savedInstanceState == null) {
             onMenuItemClick(mSelectedItemId, true);
+        } else {
+            mSelectedItemId = savedInstanceState.getString(BUNDLE_SELECTED_ITEM_ID);
         }
     }
 
@@ -267,16 +269,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         super.onSaveInstanceState(outState);
         outState.putString(BUNDLE_SELECTED_ITEM_ID, mSelectedItemId);
         outState.putString(BUNDLE_TITLE, mTextViewTitle.getText().toString());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-            mSelectedItemId = savedInstanceState.getString(BUNDLE_SELECTED_ITEM_ID);
-            onMenuItemClick(mSelectedItemId, true);
-            onTitleChange(savedInstanceState.getString(BUNDLE_TITLE));
-        }
+        getSupportFragmentManager().putFragment(outState, BUNDLE_FRAGMENT, getFragment(TAG_FRAGMENT));
     }
 
     @Override
@@ -369,7 +362,8 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
                     @Override
                     public void onSuccess(GoogleSignInAccount googleAccount) {
-                        importDrive();
+                        // importDrive(); fixme
+                        startActivity(new Intent(MainActivity.this, UserActivity.class));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

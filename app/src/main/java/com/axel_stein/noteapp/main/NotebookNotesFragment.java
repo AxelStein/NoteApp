@@ -32,6 +32,7 @@ import io.reactivex.disposables.Disposable;
 
 public class NotebookNotesFragment extends NotesFragment implements BottomMenuDialog.OnMenuItemClickListener {
     private static final String TAG_SORT_NOTEBOOK_NOTES = "TAG_SORT_NOTEBOOK_NOTES";
+    private static final String BUNDLE_NOTEBOOK_ID = "BUNDLE_NOTEBOOK_ID";
 
     private String mNotebookId;
     private Notebook mNotebook;
@@ -52,11 +53,6 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
         setHasOptionsMenu(true);
-
-        if (mPresenter == null) {
-            setPresenter(new NotebookNotesPresenter(mNotebookId));
-        }
-
         setEmptyMsg(getString(R.string.empty_notes));
         setPaddingTop(8);
         setPaddingBottom(88);
@@ -93,6 +89,23 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
         mNotebook = notebook;
         if (mOnTitleChangeListener != null) {
             mOnTitleChangeListener.onTitleChange(notebook.getTitle());
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_NOTEBOOK_ID, mNotebookId);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mNotebookId = savedInstanceState.getString(BUNDLE_NOTEBOOK_ID);
+        }
+        if (mPresenter == null) {
+            setPresenter(new NotebookNotesPresenter(mNotebookId));
         }
     }
 
