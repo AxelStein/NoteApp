@@ -26,12 +26,19 @@ import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
-// FIXME: 30.07.2017
 public abstract class EditTextDialog extends AppCompatDialogFragment {
+    private static final String BUNDLE_HINT = "BUNDLE_HINT";
+    private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
+    private static final String BUNDLE_POSITIVE = "BUNDLE_POSITIVE";
+    private static final String BUNDLE_NEGATIVE = "BUNDLE_NEGATIVE";
+    private static final String BUNDLE_TEXT = "BUNDLE_TEXT";
+    private static final String BUNDLE_SUGGESTIONS = "BUNDLE_SUGGESTIONS";
+
     private String mHint;
     private int mHintRes;
 
@@ -102,6 +109,20 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_HINT, getResourceText(mHint, mHintRes));
+        outState.putString(BUNDLE_TITLE, getResourceText(mTitle, mTitleRes));
+        outState.putString(BUNDLE_POSITIVE, getResourceText(mPositiveButtonText, mPositiveButtonTextRes));
+        outState.putString(BUNDLE_NEGATIVE, getResourceText(mNegativeButtonText, mNegativeButtonTextRes));
+        outState.putString(BUNDLE_TEXT, mText);
+
+        if (mSuggestions != null) {
+            outState.putStringArrayList(BUNDLE_SUGGESTIONS, new ArrayList<>(mSuggestions.keySet()));
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         if (getDialog() != null && getRetainInstance()) {
             getDialog().setDismissMessage(null);
@@ -129,6 +150,22 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         checkNotNull(getContext());
 
+        if (savedInstanceState != null) {
+            mTitle = savedInstanceState.getString(BUNDLE_TITLE);
+            mPositiveButtonText = savedInstanceState.getString(BUNDLE_POSITIVE);
+            mNegativeButtonText = savedInstanceState.getString(BUNDLE_NEGATIVE);
+            mHint = savedInstanceState.getString(BUNDLE_HINT);
+            mText = savedInstanceState.getString(BUNDLE_TEXT);
+
+            mSuggestions = new HashMap<>();
+            ArrayList<String> list = savedInstanceState.getStringArrayList(BUNDLE_SUGGESTIONS);
+            if (list != null) {
+                for (String s : list) {
+                    mSuggestions.put(s, true);
+                }
+            }
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // R.style.DialogStyle
         builder.setTitle(getResourceText(mTitle, mTitleRes));
         builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), new DialogInterface.OnClickListener() {
@@ -146,7 +183,7 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
                 dialog.dismiss();
             }
         });
-        builder.setView(inflateView());
+        builder.setView(inflateView(savedInstanceState != null));
 
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -160,15 +197,17 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
     }
 
     @SuppressLint("InflateParams")
-    private View inflateView() {
+    private View inflateView(boolean restore) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_edit_text, null);
 
         mTextInputLayout = view.findViewById(R.id.text_input);
         mTextInputLayout.setHint(getResourceText(mHint, mHintRes));
 
         mEditText = view.findViewById(R.id.edit_text);
-        mEditText.setText(mText);
-        mEditText.setSelection(mEditText.length());
+        if (!restore) {
+            mEditText.setText(mText);
+            mEditText.setSelection(mEditText.length());
+        }
         mEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -210,14 +249,16 @@ public abstract class EditTextDialog extends AppCompatDialogFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    Window window = getDialog().getWindow();
-                    if (window != null) {
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    Dialog d = getDialog();
+                    if (d != null) {
+                        Window window = d.getWindow();
+                        if (window != null) {
+                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        }
                     }
                 }
             }
         });
-
         return view;
     }
 
