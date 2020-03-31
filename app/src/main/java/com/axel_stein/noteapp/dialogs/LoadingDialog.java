@@ -13,6 +13,9 @@ import com.axel_stein.noteapp.utils.ResourceUtil;
 
 public class LoadingDialog extends AppCompatDialogFragment {
     private static final String TAG = LoadingDialog.class.getSimpleName();
+    private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
+    private static final String BUNDLE_MESSAGE = "BUNDLE_MESSAGE";
+
     private String mTitle;
     private int mTitleRes;
     private String mMessage;
@@ -64,6 +67,18 @@ public class LoadingDialog extends AppCompatDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        if (savedInstanceState != null) {
+            mTitle = savedInstanceState.getString(BUNDLE_TITLE);
+            mMessage = savedInstanceState.getString(BUNDLE_MESSAGE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_TITLE, mTitle);
+        outState.putString(BUNDLE_MESSAGE, mMessage);
     }
 
     @Override
