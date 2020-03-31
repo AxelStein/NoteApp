@@ -48,6 +48,21 @@ public interface NoteDao {
     @Query("UPDATE notes SET views = :views WHERE id = :noteId")
     void updateViews(String noteId, long views);
 
+    @Query("UPDATE notes SET title = :title WHERE id = :noteId")
+    void updateTitle(String noteId, String title);
+
+    @Query("UPDATE notes SET content = :content WHERE id = :noteId")
+    void updateContent(String noteId, String content);
+
+    @Query("UPDATE notes SET modifiedDate = :dateTime WHERE id = :noteId")
+    void updateModifiedDate(String noteId, DateTime dateTime);
+
+    @Query("UPDATE notes SET checkList = :isCheckList WHERE id = :noteId")
+    void updateIsCheckList(String noteId, boolean isCheckList);
+
+    @Query("UPDATE notes SET checkListJson = :checkListJson WHERE id = :noteId")
+    void updateCheckListJson(String noteId, String checkListJson);
+
     /* Delete methods */
 
     @Delete

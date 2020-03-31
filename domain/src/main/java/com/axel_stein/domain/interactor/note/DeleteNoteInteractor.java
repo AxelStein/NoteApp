@@ -12,7 +12,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
-import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
+import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 
 public class DeleteNoteInteractor {
 
@@ -32,9 +32,6 @@ public class DeleteNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
-                if (!isValid(note)) {
-                    throw new IllegalArgumentException("note is not valid");
-                }
                 deleteImpl(note);
             }
         }).subscribeOn(Schedulers.io());
@@ -48,9 +45,6 @@ public class DeleteNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
-                if (!isValid(notes)) {
-                    throw new IllegalArgumentException("notes is not valid");
-                }
                 for (Note note : notes) {
                     deleteImpl(note);
                 }
@@ -59,6 +53,9 @@ public class DeleteNoteInteractor {
     }
 
     private void deleteImpl(Note note) {
+        if (note == null || isEmpty(note.getId())) {
+            throw new IllegalArgumentException("note is not valid");
+        }
         mRepository.delete(note);
     }
 

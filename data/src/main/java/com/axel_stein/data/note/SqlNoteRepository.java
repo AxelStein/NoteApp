@@ -7,6 +7,8 @@ import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 import com.axel_stein.domain.repository.NoteRepository;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -79,6 +81,31 @@ public class SqlNoteRepository implements NoteRepository {
     @Override
     public void updateViews(@NonNull Note note, long views) {
         mDao.updateViews(note.getId(), views);
+    }
+
+    @Override
+    public void updateTitle(String noteId, String title) {
+        mDao.updateTitle(noteId, title);
+    }
+
+    @Override
+    public void updateContent(String noteId, String content) {
+        mDao.updateContent(noteId, content);
+    }
+
+    @Override
+    public void updateModifiedDate(String noteId, DateTime dateTime) {
+        mDao.updateModifiedDate(noteId, dateTime);
+    }
+
+    @Override
+    public void updateIsCheckList(String noteId, boolean isCheckList) {
+        mDao.updateIsCheckList(noteId, isCheckList);
+    }
+
+    @Override
+    public void updateCheckListJson(String noteId, String checkListJson) {
+        mDao.updateCheckListJson(noteId, checkListJson);
     }
 
     /* Delete methods */

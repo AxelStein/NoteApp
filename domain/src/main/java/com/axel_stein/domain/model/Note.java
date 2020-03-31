@@ -24,6 +24,13 @@ public class Note implements Cloneable {
     private boolean checkList;
     private String checkListJson;
 
+    public Note() {
+    }
+
+    public Note(String id) {
+        this.id = id;
+    }
+
     public boolean hasId() {
         return !TextUtil.isEmpty(id);
     }

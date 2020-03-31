@@ -24,7 +24,6 @@ import static com.axel_stein.domain.model.NoteCache.hasKey;
 import static com.axel_stein.domain.model.NoteCache.put;
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
-import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
 public class QueryNoteInteractor {
 
@@ -229,9 +228,12 @@ public class QueryNoteInteractor {
 
     @NonNull
     private List<Note> orderImpl(@NonNull List<Note> list, @NonNull final NoteOrder order, boolean searchFlag) {
+        /*
+        todo
         if (!isValid(list)) {
             throw new IllegalStateException("list is not valid");
         }
+        */
 
         for (Note note : list) {
             String content = note.getContent();

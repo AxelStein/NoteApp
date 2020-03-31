@@ -12,7 +12,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
-import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
 public class SetStarredNoteInteractor {
 
@@ -27,12 +26,12 @@ public class SetStarredNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
+                /*
                 if (!isValid(note)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
-
+                */
                 note.setStarred(starred);
-
                 mRepository.setStarred(note, starred);
             }
         }).subscribeOn(Schedulers.io());
@@ -42,12 +41,12 @@ public class SetStarredNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
+                /*
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
-
+                */
                 mRepository.setStarred(notes, starred);
-
                 for (Note note : notes) {
                     note.setStarred(starred);
                 }

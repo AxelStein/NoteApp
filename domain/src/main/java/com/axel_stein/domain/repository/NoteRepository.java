@@ -6,6 +6,8 @@ import androidx.annotation.Nullable;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
 
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 public interface NoteRepository {
@@ -31,6 +33,16 @@ public interface NoteRepository {
     void setTrashed(@NonNull Note note, boolean trashed);
 
     void updateViews(@NonNull Note note, long views);
+
+    void updateTitle(String noteId, String title);
+
+    void updateContent(String noteId, String content);
+
+    void updateModifiedDate(String noteId, DateTime dateTime);
+
+    void updateIsCheckList(String noteId, boolean isCheckList);
+
+    void updateCheckListJson(String noteId, String checkListJson);
 
     void delete(@NonNull Note note);
 

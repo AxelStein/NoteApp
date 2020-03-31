@@ -14,7 +14,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
-import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
 public class SetTrashedNoteInteractor {
 
@@ -38,9 +37,11 @@ public class SetTrashedNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
+                /*
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
+                */
 
                 for (Note note : notes) {
                     setTrashedImpl(note, trashed);
@@ -50,9 +51,11 @@ public class SetTrashedNoteInteractor {
     }
 
     private void setTrashedImpl(Note note, boolean trashed) {
+        /*
         if (!isValid(note)) {
             throw new IllegalArgumentException();
         }
+        */
 
         note.setTrashed(trashed);
         note.setTrashedDate(trashed ? new DateTime() : null);

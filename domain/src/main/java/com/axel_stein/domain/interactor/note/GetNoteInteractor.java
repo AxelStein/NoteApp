@@ -11,7 +11,6 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
-import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
 public class GetNoteInteractor {
 
@@ -26,16 +25,18 @@ public class GetNoteInteractor {
      * @param id request
      * @throws IllegalStateException if id, notebook or title is empty
      */
-    public Single<Note> execute(final String id) {
+    public Single<Note> execute(final String id, final boolean incrementViews) {
         return Single.fromCallable(new Callable<Note>() {
             @Override
             public Note call() {
                 Note note = mNoteRepository.get(id);
                 if (note != null) {
+                    /*
                     if (!isValid(note)) {
                         throw new IllegalStateException("note is not valid");
                     }
-                    if (!note.isTrashed()) {
+                    */
+                    if (!note.isTrashed() && incrementViews) {
                         note.incrementViews();
                         mNoteRepository.updateViews(note, note.getViews());
                     }

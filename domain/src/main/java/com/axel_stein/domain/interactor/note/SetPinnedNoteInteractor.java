@@ -12,7 +12,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
-import static com.axel_stein.domain.utils.validators.NoteValidator.isValid;
 
 public class SetPinnedNoteInteractor {
 
@@ -27,9 +26,11 @@ public class SetPinnedNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
+                /*
                 if (!isValid(note)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
+                */
                 mRepository.setPinned(note, pinned);
                 note.setPinned(pinned);
             }
@@ -40,9 +41,11 @@ public class SetPinnedNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
+                /*
                 if (!isValid(notes)) {
                     throw new IllegalArgumentException("notes is not valid");
                 }
+                */
 
                 mRepository.setPinned(notes, pinned);
 

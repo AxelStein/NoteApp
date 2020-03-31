@@ -12,7 +12,6 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
-import static com.axel_stein.domain.utils.validators.NoteValidator.validateBeforeInsert;
 
 public class InsertNoteInteractor {
 
@@ -32,9 +31,11 @@ public class InsertNoteInteractor {
         return Completable.fromAction(new Action() {
             @Override
             public void run() {
+                /*
                 if (!validateBeforeInsert(note)) {
                     throw new IllegalArgumentException("note is not valid");
                 }
+                */
 
                 note.setModifiedDate(new DateTime());
 
