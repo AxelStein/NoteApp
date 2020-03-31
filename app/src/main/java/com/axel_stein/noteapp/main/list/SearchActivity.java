@@ -34,11 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
 public class SearchActivity extends BaseActivity {
     private static final String BUNDLE_SEARCH_HAS_FOCUS = "BUNDLE_SEARCH_HAS_FOCUS";
     private static final String BUNDLE_CURRENT_QUERY = "BUNDLE_CURRENT_QUERY";
-
     private static final int SEARCH_INPUT_DELAY = 600;
-
-    private EditText mEditSearch;
-    private ImageButton mButtonClear;
 
     @Nullable
     private NotesFragment mFragment;
@@ -46,19 +42,17 @@ public class SearchActivity extends BaseActivity {
     @Nullable
     private Runnable mSearchTask;
 
+    private EditText mEditSearch;
+    private ImageButton mButtonClear;
     private SimpleTextWatcher mTextWatcher;
-
     private String mCurrentQuery;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
         EventBusHelper.subscribe(this);
-
-        mEditSearch = findViewById(R.id.edit_search);
-        mButtonClear = findViewById(R.id.button_clear);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -81,6 +75,8 @@ public class SearchActivity extends BaseActivity {
             mFragment = (NotesFragment) fragment;
         }
 
+        mEditSearch = findViewById(R.id.edit_search);
+        mButtonClear = findViewById(R.id.button_clear);
         mButtonClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,12 +115,6 @@ public class SearchActivity extends BaseActivity {
                 }
             }
         };
-
-        if (savedInstanceState != null) {
-            mCurrentQuery = savedInstanceState.getString(BUNDLE_CURRENT_QUERY);
-            mEditSearch.setText(mCurrentQuery);
-        }
-
         mEditSearch.addTextChangedListener(mTextWatcher);
         mEditSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -152,6 +142,14 @@ public class SearchActivity extends BaseActivity {
                 mEditSearch.requestFocus();
             }
         });
+        if (savedInstanceState != null) {
+            mCurrentQuery = savedInstanceState.getString(BUNDLE_CURRENT_QUERY);
+            mEditSearch.setText(mCurrentQuery);
+            if (mFragment != null && mFragment.getPresenter() == null) {
+                handler.removeCallbacks(mSearchTask);
+                handler.postDelayed(mSearchTask, SEARCH_INPUT_DELAY);
+            }
+        }
 
         if (mEditSearch.length() == 0) {
             mEditSearch.requestFocus();
@@ -161,7 +159,7 @@ public class SearchActivity extends BaseActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(BUNDLE_SEARCH_HAS_FOCUS, mEditSearch.hasFocus());
         outState.putString(BUNDLE_CURRENT_QUERY, mEditSearch.getText().toString());
