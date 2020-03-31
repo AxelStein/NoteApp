@@ -1,4 +1,4 @@
-package com.axel_stein.noteapp.main.edit2;
+package com.axel_stein.noteapp.main.edit;
 
 class CheckItem {
     private String text;

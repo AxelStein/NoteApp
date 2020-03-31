@@ -1,4 +1,4 @@
-package com.axel_stein.noteapp.main.edit2;
+package com.axel_stein.noteapp.main.edit;
 
 import android.content.Context;
 import android.content.Intent;
@@ -47,6 +47,8 @@ import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.MenuUtil;
+import com.axel_stein.noteapp.utils.SimpleCompletableObserver;
+import com.axel_stein.noteapp.utils.SimpleSingleObserver;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.IconTextView;
@@ -66,7 +68,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 
-public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDialog.OnMenuItemClickListener,
+public class EditNoteActivity extends BaseActivity implements SelectNotebookDialog.OnMenuItemClickListener,
         ConfirmDialog.OnConfirmListener {
     private static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
     private static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.EXTRA_NOTEBOOK_ID";
@@ -78,13 +80,13 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
     private static final int INPUT_DELAY = 600;
 
     public static void launch(Context context, @Nullable String notebookId) {
-        Intent intent = new Intent(context, EditNoteActivity2.class);
+        Intent intent = new Intent(context, EditNoteActivity.class);
         intent.putExtra(EXTRA_NOTEBOOK_ID, notebookId);
         context.startActivity(intent);
     }
 
     public static void launch(Context context, @NonNull Note note) {
-        Intent intent = new Intent(context, EditNoteActivity2.class);
+        Intent intent = new Intent(context, EditNoteActivity.class);
         intent.putExtra(EXTRA_NOTE_ID, note.getId());
         context.startActivity(intent);
     }
@@ -367,20 +369,10 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
                         .andThen(mUpdateNoteInteractor.updateContent(mNote.getId(), mNote.getContent()))
                         .andThen(mUpdateNoteInteractor.updateCheckListJson(mNote.getId(), mNote.getCheckListJson()))
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CompletableObserver() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
+                        .subscribe(new SimpleCompletableObserver() {
                             @Override
                             public void onComplete() {
                                 EventBusHelper.updateNoteList();
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
                             }
                         });
             }
@@ -391,35 +383,13 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
     private void updateNoteTitle(String title) {
         mUpdateNoteInteractor.updateTitle(mNote.getId(), title)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
-                    @Override
-                    public void onComplete() {}
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
+                .subscribe(new SimpleCompletableObserver());
     }
 
     private void updateNoteContent(String content) {
         mUpdateNoteInteractor.updateContent(mNote.getId(), content)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
-                    @Override
-                    public void onComplete() {}
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
+                .subscribe(new SimpleCompletableObserver());
     }
 
     /*
@@ -519,20 +489,10 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
         } else {
             mGetNotebookInteractor.execute(notebookId)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SingleObserver<Notebook>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
+                    .subscribe(new SimpleSingleObserver<Notebook>() {
                         @Override
                         public void onSuccess(Notebook notebook) {
                             setNotebookTitle(notebook.getTitle());
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
                         }
                     });
         }
@@ -541,35 +501,29 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
     public void onNotebookViewClick() {
         mQueryNotebookInteractor.execute()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Notebook>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new SimpleSingleObserver<List<Notebook>>() {
                     @Override
                     public void onSuccess(List<Notebook> notebooks) {
-                        String notebookId = mNote.getNotebookId();
-                        if (isEmpty(notebookId)) {
-                            notebookId = Notebook.ID_INBOX;
-                        }
-                        SelectNotebookDialog.Builder builder = new SelectNotebookDialog.Builder();
-                        builder.setTitle(getString(R.string.title_select_notebook));
-                        builder.setAction(getString(R.string.action_new_notebook));
-
-                        List<Notebook> items = new ArrayList<>(notebooks);
-                        items.add(0, Notebook.from(Notebook.ID_INBOX, getString(R.string.action_inbox)));
-                        builder.setItems(items);
-
-                        builder.setSelectedNotebookId(notebookId);
-                        builder.show(getSupportFragmentManager(), TAG_SELECT_NOTEBOOK);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
+                        showSelectNotebookDialog(notebooks);
                     }
                 });
+    }
+
+    private void showSelectNotebookDialog(List<Notebook> notebooks) {
+        String notebookId = mNote.getNotebookId();
+        if (isEmpty(notebookId)) {
+            notebookId = Notebook.ID_INBOX;
+        }
+        SelectNotebookDialog.Builder builder = new SelectNotebookDialog.Builder();
+        builder.setTitle(getString(R.string.title_select_notebook));
+        builder.setAction(getString(R.string.action_new_notebook));
+
+        List<Notebook> items = new ArrayList<>(notebooks);
+        items.add(0, Notebook.from(Notebook.ID_INBOX, getString(R.string.action_inbox)));
+        builder.setItems(items);
+
+        builder.setSelectedNotebookId(notebookId);
+        builder.show(getSupportFragmentManager(), TAG_SELECT_NOTEBOOK);
     }
 
     @Override
@@ -584,10 +538,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
     private void setNotebook(final Notebook notebook) {
         mSetNotebookNoteInteractor.execute(mNote, notebook.getId())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {}
-
+                .subscribe(new SimpleCompletableObserver() {
                     @Override
                     public void onComplete() {
                         mNote.setNotebook(notebook);
@@ -597,7 +548,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        super.onError(e);
                         showMessage(R.string.error);
                     }
                 });
@@ -845,12 +796,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
 
         mInsertNoteInteractor.execute(duplicate)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new SimpleCompletableObserver() {
                     @Override
                     public void onComplete() {
                         showMessage(R.string.msg_note_duplicated);
@@ -859,7 +805,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        super.onError(e);
                         showMessage(R.string.error);
                     }
                 });
@@ -884,12 +830,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
     private void actionDelete() {
         mDeleteNoteInteractor.execute(mNote)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new SimpleCompletableObserver() {
                     @Override
                     public void onComplete() {
                         finish();
@@ -899,7 +840,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        super.onError(e);
                         showMessage(R.string.error);
                     }
                 });
@@ -933,22 +874,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
         mNote.setCheckList(isCheckList);
         mUpdateNoteInteractor.updateIsCheckList(mNote.getId(), isCheckList)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        showMessage(R.string.error);
-                    }
-                });
+                .subscribe(new SimpleCompletableObserver());
     }
 
     private void showCheckList(List<CheckItem> items) {

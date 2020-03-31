@@ -13,7 +13,7 @@ import com.axel_stein.noteapp.main.NotebookNotesFragment;
 import com.axel_stein.noteapp.main.StarredFragment;
 import com.axel_stein.noteapp.main.TrashFragment;
 import com.axel_stein.noteapp.main.UserActivity;
-import com.axel_stein.noteapp.main.edit2.EditNoteActivity2;
+import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.list.presenters.InboxNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.NotesPresenter;
@@ -50,7 +50,7 @@ public interface AppComponent {
 
     void inject(UserActivity activity);
 
-    void inject(EditNoteActivity2 activity);
+    void inject(EditNoteActivity activity);
 
     void inject(TrashNotesPresenter presenter);
 

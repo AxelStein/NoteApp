@@ -1,4 +1,4 @@
-package com.axel_stein.noteapp.main.edit2;
+package com.axel_stein.noteapp.main.edit;
 
 public class DataCheckItem extends CheckItem {
     private long views;

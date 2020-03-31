@@ -30,7 +30,7 @@ import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog.Builder;
-import com.axel_stein.noteapp.main.edit2.EditNoteActivity2;
+import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.list.NotesContract.Presenter;
 import com.axel_stein.noteapp.utils.DisplayUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -259,7 +259,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
     @Override
     public void showNote(Note note) {
-        EditNoteActivity2.launch(getContext(), note);
+        EditNoteActivity.launch(getContext(), note);
     }
 
     @Override

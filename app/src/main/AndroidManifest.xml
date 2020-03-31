@@ -25,7 +25,7 @@
             android:label="@string/action_settings"/>
 
         <activity
-            android:name=".main.edit2.EditNoteActivity2">
+            android:name=".main.edit.EditNoteActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

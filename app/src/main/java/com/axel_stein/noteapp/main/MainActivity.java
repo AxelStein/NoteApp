@@ -26,7 +26,7 @@ import com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog;
 import com.axel_stein.noteapp.dialogs.main_menu.PrimaryItem;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
-import com.axel_stein.noteapp.main.edit2.EditNoteActivity2;
+import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.list.SearchActivity;
 import com.axel_stein.noteapp.settings.SettingsActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                     default: id = mSelectedItemId;
                 }
                 // todo EditNoteActivity.launch(MainActivity.this, id);
-                EditNoteActivity2.launch(MainActivity.this, id);
+                EditNoteActivity.launch(MainActivity.this, id);
             }
         });
 
