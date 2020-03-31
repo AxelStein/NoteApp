@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
@@ -75,7 +76,7 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_trash, menu);
         MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
@@ -83,7 +84,7 @@ public class TrashFragment extends NotesFragment implements ConfirmDialog.OnConf
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
         MenuUtil.show(menu, !mEmptyList, R.id.menu_empty_trash);
         MenuUtil.show(menu, false, R.id.menu_sort);

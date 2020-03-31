@@ -37,10 +37,11 @@ public class TrashNotesPresenter extends NotesPresenter {
             case AppSettingsRepository.SWIPE_ACTION_TRASH_RESTORE:
                 restore(note);
                 break;
-
+                /*
             case AppSettingsRepository.SWIPE_ACTION_DELETE:
                 delete(note);
                 break;
+                */
 
             default:
                 super.handleSwipeAction(action, note);

@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.axel_stein.data.AppSettingsRepository;
@@ -64,12 +65,6 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
     @Override
     public void onStart() {
         super.onStart();
-
-        Activity activity = getActivity();
-        if (activity instanceof OnTitleChangeListener) {
-            mOnTitleChangeListener = (OnTitleChangeListener) activity;
-        }
-
         mNotebookInteractor.execute(mNotebookId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Notebook>() {
@@ -80,6 +75,10 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
 
                     @Override
                     public void onSuccess(Notebook notebook) {
+                        Activity activity = getActivity();
+                        if (activity instanceof OnTitleChangeListener) {
+                            mOnTitleChangeListener = (OnTitleChangeListener) activity;
+                        }
                         updateNotebook(notebook);
                     }
 
@@ -98,7 +97,7 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_notebook, menu);
         MenuUtil.tintMenuIconsAttr(getContext(), menu, R.attr.menuItemTintColor);
@@ -120,7 +119,7 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
         BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
         builder.setTitle(getString(R.string.action_sort));
         builder.setMenuRes(R.menu.fragment_notebook_notes);
-        builder.addChecked(itemId);
+        builder.setCheckedItemId(itemId);
         builder.show(this, TAG_SORT_NOTEBOOK_NOTES);
     }
 

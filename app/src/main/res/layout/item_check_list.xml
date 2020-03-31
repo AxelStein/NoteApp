@@ -32,7 +32,7 @@
         android:textSize="16sp"
         android:gravity="center_vertical"
         android:background="@null"
-        android:inputType="textMultiLine|textCapSentences"
+        android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
         android:hint="@string/hint_new_item" />
 
     <ImageButton

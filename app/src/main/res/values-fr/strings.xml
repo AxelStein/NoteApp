@@ -134,7 +134,7 @@
     <string name="title_export_drive">Exporter vers Google Drive</string>
     <string name="title_import_drive">Importer depuis Google Drive</string>
     <string name="title_rename_notebook">Renommer le carnet</string>
-    <string name="title_select_notebook">Déplacer vers le carner</string>
+    <string name="title_select_notebook">Déplacer vers le carnet</string>
     <string name="title_import">Importation…</string>
 
     <!--Plurals-->

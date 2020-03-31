@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_edit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        app:elevation="0dp"
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="?attr/toolbarPopupTheme">
+
+            <com.axel_stein.noteapp.views.IconTextView
+                app:iconRight="@drawable/ic_arrow_drop_down_24dp"
+                app:iconRightTint="?attr/menuItemTintColor"
+
+                android:id="@+id/notebook"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:drawablePadding="8dp"
+
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:gravity="center_vertical"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:minWidth="72dp"
+                tools:text="S" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:background="?android:attr/listDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <View
+            android:id="@+id/focus_view"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/check_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"
+            android:visibility="gone"
+            tools:listitem="@layout/item_check_list"/>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+
+                    android:background="@null"
+                    android:hint="@string/hint_title"
+                    android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+                    android:maxLength="@integer/max_title"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+
+                    tools:text="10 Best Note Apps for iPhone You Can Use"/>
+
+                <View
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:visibility="gone"
+                    android:background="?android:attr/listDivider" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="0dp"
+
+                    app:counterEnabled="false"
+                    app:counterMaxLength="@integer/max_content"
+                    app:hintEnabled="false">
+
+                    <EditText
+                        android:id="@+id/edit_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:layout_marginBottom="16dp"
+                        android:hint="@string/hint_content"
+                        android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+                        android:lineSpacingMultiplier="1.5"
+                        android:padding="0dp"
+                        android:maxLength="@integer/max_content"
+                        android:minHeight="48dp"
+                        android:textSize="16sp"
+                        tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things"
+                        android:importantForAutofill="no" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.axel_stein.noteapp.views.IconTextView
+                        app:iconLeft="@drawable/ic_date_range_24dp"
+                        app:iconLeftTint="?android:attr/textColorSecondary"
+                        android:drawablePadding="16dp"
+                        android:id="@+id/text_modified_date"
+                        tools:text="Updated: 23 oct 16:30"
+                        android:visibility="visible"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="14sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <com.axel_stein.noteapp.views.IconTextView
+                        app:iconLeft="@drawable/ic_visibility_24dp"
+                        app:iconLeftTint="?android:attr/textColorSecondary"
+                        android:drawablePadding="8dp"
+                        android:id="@+id/text_views"
+                        tools:text="100"
+                        android:visibility="visible"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="14sp"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:gravity="center_vertical"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <View
+            android:visibility="gone"
+            android:id="@+id/glass_view"
+            android:background="?attr/glassViewColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
