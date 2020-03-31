@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import io.reactivex.disposables.Disposable;
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public class DeleteNoteDialog extends ConfirmDialog {
+    private static final String BUNDLE_IDS = "BUNDLE_IDS";
 
     @Inject
     DeleteNoteInteractor mInteractor;
@@ -88,6 +91,26 @@ public class DeleteNoteDialog extends ConfirmDialog {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
+        if (savedInstanceState != null) {
+            mNotes = new ArrayList<>();
+            ArrayList<String> ids = savedInstanceState.getStringArrayList(BUNDLE_IDS);
+            if (ids != null) {
+                for (String id : ids) {
+                    mNotes.add(new Note(id));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        ArrayList<String> ids = new ArrayList<>();
+        for (Note n : mNotes) {
+            ids.add(n.getId());
+        }
+        outState.putStringArrayList(BUNDLE_IDS, ids);
     }
 
     @SuppressLint("CheckResult")

@@ -18,6 +18,11 @@ import com.axel_stein.noteapp.utils.ResourceUtil;
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
 public class ConfirmDialog extends AppCompatDialogFragment implements DialogInterface.OnClickListener {
+    private static final String BUNDLE_MESSAGE = "BUNDLE_MESSAGE";
+    private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
+    private static final String BUNDLE_POSITIVE = "BUNDLE_POSITIVE";
+    private static final String BUNDLE_NEGATIVE = "BUNDLE_NEGATIVE";
+
     private String mTitle;
     private int mTitleRes;
     private String mMessage;
@@ -70,7 +75,7 @@ public class ConfirmDialog extends AppCompatDialogFragment implements DialogInte
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Fragment fragment = getTargetFragment();
         if (fragment != null) {
@@ -96,6 +101,15 @@ public class ConfirmDialog extends AppCompatDialogFragment implements DialogInte
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_MESSAGE, getResourceText(mMessage, mMessageRes));
+        outState.putString(BUNDLE_TITLE, getResourceText(mTitle, mTitleRes));
+        outState.putString(BUNDLE_POSITIVE, getResourceText(mPositiveButtonText, mPositiveButtonTextRes));
+        outState.putString(BUNDLE_NEGATIVE, getResourceText(mNegativeButtonText, mNegativeButtonTextRes));
+    }
+
+    @Override
     public void onDestroyView() {
         if (getDialog() != null && getRetainInstance()) {
             getDialog().setDismissMessage(null);
@@ -109,15 +123,22 @@ public class ConfirmDialog extends AppCompatDialogFragment implements DialogInte
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         checkNotNull(getContext());
 
+        if (savedInstanceState != null) {
+            mTitle = savedInstanceState.getString(BUNDLE_TITLE);
+            mPositiveButtonText = savedInstanceState.getString(BUNDLE_POSITIVE);
+            mNegativeButtonText = savedInstanceState.getString(BUNDLE_NEGATIVE);
+            mMessage = savedInstanceState.getString(BUNDLE_MESSAGE);
+        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext()); // , R.style.DialogStyle
-        builder.setTitle(getText(mTitle, mTitleRes));
-        builder.setMessage(getText(mMessage, mMessageRes));
-        builder.setPositiveButton(getText(mPositiveButtonText, mPositiveButtonTextRes), this);
-        builder.setNegativeButton(getText(mNegativeButtonText, mNegativeButtonTextRes), this);
+        builder.setTitle(getResourceText(mTitle, mTitleRes));
+        builder.setMessage(getResourceText(mMessage, mMessageRes));
+        builder.setPositiveButton(getResourceText(mPositiveButtonText, mPositiveButtonTextRes), this);
+        builder.setNegativeButton(getResourceText(mNegativeButtonText, mNegativeButtonTextRes), this);
         return builder.create();
     }
 
-    private String getText(String s, int res) {
+    private String getResourceText(String s, int res) {
         return ResourceUtil.getString(getContext(), s, res);
     }
 
