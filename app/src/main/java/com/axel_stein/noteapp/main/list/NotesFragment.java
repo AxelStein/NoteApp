@@ -30,7 +30,7 @@ import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog;
 import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog.Builder;
-import com.axel_stein.noteapp.main.edit.EditNoteActivity;
+import com.axel_stein.noteapp.main.edit2.EditNoteActivity2;
 import com.axel_stein.noteapp.main.list.NotesContract.Presenter;
 import com.axel_stein.noteapp.utils.DisplayUtil;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -259,7 +259,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
     @Override
     public void showNote(Note note) {
-        EditNoteActivity.launch(getContext(), note);
+        EditNoteActivity2.launch(getContext(), note);
     }
 
     @Override
@@ -285,7 +285,6 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
         builder.setTitle(getString(R.string.action_sort));
         builder.setMenuRes(R.menu.sort_notes);
-        builder.addChecked(itemId);
         builder.show(this, TAG_SORT_NOTES);
     }
 

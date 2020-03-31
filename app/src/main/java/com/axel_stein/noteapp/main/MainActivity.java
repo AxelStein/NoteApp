@@ -26,7 +26,7 @@ import com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog;
 import com.axel_stein.noteapp.dialogs.main_menu.PrimaryItem;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
-import com.axel_stein.noteapp.main.edit.EditNoteActivity;
+import com.axel_stein.noteapp.main.edit2.EditNoteActivity2;
 import com.axel_stein.noteapp.main.list.SearchActivity;
 import com.axel_stein.noteapp.settings.SettingsActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
@@ -62,6 +62,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     private static final String ID_TRASH = "ID_TRASH";
     private static final String ID_ADD_NOTEBOOK = "ID_ADD_NOTEBOOK";
     private static final String BUNDLE_SELECTED_ITEM_ID = "BUNDLE_SELECTED_ITEM_ID";
+    private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
@@ -102,7 +103,8 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                         break;
                     default: id = mSelectedItemId;
                 }
-                EditNoteActivity.launch(MainActivity.this, id);
+                // todo EditNoteActivity.launch(MainActivity.this, id);
+                EditNoteActivity2.launch(MainActivity.this, id);
             }
         });
 
@@ -261,11 +263,10 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (outState != null) {
-            outState.putString(BUNDLE_SELECTED_ITEM_ID, mSelectedItemId);
-        }
+        outState.putString(BUNDLE_SELECTED_ITEM_ID, mSelectedItemId);
+        outState.putString(BUNDLE_TITLE, mTextViewTitle.getText().toString());
     }
 
     @Override
@@ -273,6 +274,8 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
             mSelectedItemId = savedInstanceState.getString(BUNDLE_SELECTED_ITEM_ID);
+            onMenuItemClick(mSelectedItemId, true);
+            onTitleChange(savedInstanceState.getString(BUNDLE_TITLE));
         }
     }
 
