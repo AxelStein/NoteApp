@@ -52,24 +52,22 @@ public class DriveServiceHelper {
     }
 
     public Intent requestSignInIntent() {
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA), new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
+        GoogleSignInOptions signInOptions = getSignInOptions();
         GoogleSignInClient client = GoogleSignIn.getClient(mContext, signInOptions);
-        // The result of the sign-in Intent is handled in onActivityResult.
         return client.getSignInIntent();
     }
 
     public void signOut(@NonNull OnSuccessListener<Void> l, @NonNull OnFailureListener f) {
-        GoogleSignInOptions signInOptions =
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestEmail()
-                        .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA), new Scope(DriveScopes.DRIVE_FILE))
-                        .build();
+        GoogleSignInOptions signInOptions = getSignInOptions();
         GoogleSignInClient client = GoogleSignIn.getClient(mContext, signInOptions);
         client.signOut().addOnSuccessListener(l).addOnFailureListener(f);
+    }
+
+    private GoogleSignInOptions getSignInOptions() {
+        return new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestScopes(new Scope(DriveScopes.DRIVE_APPDATA), new Scope(DriveScopes.DRIVE_FILE))
+                .build();
     }
 
     private boolean setupDriveService() {
@@ -112,14 +110,12 @@ public class DriveServiceHelper {
 
         if (setupDriveService()) {
             String id = getFileId(fileName);
-            File file;
             if (isEmpty(id)) {
                 metadata.setParents(Collections.singletonList("appDataFolder"));
-                file = mDriveService.files().create(metadata, contentStream).setFields("id").execute();
+                mDriveService.files().create(metadata, contentStream).setFields("id").execute();
             } else {
-                file = mDriveService.files().update(id, metadata, contentStream).execute();
+                mDriveService.files().update(id, metadata, contentStream).execute();
             }
-            LogHelper.logVerbose("saveFileSync", fileName, file.getId());
         }
     }
 
@@ -156,8 +152,7 @@ public class DriveServiceHelper {
 
     @Nullable
     private String downloadFileSync(String fileName) throws IOException {
-        LogHelper.logVerbose("downloadFile", fileName);
-
+        LogHelper.logVerbose("downloadFileSync", fileName);
         String id = getFileId(fileName);
         if (notEmpty(id) && setupDriveService()) {
             InputStream is = mDriveService.files().get(id).executeMediaAsInputStream();
@@ -179,6 +174,7 @@ public class DriveServiceHelper {
             if (setupDriveService()) {
                 FileList result = mDriveService.files()
                         .list()
+                        .setSpaces("appDataFolder")
                         .setQ(String.format("name = '%s'", fileName))
                         .execute();
                 List<File> files = result.getFiles();
@@ -187,7 +183,7 @@ public class DriveServiceHelper {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LogHelper.logError("getFileId", e);
         }
         return null;
     }
