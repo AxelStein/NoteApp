@@ -357,7 +357,7 @@ public class EditNoteActivity2 extends BaseActivity implements SelectNotebookDia
         if (mNote.isCheckList()) {
             List<CheckItem> items = getCheckItems();
             mNote.setCheckListJson(CheckListHelper.toJson(items));
-            if (!mNote.getCheckListJson().contentEquals(mCheckListJsonSrc)) {
+            if (!TextUtils.equals(mNote.getCheckListJson(), mCheckListJsonSrc)) {
                 if (items.size() > 0) {
                     mNote.setTitle(items.get(0).getText());
                 }

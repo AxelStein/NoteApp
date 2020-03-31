@@ -285,6 +285,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
         BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
         builder.setTitle(getString(R.string.action_sort));
         builder.setMenuRes(R.menu.sort_notes);
+        builder.setCheckedItemId(itemId);
         builder.show(this, TAG_SORT_NOTES);
     }
 
