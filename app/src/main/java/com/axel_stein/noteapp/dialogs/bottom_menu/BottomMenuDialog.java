@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,16 +27,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class BottomMenuDialog extends BottomSheetDialogFragment {
+    private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
+    private static final String BUNDLE_MENU_RES = "BUNDLE_MENU_RES";
+    private static final String BUNDLE_CHECKED_ITEM_ID = "BUNDLE_CHECKED_ITEM_ID";
+
     private String mTitle;
     private int mMenuRes;
-    private Object mData;
-    private SparseBooleanArray mCheckedItems;
-    private SparseBooleanArray mItemsVisibility;
+    private int mCheckedItemId;
     private OnMenuItemClickListener mListener;
-
-    public Object getData() {
-        return mData;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +43,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Fragment fragment = getTargetFragment();
         if (fragment != null) {
@@ -79,6 +76,12 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mTitle = savedInstanceState.getString(BUNDLE_TITLE);
+            mMenuRes = savedInstanceState.getInt(BUNDLE_MENU_RES);
+            mCheckedItemId = savedInstanceState.getInt(BUNDLE_CHECKED_ITEM_ID);
+        }
+
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         View view = inflater.inflate(R.layout.dialog_bottom_menu, null);
@@ -93,21 +96,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Menu menu = MenuUtil.inflateMenuFromResource(recyclerView, mMenuRes);
-        if (mItemsVisibility != null) {
-            for (int i = 0; i < mItemsVisibility.size(); i++) {
-                int id = mItemsVisibility.keyAt(i);
-                boolean visible = mItemsVisibility.valueAt(i);
-                MenuUtil.show(menu, visible, id);
-            }
-        }
-
-        if (mCheckedItems != null) {
-            for (int i = 0; i < mCheckedItems.size(); i++) {
-                int id = mCheckedItems.keyAt(i);
-                boolean checked = mCheckedItems.valueAt(i);
-                MenuUtil.check(menu, id, checked);
-            }
-        }
+        MenuUtil.check(menu, mCheckedItemId, true);
 
         MenuAdapter adapter = new MenuAdapter(getContext());
         adapter.setItems(MenuUtil.getVisibleMenuItems(menu));
@@ -136,6 +125,14 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         return dialog;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUNDLE_MENU_RES, mMenuRes);
+        outState.putString(BUNDLE_TITLE, mTitle);
+        outState.putInt(BUNDLE_CHECKED_ITEM_ID, mCheckedItemId);
+    }
+
     public interface OnMenuItemClickListener {
         void onMenuItemClick(BottomMenuDialog dialog, String tag, MenuItem item);
     }
@@ -144,9 +141,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     public static class Builder {
         private String mTitle;
         private int mMenuRes;
-        private Object mData;
-        private SparseBooleanArray mCheckedItems;
-        private SparseBooleanArray mItemsVisibility;
+        private int mCheckedItemId;
 
         public Builder setTitle(String title) {
             mTitle = title;
@@ -158,39 +153,15 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             return this;
         }
 
-        public Builder setData(Object data) {
-            mData = data;
-            return this;
-        }
-
-        public Builder showMenuItem(int itemId, boolean show) {
-            if (mItemsVisibility == null) {
-                mItemsVisibility = new SparseBooleanArray();
-            }
-            mItemsVisibility.put(itemId, show);
-            return this;
-        }
-
-        public Builder addChecked(int itemId) {
-            return addChecked(itemId, true);
-        }
-
-        @SuppressWarnings("SameParameterValue")
-        Builder addChecked(int itemId, boolean checked) {
-            if (mCheckedItems == null) {
-                mCheckedItems = new SparseBooleanArray();
-            }
-            mCheckedItems.put(itemId, checked);
-            return this;
+        public void setCheckedItemId(int itemId) {
+            this.mCheckedItemId = itemId;
         }
 
         public void show(Fragment fragment, String tag) {
             BottomMenuDialog dialog = new BottomMenuDialog();
             dialog.mTitle = mTitle;
             dialog.mMenuRes = mMenuRes;
-            dialog.mData = mData;
-            dialog.mCheckedItems = mCheckedItems;
-            dialog.mItemsVisibility = mItemsVisibility;
+            dialog.mCheckedItemId = mCheckedItemId;
             dialog.setTargetFragment(fragment, 0);
             assert fragment.getFragmentManager() != null;
             dialog.show(fragment.getFragmentManager(), tag);
@@ -200,9 +171,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             BottomMenuDialog dialog = new BottomMenuDialog();
             dialog.mTitle = mTitle;
             dialog.mMenuRes = mMenuRes;
-            dialog.mData = mData;
-            dialog.mCheckedItems = mCheckedItems;
-            dialog.mItemsVisibility = mItemsVisibility;
+            dialog.mCheckedItemId = mCheckedItemId;
             dialog.show(manager, tag);
         }
 
