@@ -316,16 +316,13 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
                 moveToTrash(note);
                 break;
 
-            case AppSettingsRepository.SWIPE_ACTION_DELETE:
-                // todo delete(note);
-                break;
-
             case AppSettingsRepository.SWIPE_ACTION_PIN:
                 pin(note);
                 break;
 
             case AppSettingsRepository.SWIPE_ACTION_STAR:
                 star(note);
+                break;
         }
     }
 
@@ -545,9 +542,11 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         return notes;
     }
 
+    /*
     void delete(Note note) {
         delete(makeList(note));
     }
+    */
 
     private void delete(List<Note> notes) {
         if (mView != null) {
@@ -613,4 +612,5 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     public boolean isTrash() {
         return false;
     }
+
 }

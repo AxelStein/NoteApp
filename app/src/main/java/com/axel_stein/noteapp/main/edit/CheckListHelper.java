@@ -22,9 +22,6 @@ public class CheckListHelper {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < items.size(); i++) {
             CheckItem item = items.get(i);
-            if (item instanceof DataCheckItem) {
-                continue;
-            }
             if (item.isCheckable()) {
                 builder.append(item.getText());
                 if (i < items.size() - 1) {
@@ -93,9 +90,6 @@ public class CheckListHelper {
         JSONArray array = new JSONArray();
         if (items != null) {
             for (CheckItem item : items) {
-                if (item instanceof DataCheckItem) {
-                    continue;
-                }
                 if (item.isCheckable()) {
                     JSONObject object = new JSONObject();
                     try {

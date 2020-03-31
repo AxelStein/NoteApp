@@ -146,7 +146,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_note_2);
+        setContentView(R.layout.activity_edit_note);
 
         App.getAppComponent().inject(this);
         EventBusHelper.subscribe(this);
@@ -287,9 +287,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SingleObserver<Note>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
+                        public void onSubscribe(Disposable d) {}
 
                         @Override
                         public void onSuccess(Note note) {
@@ -349,7 +347,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     }
 
     private void editTitleRequestFocus() {
-        if (!mNote.isTrashed() && isEmptyNote()) {
+        if (!mNote.isTrashed() && isEmptyNote() && !mNote.isCheckList()) {
             mEditTitle.requestFocus();
         }
     }
@@ -359,12 +357,12 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
         if (mNote.isCheckList()) {
             List<CheckItem> items = getCheckItems();
             mNote.setCheckListJson(CheckListHelper.toJson(items));
-            if (!TextUtils.equals(mNote.getCheckListJson(), mCheckListJsonSrc)) {
-                if (items.size() > 0) {
-                    mNote.setTitle(items.get(0).getText());
-                }
-                mNote.setContent(CheckListHelper.toContentFromCheckList(items));
 
+            boolean jsonChanged = !TextUtils.equals(mNote.getCheckListJson(), mCheckListJsonSrc);
+            boolean titleChanged = !TextUtils.equals(mNote.getTitle(), items.get(0).getText());
+            if (titleChanged || jsonChanged) {
+                mNote.setTitle(items.get(0).getText());
+                mNote.setContent(CheckListHelper.toContentFromCheckList(items));
                 mUpdateNoteInteractor.updateTitle(mNote.getId(), mNote.getTitle())
                         .andThen(mUpdateNoteInteractor.updateContent(mNote.getId(), mNote.getContent()))
                         .andThen(mUpdateNoteInteractor.updateCheckListJson(mNote.getId(), mNote.getCheckListJson()))
@@ -416,7 +414,24 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     protected void onDestroy() {
         mEditTitle.removeTextChangedListener(mEditTitleTextWatcher);
         mEditContent.removeTextChangedListener(mEditContentTextWatcher);
-        EventBusHelper.updateNoteList();
+        if (isEmptyNote()) {
+            mDeleteNoteInteractor.execute(mNote)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SimpleCompletableObserver() {
+                        @Override
+                        public void onComplete() {
+                            EventBusHelper.updateNoteList();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            super.onError(e);
+                            EventBusHelper.showMessage(R.string.error);
+                        }
+                    });
+        } else {
+            EventBusHelper.updateNoteList();
+        }
         EventBusHelper.unsubscribe(this);
         super.onDestroy();
     }
@@ -878,15 +893,11 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     }
 
     private void showCheckList(List<CheckItem> items) {
-        ViewUtil.show(mFocusView, mCheckRecyclerView);
+        ViewUtil.show(mCheckRecyclerView);
         ViewUtil.hide(mScrollView);
 
         mCheckListAdapter = new CheckListAdapter();
         mCheckListAdapter.setItems(items);
-
-        String date = DateFormatter.formatDateTime(this, mNote.getModifiedDate().getMillis());
-        mCheckListAdapter.addItem(new DataCheckItem(date, mNote.getViews()));
-
         mCheckRecyclerView.setAdapter(mCheckListAdapter);
         mCheckRecyclerView.setHasFixedSize(true);
         mCheckRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -895,7 +906,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     }
 
     private void hideCheckList() {
-        ViewUtil.hide(mFocusView, mCheckRecyclerView);
+        ViewUtil.hide(mCheckRecyclerView);
         ViewUtil.show(mScrollView);
         mCheckListAdapter = null;
     }

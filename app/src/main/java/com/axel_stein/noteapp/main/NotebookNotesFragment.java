@@ -21,14 +21,13 @@ import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
 import com.axel_stein.noteapp.main.list.NotesFragment;
 import com.axel_stein.noteapp.main.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.utils.MenuUtil;
+import com.axel_stein.noteapp.utils.SimpleSingleObserver;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 
 public class NotebookNotesFragment extends NotesFragment implements BottomMenuDialog.OnMenuItemClickListener {
     private static final String TAG_SORT_NOTEBOOK_NOTES = "TAG_SORT_NOTEBOOK_NOTES";
@@ -53,6 +52,9 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
         setHasOptionsMenu(true);
+        if (savedInstanceState == null && mPresenter == null) {
+            setPresenter(new NotebookNotesPresenter(mNotebookId));
+        }
         setEmptyMsg(getString(R.string.empty_notes));
         setPaddingTop(8);
         setPaddingBottom(88);
@@ -63,12 +65,7 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
         super.onStart();
         mNotebookInteractor.execute(mNotebookId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Notebook>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new SimpleSingleObserver<Notebook>() {
                     @Override
                     public void onSuccess(Notebook notebook) {
                         Activity activity = getActivity();
@@ -76,11 +73,6 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
                             mOnTitleChangeListener = (OnTitleChangeListener) activity;
                         }
                         updateNotebook(notebook);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
                     }
                 });
     }
@@ -155,7 +147,6 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
                 super.onMenuItemClick(dialog, tag, item);
 
         }
-
         dialog.dismiss();
     }
 

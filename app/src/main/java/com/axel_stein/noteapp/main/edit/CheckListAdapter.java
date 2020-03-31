@@ -38,7 +38,6 @@ import static androidx.recyclerview.widget.ItemTouchHelper.UP;
 public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.ViewHolder> {
     private static final int ITEM_TITLE = 0;
     private static final int ITEM_LIST = 1;
-    private static final int ITEM_DATA = 2;
 
     private List<CheckItem> mItems;
     private ItemTouchHelper mItemTouchHelper;
@@ -183,7 +182,7 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
         item.setChecked(checked);
         notifyItemChanged(pos);
 
-        int to = checked ? getItemCount()-2 : 1; // todo
+        int to = checked ? getItemCount()-1 : 1; // todo
         mItems.remove(pos);
         mItems.add(to, item);
         notifyItemMoved(pos, to);
@@ -192,9 +191,7 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     @Override
     public int getItemViewType(int position) {
         CheckItem item = getItemAt(position);
-        if (item instanceof DataCheckItem) {
-            return ITEM_DATA;
-        } else if (item.isCheckable()) {
+        if (item.isCheckable()) {
             return ITEM_LIST;
         }
         return ITEM_TITLE;
@@ -204,60 +201,53 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case ITEM_TITLE: {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_list_title, parent, false);
-                TitleViewHolder tvh = new TitleViewHolder(v, new EditTextListener());
-                tvh.mOptions.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PopupMenu menu = new PopupMenu(v.getContext(), v, TOP | END, 0, R.style.PopupMenu);
-                        menu.inflate(R.menu.check_list);
-                        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                if (menuItem.getItemId() == R.id.menu_remove_checked_items) {
-                                    removeCheckedItems();
-                                }
-                                return true;
-                            }
-                        });
-                        menu.show();
-                    }
-                });
-                return tvh;
-                }
-
-            case ITEM_LIST: {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_list, parent, false);
-                final CheckViewHolder vh = new CheckViewHolder(v, new EditTextListener());
-                if (mItemTouchHelper != null) {
-                    vh.mDragHandle.setOnTouchListener(new View.OnTouchListener() {
+        if (viewType == ITEM_TITLE) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_list_title, parent, false);
+            TitleViewHolder tvh = new TitleViewHolder(v, new EditTextListener());
+            tvh.mOptions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PopupMenu menu = new PopupMenu(v.getContext(), v, TOP | END, 0, R.style.PopupMenu);
+                    menu.inflate(R.menu.check_list);
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                                mItemTouchHelper.startDrag(vh);
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            if (menuItem.getItemId() == R.id.menu_remove_checked_items) {
+                                removeCheckedItems();
                             }
-                            return false;
+                            return true;
                         }
                     });
+                    menu.show();
                 }
-                vh.mCheckBox.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        boolean checked = vh.mCheckBox.isChecked();
-                        if (checked && vh.mEditText.hasFocus()) {
-                            KeyboardUtil.hide(vh.mEditText);
-                        }
-                        checkItem(vh.getAdapterPosition(), checked);
-                    }
-                });
-                return vh;
-                }
+            });
+            return tvh;
         }
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_list_data, parent, false);
-        return new DataViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_check_list, parent, false);
+        final CheckViewHolder vh = new CheckViewHolder(v, new EditTextListener());
+        if (mItemTouchHelper != null) {
+            vh.mDragHandle.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mItemTouchHelper.startDrag(vh);
+                    }
+                    return false;
+                }
+            });
+        }
+        vh.mCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = vh.mCheckBox.isChecked();
+                if (checked && vh.mEditText.hasFocus()) {
+                    KeyboardUtil.hide(vh.mEditText);
+                }
+                checkItem(vh.getAdapterPosition(), checked);
+            }
+        });
+        return vh;
     }
 
     @Override
@@ -298,15 +288,6 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
                 }
                 break;
             }
-
-            case ITEM_DATA: {
-                DataCheckItem data = (DataCheckItem) item;
-
-                DataViewHolder vh = (DataViewHolder) holder;
-                vh.mTextModifiedDate.setText(data.getText());
-                vh.mViews.setText(String.valueOf(data.getViews()));
-                break;
-            }
         }
     }
 
@@ -333,17 +314,6 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
             mEditTextListener = listener;
             mEditText.addTextChangedListener(mEditTextListener);
             mOptions = itemView.findViewById(R.id.button_more_options);
-        }
-    }
-
-    class DataViewHolder extends ViewHolder {
-        TextView mTextModifiedDate;
-        TextView mViews;
-
-        DataViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mTextModifiedDate = itemView.findViewById(R.id.text_modified_date);
-            mViews = itemView.findViewById(R.id.text_views);
         }
     }
 

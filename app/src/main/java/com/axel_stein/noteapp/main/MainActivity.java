@@ -45,12 +45,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.CompletableObserver;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-
-import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 
 public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuItemClickListener, OnTitleChangeListener {
     private static final int REQUEST_CODE_SIGN_IN = 1;
@@ -376,6 +373,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 });
     }
 
+    /*
     private void importDrive() {
         mDriveServiceHelper.downloadFile(BACKUP_FILE_NAME, new OnSuccessListener<String>() {
             @Override
@@ -409,6 +407,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
             }
         });
     }
+    */
 
 
 }

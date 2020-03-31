@@ -25,7 +25,8 @@
             android:label="@string/action_settings"/>
 
         <activity
-            android:name=".main.edit.EditNoteActivity">
+            android:name=".main.edit.EditNoteActivity"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
