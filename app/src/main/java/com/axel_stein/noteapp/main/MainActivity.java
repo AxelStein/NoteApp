@@ -21,7 +21,6 @@ import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
-import com.axel_stein.noteapp.dialogs.main_menu.DividerItem;
 import com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog;
 import com.axel_stein.noteapp.dialogs.main_menu.PrimaryItem;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
@@ -41,26 +40,27 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import io.reactivex.SingleObserver;
+import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+
+import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
+import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_ADD_NOTEBOOK;
+import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_INBOX;
+import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_STARRED;
+import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_TRASH;
 
 public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuItemClickListener, OnTitleChangeListener {
     private static final int REQUEST_CODE_SIGN_IN = 1;
 
     private static final String TAG_MAIN_MENU = "TAG_MAIN_MENU";
     private static final String TAG_FRAGMENT = "TAG_FRAGMENT";
-    private static final String ID_INBOX = "ID_INBOX";
-    private static final String ID_STARRED = "ID_STARRED";
-    private static final String ID_TRASH = "ID_TRASH";
-    private static final String ID_ADD_NOTEBOOK = "ID_ADD_NOTEBOOK";
     private static final String BUNDLE_SELECTED_ITEM_ID = "BUNDLE_SELECTED_ITEM_ID";
     private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
     private static final String BUNDLE_FRAGMENT = "BUNDLE_FRAGMENT";
+    private static final String BUNDLE_MAIN_MENU_FRAGMENT = "BUNDLE_MAIN_MENU_FRAGMENT";
 
     @Inject
     QueryNotebookInteractor mQueryNotebookInteractor;
@@ -120,64 +120,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
     @SuppressLint("CheckResult")
     private void openMainMenu() {
-        mQueryNotebookInteractor.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Notebook>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(List<Notebook> notebooks) {
-                        MainMenuDialog.Builder builder = new MainMenuDialog.Builder();
-                        builder.setSelectedItemId(mSelectedItemId);
-                        builder.addItem(new PrimaryItem()
-                                .fromId(ID_INBOX)
-                                .fromTitle(R.string.action_inbox)
-                                .fromIcon(R.drawable.ic_inbox_24dp));
-                        builder.addItem(new PrimaryItem()
-                                .fromId(ID_STARRED)
-                                .fromTitle(R.string.action_starred)
-                                .fromIcon(R.drawable.ic_star_border_24dp));
-
-                        for (Notebook notebook : notebooks) {
-                            builder.addItem(new PrimaryItem()
-                                    .fromId(notebook.getId())
-                                    .fromTitle(notebook.getTitle())
-                                    .fromIcon(R.drawable.ic_book_24dp));
-                        }
-
-                        //builder.addItem(new DividerItem());
-                        builder.addItem(new PrimaryItem()
-                                .fromId(ID_ADD_NOTEBOOK)
-                                .fromTitle(R.string.action_add_notebook)
-                                .fromIcon(R.drawable.ic_add_box_24dp)
-                                .fromCheckable(false));
-                        builder.addItem(new DividerItem());
-
-                        builder.addItem(new PrimaryItem()
-                                .fromId(ID_TRASH)
-                                .fromTitle(R.string.action_trash)
-                                .fromIcon(R.drawable.ic_delete_24dp));
-
-                        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-                        if (account != null) {
-                            builder.setUserName(account.getDisplayName())
-                                    .setUserEmail(account.getEmail())
-                                    .setUserPhotoUrl(account.getPhotoUrl());
-                        } else {
-                            builder.setUserName(getString(R.string.action_sign_in));
-                        }
-
-                        builder.show(MainActivity.this, TAG_MAIN_MENU);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-                });
+        MainMenuDialog.launch(getSupportFragmentManager(), TAG_MAIN_MENU, mSelectedItemId);
     }
 
     @Override

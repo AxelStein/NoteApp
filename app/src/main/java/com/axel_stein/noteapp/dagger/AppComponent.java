@@ -2,6 +2,7 @@ package com.axel_stein.noteapp.dagger;
 
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog;
 import com.axel_stein.noteapp.dialogs.note.DeleteNoteDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
@@ -75,5 +76,7 @@ public interface AppComponent {
     void inject(DriveWorker worker);
 
     void inject(App app);
+
+    void inject(MainMenuDialog dialog);
 
 }
