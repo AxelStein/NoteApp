@@ -63,6 +63,10 @@ public class EventBusHelper {
         post(new Recreate());
     }
 
+    public static void importCompleted() {
+        post(new ImportCompleted());
+    }
+
     private static void post(@NonNull Object o) {
         EventBus.getDefault().postSticky(o);
     }
@@ -76,11 +80,11 @@ public class EventBusHelper {
     static class SignOutEvent {
     }
 
-    public static class Recreate {
-    }
+    public static class ImportCompleted {}
 
-    public static class UpdateNoteList {
-    }
+    public static class Recreate {}
+
+    public static class UpdateNoteList {}
 
     public static class AddNotebook {
         private final Notebook notebook;

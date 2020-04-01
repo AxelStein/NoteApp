@@ -60,7 +60,12 @@ public class DriveServiceHelper {
     public void signOut(@NonNull OnSuccessListener<Void> l, @NonNull OnFailureListener f) {
         GoogleSignInOptions signInOptions = getSignInOptions();
         GoogleSignInClient client = GoogleSignIn.getClient(mContext, signInOptions);
-        client.signOut().addOnSuccessListener(l).addOnFailureListener(f);
+        client.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mDriveService = null; // fixme
+            }
+        }).addOnSuccessListener(l).addOnFailureListener(f);
     }
 
     private GoogleSignInOptions getSignInOptions() {

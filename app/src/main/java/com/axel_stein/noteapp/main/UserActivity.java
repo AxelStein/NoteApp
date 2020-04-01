@@ -190,6 +190,7 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
                             @Override
                             public void onComplete() {
                                 EventBusHelper.updateNoteList();
+                                EventBusHelper.importCompleted();
                                 EventBusHelper.recreate();
                                 EventBusHelper.showMessage(R.string.msg_import_success);
                                 mProgressBar.hide();

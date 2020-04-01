@@ -126,6 +126,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                         if (mView != null) {
                             mView.dismissImportDialog();
                             EventBusHelper.updateNoteList();
+                            EventBusHelper.importCompleted();
                             EventBusHelper.recreate();
                             // fixme
                             EventBusHelper.showMessage(R.string.msg_import_success, 1000);

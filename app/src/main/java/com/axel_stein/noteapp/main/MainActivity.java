@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.ActionMode;
+import androidx.fragment.app.FragmentManager;
 
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
@@ -173,6 +174,11 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     }
 
     @Subscribe
+    public void onImportCompleted(EventBusHelper.ImportCompleted e) {
+        onMenuItemClick(ID_INBOX, true); // fixme not working
+    }
+
+    @Subscribe
     public void onNotebookAdded(final EventBusHelper.AddNotebook e) {
         Notebook notebook = e.getNotebook();
         onMenuItemClick(notebook.getId(), true);
@@ -209,7 +215,14 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         super.onSaveInstanceState(outState);
         outState.putString(BUNDLE_SELECTED_ITEM_ID, mSelectedItemId);
         outState.putString(BUNDLE_TITLE, mTextViewTitle.getText().toString());
-        getSupportFragmentManager().putFragment(outState, BUNDLE_FRAGMENT, getFragment(TAG_FRAGMENT));
+
+        FragmentManager fm = getSupportFragmentManager();
+        if (getFragment(TAG_FRAGMENT) != null) {
+            fm.putFragment(outState, BUNDLE_FRAGMENT, getFragment(TAG_FRAGMENT));
+        }
+        if (getFragment(TAG_MAIN_MENU) != null) {
+            fm.putFragment(outState, BUNDLE_MAIN_MENU_FRAGMENT, getFragment(TAG_MAIN_MENU));
+        }
     }
 
     @Override
@@ -302,8 +315,8 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 .addOnSuccessListener(new OnSuccessListener<GoogleSignInAccount>() {
                     @Override
                     public void onSuccess(GoogleSignInAccount googleAccount) {
-                        // importDrive(); fixme
-                        startActivity(new Intent(MainActivity.this, UserActivity.class));
+                        importDrive();
+                        //startActivity(new Intent(MainActivity.this, UserActivity.class));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -316,7 +329,6 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 });
     }
 
-    /*
     private void importDrive() {
         mDriveServiceHelper.downloadFile(BACKUP_FILE_NAME, new OnSuccessListener<String>() {
             @Override
@@ -325,20 +337,20 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CompletableObserver() {
                             @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
+                            public void onSubscribe(Disposable d) {}
 
                             @Override
                             public void onComplete() {
                                 EventBusHelper.updateNoteList();
                                 EventBusHelper.recreate();
+                                EventBusHelper.importCompleted();
                                 EventBusHelper.showMessage(R.string.msg_import_success);
                             }
 
                             @Override
                             public void onError(Throwable e) {
                                 e.printStackTrace();
+                                EventBusHelper.showMessage(R.string.error);
                             }
                         });
             }
@@ -350,7 +362,6 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
             }
         });
     }
-    */
 
 
 }
