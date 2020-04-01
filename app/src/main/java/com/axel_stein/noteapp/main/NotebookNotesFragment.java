@@ -52,7 +52,10 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
         super.onCreate(savedInstanceState);
         App.getAppComponent().inject(this);
         setHasOptionsMenu(true);
-        if (savedInstanceState == null && mPresenter == null) {
+        if (mPresenter == null) {
+            if (savedInstanceState != null) {
+                mNotebookId = savedInstanceState.getString(BUNDLE_NOTEBOOK_ID);
+            }
             setPresenter(new NotebookNotesPresenter(mNotebookId));
         }
         setEmptyMsg(getString(R.string.empty_notes));
