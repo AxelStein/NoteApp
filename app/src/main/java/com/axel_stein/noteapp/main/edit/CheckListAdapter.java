@@ -169,6 +169,9 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     private void removeItemAt(int pos) {
         mItems.remove(pos);
         notifyItemRemoved(pos);
+        if (getItemCount() == 1) {
+            addItemAt(1, null);
+        }
         /*
         todo
         if (getItemCount() == 1 && mPresenter != null) {
