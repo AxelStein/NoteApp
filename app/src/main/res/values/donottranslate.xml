@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Carnet</string>
-    <string name="app_version_number" translatable="false">1.4.6</string>
+    <string name="app_version_number" translatable="false">1.4.8</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>
