@@ -28,8 +28,7 @@ public class SetNotebookNoteInteractor {
             @Override
             public void run() {
                 requireNonNull(note);
-                String n = notebookId != null && notebookId.equals(Notebook.ID_INBOX) ? null : notebookId;
-                mRepository.setNotebook(note.getId(), n);
+                executeImpl(note.getId(), notebookId);
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -42,9 +41,16 @@ public class SetNotebookNoteInteractor {
             @Override
             public void run() {
                 requireNonNull(notes);
-                mRepository.setNotebook(notes, notebookId);
+                for (Note note : notes) {
+                    executeImpl(note.getId(), notebookId);
+                }
             }
         }).subscribeOn(Schedulers.io());
+    }
+
+    private void executeImpl(String noteId, String notebookId) {
+        String n = notebookId != null && notebookId.equals(Notebook.ID_INBOX) ? null : notebookId;
+        mRepository.setNotebook(noteId, n);
     }
 
 }
