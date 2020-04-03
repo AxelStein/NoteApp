@@ -150,5 +150,6 @@
         <item quantity="many">%1$d нотатків видалено із відмічених</item>
         <item quantity="other">%1$d нотатків видалено із відмічених</item>
     </plurals>
+    <string name="action_reminders">Нагадування</string>
 
 </resources>

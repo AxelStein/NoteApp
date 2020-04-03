@@ -37,6 +37,7 @@
     <string name="action_sort_views">Views</string>
     <string name="action_sort_date">Date</string>
     <string name="action_starred">Starred</string>
+    <string name="action_reminders">Reminders</string>
     <string name="action_export">Export</string>
     <string name="action_new_notebook">+ New notebook</string>
     <string name="action_check_list">Check list</string>
