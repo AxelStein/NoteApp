@@ -46,6 +46,12 @@ public class NoteEntity {
     @ColumnInfo
     private String checkListJson;
 
+    @ColumnInfo
+    private boolean hasReminder;
+
+    @ColumnInfo
+    private String reminderId;
+
     @NonNull
     public String getId() {
         return id;
@@ -142,4 +148,21 @@ public class NoteEntity {
     public void setCheckListJson(String checkListJson) {
         this.checkListJson = checkListJson;
     }
+
+    public boolean hasReminder() {
+        return hasReminder;
+    }
+
+    public void setHasReminder(boolean hasReminder) {
+        this.hasReminder = hasReminder;
+    }
+
+    public String getReminderId() {
+        return reminderId;
+    }
+
+    public void setReminderId(String reminderId) {
+        this.reminderId = reminderId;
+    }
+
 }

@@ -1,7 +1,12 @@
 package com.axel_stein.noteapp.dagger;
 
+import android.text.format.DateFormat;
+
+import androidx.core.os.ConfigurationCompat;
+
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.data.note.SqlNoteRepository;
+import com.axel_stein.data.reminder.SqlReminderRepository;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
@@ -12,6 +17,9 @@ import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetTrashedNoteInteractor;
 import com.axel_stein.domain.interactor.note.UpdateNoteInteractor;
+import com.axel_stein.noteapp.App;
+
+import java.util.Locale;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,8 +33,8 @@ class NoteInteractorModule {
     }
 
     @Provides
-    DeleteNoteInteractor delete(SqlNoteRepository r) {
-        return new DeleteNoteInteractor(r);
+    DeleteNoteInteractor delete(SqlNoteRepository n, SqlReminderRepository r) {
+        return new DeleteNoteInteractor(n, r);
     }
 
     @Provides
@@ -35,8 +43,8 @@ class NoteInteractorModule {
     }
 
     @Provides
-    GetNoteInteractor get(SqlNoteRepository r) {
-        return new GetNoteInteractor(r);
+    GetNoteInteractor get(SqlNoteRepository n) {
+        return new GetNoteInteractor(n);
     }
 
     @Provides
@@ -45,8 +53,9 @@ class NoteInteractorModule {
     }
 
     @Provides
-    QueryNoteInteractor query(SqlNoteRepository r, AppSettingsRepository s) {
-        return new QueryNoteInteractor(r, s);
+    QueryNoteInteractor query(SqlNoteRepository n, AppSettingsRepository s, SqlReminderRepository r, App app) {
+        Locale locale = ConfigurationCompat.getLocales(app.getResources().getConfiguration()).get(0);
+        return new QueryNoteInteractor(n, s, r, locale, DateFormat.is24HourFormat(app));
     }
 
     @Provides

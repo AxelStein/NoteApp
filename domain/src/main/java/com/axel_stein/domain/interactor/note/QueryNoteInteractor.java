@@ -4,16 +4,20 @@ import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.NoteOrder;
+import com.axel_stein.domain.model.Reminder;
 import com.axel_stein.domain.repository.NoteRepository;
+import com.axel_stein.domain.repository.ReminderRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Single;
@@ -33,9 +37,20 @@ public class QueryNoteInteractor {
     @NonNull
     private final SettingsRepository mSettingsRepository;
 
-    public QueryNoteInteractor(@NonNull NoteRepository n, @NonNull SettingsRepository s) {
+    @NonNull
+    private final ReminderRepository mReminderRepository;
+
+    @NonNull
+    private final Locale mLocale;
+
+    private final boolean m24HFormat;
+
+    public QueryNoteInteractor(@NonNull NoteRepository n, @NonNull SettingsRepository s, @NonNull ReminderRepository r, @NonNull Locale l, boolean is24HFormat) {
         mNoteRepository = requireNonNull(n);
         mSettingsRepository = requireNonNull(s);
+        mReminderRepository = requireNonNull(r);
+        mLocale = requireNonNull(l);
+        m24HFormat = is24HFormat;
     }
 
     @NonNull
@@ -65,6 +80,16 @@ public class QueryNoteInteractor {
             @Override
             public List<Note> call() {
                 return orderImpl(mNoteRepository.queryStarred());
+            }
+        });
+    }
+
+    @NonNull
+    public Single<List<Note>> queryReminders() {
+        return single(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() {
+                return orderImpl(mNoteRepository.queryReminders(), NoteOrder.REMINDER, false);
             }
         });
     }
@@ -235,7 +260,33 @@ public class QueryNoteInteractor {
         }
         */
 
+        LocalDate today = new LocalDate(System.currentTimeMillis());
+
         for (Note note : list) {
+            if (note.hasReminder()) {
+                Reminder reminder = mReminderRepository.get(note.getReminderId());
+                note.setReminder(reminder);
+
+                LocalDate localDate = reminder.getDateTime().toLocalDate();
+                note.setReminderPassed(localDate.isBefore(today));
+
+                String pattern;
+                if (localDate.equals(today)) {
+                    if (m24HFormat) {
+                        pattern = "H:mm";
+                    } else {
+                        pattern = "h:mm aa";
+                    }
+                } else if (localDate.year().equals(today.year())) {
+                    pattern = "d MMM";
+                } else {
+                    pattern = "d MMM yyyy";
+                }
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, mLocale);
+                note.setReminderDateText(simpleDateFormat.format(reminder.getDateTime().toDate()).toLowerCase());
+            }
+
             String content = note.getContent();
             if (!isEmpty(content)) {
                 if (mSettingsRepository.showNotesContent() || searchFlag) {
@@ -281,13 +332,16 @@ public class QueryNoteInteractor {
 
                     case TRASHED:
                         return compareDates(n1.getTrashedDate(), n2.getTrashedDate());
+
+                    case REMINDER:
+                        return compareDates(n2.getReminderDate(), n1.getReminderDate());
                 }
 
                 return 0;
             }
         });
 
-        if (!searchFlag && order != NoteOrder.TRASHED) {
+        if (!searchFlag && order != NoteOrder.TRASHED && order != NoteOrder.REMINDER) {
             Collections.sort(list, new Comparator<Note>() {
                 @Override
                 public int compare(Note n1, Note n2) {

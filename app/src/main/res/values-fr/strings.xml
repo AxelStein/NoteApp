@@ -147,5 +147,6 @@
         <item quantity="other">%1$d notes sont non marquées</item>
     </plurals>
     <string name="action_reminders">Rappels</string>
+    <string name="action_add_reminder">Ajouter un rappel</string>
 
 </resources>

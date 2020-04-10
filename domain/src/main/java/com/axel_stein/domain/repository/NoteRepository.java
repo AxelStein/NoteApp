@@ -18,8 +18,6 @@ public interface NoteRepository {
 
     void setNotebook(String noteId, String notebookId);
 
-    void setNotebook(@NonNull List<Note> notes, String notebookId);
-
     void setInbox(@NonNull Notebook notebook);
 
     void setPinned(@NonNull Note note, boolean pinned);
@@ -50,8 +48,15 @@ public interface NoteRepository {
 
     void deleteAll();
 
+    void setReminder(String noteId, String reminderId);
+
+    void deleteReminder(String reminderId);
+
     @Nullable
     Note get(String id);
+
+    @Nullable
+    String getReminderId(String noteId);
 
     @NonNull
     List<Note> queryAll();
@@ -64,6 +69,9 @@ public interface NoteRepository {
 
     @NonNull
     List<Note> queryTrashed();
+
+    @NonNull
+    List<Note> queryReminders();
 
     @NonNull
     List<Note> queryNotebook(@NonNull String notebookId);

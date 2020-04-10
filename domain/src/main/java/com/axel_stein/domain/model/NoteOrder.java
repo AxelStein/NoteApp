@@ -6,7 +6,8 @@ public enum NoteOrder {
     TITLE,
     VIEWS,
     MODIFIED,
-    TRASHED;
+    TRASHED,
+    REMINDER;
 
     @Nullable
     public static NoteOrder from(int value) {
@@ -27,6 +28,9 @@ public enum NoteOrder {
 
             case 3:
                 return TRASHED;
+
+            case 4:
+                return REMINDER;
         }
 
         return null;

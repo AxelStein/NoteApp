@@ -8,9 +8,12 @@ import com.axel_stein.domain.utils.TextUtil;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
 
-public class Note implements Cloneable {
+public class Note implements Cloneable, Serializable {
     private String id;
     private String title;
     private String content;
@@ -23,6 +26,11 @@ public class Note implements Cloneable {
     private DateTime modifiedDate;
     private boolean checkList;
     private String checkListJson;
+    private boolean hasReminder;
+    private String reminderId;
+    private Reminder reminder;
+    private String reminderDateText;
+    private boolean reminderPassed;
 
     public Note() {
     }
@@ -148,6 +156,51 @@ public class Note implements Cloneable {
         return checkListJson;
     }
 
+    public boolean hasReminder() {
+        return hasReminder;
+    }
+
+    public void setHasReminder(boolean hasReminder) {
+        this.hasReminder = hasReminder;
+    }
+
+    public String getReminderId() {
+        return reminderId;
+    }
+
+    public void setReminderId(String reminderId) {
+        this.reminderId = reminderId;
+    }
+
+    public void setReminder(Reminder reminder) {
+        this.reminder = reminder;
+    }
+
+    public Reminder getReminder() {
+        return reminder;
+    }
+
+    @Nullable
+    public DateTime getReminderDate() {
+        return reminder != null ? reminder.getDateTime() : null;
+    }
+
+    public String getReminderDateText() {
+        return reminderDateText;
+    }
+
+    public void setReminderDateText(String reminderDateText) {
+        this.reminderDateText = reminderDateText;
+    }
+
+    public boolean reminderPassed() {
+        return reminderPassed;
+    }
+
+    public void setReminderPassed(boolean reminderPassed) {
+        this.reminderPassed = reminderPassed;
+    }
+
     public Note copy() {
         Note copy;
         try {
@@ -156,6 +209,11 @@ public class Note implements Cloneable {
             copy = new Note();
         }
         return copy;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
@@ -174,6 +232,8 @@ public class Note implements Cloneable {
             builder.append(starred, note.starred);
             builder.append(checkList, note.checkList);
             builder.append(checkListJson, note.checkListJson);
+            builder.append(hasReminder, note.hasReminder);
+            builder.append(reminderId, note.reminderId);
 
             return builder.areEqual();
         }
@@ -194,6 +254,10 @@ public class Note implements Cloneable {
                 ", trashed=" + trashed +
                 ", trashedDate=" + trashedDate +
                 ", modifiedDate=" + modifiedDate +
+                ", checkList=" + checkList +
+                ", checkListJson='" + checkListJson + '\'' +
+                ", hasReminder=" + hasReminder +
+                ", reminderId='" + reminderId + '\'' +
                 '}';
     }
 }

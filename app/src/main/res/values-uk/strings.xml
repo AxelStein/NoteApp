@@ -151,5 +151,6 @@
         <item quantity="other">%1$d нотатків видалено із відмічених</item>
     </plurals>
     <string name="action_reminders">Нагадування</string>
+    <string name="action_add_reminder">Додати нагадування</string>
 
 </resources>

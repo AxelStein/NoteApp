@@ -30,10 +30,19 @@ public class DateFormatter {
 
     @NonNull
     public static String formatDate(@Nullable Context context, Long date) {
+        return formatDate(context, date, true);
+    }
+
+    @NonNull
+    public static String formatDate(@Nullable Context context, Long date, boolean showWeekDay) {
         if (context == null || date == null) {
             return "";
         }
-        return DateUtils.formatDateTime(context, date, FORMAT_SHOW_DATE | FORMAT_SHOW_WEEKDAY | FORMAT_ABBREV_WEEKDAY);
+        int flags = FORMAT_SHOW_DATE;
+        if (showWeekDay) {
+            flags |= FORMAT_SHOW_WEEKDAY | FORMAT_ABBREV_WEEKDAY;
+        }
+        return DateUtils.formatDateTime(context, date, flags);
     }
 
     @NonNull
@@ -46,10 +55,19 @@ public class DateFormatter {
 
     @NonNull
     public static String formatDateTime(@Nullable Context context, Long time) {
+        return formatDateTime(context, time, false);
+    }
+
+    @NonNull
+    public static String formatDateTime(@Nullable Context context, Long time, boolean showWeekDay) {
         if (context == null || time == null) {
             return "";
         }
-        return DateUtils.formatDateTime(context, time, FORMAT_SHOW_DATE | FORMAT_SHOW_TIME
+        int dateFlags = FORMAT_SHOW_DATE;
+        if (showWeekDay) {
+            dateFlags |= FORMAT_SHOW_WEEKDAY | FORMAT_ABBREV_WEEKDAY;
+        }
+        return DateUtils.formatDateTime(context, time, dateFlags | FORMAT_SHOW_TIME
                 | FORMAT_ABBREV_TIME | FORMAT_ABBREV_MONTH).toLowerCase();
     }
 

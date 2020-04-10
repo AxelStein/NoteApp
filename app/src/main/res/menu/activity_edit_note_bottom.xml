@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_check_list"
+        android:title="@string/action_check_list"
+        android:icon="@drawable/ic_list_24dp"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_share_24dp"
+        android:title="@string/action_share"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_duplicate"
+        android:icon="@drawable/ic_content_copy_24dp"
+        android:title="@string/action_duplicate"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_move_to_trash"
+        android:icon="@drawable/ic_delete_24dp"
+        android:title="@string/action_move_to_trash"
+        app:showAsAction="ifRoom"/>
+
+</menu>

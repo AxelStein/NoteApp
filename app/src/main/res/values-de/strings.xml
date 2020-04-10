@@ -147,5 +147,6 @@
         <item quantity="other">%1$d Notizen werden aus markiert gelöscht</item>
     </plurals>
     <string name="action_reminders">Erinnerungen</string>
+    <string name="action_add_reminder">Erinnerung hinzufügen</string>
 
 </resources>

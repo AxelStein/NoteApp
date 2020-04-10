@@ -2,6 +2,7 @@ package com.axel_stein.domain.model;
 
 import com.axel_stein.domain.json_wrapper.NoteWrapper;
 import com.axel_stein.domain.json_wrapper.NotebookWrapper;
+import com.axel_stein.domain.json_wrapper.ReminderWrapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Backup {
-    private final int version = 3;
+    private final int version = 4;
 
     private List<NoteWrapper> notes;
 
@@ -18,6 +19,8 @@ public class Backup {
 
     @JsonProperty("settings")
     private String jsonSettings;
+
+    private List<ReminderWrapper> reminders;
 
     public Backup() {
     }
@@ -54,6 +57,17 @@ public class Backup {
 
     public String getJsonSettings() {
         return jsonSettings;
+    }
+
+    public void setSourceReminders(List<Reminder> reminders) {
+        this.reminders = new ArrayList<>();
+        for (Reminder r : reminders) {
+            this.reminders.add(ReminderWrapper.from(r));
+        }
+    }
+
+    public List<ReminderWrapper> getReminders() {
+        return reminders;
     }
 
     public String toJson() throws JsonProcessingException {

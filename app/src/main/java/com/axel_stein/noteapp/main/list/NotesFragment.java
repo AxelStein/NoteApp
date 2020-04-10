@@ -420,6 +420,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
             private final ImageView mStar;
             private final TextView mTitle;
             private final TextView mContent;
+            private final TextView mReminder;
             private final NoteItemListener mListener;
 
             private NoteViewHolder(final View itemView, NoteItemListener l) {
@@ -429,6 +430,7 @@ public class NotesFragment extends Fragment implements NotesContract.View,
                 mStar = itemView.findViewById(R.id.img_starred);
                 mTitle = itemView.findViewById(R.id.text_title);
                 mContent = itemView.findViewById(R.id.text_content);
+                mReminder = itemView.findViewById(R.id.text_reminder);
                 mListener = l;
 
                 mIcon.setOnClickListener(new View.OnClickListener() {
@@ -456,6 +458,11 @@ public class NotesFragment extends Fragment implements NotesContract.View,
 
                 ViewUtil.setVisible(note.isPinned(), mPin);
                 ViewUtil.setVisible(note.isStarred(), mStar);
+                ViewUtil.setVisible(note.hasReminder(), mReminder);
+                if (note.hasReminder()) {
+                    ViewUtil.setText(mReminder, note.getReminderDateText());
+                    mReminder.setSelected(note.reminderPassed());
+                }
             }
 
             void setChecked(boolean checkable, boolean checked, boolean checkList) {

@@ -63,6 +63,12 @@ public interface NoteDao {
     @Query("UPDATE notes SET checkListJson = :checkListJson WHERE id = :noteId")
     void updateCheckListJson(String noteId, String checkListJson);
 
+    @Query("UPDATE notes SET reminderId = :reminderId, hasReminder = 1 WHERE id = :noteId")
+    void setReminder(String noteId, String reminderId);
+
+    @Query("UPDATE notes SET reminderId = '', hasReminder = 0 WHERE reminderId = :reminderId")
+    void deleteReminder(String reminderId);
+
     /* Delete methods */
 
     @Delete
@@ -79,6 +85,9 @@ public interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :id")
     NoteEntity get(String id);
 
+    @Query("SELECT reminderId FROM notes WHERE id = :noteId")
+    String getReminderId(String noteId);
+
     @Query("SELECT * FROM notes")
     List<NoteEntity> queryAll();
 
@@ -87,6 +96,9 @@ public interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE starred != 0 AND trashed = 0")
     List<NoteEntity> queryStarred();
+
+    @Query("SELECT * FROM notes WHERE hasReminder != 0 AND trashed = 0")
+    List<NoteEntity> queryReminders();
 
     @Query("SELECT * FROM notes WHERE trashed != 0")
     List<NoteEntity> queryTrashed();

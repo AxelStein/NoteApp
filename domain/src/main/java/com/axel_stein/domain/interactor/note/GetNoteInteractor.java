@@ -26,26 +26,29 @@ public class GetNoteInteractor {
      * @throws IllegalStateException if id, notebook or title is empty
      */
     public Single<Note> execute(final String id, final boolean incrementViews) {
+        return impl(id, incrementViews).subscribeOn(Schedulers.io());
+    }
+
+    private Single<Note> impl(final String id, final boolean incrementViews) {
         return Single.fromCallable(new Callable<Note>() {
             @Override
             public Note call() {
-                Note note = mNoteRepository.get(id);
-                if (note != null) {
-                    /*
-                    if (!isValid(note)) {
-                        throw new IllegalStateException("note is not valid");
-                    }
-                    */
-                    if (!note.isTrashed() && incrementViews) {
-                        note.incrementViews();
-                        mNoteRepository.updateViews(note, note.getViews());
-                    }
-                } else {
-                    note = new Note();
-                }
-                return note;
+                return get(id, incrementViews);
             }
-        }).subscribeOn(Schedulers.io());
+        });
+    }
+
+    public Note get(String id, boolean incrementViews) {
+        Note note = mNoteRepository.get(id);
+        if (note != null) {
+            if (!note.isTrashed() && incrementViews) {
+                note.incrementViews();
+                mNoteRepository.updateViews(note, note.getViews());
+            }
+        } else {
+            note = new Note();
+        }
+        return note;
     }
 
 }
