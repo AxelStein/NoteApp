@@ -14,7 +14,7 @@ import com.axel_stein.data.notebook.NotebookEntity;
 import com.axel_stein.data.reminder.ReminderDao;
 import com.axel_stein.data.reminder.ReminderEntity;
 
-@Database(entities = {NotebookEntity.class, NoteEntity.class, ReminderEntity.class}, version = 4)
+@Database(entities = {NotebookEntity.class, NoteEntity.class, ReminderEntity.class}, version = 5)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -44,6 +44,13 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE notes ADD COLUMN hasReminder INTEGER NOT NULL DEFAULT 0");
             database.execSQL("ALTER TABLE notes ADD COLUMN reminderId TEXT");
             database.execSQL("CREATE TABLE IF NOT EXISTS reminders (id TEXT PRIMARY KEY NOT NULL, noteId TEXT, dateTime TEXT, repeatMode INTEGER NOT NULL, repeatCount INTEGER NOT NULL, repeatEndDate TEXT)");
+        }
+    };
+
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE notes ADD COLUMN archived INTEGER NOT NULL DEFAULT 0");
         }
     };
 

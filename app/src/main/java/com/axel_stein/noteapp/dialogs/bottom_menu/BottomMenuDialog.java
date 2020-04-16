@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,11 +31,14 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     private static final String BUNDLE_TITLE = "BUNDLE_TITLE";
     private static final String BUNDLE_MENU_RES = "BUNDLE_MENU_RES";
     private static final String BUNDLE_CHECKED_ITEM_ID = "BUNDLE_CHECKED_ITEM_ID";
+    private static final String BUNDLE_SPARSE_IDS = "BUNDLE_SPARSE_IDS";
+    private static final String BUNDLE_SPARSE_VALUES = "BUNDLE_SPARSE_VALUES";
 
     private String mTitle;
     private int mMenuRes;
     private int mCheckedItemId;
     private OnMenuItemClickListener mListener;
+    private SparseBooleanArray mItemsVisibility;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +84,15 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             mTitle = savedInstanceState.getString(BUNDLE_TITLE);
             mMenuRes = savedInstanceState.getInt(BUNDLE_MENU_RES);
             mCheckedItemId = savedInstanceState.getInt(BUNDLE_CHECKED_ITEM_ID);
+
+            mItemsVisibility = new SparseBooleanArray();
+            int[] ids = savedInstanceState.getIntArray(BUNDLE_SPARSE_IDS);
+            boolean[] values = savedInstanceState.getBooleanArray(BUNDLE_SPARSE_VALUES);
+            if (ids != null && values != null && ids.length == values.length) {
+                for (int i = 0; i < ids.length; i++) {
+                    mItemsVisibility.append(ids[i], values[i]);
+                }
+            }
         }
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -99,6 +112,11 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
 
         Menu menu = MenuUtil.inflateMenuFromResource(recyclerView, mMenuRes);
         MenuUtil.check(menu, mCheckedItemId, true);
+        if (mItemsVisibility != null) {
+            for (int i = 0; i < mItemsVisibility.size(); i++) {
+                MenuUtil.show(menu, mItemsVisibility.valueAt(i), mItemsVisibility.keyAt(i));
+            }
+        }
 
         MenuAdapter adapter = new MenuAdapter(getContext());
         adapter.setItems(MenuUtil.getVisibleMenuItems(menu));
@@ -133,6 +151,18 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         outState.putInt(BUNDLE_MENU_RES, mMenuRes);
         outState.putString(BUNDLE_TITLE, mTitle);
         outState.putInt(BUNDLE_CHECKED_ITEM_ID, mCheckedItemId);
+
+        if (mItemsVisibility != null) {
+            int size = mItemsVisibility.size();
+            int[] ids = new int[size];
+            boolean[] values = new boolean[size];
+            for (int i = 0; i < size; i++) {
+                ids[i] = mItemsVisibility.keyAt(i);
+                values[i] = mItemsVisibility.valueAt(i);
+            }
+            outState.putIntArray(BUNDLE_SPARSE_IDS, ids);
+            outState.putBooleanArray(BUNDLE_SPARSE_VALUES, values);
+        }
     }
 
     public interface OnMenuItemClickListener {
@@ -144,6 +174,11 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         private String mTitle;
         private int mMenuRes;
         private int mCheckedItemId;
+        private SparseBooleanArray mItemsVisibility;
+
+        public Builder() {
+            mItemsVisibility = new SparseBooleanArray();
+        }
 
         public Builder setTitle(String title) {
             mTitle = title;
@@ -164,6 +199,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             dialog.mTitle = mTitle;
             dialog.mMenuRes = mMenuRes;
             dialog.mCheckedItemId = mCheckedItemId;
+            dialog.mItemsVisibility = mItemsVisibility;
             dialog.setTargetFragment(fragment, 0);
             assert fragment.getFragmentManager() != null;
             dialog.show(fragment.getFragmentManager(), tag);
@@ -174,9 +210,13 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             dialog.mTitle = mTitle;
             dialog.mMenuRes = mMenuRes;
             dialog.mCheckedItemId = mCheckedItemId;
+            dialog.mItemsVisibility = mItemsVisibility;
             dialog.show(manager, tag);
         }
 
+        public void setMenuItemVisible(int itemId, boolean visible) {
+            mItemsVisibility.append(itemId, visible);
+        }
     }
 
 }

@@ -74,15 +74,21 @@ class SwipeActionCallback extends ItemTouchHelper.SimpleCallback {
 
     private Drawable getSwipeActionIcon(int action) {
         switch (action) {
-            case AppSettingsRepository.SWIPE_ACTION_TRASH_RESTORE:
+            case AppSettingsRepository.SWIPE_ACTION_TRASH_RESTORE: {
                 int ic = mPresenter.isTrash() ? R.drawable.ic_restore_24dp : R.drawable.ic_delete_24dp;
                 return ContextCompat.getDrawable(mContext, ic);
+            }
 
             case AppSettingsRepository.SWIPE_ACTION_PIN:
                 return ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_24dp);
 
-                case AppSettingsRepository.SWIPE_ACTION_STAR:
-                    return ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_24dp);
+            case AppSettingsRepository.SWIPE_ACTION_STAR:
+                return ContextCompat.getDrawable(mContext, R.drawable.ic_star_border_24dp);
+
+            case AppSettingsRepository.SWIPE_ACTION_ARCHIVE: {
+                int ic = mPresenter.isArchived() ? R.drawable.ic_unarchive_24dp : R.drawable.ic_archive_24dp;
+                return ContextCompat.getDrawable(mContext, ic);
+            }
         }
         return null;
     }
@@ -97,6 +103,9 @@ class SwipeActionCallback extends ItemTouchHelper.SimpleCallback {
 
             case AppSettingsRepository.SWIPE_ACTION_STAR:
                 return new ColorDrawable(ContextCompat.getColor(mContext, R.color.swipe_action_star));
+
+            case AppSettingsRepository.SWIPE_ACTION_ARCHIVE:
+                return new ColorDrawable(ContextCompat.getColor(mContext, R.color.swipe_action_archive));
         }
         return null;
     }

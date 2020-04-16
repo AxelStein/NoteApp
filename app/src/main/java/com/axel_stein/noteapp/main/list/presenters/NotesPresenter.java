@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetArchivedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
@@ -20,6 +21,7 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.main.list.NotesContract;
 import com.axel_stein.noteapp.main.list.NotesContract.View;
+import com.axel_stein.noteapp.utils.SimpleCompletableObserver;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -61,6 +63,9 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Inject
     SetStarredNoteInteractor mSetStarredNoteInteractor;
+
+    @Inject
+    SetArchivedNoteInteractor mSetArchivedNoteInteractor;
 
     @Inject
     AppSettingsRepository mSettings;
@@ -323,7 +328,36 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
             case AppSettingsRepository.SWIPE_ACTION_STAR:
                 star(note);
                 break;
+
+            case AppSettingsRepository.SWIPE_ACTION_ARCHIVE:
+                archive(note);
+                break;
         }
+    }
+
+    private void archive(final Note note) {
+        final boolean archived = !note.isArchived();
+        mSetArchivedNoteInteractor.execute(note, archived)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SimpleCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        int msg = archived ? R.string.msg_note_archived : R.string.msg_note_unarchived;
+                        EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
+                            @Override
+                            public void run() {
+                                archive(note);
+                            }
+                        });
+                        EventBusHelper.updateNoteList();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        EventBusHelper.showMessage(R.string.error);
+                    }
+                });
     }
 
     private void pin(Note note) {
@@ -613,4 +647,8 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         return false;
     }
 
+    @Override
+    public boolean isArchived() {
+        return false;
+    }
 }

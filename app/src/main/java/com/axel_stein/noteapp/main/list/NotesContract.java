@@ -83,6 +83,8 @@ public interface NotesContract {
 
         boolean isTrash();
 
+        boolean isArchived();
+
     }
 
 }

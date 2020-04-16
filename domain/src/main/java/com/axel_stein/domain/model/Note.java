@@ -31,6 +31,7 @@ public class Note implements Cloneable, Serializable {
     private Reminder reminder;
     private String reminderDateText;
     private boolean reminderPassed;
+    private boolean archived;
 
     public Note() {
     }
@@ -201,6 +202,14 @@ public class Note implements Cloneable, Serializable {
         this.reminderPassed = reminderPassed;
     }
 
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
     public Note copy() {
         Note copy;
         try {
@@ -234,6 +243,7 @@ public class Note implements Cloneable, Serializable {
             builder.append(checkListJson, note.checkListJson);
             builder.append(hasReminder, note.hasReminder);
             builder.append(reminderId, note.reminderId);
+            builder.append(archived, note.archived);
 
             return builder.areEqual();
         }
@@ -258,6 +268,7 @@ public class Note implements Cloneable, Serializable {
                 ", checkListJson='" + checkListJson + '\'' +
                 ", hasReminder=" + hasReminder +
                 ", reminderId='" + reminderId + '\'' +
+                ", archived='" + archived + '\'' +
                 '}';
     }
 }

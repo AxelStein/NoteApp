@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Backup {
-    private final int version = 4;
+    private final int version = 5;
 
     private List<NoteWrapper> notes;
 

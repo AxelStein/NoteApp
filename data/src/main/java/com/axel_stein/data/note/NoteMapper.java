@@ -28,6 +28,7 @@ class NoteMapper {
         note.setCheckListJson(entity.getCheckListJson());
         note.setHasReminder(entity.hasReminder());
         note.setReminderId(entity.getReminderId());
+        note.setArchived(entity.isArchived());
         return note;
     }
 
@@ -50,6 +51,7 @@ class NoteMapper {
         entity.setCheckListJson(note.getCheckListJson());
         entity.setHasReminder(note.hasReminder());
         entity.setReminderId(note.getReminderId());
+        entity.setArchived(note.isArchived());
         return entity;
     }
 

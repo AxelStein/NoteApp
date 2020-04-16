@@ -52,6 +52,9 @@ public class NoteEntity {
     @ColumnInfo
     private String reminderId;
 
+    @ColumnInfo
+    private boolean archived;
+
     @NonNull
     public String getId() {
         return id;
@@ -163,6 +166,14 @@ public class NoteEntity {
 
     public void setReminderId(String reminderId) {
         this.reminderId = reminderId;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
 }

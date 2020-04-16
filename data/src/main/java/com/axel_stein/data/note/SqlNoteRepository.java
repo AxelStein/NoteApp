@@ -74,6 +74,11 @@ public class SqlNoteRepository implements NoteRepository {
     }
 
     @Override
+    public void setArchived(String noteId, boolean archived) {
+        mDao.setArchived(noteId, archived);
+    }
+
+    @Override
     public void updateViews(@NonNull Note note, long views) {
         mDao.updateViews(note.getId(), views);
     }
@@ -172,6 +177,11 @@ public class SqlNoteRepository implements NoteRepository {
     @Override
     public List<Note> queryReminders() {
         return map(mDao.queryReminders());
+    }
+
+    @Override
+    public List<Note> queryArchived() {
+        return map(mDao.queryArchived());
     }
 
     @NonNull
