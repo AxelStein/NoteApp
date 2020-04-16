@@ -4,6 +4,9 @@
           package="com.axel_stein.noteapp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".App"
@@ -14,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
+        android:process=":service"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup,android:supportsRtl">
 
@@ -26,6 +30,7 @@
 
         <activity
             android:name=".main.edit.EditNoteActivity"
+            android:parentActivityName=".main.MainActivity"
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
@@ -47,7 +52,13 @@
             </intent-filter>
 
         </activity>
+
         <activity android:name=".main.UserActivity" />
+
+        <activity
+            android:name=".main.AddReminderActivity"
+            android:label="@string/action_add_reminder"
+            android:exported="true"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -65,6 +76,22 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <receiver
+            android:process=":service"
+            android:name=".reminder.ReminderReceiver"
+            android:enabled="true" />
+
+        <receiver android:name=".reminder.RebootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:process=":service"
+            android:enabled="true"
+            android:exported="false"
+            android:name=".reminder.ReminderService" />
 
     </application>
 

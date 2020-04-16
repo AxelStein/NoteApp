@@ -37,11 +37,14 @@
     <string name="action_sort_views">Views</string>
     <string name="action_sort_date">Date</string>
     <string name="action_starred">Starred</string>
+    <string name="action_reminders">Reminders</string>
     <string name="action_export">Export</string>
     <string name="action_new_notebook">+ New notebook</string>
     <string name="action_check_list">Check list</string>
     <string name="action_remove_checked_items">Remove checked items</string>
     <string name="action_auto_sync">Auto sync</string>
+    <string name="action_add_reminder">Add reminder</string>
+    <string name="action_edit_reminder">Edit reminder</string>
 
     <!--Content description-->
     <string name="content_clear">Clear</string>
@@ -134,7 +137,7 @@
     <string name="title_select_notebook">Move to notebook</string>
     <string name="title_discard">Are you sure you want to discard changes?</string>
     <string name="title_export_drive">Export to Google Drive</string>
-    <string name="title_import_drive">Import from Google Drive</string>
+    <string name="title_import_drive">Import from Google Drive</string>>
 
     <!--Plurals-->
     <plurals name="plurals_notes_starred">
@@ -146,5 +149,13 @@
         <item quantity="one">%1$d note unstarred</item>
         <item quantity="other">%1$d notes unstarred</item>
     </plurals>
+
+    <string name="repeat_mode_none">No repeat</string>
+    <string name="repeat_mode_day">Every day</string>
+    <string name="repeat_mode_week">Every week</string>
+    <string name="repeat_mode_month">Every month</string>
+    <string name="repeat_mode_year">Every year</string>
+    <string name="title_repeat">Repeat</string>
+    <string name="repeat_every">Every</string>
 
 </resources>

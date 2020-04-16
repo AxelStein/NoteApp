@@ -43,6 +43,7 @@ import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 public class MainMenuDialog extends BottomSheetDialogFragment {
     public static final String ID_INBOX = "ID_INBOX";
     public static final String ID_STARRED = "ID_STARRED";
+    public static final String ID_REMINDERS = "ID_REMINDERS";
     public static final String ID_TRASH = "ID_TRASH";
     public static final String ID_ADD_NOTEBOOK = "ID_ADD_NOTEBOOK";
     private static final String BUNDLE_SELECTED_ITEM_ID = "BUNDLE_SELECTED_ITEM_ID";
@@ -162,6 +163,10 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
                                 .fromId(ID_STARRED)
                                 .fromTitle(R.string.action_starred)
                                 .fromIcon(R.drawable.ic_star_border_24dp));
+                        items.add(new PrimaryItem()
+                                .fromId(ID_REMINDERS)
+                                .fromTitle(R.string.action_reminders)
+                                .fromIcon(R.drawable.ic_notifications_none_24dp));
                         for (Notebook notebook : notebooks) {
                             items.add(new PrimaryItem()
                                     .fromId(notebook.getId())

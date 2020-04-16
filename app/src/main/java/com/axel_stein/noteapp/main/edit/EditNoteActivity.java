@@ -43,8 +43,10 @@ import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
 import com.axel_stein.noteapp.dialogs.ConfirmDialog;
+import com.axel_stein.noteapp.dialogs.bottom_menu.BottomMenuDialog;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.select_notebook.SelectNotebookDialog;
+import com.axel_stein.noteapp.main.AddReminderActivity;
 import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.SimpleCompletableObserver;
@@ -69,8 +71,9 @@ import io.reactivex.disposables.Disposable;
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 
 public class EditNoteActivity extends BaseActivity implements SelectNotebookDialog.OnMenuItemClickListener,
+        BottomMenuDialog.OnMenuItemClickListener,
         ConfirmDialog.OnConfirmListener {
-    private static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
+    public static final String EXTRA_NOTE_ID = "com.axel_stein.noteapp.EXTRA_NOTE_ID";
     private static final String EXTRA_NOTEBOOK_ID = "com.axel_stein.noteapp.EXTRA_NOTEBOOK_ID";
     private static final String EXTRA_EDIT_TITLE_CURSOR = "EXTRA_EDIT_TITLE_CURSOR";
     private static final String EXTRA_EDIT_CONTENT_CURSOR = "EXTRA_EDIT_CONTENT_CURSOR";
@@ -96,8 +99,9 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     private EditText mEditTitle;
     private EditText mEditContent;
     private View mFocusView;
+    private View mButtonMenu;
     private TextView mTextModifiedDate;
-    private TextView mTextViews;
+    //private TextView mTextViews;
     private RecyclerView mCheckRecyclerView;
     private CheckListAdapter mCheckListAdapter;
     private View mScrollView;
@@ -109,6 +113,8 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     private TextWatcher mEditTitleTextWatcher;
     private TextWatcher mEditContentTextWatcher;
     private String mCheckListJsonSrc;
+    //private DateTimeParser mDateTimeParser;
+    //private Reminder mReminder;
 
     @Inject
     GetNoteInteractor mGetNoteInteractor;
@@ -143,6 +149,20 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     @Inject
     DeleteNoteInteractor mDeleteNoteInteractor;
 
+    /*
+    @Inject
+    InsertReminderInteractor mInsertReminderInteractor;
+
+    @Inject
+    UpdateReminderInteractor mUpdateReminderInteractor;
+
+    @Inject
+    GetReminderInteractor mGetReminderInteractor;
+
+    @Inject
+    ReminderScheduler mReminderScheduler;
+    */
+
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,12 +186,18 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
         mEditTitle = findViewById(R.id.edit_title);
         mEditContent = findViewById(R.id.edit_content);
         mTextModifiedDate = findViewById(R.id.text_modified_date);
-        mTextViews = findViewById(R.id.text_views);
+        //mTextViews = findViewById(R.id.text_views);
+        mButtonMenu = findViewById(R.id.button_menu);
+        mButtonMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomMenu();
+            }
+        });
 
         int baseFontSize = mAppSettings.getBaseFontSize();
         mEditTitle.setTextSize(baseFontSize + 4);
         mEditContent.setTextSize(baseFontSize);
-
 
         mHandler = new Handler(Looper.getMainLooper());
         mEditTitleTask = new Runnable() {
@@ -183,6 +209,14 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
         mEditTitleTextWatcher = new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
+                /*
+                if (mDateTimeParser != null) {
+                    mDateTimeParser.parse(s.toString());
+                    if (mDateTimeParser.hasTime()) {
+                        setReminder();
+                    }
+                }
+                */
                 if (!TextUtils.equals(s, mNote.getTitle())) {
                     mNote.setTitle(s.toString());
 
@@ -332,11 +366,64 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
         });
     }
 
+    /*
+    private void setReminder() {
+        Completable completable;
+
+        final MutableDateTime dateTime = new MutableDateTime();
+        dateTime.setHourOfDay(mDateTimeParser.getHours());
+        dateTime.setMinuteOfHour(mDateTimeParser.getMinutes());
+        dateTime.setDayOfMonth(mDateTimeParser.getDay());
+        dateTime.setMonthOfYear(mDateTimeParser.getMonth());
+        dateTime.setYear(mDateTimeParser.getYear());
+
+        if (mReminder == null) {
+            mReminder = new Reminder();
+            mReminder.setNoteId(mNote.getId());
+            completable = mInsertReminderInteractor.execute(mReminder, mNote.getId());
+        } else {
+            completable = mUpdateReminderInteractor.execute(mReminder);
+        }
+        mReminder.setDateTime(dateTime.toDateTime());
+
+        completable.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SimpleCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        mReminderScheduler.schedule(mNote.getId(), dateTime.getMillis());
+                    }
+                });
+    }
+    */
+
+    private void showBottomMenu() {
+        BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
+        builder.setMenuRes(R.menu.activity_edit_note_bottom);
+        builder.show(getSupportFragmentManager(), EditNoteActivity.class.getName());
+    }
+
     private boolean isKeyboardShowing = false;
     private void onKeyboardVisibilityChanged(boolean opened) {
         if (!opened) {
             EventBusHelper.hideKeyboard();
         }
+    }
+
+    @Subscribe
+    public void onApplyReminder(EventBusHelper.ApplyReminder e) {
+        if (mNote != null) {
+            mNote.setHasReminder(true);
+        }
+        supportInvalidateOptionsMenu();
+    }
+
+    @Subscribe
+    public void onDeleteReminder(EventBusHelper.DeleteReminder e) {
+        if (mNote != null) {
+            mNote.setHasReminder(false);
+            mNote.setReminderId(null);
+        }
+        supportInvalidateOptionsMenu();
     }
 
     @Subscribe
@@ -354,7 +441,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
 
     @Override
     protected void onStop() {
-        if (mNote.isCheckList()) {
+        if (mNote != null && mNote.isCheckList()) {
             List<CheckItem> items = getCheckItems();
             mNote.setCheckListJson(CheckListHelper.toJson(items));
 
@@ -414,7 +501,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     protected void onDestroy() {
         mEditTitle.removeTextChangedListener(mEditTitleTextWatcher);
         mEditContent.removeTextChangedListener(mEditContentTextWatcher);
-        if (isEmptyNote()) {
+        if (mNote != null && isEmptyNote()) {
             mDeleteNoteInteractor.execute(mNote)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SimpleCompletableObserver() {
@@ -439,8 +526,10 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(EXTRA_NOTE_ID, mNote.getId());
-        outState.putString(EXTRA_NOTEBOOK_ID, mNote.getNotebookId());
+        if (mNote != null) {
+            outState.putString(EXTRA_NOTE_ID, mNote.getId());
+            outState.putString(EXTRA_NOTEBOOK_ID, mNote.getNotebookId());
+        }
         outState.putInt(EXTRA_EDIT_TITLE_CURSOR, mEditTitle.getSelectionStart());
         outState.putInt(EXTRA_EDIT_CONTENT_CURSOR, mEditContent.getSelectionStart());
         outState.putString(EXTRA_CHECK_LIST_JSON_SRC, mCheckListJsonSrc);
@@ -464,15 +553,29 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
         }
 
         ViewUtil.enable(!mNote.isTrashed(), mEditTitle, mEditContent, mNotebookView,
-                mCheckRecyclerView, mTextModifiedDate, mTextViews);
+                mCheckRecyclerView, mTextModifiedDate, mButtonMenu); // mTextViews
 
         mTextModifiedDate.setText(DateFormatter.formatDateTime(this, mNote.getModifiedDate().getMillis()));
 
+        /*
+        mGetReminderInteractor.findByNoteId(mNote.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SimpleSingleObserver<Reminder>() {
+                    @Override
+                    public void onSuccess(Reminder reminder) {
+                        mDateTimeParser = new DateTimeParser();
+                        mReminder = reminder;
+                    }
+                });
+        */
+
+        /*
         long views = mNote.getViews();
         ViewUtil.setVisible(views > 0, mTextViews);
         mTextViews.setText(String.valueOf(views));
+        */
 
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 
     /*
@@ -525,6 +628,8 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     }
 
     private void showSelectNotebookDialog(List<Notebook> notebooks) {
+        if (mNote == null) return;
+
         String notebookId = mNote.getNotebookId();
         if (isEmpty(notebookId)) {
             notebookId = Notebook.ID_INBOX;
@@ -590,21 +695,22 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (mNote != null) {
             boolean trash = mNote.isTrashed();
-            MenuUtil.show(menu, !trash, R.id.menu_pin_note, R.id.menu_star_note, R.id.menu_check_list,
-                    R.id.menu_select_notebook, R.id.menu_share,
-                    R.id.menu_move_to_trash, R.id.menu_duplicate);
+            MenuUtil.show(menu, !trash, R.id.menu_pin_note, R.id.menu_star_note, R.id.menu_add_reminder);
             MenuUtil.show(menu, trash, R.id.menu_restore, R.id.menu_delete);
+
+            MenuItem itemReminder = menu.findItem(R.id.menu_add_reminder);
+            if (itemReminder != null) {
+                itemReminder.setIcon(mNote.hasReminder() ? R.drawable.ic_notifications_24dp : R.drawable.ic_notifications_none_24dp);
+            }
 
             MenuItem itemPinned = menu.findItem(R.id.menu_pin_note);
             if (itemPinned != null) {
                 itemPinned.setIcon(mNote.isPinned() ? R.drawable.ic_bookmark_24dp : R.drawable.ic_bookmark_border_24dp);
-                //MenuUtil.tintAttr(this, itemPinned, R.attr.menuItemTintColor);
             }
 
             MenuItem itemStarred = menu.findItem(R.id.menu_star_note);
             if (itemStarred != null) {
                 itemStarred.setIcon(mNote.isStarred() ? R.drawable.ic_star_24dp : R.drawable.ic_star_border_24dp);
-                //MenuUtil.tintAttr(this, itemStarred, R.attr.menuItemTintColor);
             }
             MenuUtil.tintMenuIconsAttr(this, menu, R.attr.menuItemTintColor);
         }
@@ -645,9 +751,17 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
             case R.id.menu_check_list:
                 actionCheckList();
                 break;
+
+            case R.id.menu_add_reminder:
+                actionAddReminder();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void actionAddReminder() {
+        AddReminderActivity.launch(this, mNote);
     }
 
     private void actionStarNote() {
@@ -799,6 +913,8 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
 
         Note duplicate = mNote.copy();
         duplicate.setId(null);
+        duplicate.setReminderId(null);
+        duplicate.setHasReminder(false);
 
         String title = duplicate.getTitle();
         String content = duplicate.getContent();
@@ -923,4 +1039,13 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
         Snackbar.make(mToolbar, msg, Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onMenuItemClick(BottomMenuDialog dialog, String tag, MenuItem item) {
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+        if (item != null) {
+            onOptionsItemSelected(item);
+        }
+    }
 }

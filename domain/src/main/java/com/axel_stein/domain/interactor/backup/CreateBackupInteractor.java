@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.axel_stein.domain.model.Backup;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
+import com.axel_stein.domain.repository.ReminderRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -26,12 +27,17 @@ public class CreateBackupInteractor {
     @NonNull
     private final SettingsRepository mSettingsRepository;
 
-    public CreateBackupInteractor(@NonNull NoteRepository noteRepository,
-                                  @NonNull NotebookRepository notebookRepository,
-                                  @NonNull SettingsRepository settingsRepository) {
-        mNoteRepository = requireNonNull(noteRepository);
-        mNotebookRepository = requireNonNull(notebookRepository);
-        mSettingsRepository = requireNonNull(settingsRepository);
+    @NonNull
+    private final ReminderRepository mReminderRepository;
+
+    public CreateBackupInteractor(@NonNull NoteRepository n,
+                                  @NonNull NotebookRepository b,
+                                  @NonNull SettingsRepository s,
+                                  @NonNull ReminderRepository r) {
+        mNoteRepository = requireNonNull(n);
+        mNotebookRepository = requireNonNull(b);
+        mSettingsRepository = requireNonNull(s);
+        mReminderRepository = requireNonNull(r);
     }
 
     public Single<String> execute() {
@@ -48,6 +54,7 @@ public class CreateBackupInteractor {
         backup.setSourceNotes(mNoteRepository.queryAll());
         backup.setSourceNotebooks(mNotebookRepository.query());
         backup.setJsonSettings(mSettingsRepository.exportSettings());
+        backup.setSourceReminders(mReminderRepository.query());
         try {
             return backup.toJson();
         } catch (JsonProcessingException e) {

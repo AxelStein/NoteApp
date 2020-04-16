@@ -22,6 +22,7 @@
         <item name="menuItemTintColor">@color/text_color_primary_light</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="checkBoxTint">@color/checkbox_tint_light</item>
+        <item name="reminderTint">@color/reminder_tint_light</item>
         <item name="selectedNotebookBackgroundColor">@color/selected_notebook_background_color_light</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogLight</item>
         <item name="appBarColor">#E0E0E0</item> <!--#E0E0E0-->
@@ -47,6 +48,7 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogDark</item>
         <item name="checkBoxTint">@color/checkbox_tint_dark</item>
+        <item name="reminderTint">@color/reminder_tint_dark</item>
         <item name="selectedNotebookBackgroundColor">@color/selected_notebook_background_color_dark</item>
         <item name="toolbarPopupTheme">@style/ThemeOverlay.AppCompat</item>
         <item name="alertDialogTheme">@style/DialogThemeDark</item>

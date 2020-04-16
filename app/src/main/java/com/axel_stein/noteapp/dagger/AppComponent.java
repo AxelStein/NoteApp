@@ -8,9 +8,11 @@ import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.DeleteNotebookDialog;
 import com.axel_stein.noteapp.dialogs.notebook.RenameNotebookDialog;
 import com.axel_stein.noteapp.google_drive.DriveWorker;
+import com.axel_stein.noteapp.main.AddReminderActivity;
 import com.axel_stein.noteapp.main.InboxFragment;
 import com.axel_stein.noteapp.main.MainActivity;
 import com.axel_stein.noteapp.main.NotebookNotesFragment;
+import com.axel_stein.noteapp.main.RemindersFragment;
 import com.axel_stein.noteapp.main.StarredFragment;
 import com.axel_stein.noteapp.main.TrashFragment;
 import com.axel_stein.noteapp.main.UserActivity;
@@ -18,9 +20,12 @@ import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.list.presenters.InboxNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.NotebookNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.NotesPresenter;
+import com.axel_stein.noteapp.main.list.presenters.RemindersNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.SearchNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.StarredNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.TrashNotesPresenter;
+import com.axel_stein.noteapp.reminder.ReminderReceiver;
+import com.axel_stein.noteapp.reminder.ReminderService;
 import com.axel_stein.noteapp.settings.SettingsPresenter;
 
 import javax.inject.Singleton;
@@ -30,7 +35,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {
         AppModule.class, NotebookInteractorModule.class,
-        NoteInteractorModule.class, BackupInteractorModule.class
+        NoteInteractorModule.class, BackupInteractorModule.class,
+        ReminderInteractorModule.class
 })
 
 public interface AppComponent {
@@ -51,6 +57,8 @@ public interface AppComponent {
 
     void inject(UserActivity activity);
 
+    void inject(AddReminderActivity activity);
+
     void inject(EditNoteActivity activity);
 
     void inject(TrashNotesPresenter presenter);
@@ -62,6 +70,8 @@ public interface AppComponent {
     void inject(StarredNotesPresenter presenter);
 
     void inject(InboxNotesPresenter presenter);
+
+    void inject(RemindersNotesPresenter presenter);
 
     void inject(DeleteNoteDialog dialog);
 
@@ -78,5 +88,11 @@ public interface AppComponent {
     void inject(App app);
 
     void inject(MainMenuDialog dialog);
+
+    void inject(RemindersFragment fragment);
+
+    void inject(ReminderService service);
+
+    void inject(ReminderReceiver receiver);
 
 }

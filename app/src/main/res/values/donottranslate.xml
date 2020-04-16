@@ -2,6 +2,11 @@
 <resources>
     <string name="app_name">Carnet</string>
     <string name="app_version_number" translatable="false">1.4.8</string>
+    <string name="repeat_period_none">none</string>
+    <string name="repeat_period_day">days</string>
+    <string name="repeat_period_week">weeks</string>
+    <string name="repeat_period_month">months</string>
+    <string name="repeat_period_year">years</string>
 
     <string-array name="font_sizes">
         <item>@string/pref_font_size_small</item>
@@ -31,6 +36,22 @@
         <item>swipe_action_pin</item>
         <item>swipe_action_star</item>
         <!--<item>swipe_action_delete</item>-->
+    </string-array>
+
+    <string-array name="repeat_mode">
+        <item>@string/repeat_mode_none</item>
+        <item>@string/repeat_mode_day</item>
+        <item>@string/repeat_mode_week</item>
+        <item>@string/repeat_mode_month</item>
+        <item>@string/repeat_mode_year</item>
+    </string-array>
+
+    <string-array name="repeat_periods">
+        <item>@string/repeat_period_none</item>
+        <item>@string/repeat_period_day</item>
+        <item>@string/repeat_period_week</item>
+        <item>@string/repeat_period_month</item>
+        <item>@string/repeat_period_year</item>
     </string-array>
 
 </resources>

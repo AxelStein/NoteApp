@@ -75,10 +75,22 @@ public class EventBusHelper {
         post(new HideKeyboard());
     }
 
+    public static void applyReminder() {
+        post(new ApplyReminder());
+    }
+
+    public static void deleteReminder() {
+        post(new DeleteReminder());
+    }
+
     public static class HideKeyboard {}
 
     static class SignOutEvent {
     }
+
+    public static class ApplyReminder {}
+
+    public static class DeleteReminder {}
 
     public static class ImportCompleted {}
 

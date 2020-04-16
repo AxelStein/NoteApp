@@ -15,6 +15,8 @@
 
     <color name="selected_item_bg_color_light">#E0E0E0</color>
     <color name="selected_item_bg_color_dark">#3362A8E3</color>
+    <color name="text_color_reminder_passed_light">#FFD32F2F</color>
+    <color name="text_color_reminder_passed_dark">#F44336</color>
 
     <color name="grey_color_background">#323e45</color>
     <color name="grey_color_primary">#3f525b</color>

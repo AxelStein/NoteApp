@@ -14,7 +14,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.FragmentManager;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
+import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.domain.interactor.notebook.QueryNotebookInteractor;
 import com.axel_stein.domain.model.Notebook;
@@ -26,6 +32,7 @@ import com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog;
 import com.axel_stein.noteapp.dialogs.main_menu.PrimaryItem;
 import com.axel_stein.noteapp.dialogs.notebook.AddNotebookDialog;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
+import com.axel_stein.noteapp.google_drive.DriveWorker;
 import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import com.axel_stein.noteapp.main.list.SearchActivity;
 import com.axel_stein.noteapp.settings.SettingsActivity;
@@ -50,6 +57,7 @@ import io.reactivex.disposables.Disposable;
 import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_ADD_NOTEBOOK;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_INBOX;
+import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_REMINDERS;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_STARRED;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_TRASH;
 
@@ -72,6 +80,9 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     @Inject
     ImportBackupInteractor mImportBackupInteractor;
 
+    @Inject
+    AppSettingsRepository mSettings;
+
     private BottomAppBar mAppBar;
     private FloatingActionButton mFabCreateNote;
     private TextView mTextViewTitle;
@@ -84,6 +95,16 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         App.getAppComponent().inject(this);
         EventBusHelper.subscribe(this);
         setContentView(R.layout.activity_main);
+
+        if (mSettings.autoSyncEnabled()) {
+            Constraints constraints = new Constraints.Builder()
+                    .setRequiresBatteryNotLow(true)
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build();
+
+            WorkRequest request = new OneTimeWorkRequest.Builder(DriveWorker.class).setConstraints(constraints).build();
+            WorkManager.getInstance(this).enqueue(request);
+        }
 
         mAppBar = findViewById(R.id.app_bar);
         setSupportActionBar(mAppBar);
@@ -99,6 +120,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                     case ID_INBOX:
                     case ID_STARRED:
                     case ID_TRASH:
+                    case ID_REMINDERS:
                         break;
                     default: id = mSelectedItemId;
                 }
@@ -247,6 +269,10 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
             case ID_STARRED:
                 setFragment(new StarredFragment(), TAG_FRAGMENT);
+                break;
+
+            case ID_REMINDERS:
+                setFragment(new RemindersFragment(), TAG_FRAGMENT);
                 break;
 
             case ID_ADD_NOTEBOOK:

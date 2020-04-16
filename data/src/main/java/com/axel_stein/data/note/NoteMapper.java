@@ -26,6 +26,8 @@ class NoteMapper {
         note.setModifiedDate(entity.getModifiedDate());
         note.setCheckList(entity.isCheckList());
         note.setCheckListJson(entity.getCheckListJson());
+        note.setHasReminder(entity.hasReminder());
+        note.setReminderId(entity.getReminderId());
         return note;
     }
 
@@ -46,6 +48,8 @@ class NoteMapper {
         entity.setModifiedDate(note.getModifiedDate());
         entity.setCheckList(note.isCheckList());
         entity.setCheckListJson(note.getCheckListJson());
+        entity.setHasReminder(note.hasReminder());
+        entity.setReminderId(note.getReminderId());
         return entity;
     }
 

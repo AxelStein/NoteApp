@@ -149,5 +149,7 @@
         <item quantity="many">%1$d заметок удалено из отмеченных</item>
         <item quantity="other">%1$d заметок удалено из отмеченных</item>
     </plurals>
+    <string name="action_reminders">Напоминания</string>
+    <string name="action_add_reminder">Добавить напоминание</string>
 
 </resources>

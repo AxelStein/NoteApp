@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.repository.NoteRepository;
+import com.axel_stein.domain.repository.ReminderRepository;
 
 import java.util.List;
 
@@ -19,8 +20,12 @@ public class DeleteNoteInteractor {
     @NonNull
     private final NoteRepository mRepository;
 
-    public DeleteNoteInteractor(@NonNull NoteRepository r) {
-        mRepository = requireNonNull(r);
+    @NonNull
+    private final ReminderRepository mReminderRepository;
+
+    public DeleteNoteInteractor(@NonNull NoteRepository n, @NonNull ReminderRepository r) {
+        mRepository = requireNonNull(n);
+        mReminderRepository = requireNonNull(r);
     }
 
     /**
@@ -55,6 +60,9 @@ public class DeleteNoteInteractor {
     private void deleteImpl(Note note) {
         if (note == null || isEmpty(note.getId())) {
             throw new IllegalArgumentException("note is not valid");
+        }
+        if (note.hasReminder()) {
+            mReminderRepository.delete(note.getReminderId());
         }
         mRepository.delete(note);
     }

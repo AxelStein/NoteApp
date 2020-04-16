@@ -17,11 +17,11 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/menu_check_list"
-        android:title="@string/action_check_list"
-        android:icon="@drawable/ic_list_24dp"
+        android:id="@+id/menu_add_reminder"
+        android:icon="@drawable/ic_notifications_none_24dp"
+        android:title="@string/action_add_reminder"
         android:visible="false"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/menu_restore"
@@ -29,27 +29,6 @@
         android:title="@string/action_restore"
         android:visible="false"
         app:showAsAction="always"/>
-
-    <item
-        android:id="@+id/menu_share"
-        android:icon="@drawable/ic_share_24dp"
-        android:title="@string/action_share"
-        android:visible="false"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_duplicate"
-        android:icon="@drawable/ic_content_copy_24dp"
-        android:title="@string/action_duplicate"
-        android:visible="false"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_move_to_trash"
-        android:icon="@drawable/ic_delete_24dp"
-        android:title="@string/action_move_to_trash"
-        android:visible="false"
-        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_delete"

@@ -44,11 +44,6 @@ public class SqlNoteRepository implements NoteRepository {
     }
 
     @Override
-    public void setNotebook(@NonNull List<Note> notes, String notebookId) {
-        mDao.setNotebook(mapIds(notes), notebookId);
-    }
-
-    @Override
     public void setInbox(@NonNull Notebook notebook) {
         mDao.setInbox(notebook.getId());
     }
@@ -125,12 +120,28 @@ public class SqlNoteRepository implements NoteRepository {
         mDao.deleteAll();
     }
 
+    @Override
+    public void setReminder(String noteId, String reminderId) {
+        mDao.setReminder(noteId, reminderId);
+    }
+
+    @Override
+    public void deleteReminder(String reminderId) {
+        mDao.deleteReminder(reminderId);
+    }
+
     /* Query methods */
 
     @Nullable
     @Override
     public Note get(String id) {
         return map(mDao.get(id));
+    }
+
+    @Nullable
+    @Override
+    public String getReminderId(String noteId) {
+        return mDao.getReminderId(noteId);
     }
 
     @NonNull
@@ -155,6 +166,12 @@ public class SqlNoteRepository implements NoteRepository {
     @Override
     public List<Note> queryTrashed() {
         return map(mDao.queryTrashed());
+    }
+
+    @NonNull
+    @Override
+    public List<Note> queryReminders() {
+        return map(mDao.queryReminders());
     }
 
     @NonNull

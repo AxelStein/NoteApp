@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 
 import com.axel_stein.domain.json_wrapper.NoteWrapper;
 import com.axel_stein.domain.json_wrapper.NotebookWrapper;
+import com.axel_stein.domain.json_wrapper.ReminderWrapper;
 import com.axel_stein.domain.model.Backup;
 import com.axel_stein.domain.model.Note;
 import com.axel_stein.domain.model.Notebook;
+import com.axel_stein.domain.model.Reminder;
 import com.axel_stein.domain.repository.NoteRepository;
 import com.axel_stein.domain.repository.NotebookRepository;
+import com.axel_stein.domain.repository.ReminderRepository;
 import com.axel_stein.domain.repository.SettingsRepository;
 import com.axel_stein.domain.utils.validators.NoteValidator;
 import com.axel_stein.domain.utils.validators.NotebookValidator;
@@ -21,6 +24,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.axel_stein.domain.utils.ObjectUtil.requireNonNull;
+import static com.axel_stein.domain.utils.TextUtil.notEmpty;
 
 public class ImportBackupInteractor {
 
@@ -33,12 +37,17 @@ public class ImportBackupInteractor {
     @NonNull
     private final SettingsRepository mSettingsRepository;
 
+    @NonNull
+    private final ReminderRepository mReminderRepository;
+
     public ImportBackupInteractor(@NonNull NoteRepository n,
                                   @NonNull NotebookRepository b,
-                                  @NonNull SettingsRepository s) {
+                                  @NonNull SettingsRepository s,
+                                  @NonNull ReminderRepository r) {
         mNoteRepository = requireNonNull(n);
         mNotebookRepository = requireNonNull(b);
         mSettingsRepository = requireNonNull(s);
+        mReminderRepository = requireNonNull(r);
     }
 
     public Completable execute(final String src) {
@@ -83,6 +92,20 @@ public class ImportBackupInteractor {
 
                 String settings = backup.getJsonSettings();
                 mSettingsRepository.importSettings(settings);
+
+                List<ReminderWrapper> reminders = backup.getReminders();
+                if (reminders != null) {
+                    for (ReminderWrapper w : reminders) {
+                        Reminder r = w.toReminder();
+                        if (r != null && notEmpty(r.getId()) && notEmpty(r.getNoteId())) {
+                            mReminderRepository.insert(r);
+                        } else {
+                            System.out.println("Error: reminder is not valid = " + r);
+                        }
+                    }
+                } else {
+                    System.out.println("Error: reminders not found");
+                }
             }
         }).subscribeOn(Schedulers.io());
     }
