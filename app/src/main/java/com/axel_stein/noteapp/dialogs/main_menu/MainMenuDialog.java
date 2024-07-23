@@ -44,6 +44,7 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
     public static final String ID_INBOX = "ID_INBOX";
     public static final String ID_STARRED = "ID_STARRED";
     public static final String ID_REMINDERS = "ID_REMINDERS";
+    public static final String ID_ARCHIVED = "ID_ARCHIVED";
     public static final String ID_TRASH = "ID_TRASH";
     public static final String ID_ADD_NOTEBOOK = "ID_ADD_NOTEBOOK";
     private static final String BUNDLE_SELECTED_ITEM_ID = "BUNDLE_SELECTED_ITEM_ID";
@@ -180,6 +181,10 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
                                 .fromCheckable(false));
                         items.add(new DividerItem());
 
+                        items.add(new PrimaryItem()
+                                .fromId(ID_ARCHIVED)
+                                .fromTitle(R.string.action_archived)
+                                .fromIcon(R.drawable.ic_archive_24dp));
                         items.add(new PrimaryItem()
                                 .fromId(ID_TRASH)
                                 .fromTitle(R.string.action_trash)

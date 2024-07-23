@@ -45,6 +45,9 @@ public interface NoteDao {
     @Query("UPDATE notes SET trashed = :trashed, trashedDate = :date WHERE id = :noteId")
     void setTrashed(String noteId, boolean trashed, DateTime date);
 
+    @Query("UPDATE notes SET archived = :archived WHERE id = :noteId")
+    void setArchived(String noteId, boolean archived);
+
     @Query("UPDATE notes SET views = :views WHERE id = :noteId")
     void updateViews(String noteId, long views);
 
@@ -91,19 +94,22 @@ public interface NoteDao {
     @Query("SELECT * FROM notes")
     List<NoteEntity> queryAll();
 
-    @Query("SELECT * FROM notes WHERE (notebookId IS NULL OR notebookId = '') AND trashed = 0")
+    @Query("SELECT * FROM notes WHERE (notebookId IS NULL OR notebookId = '') AND trashed = 0 AND archived = 0")
     List<NoteEntity> queryInbox();
 
-    @Query("SELECT * FROM notes WHERE starred != 0 AND trashed = 0")
+    @Query("SELECT * FROM notes WHERE starred != 0 AND trashed = 0 AND archived = 0")
     List<NoteEntity> queryStarred();
 
-    @Query("SELECT * FROM notes WHERE hasReminder != 0 AND trashed = 0")
+    @Query("SELECT * FROM notes WHERE hasReminder != 0 AND trashed = 0 AND archived = 0")
     List<NoteEntity> queryReminders();
+
+    @Query("SELECT * FROM notes WHERE archived != 0")
+    List<NoteEntity> queryArchived();
 
     @Query("SELECT * FROM notes WHERE trashed != 0")
     List<NoteEntity> queryTrashed();
 
-    @Query("SELECT * FROM notes WHERE notebookId = :notebook AND trashed = 0")
+    @Query("SELECT * FROM notes WHERE notebookId = :notebook AND trashed = 0 AND archived = 0")
     List<NoteEntity> queryNotebook(String notebook);
 
     @Query("SELECT * FROM notes WHERE trashed = 0 AND (title LIKE :query OR content LIKE :query)")

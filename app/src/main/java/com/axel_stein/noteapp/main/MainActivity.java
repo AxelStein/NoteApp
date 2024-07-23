@@ -56,6 +56,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.axel_stein.data.AppSettingsRepository.BACKUP_FILE_NAME;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_ADD_NOTEBOOK;
+import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_ARCHIVED;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_INBOX;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_REMINDERS;
 import static com.axel_stein.noteapp.dialogs.main_menu.MainMenuDialog.ID_STARRED;
@@ -119,6 +120,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
                 case ID_STARRED:
                 case ID_TRASH:
                 case ID_REMINDERS:
+                case ID_ARCHIVED:
                     break;
                 default: id = mSelectedItemId;
             }
@@ -265,6 +267,10 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
             case ID_ADD_NOTEBOOK:
                 AddNotebookDialog.launch(this);
+                break;
+
+            case ID_ARCHIVED:
+                setFragment(new ArchivedFragment(), TAG_FRAGMENT);
                 break;
 
             case ID_TRASH:

@@ -95,6 +95,16 @@ public class QueryNoteInteractor {
     }
 
     @NonNull
+    public Single<List<Note>> queryArchived() {
+        return single(new Callable<List<Note>>() {
+            @Override
+            public List<Note> call() {
+                return orderImpl(mNoteRepository.queryArchived());
+            }
+        });
+    }
+
+    @NonNull
     public Single<List<Note>> queryTrashed() {
         return single(new Callable<List<Note>>() {
             @Override

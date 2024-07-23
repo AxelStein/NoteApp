@@ -12,6 +12,7 @@ import com.axel_stein.domain.interactor.note.EmptyTrashInteractor;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
 import com.axel_stein.domain.interactor.note.QueryNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetArchivedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
@@ -76,6 +77,11 @@ class NoteInteractorModule {
     @Provides
     SetStarredNoteInteractor star(SqlNoteRepository r) {
         return new SetStarredNoteInteractor(r);
+    }
+
+    @Provides
+    SetArchivedNoteInteractor archive(SqlNoteRepository r) {
+        return new SetArchivedNoteInteractor(r);
     }
 
 }

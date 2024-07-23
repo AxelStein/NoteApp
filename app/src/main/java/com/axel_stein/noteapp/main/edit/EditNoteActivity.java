@@ -29,6 +29,7 @@ import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.note.DeleteNoteInteractor;
 import com.axel_stein.domain.interactor.note.GetNoteInteractor;
 import com.axel_stein.domain.interactor.note.InsertNoteInteractor;
+import com.axel_stein.domain.interactor.note.SetArchivedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetNotebookNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetPinnedNoteInteractor;
 import com.axel_stein.domain.interactor.note.SetStarredNoteInteractor;
@@ -148,6 +149,9 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
 
     @Inject
     DeleteNoteInteractor mDeleteNoteInteractor;
+
+    @Inject
+    SetArchivedNoteInteractor mSetArchivedNoteInteractor;
 
     /*
     @Inject
@@ -399,6 +403,8 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     private void showBottomMenu() {
         BottomMenuDialog.Builder builder = new BottomMenuDialog.Builder();
         builder.setMenuRes(R.menu.activity_edit_note_bottom);
+        builder.setMenuItemVisible(R.id.menu_archive, !mNote.isArchived());
+        builder.setMenuItemVisible(R.id.menu_unarchive, mNote.isArchived());
         builder.show(getSupportFragmentManager(), EditNoteActivity.class.getName());
     }
 
@@ -738,9 +744,41 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
             actionCheckList();
         } else if (itemId == R.id.menu_add_reminder) {
             actionAddReminder();
+        } else if (itemId == R.id.menu_archive || itemId == R.id.menu_unarchive) {
+            actionArchive();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void actionArchive() {
+        final boolean archived = !mNote.isArchived();
+        mSetArchivedNoteInteractor.execute(mNote, archived)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SimpleCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        mNote.setArchived(archived);
+                        if (archived) {
+                            finish();
+                            EventBusHelper.showMessage(R.string.msg_note_archived, R.string.action_undo, new Runnable() {
+                                @Override
+                                public void run() {
+                                    actionArchive();
+                                }
+                            });
+                        } else {
+                            EventBusHelper.showMessage(R.string.msg_note_unarchived);
+                        }
+                        EventBusHelper.updateNoteList();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        showMessage(R.string.error);
+                    }
+                });
     }
 
     private void actionAddReminder() {
@@ -1016,6 +1054,38 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
             return mCheckListAdapter.getItems();
         }
         return new ArrayList<>();
+    }
+
+    @Subscribe
+    public void showMessage(final EventBusHelper.Message e) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String msg = e.getMsg();
+                    if (e.hasMsgRes()) {
+                        msg = getString(e.getMsgRes());
+                    }
+
+                    String actionName = null;
+                    if (e.hasActionNameRes()) {
+                        actionName = getString(e.getActionName());
+                    }
+
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_main), msg, Snackbar.LENGTH_SHORT);
+                    if (e.hasAction()) {
+                        snackbar.setAction(actionName, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                e.getAction().run();
+                            }
+                        });
+                    }
+                    snackbar.show();
+                } catch (Exception ignored) {
+                }
+            }
+        }, 100);
     }
 
     private void showMessage(int msg) {

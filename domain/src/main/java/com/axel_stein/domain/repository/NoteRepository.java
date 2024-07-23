@@ -30,6 +30,8 @@ public interface NoteRepository {
 
     void setTrashed(@NonNull Note note, boolean trashed);
 
+    void setArchived(String noteId, boolean archived);
+
     void updateViews(@NonNull Note note, long views);
 
     void updateTitle(String noteId, String title);
@@ -72,6 +74,8 @@ public interface NoteRepository {
 
     @NonNull
     List<Note> queryReminders();
+
+    List<Note> queryArchived();
 
     @NonNull
     List<Note> queryNotebook(@NonNull String notebookId);

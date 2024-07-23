@@ -20,6 +20,7 @@
         <item>@string/pref_swipe_action_trash_restore</item>
         <item>@string/pref_swipe_action_pin</item>
         <item>@string/pref_swipe_action_star</item>
+        <item>@string/pref_swipe_action_archive</item>
         <!--<item>@string/pref_swipe_action_delete</item>-->
     </string-array>
 
@@ -35,6 +36,7 @@
         <item>swipe_action_trash_restore</item>
         <item>swipe_action_pin</item>
         <item>swipe_action_star</item>
+        <item>swipe_action_archive</item>
         <!--<item>swipe_action_delete</item>-->
     </string-array>
 

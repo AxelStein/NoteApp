@@ -16,6 +16,7 @@ public class NoteWrapper {
     private boolean pinned;
     private boolean starred;
     private boolean trashed;
+    private boolean archived;
 
     @JsonProperty("notebook_id")
     private String notebookId;
@@ -38,6 +39,7 @@ public class NoteWrapper {
         wrapper.notebookId = note.getNotebookId();
         wrapper.views = note.getViews();
         wrapper.trashed = note.isTrashed();
+        wrapper.archived = note.isArchived();
         wrapper.title = note.getTitle();
         wrapper.content = note.getContent();
         wrapper.pinned = note.isPinned();
@@ -71,6 +73,7 @@ public class NoteWrapper {
         note.setModifiedDate(TextUtil.isEmpty(modifiedDate) ? new DateTime() : DateTime.parse(modifiedDate));
         note.setCheckList(checkList);
         note.setCheckListJson(checkListJson);
+        note.setArchived(archived);
         return note;
     }
 
@@ -168,5 +171,13 @@ public class NoteWrapper {
 
     public void setCheckListJson(String checkListJson) {
         this.checkListJson = checkListJson;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }
