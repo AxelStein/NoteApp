@@ -46,8 +46,6 @@ public class RenameNotebookDialog extends EditTextDialog {
     private HashMap<String, Boolean> mMap;
 
     public static void launch(AppCompatActivity activity, Notebook notebook) {
-        checkNotNull(activity);
-
         launch(activity.getSupportFragmentManager(), notebook);
     }
 

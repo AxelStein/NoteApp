@@ -15,8 +15,8 @@ import static android.app.AlarmManager.RTC_WAKEUP;
 import static com.axel_stein.domain.utils.TextUtil.isEmpty;
 
 public class ReminderScheduler {
-    private Context mContext;
-    private AlarmManager mAlarmManager;
+    private final Context mContext;
+    private final AlarmManager mAlarmManager;
 
     public ReminderScheduler(Context context) {
         mContext = context;
@@ -34,13 +34,13 @@ public class ReminderScheduler {
         if (timestamp < System.currentTimeMillis()) return;
 
         Intent intent = ReminderReceiver.getLaunchIntent(mContext);
-        PendingIntent pi = PendingIntent.getBroadcast(mContext, Objects.hashCode(noteId), intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pi = PendingIntent.getBroadcast(mContext, Objects.hashCode(noteId), intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         AlarmManagerCompat.setExactAndAllowWhileIdle(mAlarmManager, RTC_WAKEUP, timestamp, pi);
     }
 
     public void cancel(String noteId) {
         Intent intent = ReminderReceiver.getLaunchIntent(mContext);
-        PendingIntent pi = PendingIntent.getBroadcast(mContext, Objects.hashCode(noteId), intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pi = PendingIntent.getBroadcast(mContext, Objects.hashCode(noteId), intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         mAlarmManager.cancel(pi);
     }
 

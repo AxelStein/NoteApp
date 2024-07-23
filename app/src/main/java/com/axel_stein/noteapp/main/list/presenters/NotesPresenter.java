@@ -226,54 +226,40 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
 
     @Override
     public void onActionItemClicked(int itemId) {
-        switch (itemId) {
-            case R.id.menu_select_all:
-                checkAll();
-                break;
+        if (itemId == R.id.menu_select_all) {
+            checkAll();
+        } else if (itemId == R.id.menu_pin_note) {
+            pin(getCheckedNotes());
+        } else if (itemId == R.id.menu_star_note) {
+            star(getCheckedNotes());
+        } else if (itemId == R.id.menu_move_to_trash) {
+            moveToTrash(getCheckedNotes());
+        } else if (itemId == R.id.menu_delete) {
+            delete(getCheckedNotes());
+        } else if (itemId == R.id.menu_restore) {
+            restore(getCheckedNotes());
+        } else if (itemId == R.id.menu_select_notebook) {
+            mQueryNotebookInteractor.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Notebook>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            case R.id.menu_pin_note:
-                pin(getCheckedNotes());
-                break;
+                    }
 
-            case R.id.menu_star_note:
-                star(getCheckedNotes());
-                break;
+                    @Override
+                    public void onSuccess(List<Notebook> notebooks) {
+                        if (mView != null) {
+                            mView.showSelectNotebookView(notebooks);
+                        }
+                    }
 
-            case R.id.menu_move_to_trash:
-                moveToTrash(getCheckedNotes());
-                break;
-
-            case R.id.menu_delete:
-                delete(getCheckedNotes());
-                break;
-
-            case R.id.menu_restore:
-                restore(getCheckedNotes());
-                break;
-
-            case R.id.menu_select_notebook:
-                mQueryNotebookInteractor.execute()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new SingleObserver<List<Notebook>>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onSuccess(List<Notebook> notebooks) {
-                                if (mView != null) {
-                                    mView.showSelectNotebookView(notebooks);
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                                EventBusHelper.showMessage(R.string.error);
-                            }
-                        });
-                break;
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        EventBusHelper.showMessage(R.string.error);
+                    }
+                });
         }
     }
 
@@ -345,31 +331,31 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         final boolean result = pin;
         Completable c = mSetPinnedNoteInteractor.execute(notes, result);
         c.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            .subscribe(new CompletableObserver() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
+                }
+
+                @Override
+                public void onComplete() {
+                    int msg;
+                    if (notes.size() == 1) {
+                        msg = result ? R.string.msg_note_pinned : R.string.msg_note_unpinned;
+                    } else {
+                        msg = result ? R.string.msg_notes_pinned : R.string.msg_notes_unpinned;
                     }
 
-                    @Override
-                    public void onComplete() {
-                        int msg;
-                        if (notes.size() == 1) {
-                            msg = result ? R.string.msg_note_pinned : R.string.msg_note_unpinned;
-                        } else {
-                            msg = result ? R.string.msg_notes_pinned : R.string.msg_notes_unpinned;
-                        }
+                    EventBusHelper.showMessage(msg);
+                    EventBusHelper.updateNoteList();
+                }
 
-                        EventBusHelper.showMessage(msg);
-                        EventBusHelper.updateNoteList();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    EventBusHelper.showMessage(R.string.error);
+                }
+            });
     }
 
     private void star(Note note) {
@@ -389,29 +375,29 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
         final boolean result = star;
         Completable c = mSetStarredNoteInteractor.execute(notes, result);
         c.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            .subscribe(new CompletableObserver() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-                    }
+                }
 
-                    @Override
-                    public void onComplete() {
-                        if (mView != null) {
-                            int count = notes.size();
-                            int plurals = result ? R.plurals.plurals_notes_starred : R.plurals.plurals_notes_unstarred;
-                            String msg = mView.getResources().getQuantityString(plurals, count, count);
-                            EventBusHelper.showMessage(msg);
-                        }
-                        EventBusHelper.updateNoteList();
+                @Override
+                public void onComplete() {
+                    if (mView != null) {
+                        int count = notes.size();
+                        int plurals = result ? R.plurals.plurals_notes_starred : R.plurals.plurals_notes_unstarred;
+                        String msg = mView.getResources().getQuantityString(plurals, count, count);
+                        EventBusHelper.showMessage(msg);
                     }
+                    EventBusHelper.updateNoteList();
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    EventBusHelper.showMessage(R.string.error);
+                }
+            });
     }
 
     private void moveToTrash(Note note) {
@@ -424,33 +410,33 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
             return;
         }
         mSetTrashedNoteInteractor.execute(notes, true)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new CompletableObserver() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-                    }
+                }
 
-                    @Override
-                    public void onComplete() {
-                        int msg = notes.size() == 1 ? R.string.msg_note_trashed : R.string.msg_notes_trashed;
-                        EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
-                            @Override
-                            public void run() {
-                                restore(notes);
-                            }
-                        });
+                @Override
+                public void onComplete() {
+                    int msg = notes.size() == 1 ? R.string.msg_note_trashed : R.string.msg_notes_trashed;
+                    EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
+                        @Override
+                        public void run() {
+                            restore(notes);
+                        }
+                    });
 
-                        stopCheckMode();
-                        EventBusHelper.updateNoteList();
-                    }
+                    stopCheckMode();
+                    EventBusHelper.updateNoteList();
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    EventBusHelper.showMessage(R.string.error);
+                }
+            });
     }
 
     void restore(Note note) {
@@ -463,33 +449,33 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
             return;
         }
         mSetTrashedNoteInteractor.execute(notes, false)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new CompletableObserver() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-                    }
+                }
 
-                    @Override
-                    public void onComplete() {
-                        int msg = notes.size() == 1 ? R.string.msg_note_restored : R.string.msg_notes_restored;
-                        EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
-                            @Override
-                            public void run() {
-                                moveToTrash(notes);
-                            }
-                        });
+                @Override
+                public void onComplete() {
+                    int msg = notes.size() == 1 ? R.string.msg_note_restored : R.string.msg_notes_restored;
+                    EventBusHelper.showMessage(msg, R.string.action_undo, new Runnable() {
+                        @Override
+                        public void run() {
+                            moveToTrash(notes);
+                        }
+                    });
 
-                        stopCheckMode();
-                        EventBusHelper.updateNoteList();
-                    }
+                    stopCheckMode();
+                    EventBusHelper.updateNoteList();
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    EventBusHelper.showMessage(R.string.error);
+                }
+            });
     }
 
     @Override
@@ -506,28 +492,28 @@ public abstract class NotesPresenter implements NotesContract.Presenter, SingleO
     private void onNotebookSelectedImpl(Notebook notebook) {
         final List<Note> notes = getCheckedNotes();
         mSetNotebookInteractor.execute(notes, notebook.getId())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new CompletableObserver() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-                    }
+                }
 
-                    @Override
-                    public void onComplete() {
-                        stopCheckMode();
+                @Override
+                public void onComplete() {
+                    stopCheckMode();
 
-                        int msg = notes.size() == 1 ? R.string.msg_note_updated : R.string.msg_notes_updated;
-                        EventBusHelper.showMessage(msg);
-                        EventBusHelper.updateNoteList();
-                    }
+                    int msg = notes.size() == 1 ? R.string.msg_note_updated : R.string.msg_notes_updated;
+                    EventBusHelper.showMessage(msg);
+                    EventBusHelper.updateNoteList();
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBusHelper.showMessage(R.string.error);
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    EventBusHelper.showMessage(R.string.error);
+                }
+            });
     }
 
     private List<Note> getCheckedNotes() {

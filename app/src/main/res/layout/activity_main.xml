@@ -12,29 +12,29 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
-            app:elevation="0dp"
-            android:background="?attr/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?attr/toolbarColor"
+            app:elevation="0dp">
 
             <TextView
                 android:id="@+id/text_title"
                 style="@style/TextAppearance.AppCompat.Title"
-                android:text="@string/action_inbox"
-                android:maxLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
                 android:ellipsize="end"
-                android:textSize="16sp"
-                app:layout_scrollFlags=""
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"/>
+                android:text="@string/action_inbox"
+                android:textSize="16sp"
+                app:layout_scrollFlags=""/>
 
             <View
-                android:background="?android:attr/listDivider"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -47,21 +47,25 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar
-        app:backgroundTint="?attr/appBarColor"
         android:id="@+id/app_bar"
         style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_gravity="bottom"
-        app:layout_dodgeInsetEdges="bottom"
-        app:hideOnScroll="true"
+        app:elevation="2dp"
+        app:backgroundTint="?attr/appBarColor"
         app:fabCradleMargin="8dp"
         app:fabCradleRoundedCornerRadius="8dp"
         app:fabCradleVerticalOffset="4dp"
+        app:hideOnScroll="true"
+        app:layout_dodgeInsetEdges="bottom"
         app:navigationIcon="?attr/appBarIcon"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_create_note"
+        app:elevation="2dp"
+        app:tint="?android:attr/textColorPrimaryInverse"
+        app:backgroundTint="?attr/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="?attr/appBarFabIcon"

@@ -47,7 +47,6 @@ public class DeleteNotebookDialog extends ConfirmDialog {
     }
 
     private static DeleteNotebookDialog createDialog(Context context, Notebook notebook) {
-        checkNotNull(context);
         checkNotNull(notebook);
 
         DeleteNotebookDialog dialog = new DeleteNotebookDialog();

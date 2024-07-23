@@ -133,22 +133,17 @@ public class NotebookNotesFragment extends NotesFragment implements BottomMenuDi
 
     @Override
     public void onMenuItemClick(BottomMenuDialog dialog, String tag, MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_rename_notebook:
-                if (mNotebook != null) {
-                    RenameNotebookDialog.launch(this, mNotebook);
-                }
-                break;
-
-            case R.id.menu_delete_notebook:
-                if (mNotebook != null) {
-                    DeleteNotebookDialog.launch(getContext(), this, mNotebook);
-                }
-                break;
-
-            default:
-                super.onMenuItemClick(dialog, tag, item);
-
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_rename_notebook) {
+            if (mNotebook != null) {
+                RenameNotebookDialog.launch(this, mNotebook);
+            }
+        } else if (itemId == R.id.menu_delete_notebook) {
+            if (mNotebook != null) {
+                DeleteNotebookDialog.launch(getContext(), this, mNotebook);
+            }
+        } else {
+            super.onMenuItemClick(dialog, tag, item);
         }
         dialog.dismiss();
     }

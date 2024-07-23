@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Carnet</string>
+    <string name="app_name">Simple Notes</string>
     <string name="app_version_number" translatable="false">1.4.8</string>
     <string name="repeat_period_none">none</string>
     <string name="repeat_period_day">days</string>

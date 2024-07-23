@@ -2,6 +2,7 @@
 
     <style name="AppTheme.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
         <item name="height">48dp</item>
+        <item name="background">@color/window_background_light</item>
     </style>
 
     <style name="AppThemeDark.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -9,8 +10,9 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@android:color/white</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_accent</item>
+        <item name="colorPrimaryDark">#8a000000</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowBackground">@color/window_background_light</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -30,11 +32,13 @@
         <item name="appBarFabIcon">@drawable/ic_create_white_24dp</item>
         <item name="selectedItemBackgroundColor">@color/selected_item_bg_color_light</item>
         <item name="glassViewColor">@color/glass_view_color_light</item>
+        <item name="toolbarColor">#fff</item>
     </style>
 
-    <style name="AppThemeDark" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppThemeDark" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#222E3C</item>
+        <item name="toolbarColor">#222E3C</item>
         <item name="colorPrimaryDark">#19222D</item>
         <item name="colorAccent">@color/color_accent_dark</item>
         <item name="android:windowBackground">@color/window_background_dark</item>

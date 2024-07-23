@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdk 34
+    namespace 'com.axel_stein.data'
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
 
@@ -45,10 +46,10 @@ dependencies {
     })
     testImplementation "junit:junit:$junitVersion"
 
-    implementation 'androidx.room:room-runtime:2.1.0'
-    annotationProcessor 'androidx.room:room-compiler:2.1.0'
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
     implementation project(path: ':domain')
 
-    implementation "joda-time:joda-time:2.10"
+    implementation "joda-time:joda-time:2.12.7"
 
 }

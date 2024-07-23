@@ -12,7 +12,7 @@ import com.axel_stein.noteapp.main.edit.EditNoteActivity;
 import java.util.Objects;
 
 public class PendingIntentFactory {
-    private Context mContext;
+    private final Context mContext;
 
     public PendingIntentFactory(Context context) {
         mContext = context;
@@ -23,7 +23,7 @@ public class PendingIntentFactory {
         resultIntent.putExtra(EditNoteActivity.EXTRA_NOTE_ID, note.getId());
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(mContext);
         stackBuilder.addNextIntentWithParentStack(resultIntent);
-        return stackBuilder.getPendingIntent(Objects.hashCode(note.getId()), PendingIntent.FLAG_UPDATE_CURRENT);
+        return stackBuilder.getPendingIntent(Objects.hashCode(note.getId()), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
     }
 
 }

@@ -112,20 +112,17 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         mTextViewTitle = findViewById(R.id.text_title);
 
         mFabCreateNote = findViewById(R.id.fab_create_note);
-        mFabCreateNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String id = "";
-                switch (mSelectedItemId) {
-                    case ID_INBOX:
-                    case ID_STARRED:
-                    case ID_TRASH:
-                    case ID_REMINDERS:
-                        break;
-                    default: id = mSelectedItemId;
-                }
-                EditNoteActivity.launch(MainActivity.this, id);
+        mFabCreateNote.setOnClickListener(view -> {
+            String id = "";
+            switch (mSelectedItemId) {
+                case ID_INBOX:
+                case ID_STARRED:
+                case ID_TRASH:
+                case ID_REMINDERS:
+                    break;
+                default: id = mSelectedItemId;
             }
+            EditNoteActivity.launch(MainActivity.this, id);
         });
 
         if (savedInstanceState == null) {
@@ -160,32 +157,24 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
     @Subscribe
     public void showMessage(final EventBusHelper.Message e) {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String msg = e.getMsg();
-                    if (e.hasMsgRes()) {
-                        msg = getString(e.getMsgRes());
-                    }
-
-                    String actionName = null;
-                    if (e.hasActionNameRes()) {
-                        actionName = getString(e.getActionName());
-                    }
-
-                    Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_main), msg, Snackbar.LENGTH_SHORT);
-                    if (e.hasAction()) {
-                        snackbar.setAction(actionName, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                e.getAction().run();
-                            }
-                        });
-                    }
-                    snackbar.show();
-                } catch (Exception ignored) {
+        new Handler().postDelayed(() -> {
+            try {
+                String msg = e.getMsg();
+                if (e.hasMsgRes()) {
+                    msg = getString(e.getMsgRes());
                 }
+
+                String actionName = null;
+                if (e.hasActionNameRes()) {
+                    actionName = getString(e.getActionName());
+                }
+
+                Snackbar snackbar = Snackbar.make(findViewById(R.id.coordinator_main), msg, Snackbar.LENGTH_SHORT);
+                if (e.hasAction()) {
+                    snackbar.setAction(actionName, v -> e.getAction().run());
+                }
+                snackbar.show();
+            } catch (Exception ignored) {
             }
         }, 100);
     }
@@ -220,14 +209,13 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                openMainMenu();
-                return true;
-
-            case R.id.menu_search:
-                startActivity(new Intent(this, SearchActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            openMainMenu();
+            return true;
+        } else if (itemId == R.id.menu_search) {
+            startActivity(new Intent(this, SearchActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

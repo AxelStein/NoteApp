@@ -1,10 +1,13 @@
 package com.axel_stein.noteapp.main;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.format.DateFormat;
@@ -16,11 +19,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.axel_stein.domain.interactor.reminder.DeleteReminderInteractor;
 import com.axel_stein.domain.interactor.reminder.GetReminderInteractor;
@@ -77,6 +83,7 @@ public class AddReminderActivity extends BaseActivity {
     private TextView mTextRepeatPeriod;
     private int mRepeatMode;
     private int mRepeatCount = 1;
+    private final ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {});
 
     @Nullable
     private Reminder mReminder;
@@ -119,20 +126,10 @@ public class AddReminderActivity extends BaseActivity {
                 R.drawable.ic_clear_white_24dp, R.attr.menuItemTintColor));
 
         mTextDate = findViewById(R.id.text_date);
-        mTextDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
+        mTextDate.setOnClickListener(v -> showDatePicker());
 
         mTextTime = findViewById(R.id.text_time);
-        mTextTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimePicker();
-            }
-        });
+        mTextTime.setOnClickListener(v -> showTimePicker());
 
         mTextRepeat = findViewById(R.id.text_repeat);
         mTextRepeat.setOnClickListener(new View.OnClickListener() {
@@ -143,20 +140,12 @@ public class AddReminderActivity extends BaseActivity {
         });
 
         mTextRepeatEnd = findViewById(R.id.text_repeat_end);
-        mTextRepeatEnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // todo
-            }
+        mTextRepeatEnd.setOnClickListener(v -> {
+            // todo
         });
 
         mEditRepeatLayout = findViewById(R.id.layout_edit_repeat);
-        mEditRepeatLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSelectRepeatModeDialog();
-            }
-        });
+        mEditRepeatLayout.setOnClickListener(v -> showSelectRepeatModeDialog());
         mEditRepeatCount = findViewById(R.id.edit_repeat_count);
         mEditRepeatCount.addTextChangedListener(new SimpleTextWatcher() {
             @Override
@@ -223,12 +212,7 @@ public class AddReminderActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.title_repeat);
         final String[] items = getResources().getStringArray(R.array.repeat_mode);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                setViewRepeatMode(which, mRepeatCount);
-            }
-        });
+        builder.setItems(items, (dialog, which) -> setViewRepeatMode(which, mRepeatCount));
         // create and show the alert dialog
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -256,16 +240,12 @@ public class AddReminderActivity extends BaseActivity {
             int month = mDateTime.getMonthOfYear()-1;
             int day = mDateTime.getDayOfMonth();
 
-            DatePickerDialog dialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    mDateTime.setYear(year);
-                    mDateTime.setMonthOfYear(monthOfYear+1);
-                    mDateTime.setDayOfMonth(dayOfMonth);
+            DatePickerDialog dialog = new DatePickerDialog(this, (view, year1, monthOfYear, dayOfMonth) -> {
+                mDateTime.setYear(year1);
+                mDateTime.setMonthOfYear(monthOfYear+1);
+                mDateTime.setDayOfMonth(dayOfMonth);
 
-                    ViewUtil.setText(mTextDate, DateFormatter.formatDate(getApplication(),
-                            mDateTime.getMillis(), true));
-                }
+                ViewUtil.setText(mTextDate, DateFormatter.formatDate(getApplication(), mDateTime.getMillis(), true));
             }, year, month, day);
             dialog.show();
         }
@@ -278,18 +258,30 @@ public class AddReminderActivity extends BaseActivity {
             int hour = mDateTime.getHourOfDay();
             int minute = mDateTime.getMinuteOfHour();
 
-            TimePickerDialog dialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    mDateTime.setHourOfDay(hourOfDay);
-                    mDateTime.setMinuteOfHour(minute);
+            TimePickerDialog dialog = new TimePickerDialog(this, (view, hourOfDay, minute1) -> {
+                mDateTime.setHourOfDay(hourOfDay);
+                mDateTime.setMinuteOfHour(minute1);
 
-                    ViewUtil.setText(mTextTime,
-                            DateFormatter.formatTime(getApplication(), mDateTime.getMillis()));
-                }
+                ViewUtil.setText(mTextTime, DateFormatter.formatTime(getApplication(), mDateTime.getMillis()));
             }, hour, minute, is24H);
             dialog.show();
         }
+    }
+
+    private void checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return;
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkNotificationPermission();
     }
 
     @Override
@@ -307,14 +299,13 @@ public class AddReminderActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_done:
-                applyReminder();
-                return true;
-
-            case R.id.menu_delete:
-                deleteReminder();
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_done) {
+            applyReminder();
+            return true;
+        } else if (itemId == R.id.menu_delete) {
+            deleteReminder();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -322,23 +313,23 @@ public class AddReminderActivity extends BaseActivity {
     private void deleteReminder() {
         if (mReminder != null) {
             mDeleteReminderInteractor.execute(mReminder.getId())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SimpleCompletableObserver() {
-                        @Override
-                        public void onComplete() {
-                            mReminderScheduler.cancel(mNoteId);
-                            EventBusHelper.deleteReminder();
-                            finish();
-                        }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SimpleCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        mReminderScheduler.cancel(mNoteId);
+                        EventBusHelper.deleteReminder();
+                        finish();
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            super.onError(e);
-                            if (mToolbar != null) {
-                                Snackbar.make(mToolbar, R.string.error, Snackbar.LENGTH_SHORT).show();
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        if (mToolbar != null) {
+                            Snackbar.make(mToolbar, R.string.error, Snackbar.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                });
         }
     }
 
@@ -369,16 +360,16 @@ public class AddReminderActivity extends BaseActivity {
             mReminder.setRepeatCount(mRepeatCount);
 
             completable.observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SimpleCompletableObserver() {
-                        @Override
-                        public void onComplete() {
-                            if (notEmpty(mNoteId) && mDateTime != null) {
-                                EventBusHelper.applyReminder();
-                                mReminderScheduler.schedule(mReminder);
-                            }
-                            finish();
+                .subscribe(new SimpleCompletableObserver() {
+                    @Override
+                    public void onComplete() {
+                        if (notEmpty(mNoteId) && mDateTime != null) {
+                            EventBusHelper.applyReminder();
+                            mReminderScheduler.schedule(mReminder);
                         }
-                    });
+                        finish();
+                    }
+                });
         }
     }
 

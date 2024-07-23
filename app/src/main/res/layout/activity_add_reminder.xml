@@ -12,6 +12,7 @@
     <com.google.android.material.appbar.AppBarLayout
         app:elevation="0dp"
         android:id="@+id/app_bar"
+        android:background="?attr/toolbarColor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -19,7 +20,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/toolbarColor"
             app:popupTheme="?attr/toolbarPopupTheme"/>
 
         <View

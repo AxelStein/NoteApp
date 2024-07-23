@@ -1,13 +1,16 @@
 package com.axel_stein.noteapp.reminder;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.PowerManager;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -25,8 +28,8 @@ public class AndroidNotificationTray {
     private static final String CHANNEL_DESCRIPTION = "Note reminders";
     private static final String GROUP_ID = APP_ID + "GROUP_ID";
 
-    private Context mContext;
-    private PendingIntentFactory mPendingIntents;
+    private final Context mContext;
+    private final PendingIntentFactory mPendingIntents;
 
     public AndroidNotificationTray(Context context) {
         mContext = context;
@@ -37,6 +40,9 @@ public class AndroidNotificationTray {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
         Notification notification = buildNotification(note);
         createNotificationChannel();
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         notificationManager.notify(note.hashCode(), notification);
         if (SDK_INT >= N) {
             notificationManager.notify(0, buildSummaryNotification());
@@ -58,24 +64,24 @@ public class AndroidNotificationTray {
         String content = note.getContent();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notifications_none_24dp)
-                .setContentTitle(isEmpty(title) ? content : title)
-                .setContentText(isEmpty(title) ? null : content)
-                .setStyle(new NotificationCompat.InboxStyle())
-                .setGroup(GROUP_ID)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setContentIntent(mPendingIntents.showNote(note))
-                .setAutoCancel(true)
-                .setVibrate(new long[]{500,500,500,500,500,500,500,500})
-                .setPriority(NotificationCompat.PRIORITY_MAX);
+            .setSmallIcon(R.drawable.ic_notifications_none_24dp)
+            .setContentTitle(isEmpty(title) ? content : title)
+            .setContentText(isEmpty(title) ? null : content)
+            .setStyle(new NotificationCompat.InboxStyle())
+            .setGroup(GROUP_ID)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            .setContentIntent(mPendingIntents.showNote(note))
+            .setAutoCancel(true)
+            .setVibrate(new long[]{500,500,500,500,500,500,500,500})
+            .setPriority(NotificationCompat.PRIORITY_MAX);
         return builder.build();
     }
 
     private Notification buildSummaryNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notifications_none_24dp)
-                .setGroup(GROUP_ID)
-                .setGroupSummary(true);
+            .setSmallIcon(R.drawable.ic_notifications_none_24dp)
+            .setGroup(GROUP_ID)
+            .setGroupSummary(true);
         return builder.build();
     }
 

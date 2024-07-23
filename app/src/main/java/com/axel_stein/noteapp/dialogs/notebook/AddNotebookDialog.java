@@ -39,7 +39,6 @@ public class AddNotebookDialog extends EditTextDialog {
     private HashMap<String, Boolean> mMap;
 
     public static void launch(FragmentActivity activity) {
-        checkNotNull(activity);
         launch(activity.getSupportFragmentManager());
     }
 
@@ -76,33 +75,33 @@ public class AddNotebookDialog extends EditTextDialog {
         }
 
         mQueryNotebookInteractor.execute()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Notebook>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new SingleObserver<List<Notebook>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-                    }
+                }
 
-                    @Override
-                    public void onSuccess(List<Notebook> notebooks) {
-                        if (mMap == null) {
-                            mMap = new HashMap<>();
-                        } else {
-                            mMap.clear();
-                        }
-                        for (Notebook notebook : notebooks) {
-                            mMap.put(notebook.getTitle(), true);
-                        }
-                        setSuggestions(mMap);
+                @Override
+                public void onSuccess(List<Notebook> notebooks) {
+                    if (mMap == null) {
+                        mMap = new HashMap<>();
+                    } else {
+                        mMap.clear();
                     }
+                    for (Notebook notebook : notebooks) {
+                        mMap.put(notebook.getTitle(), true);
+                    }
+                    setSuggestions(mMap);
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        EventBusHelper.showMessage(R.string.error);
-                        e.printStackTrace();
-                        dismiss();
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    EventBusHelper.showMessage(R.string.error);
+                    e.printStackTrace();
+                    dismiss();
+                }
+            });
     }
 
     @SuppressLint("CheckResult")
@@ -112,27 +111,27 @@ public class AddNotebookDialog extends EditTextDialog {
         notebook.setTitle(text);
 
         mInsertNotebookInteractor.execute(notebook)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new CompletableObserver() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-                    }
+                }
 
-                    @Override
-                    public void onComplete() {
-                        EventBusHelper.showMessage(R.string.msg_notebook_added);
-                        EventBusHelper.addNotebook(notebook);
-                        dismiss();
-                    }
+                @Override
+                public void onComplete() {
+                    EventBusHelper.showMessage(R.string.msg_notebook_added);
+                    EventBusHelper.addNotebook(notebook);
+                    dismiss();
+                }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        EventBusHelper.showMessage(R.string.error);
-                        e.printStackTrace();
-                        dismiss();
-                    }
-                });
+                @Override
+                public void onError(Throwable e) {
+                    EventBusHelper.showMessage(R.string.error);
+                    e.printStackTrace();
+                    dismiss();
+                }
+            });
     }
 }
 

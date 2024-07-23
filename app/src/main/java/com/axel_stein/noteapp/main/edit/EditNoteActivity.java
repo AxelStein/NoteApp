@@ -719,42 +719,25 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_pin_note:
-                actionPinNote();
-                break;
-
-            case R.id.menu_star_note:
-                actionStarNote();
-                break;
-
-            case R.id.menu_move_to_trash:
-                actionMoveToTrash();
-                break;
-
-            case R.id.menu_restore:
-                actionRestore();
-                break;
-
-            case R.id.menu_delete:
-                showConfirmDeleteNoteDialog();
-                break;
-
-            case R.id.menu_share:
-                actionShare();
-                break;
-
-            case R.id.menu_duplicate:
-                actionDuplicate();
-                break;
-
-            case R.id.menu_check_list:
-                actionCheckList();
-                break;
-
-            case R.id.menu_add_reminder:
-                actionAddReminder();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.menu_pin_note) {
+            actionPinNote();
+        } else if (itemId == R.id.menu_star_note) {
+            actionStarNote();
+        } else if (itemId == R.id.menu_move_to_trash) {
+            actionMoveToTrash();
+        } else if (itemId == R.id.menu_restore) {
+            actionRestore();
+        } else if (itemId == R.id.menu_delete) {
+            showConfirmDeleteNoteDialog();
+        } else if (itemId == R.id.menu_share) {
+            actionShare();
+        } else if (itemId == R.id.menu_duplicate) {
+            actionDuplicate();
+        } else if (itemId == R.id.menu_check_list) {
+            actionCheckList();
+        } else if (itemId == R.id.menu_add_reminder) {
+            actionAddReminder();
         }
 
         return super.onOptionsItemSelected(item);

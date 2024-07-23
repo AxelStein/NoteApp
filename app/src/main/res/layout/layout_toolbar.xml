@@ -5,5 +5,5 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="?attr/colorPrimary"
+    android:background="?attr/toolbarColor"
     app:popupTheme="?attr/toolbarPopupTheme"/>
