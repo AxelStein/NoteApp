@@ -98,6 +98,10 @@
             android:exported="false"
             android:name=".reminder.ReminderService" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-7709803880588182~5937369354"/>
+
     </application>
 
 </manifest>

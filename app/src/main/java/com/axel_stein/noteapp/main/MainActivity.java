@@ -38,6 +38,9 @@ import com.axel_stein.noteapp.main.list.SearchActivity;
 import com.axel_stein.noteapp.settings.SettingsActivity;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -132,6 +135,14 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         } else {
             mSelectedItemId = savedInstanceState.getString(BUNDLE_SELECTED_ITEM_ID);
         }
+
+        MobileAds.initialize(this);
+
+        AdView adView = findViewById(R.id.adView);
+        adView.loadAd(
+            new AdRequest.Builder()
+                .build()
+        );
     }
 
     @Override

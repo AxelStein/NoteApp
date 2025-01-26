@@ -27,6 +27,8 @@ import com.axel_stein.noteapp.main.list.presenters.SearchNotesPresenter;
 import com.axel_stein.noteapp.utils.KeyboardUtil;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -156,6 +158,12 @@ public class SearchActivity extends BaseActivity {
         }
 
         ViewUtil.setVisible(mEditSearch.length() > 0, mButtonClear);
+
+        AdView adView = findViewById(R.id.adView);
+        adView.loadAd(
+            new AdRequest.Builder()
+                .build()
+        );
     }
 
     @Override

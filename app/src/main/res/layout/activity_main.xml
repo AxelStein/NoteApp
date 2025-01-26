@@ -1,74 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    xmlns:ads="http://schemas.android.com/apk/res-auto">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_main"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:fitsSystemWindows="true">
 
-        <com.google.android.material.appbar.AppBarLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/toolbarColor"
+                app:elevation="0dp">
+
+                <TextView
+                    android:id="@+id/text_title"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="@string/action_inbox"
+                    android:textSize="16sp"
+                    app:layout_scrollFlags=""/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"/>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <FrameLayout
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/app_bar"
+            style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            app:elevation="2dp"
+            app:backgroundTint="?attr/appBarColor"
+            app:fabCradleMargin="8dp"
+            app:fabCradleRoundedCornerRadius="8dp"
+            app:fabCradleVerticalOffset="4dp"
+            app:hideOnScroll="true"
+            app:layout_dodgeInsetEdges="bottom"
+            app:navigationIcon="?attr/appBarIcon"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_create_note"
+            app:elevation="2dp"
+            app:tint="?android:attr/textColorPrimaryInverse"
+            app:backgroundTint="?attr/colorAccent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/toolbarColor"
-            app:elevation="0dp">
-
-            <TextView
-                android:id="@+id/text_title"
-                style="@style/TextAppearance.AppCompat.Title"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@string/action_inbox"
-                android:textSize="16sp"
-                app:layout_scrollFlags=""/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <FrameLayout
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            android:src="?attr/appBarFabIcon"
+            app:layout_anchor="@id/app_bar"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/app_bar"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_gravity="bottom"
-        app:elevation="2dp"
-        app:backgroundTint="?attr/appBarColor"
-        app:fabCradleMargin="8dp"
-        app:fabCradleRoundedCornerRadius="8dp"
-        app:fabCradleVerticalOffset="4dp"
-        app:hideOnScroll="true"
-        app:layout_dodgeInsetEdges="bottom"
-        app:navigationIcon="?attr/appBarIcon"/>
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-7709803880588182/5797768558"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_create_note"
-        app:elevation="2dp"
-        app:tint="?android:attr/textColorPrimaryInverse"
-        app:backgroundTint="?attr/colorAccent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="?attr/appBarFabIcon"
-        app:layout_anchor="@id/app_bar"/>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

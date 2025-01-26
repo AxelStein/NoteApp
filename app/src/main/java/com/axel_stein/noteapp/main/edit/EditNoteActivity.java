@@ -55,6 +55,8 @@ import com.axel_stein.noteapp.utils.SimpleSingleObserver;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
 import com.axel_stein.noteapp.views.IconTextView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -107,7 +109,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
     private CheckListAdapter mCheckListAdapter;
     private View mScrollView;
     private View mGlassView;
-    private Note mNote;
+    private @Nullable Note mNote;
     private Handler mHandler;
     private Runnable mEditTitleTask;
     private Runnable mEditContentTask;
@@ -368,6 +370,12 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
                 }
             }
         });
+
+        AdView adView = findViewById(R.id.adView);
+        adView.loadAd(
+            new AdRequest.Builder()
+                .build()
+        );
     }
 
     /*
@@ -541,8 +549,10 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
         outState.putString(EXTRA_CHECK_LIST_JSON_SRC, mCheckListJsonSrc);
     }
 
-    private void setNoteLoaded(Note note) {
+    private void setNoteLoaded(@Nullable Note note) {
         mNote = note;
+
+        if (note == null) return;
 
         fetchNotebookTitle(mNote.getNotebookId());
 

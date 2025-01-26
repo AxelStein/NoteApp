@@ -30,6 +30,8 @@ import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
 import com.axel_stein.noteapp.utils.DateFormatter;
 import com.axel_stein.noteapp.utils.MenuUtil;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -126,6 +128,12 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
 
         mTextLastSync = findViewById(R.id.text_last_sync);
         updateLastSyncTime();
+
+        AdView adView = findViewById(R.id.adView);
+        adView.loadAd(
+            new AdRequest.Builder()
+                .build()
+        );
     }
 
     @Subscribe

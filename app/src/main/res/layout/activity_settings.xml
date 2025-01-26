@@ -1,31 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator_settings"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        app:elevation="0dp"
-        android:background="?attr/toolbarColor"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/coordinator_settings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_weight="1"
+        android:layout_height="0dp">
 
-        <include layout="@layout/layout_toolbar"/>
-
-        <View
-            android:background="?android:attr/listDivider"
+        <com.google.android.material.appbar.AppBarLayout
+            app:elevation="0dp"
+            android:background="?attr/toolbarColor"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+            android:layout_height="wrap_content">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <include layout="@layout/layout_toolbar"/>
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="com.axel_stein.noteapp.settings.SettingsFragment"
+            <View
+                android:background="?android:attr/listDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <fragment
+            android:id="@+id/fragment"
+            android:name="com.axel_stein.noteapp.settings.SettingsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_gravity="bottom"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-7709803880588182/5797768558"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_height="wrap_content"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

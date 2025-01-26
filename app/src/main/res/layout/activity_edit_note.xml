@@ -1,210 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_edit"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
-        android:background="?attr/toolbarColor"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
             android:background="?attr/toolbarColor"
-            app:popupTheme="?attr/toolbarPopupTheme">
-
-            <com.axel_stein.noteapp.views.IconTextView
-                android:id="@+id/notebook"
-                android:layout_width="wrap_content"
-
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:drawablePadding="8dp"
-
-                android:ellipsize="end"
-                android:focusable="true"
-                android:gravity="center_vertical"
-
-                android:maxLines="1"
-                android:minWidth="72dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"
-                android:visibility="gone"
-                app:iconRight="@drawable/ic_arrow_drop_down_24dp"
-                app:iconRightTint="?attr/menuItemTintColor"
-                tools:text="S"
-                tools:visibility="visible" />
-
-        </androidx.appcompat.widget.Toolbar>
-
-        <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"/>
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <View
-            android:id="@+id/focus_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:visibility="visible"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/check_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layout_data"
-            android:clipToPadding="false"
-            android:paddingBottom="8dp"
-            android:scrollbars="vertical"
-            android:visibility="gone"
-            tools:listitem="@layout/item_check_list"/>
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layout_data"
-            android:scrollbars="vertical">
-
-            <LinearLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                android:layout_height="48dp"
+                android:background="?attr/toolbarColor"
+                app:popupTheme="?attr/toolbarPopupTheme">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="@null"
-                    android:hint="@string/hint_title"
-                    android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
-                    android:maxLength="@integer/max_title"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    tools:text="10 Best Note Apps for iPhone You Can Use"/>
+                <com.axel_stein.noteapp.views.IconTextView
+                    android:id="@+id/notebook"
+                    android:layout_width="wrap_content"
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="?android:attr/listDivider"
-                    android:visibility="gone" />
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawablePadding="8dp"
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@null"
-                    android:hint="@string/hint_content"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
-                    android:lineSpacingMultiplier="1.5"
-                    android:maxLength="@integer/max_content"
-                    android:minHeight="48dp"
-                    android:padding="0dp"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+
+                    android:maxLines="1"
+                    android:minWidth="72dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
-                    tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things. iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things. iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things" />
+                    android:visibility="gone"
+                    app:iconRight="@drawable/ic_arrow_drop_down_24dp"
+                    app:iconRightTint="?attr/menuItemTintColor"
+                    tools:text="S"
+                    tools:visibility="visible" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
 
-        </androidx.core.widget.NestedScrollView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <RelativeLayout
-            android:id="@+id/layout_data"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:background="?android:attr/windowBackground"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-            <com.axel_stein.noteapp.views.IconTextView
-                android:id="@+id/text_modified_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:drawablePadding="16dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingStart="14dp"
-                android:paddingEnd="16dp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"
-                android:visibility="visible"
-                tools:text="23 oct 16:30"/>
-
-            <com.axel_stein.noteapp.views.IconTextView
-                android:id="@+id/text_views"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:drawablePadding="8dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingStart="8dp"
-                android:paddingEnd="16dp"
-                android:textColor="?android:attr/textColorSecondary"
-                android:textSize="14sp"
-                android:visibility="gone"
-                app:iconLeft="@drawable/ic_visibility_24dp"
-                app:iconLeftTint="?android:attr/textColorSecondary"
-                tools:text="100"/>
-
-            <ImageButton
-                android:id="@+id/button_menu"
-                style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
-                android:layout_width="48dp"
+            <View
+                android:id="@+id/focus_view"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:contentDescription="@string/content_clear"
-                android:src="@drawable/ic_more_vert_24dp"
-                android:tint="?attr/menuItemTintColor"/>
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:visibility="visible"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/check_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/layout_data"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp"
+                android:scrollbars="vertical"
+                android:visibility="gone"
+                tools:listitem="@layout/item_check_list"/>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/layout_data"
+                android:scrollbars="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@null"
+                        android:hint="@string/hint_title"
+                        android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+                        android:maxLength="@integer/max_title"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        tools:text="10 Best Note Apps for iPhone You Can Use"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="?android:attr/listDivider"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@null"
+                        android:hint="@string/hint_content"
+                        android:importantForAutofill="no"
+                        android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+                        android:lineSpacingMultiplier="1.5"
+                        android:maxLength="@integer/max_content"
+                        android:minHeight="48dp"
+                        android:padding="0dp"
+                        android:textSize="16sp"
+                        tools:text="http://google.com +380985524370 iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things. iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things. iPhone has become one of the most versatile tech tools available today. We perform a multitude of functions using our iPhones. We use them to make calls, send messages, capture photos, play games, check our emails, set reminders, and much more. Of course, the usage pattern differs from person to person. When it comes to me, one of the foremost things" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <RelativeLayout
+                android:id="@+id/layout_data"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="?android:attr/windowBackground"
+                android:orientation="horizontal">
+
+                <com.axel_stein.noteapp.views.IconTextView
+                    android:id="@+id/text_modified_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:drawablePadding="16dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:visibility="visible"
+                    tools:text="23 oct 16:30"/>
+
+                <com.axel_stein.noteapp.views.IconTextView
+                    android:id="@+id/text_views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawablePadding="8dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    app:iconLeft="@drawable/ic_visibility_24dp"
+                    app:iconLeftTint="?android:attr/textColorSecondary"
+                    tools:text="100"/>
+
+                <ImageButton
+                    android:id="@+id/button_menu"
+                    style="@style/Widget.AppCompat.Toolbar.Button.Navigation"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/content_clear"
+                    android:src="@drawable/ic_more_vert_24dp"
+                    android:tint="?attr/menuItemTintColor"/>
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/glass_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/glassViewColor"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
-        <View
-            android:id="@+id/glass_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/glassViewColor"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="gone"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </RelativeLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_gravity="bottom"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-7709803880588182/5797768558"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

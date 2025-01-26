@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 49
-        versionName "1.4.9"
+        versionCode 50
+        versionName "1.5.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -78,6 +78,8 @@ dependencies {
 
     implementation "joda-time:joda-time:2.12.7"
     implementation "androidx.work:work-runtime:2.9.0"
+
+    implementation "com.google.android.gms:play-services-ads:23.6.0"
 
     implementation project(path: ':domain')
     implementation project(path: ':data')

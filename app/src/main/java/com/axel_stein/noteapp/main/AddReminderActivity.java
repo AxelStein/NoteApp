@@ -46,6 +46,8 @@ import com.axel_stein.noteapp.utils.SimpleCompletableObserver;
 import com.axel_stein.noteapp.utils.SimpleSingleObserver;
 import com.axel_stein.noteapp.utils.SimpleTextWatcher;
 import com.axel_stein.noteapp.utils.ViewUtil;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.joda.time.MutableDateTime;
@@ -206,6 +208,12 @@ public class AddReminderActivity extends BaseActivity {
                         supportInvalidateOptionsMenu();
                     }
                 });
+
+        AdView adView = findViewById(R.id.adView);
+        adView.loadAd(
+            new AdRequest.Builder()
+                .build()
+        );
     }
 
     private void showSelectRepeatModeDialog() {

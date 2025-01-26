@@ -9,6 +9,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -27,6 +29,12 @@ public class SettingsActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        AdView adView = findViewById(R.id.adView);
+        adView.loadAd(
+            new AdRequest.Builder()
+                .build()
+        );
     }
 
     @Subscribe

@@ -1,184 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_edit"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        app:elevation="0dp"
-        android:id="@+id/app_bar"
-        android:background="?attr/toolbarColor"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_weight="1"
+        android:id="@+id/coordinator_edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
+        <com.google.android.material.appbar.AppBarLayout
+            app:elevation="0dp"
+            android:id="@+id/app_bar"
             android:background="?attr/toolbarColor"
-            app:popupTheme="?attr/toolbarPopupTheme"/>
-
-        <View
-            android:background="?android:attr/listDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <RelativeLayout
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical">
-
-        <View
-            android:id="@+id/focus_view"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:visibility="visible"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <LinearLayout
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.axel_stein.noteapp.views.IconTextView
-                android:id="@+id/text_date"
-                android:textSize="16sp"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:drawablePadding="16dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                app:iconLeft="@drawable/ic_event_24dp"
-                app:iconLeftTint="?attr/colorControlNormal"
-                app:iconRightTint="?attr/colorAccent" />
+                android:background="?attr/toolbarColor"
+                app:popupTheme="?attr/toolbarPopupTheme"/>
 
-            <com.axel_stein.noteapp.views.IconTextView
-                android:id="@+id/text_time"
-                android:textSize="16sp"
+            <View
+                android:background="?android:attr/listDivider"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:drawablePadding="16dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                app:iconLeft="@drawable/ic_access_time_24dp"
-                app:iconLeftTint="?attr/colorControlNormal"
-                app:iconRightTint="?attr/colorAccent" />
+                android:layout_height="1dp"/>
 
-            <com.axel_stein.noteapp.views.IconTextView
-                android:id="@+id/text_repeat"
-                android:textSize="16sp"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <RelativeLayout
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+            <View
+                android:id="@+id/focus_view"
                 android:focusable="true"
-                android:drawablePadding="16dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
+                android:focusableInTouchMode="true"
                 android:visibility="visible"
-                tools:visibility="visible"
-                app:iconLeft="@drawable/ic_replay_24dp"
-                app:iconLeftTint="?attr/colorControlNormal"
-                app:iconRightTint="?attr/colorAccent" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <LinearLayout
-                android:id="@+id/layout_edit_repeat"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="?attr/selectableItemBackground"
-                android:orientation="horizontal"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="48dp">
+                android:layout_height="wrap_content">
 
                 <com.axel_stein.noteapp.views.IconTextView
+                    android:id="@+id/text_date"
                     android:textSize="16sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:drawablePadding="16dp"
                     android:ellipsize="end"
-                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
                     android:maxLines="1"
                     android:paddingStart="16dp"
-                    android:paddingEnd="0dp"
+                    android:paddingEnd="16dp"
+                    app:iconLeft="@drawable/ic_event_24dp"
+                    app:iconLeftTint="?attr/colorControlNormal"
+                    app:iconRightTint="?attr/colorAccent" />
+
+                <com.axel_stein.noteapp.views.IconTextView
+                    android:id="@+id/text_time"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:drawablePadding="16dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:iconLeft="@drawable/ic_access_time_24dp"
+                    app:iconLeftTint="?attr/colorControlNormal"
+                    app:iconRightTint="?attr/colorAccent" />
+
+                <com.axel_stein.noteapp.views.IconTextView
+                    android:id="@+id/text_repeat"
+                    android:textSize="16sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:drawablePadding="16dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     android:visibility="visible"
                     tools:visibility="visible"
-                    android:text="@string/repeat_every"
                     app:iconLeft="@drawable/ic_replay_24dp"
                     app:iconLeftTint="?attr/colorControlNormal"
                     app:iconRightTint="?attr/colorAccent" />
 
-                <EditText
-                    android:id="@+id/edit_repeat_count"
-                    tools:text=""
-                    android:gravity="center_horizontal"
-                    android:textSize="16sp"
-                    android:minWidth="48dp"
-                    android:inputType="numberDecimal"
-                    android:maxLines="1"
-                    android:maxLength="5"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:id="@+id/layout_edit_repeat"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp">
 
-                <TextView
-                    android:id="@+id/text_repeat_period"
-                    tools:text="days"
+                    <com.axel_stein.noteapp.views.IconTextView
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="16dp"
+                        android:ellipsize="end"
+                        android:layout_gravity="center_vertical"
+                        android:maxLines="1"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="0dp"
+                        android:visibility="visible"
+                        tools:visibility="visible"
+                        android:text="@string/repeat_every"
+                        app:iconLeft="@drawable/ic_replay_24dp"
+                        app:iconLeftTint="?attr/colorControlNormal"
+                        app:iconRightTint="?attr/colorAccent" />
+
+                    <EditText
+                        android:id="@+id/edit_repeat_count"
+                        tools:text=""
+                        android:gravity="center_horizontal"
+                        android:textSize="16sp"
+                        android:minWidth="48dp"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1"
+                        android:maxLength="5"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/text_repeat_period"
+                        tools:text="days"
+                        android:textSize="16sp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <com.axel_stein.noteapp.views.IconTextView
+                    android:id="@+id/text_repeat_end"
                     android:textSize="16sp"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:drawablePadding="16dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    app:iconLeft="@drawable/ic_event_busy_24dp"
+                    app:iconLeftTint="?attr/colorControlNormal"
+                    app:iconRightTint="?attr/colorAccent" />
 
             </LinearLayout>
 
-            <com.axel_stein.noteapp.views.IconTextView
-                android:id="@+id/text_repeat_end"
-                android:textSize="16sp"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:drawablePadding="16dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:visibility="gone"
-                tools:visibility="visible"
-                app:iconLeft="@drawable/ic_event_busy_24dp"
-                app:iconLeftTint="?attr/colorControlNormal"
-                app:iconRightTint="?attr/colorAccent" />
+        </RelativeLayout>
 
-        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    </RelativeLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_gravity="bottom"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-7709803880588182/5797768558"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
