@@ -44,6 +44,7 @@
     <string name="action_starred">Marquées</string>
 
     <!--Content description-->
+    <string name="action_unarchive">Supprimer des archives</string>
     <string name="content_clear">Nettoyer</string>
 
     <!--Empty msg-->
@@ -99,6 +100,7 @@
     <string name="pref_about_app">A propos de l\'application</string>
     <string name="pref_category_appearance">Écran principal</string>
     <string name="pref_category_backup">Sauvegarde et importation</string>
+    <string name="pref_swipe_action_archive">Archive</string>
     <string name="pref_category_editor">Éditeur de note</string>
     <string name="pref_export">Exporter dans un fichier</string>
     <string name="pref_export_drive">Exporter vers Google Drive</string>
@@ -109,6 +111,7 @@
     <string name="pref_font_size_small">Petite taille</string>
     <string name="pref_import">Importer depuis un fichier</string>
     <string name="pref_import_drive">Importer depuis Google Drive</string>
+    <string name="msg_note_unarchived">La note est désarchivée</string>
     <string name="pref_night_mode">Mode nuit</string>
     <string name="pref_rate_app">Évaluer l\'application</string>
     <string name="pref_show_notes_content">Afficher le contenu de la note</string>
@@ -148,5 +151,25 @@
     </plurals>
     <string name="action_reminders">Rappels</string>
     <string name="action_add_reminder">Ajouter un rappel</string>
+    <string name="action_edit_reminder">Modifier le rappel</string>
+    <string name="repeat_period_none">aucun</string>
+    <string name="repeat_period_day">jours</string>
+    <string name="repeat_period_week">semaines</string>
+    <string name="repeat_period_month">mois</string>
+    <string name="repeat_period_year">années</string>
+    <string name="action_archive">Ajouter aux archives</string>
+    <string name="msg_note_archived">La note est archivée</string>
+    <string name="repeat_mode_day">Tous les jours</string>
+    <string name="repeat_mode_week">Tous les semaines</string>
+    <string name="repeat_mode_month">Tous les mois</string>
+    <string name="repeat_mode_year">Tous les ans</string>
+    <string name="repeat_every">Tous les</string>
+    <string name="disable_ads">Désactiver les publicités</string>
+    <string name="disable_ads_summary">Désactivez les publicités pour toujours et profitez d\'une expérience sans publicité!</string>
+    <string name="restore_purchases">Restaurer les achats</string>
+    <string name="purchases">Achats</string>
+    <string name="no_purchases_found">Aucun achat trouvé</string>
+    <string name="ads_disabled">Publicités désactivées!</string>
+    <string name="title_repeat">Répéter</string>
 
 </resources>

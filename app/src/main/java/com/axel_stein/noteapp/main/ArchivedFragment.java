@@ -34,7 +34,7 @@ public class ArchivedFragment extends NotesFragment {
         Activity activity = getActivity();
         if (activity instanceof OnTitleChangeListener) {
             OnTitleChangeListener mListener = (OnTitleChangeListener) activity;
-            mListener.onTitleChange(getString(R.string.action_archived));
+            mListener.onTitleChange(getString(R.string.action_archive));
         }
     }
 

@@ -43,6 +43,7 @@
     <string name="action_remove_checked_items">Удалить отмеченные</string>
 
     <!--Content description-->
+    <string name="action_unarchive">Разархивировать</string>
     <string name="content_clear">Очистить</string>
 
     <!--Empty msg-->
@@ -104,6 +105,7 @@
     <string name="pref_font_size_extra_large">Самый большой</string>
     <string name="pref_category_appearance">Главный экран</string>
     <string name="pref_category_backup">Резервная копия и импорт</string>
+    <string name="msg_note_unarchived">Заметка разархивирована</string>
     <string name="pref_night_mode">Ночной режим</string>
     <string name="pref_show_notes_content">Показывать содержимое заметки</string>
     <string name="pref_about_app">О приложении</string>
@@ -115,6 +117,7 @@
     <string name="pref_swipe_action_delete">Удалить</string>
     <string name="pref_swipe_action_pin">Прикрепить</string>
     <string name="pref_swipe_action_star">Отметить</string>
+    <string name="pref_swipe_action_archive">Архив</string>
     <string name="pref_category_editor">Редактор заметок</string>
     <string name="pref_export_drive">Экспорт в Google Drive</string>
     <string name="pref_import_drive">Импорт из Google Drive</string>
@@ -151,5 +154,25 @@
     </plurals>
     <string name="action_reminders">Напоминания</string>
     <string name="action_add_reminder">Добавить напоминание</string>
+    <string name="repeat_mode_day">Каждый день</string>
+    <string name="repeat_mode_week">Каждую неделю</string>
+    <string name="repeat_mode_month">Каждый месяц</string>
+    <string name="repeat_mode_year">Каждый год</string>
+    <string name="repeat_every">Каждый</string>
+    <string name="disable_ads">Отключить рекламу</string>
+    <string name="disable_ads_summary">Отключить рекламу навсегда и наслаждаться без рекламы!</string>
+    <string name="restore_purchases">Восстановить покупки</string>
+    <string name="purchases">Покупки</string>
+    <string name="no_purchases_found">Покупки не найдены</string>
+    <string name="ads_disabled">Реклама отключена!</string>
+    <string name="action_edit_reminder">Изменить напоминание</string>
+    <string name="action_archive">Архив</string>
+    <string name="msg_note_archived">Заметка архивирована</string>
+    <string name="repeat_period_none">нет</string>
+    <string name="repeat_period_day">дней</string>
+    <string name="repeat_period_week">недель</string>
+    <string name="repeat_period_month">месяцев</string>
+    <string name="repeat_period_year">лет</string>
+    <string name="title_repeat">Повтор</string>
 
 </resources>

@@ -44,6 +44,7 @@
     <string name="action_remove_checked_items">Видалити відмічені</string>
 
     <!--Content description-->
+    <string name="action_unarchive">Розархівувати</string>
     <string name="content_clear">Очистити</string>
 
     <!--Empty msg-->
@@ -105,6 +106,7 @@
     <string name="pref_font_size_extra_large">Найбільший</string>
     <string name="pref_category_appearance">Головний екран</string>
     <string name="pref_category_backup">Резервна копія та імпорт</string>
+    <string name="msg_note_unarchived">Нотатка розархівована</string>
     <string name="pref_night_mode">Нічний режим</string>
     <string name="pref_show_notes_content">Показувати вміст замітки</string>
     <string name="pref_about_app">Про додаток</string>
@@ -116,6 +118,7 @@
     <string name="pref_swipe_action_delete">Видалити</string>
     <string name="pref_swipe_action_pin">Прикріпити</string>
     <string name="pref_swipe_action_star">Відмітити</string>
+    <string name="pref_swipe_action_archive">Архів</string>
     <string name="pref_category_editor">Редактор нотаток</string>
     <string name="pref_export_drive">Експорт в Google Drive</string>
     <string name="pref_import_drive">Імпорт з Google Drive</string>
@@ -152,5 +155,25 @@
     </plurals>
     <string name="action_reminders">Нагадування</string>
     <string name="action_add_reminder">Додати нагадування</string>
+    <string name="repeat_period_none">немає</string>
+    <string name="repeat_period_day">днів</string>
+    <string name="repeat_period_week">тижнів</string>
+    <string name="repeat_period_month">місяців</string>
+    <string name="action_edit_reminder">Редагувати нагадування</string>
+    <string name="action_archive">Архів</string>
+    <string name="msg_note_archived">Замітка заархівована</string>
+    <string name="repeat_mode_day">Кожен день</string>
+    <string name="repeat_mode_week">Щотижня</string>
+    <string name="repeat_mode_month">Кожен місяць</string>
+    <string name="repeat_mode_year">Щороку</string>
+    <string name="repeat_every">кожен</string>
+    <string name="disable_ads">Відключити рекламу</string>
+    <string name="disable_ads_summary">Вимкніть рекламу назавжди та насолоджуйтеся без реклами!</string>
+    <string name="restore_purchases">Відновити покупки</string>
+    <string name="purchases">покупки</string>
+    <string name="no_purchases_found">Покупок не знайдено</string>
+    <string name="ads_disabled">Рекламу вимкнено!</string>
+    <string name="repeat_period_year">років</string>
+    <string name="title_repeat">Повтор</string>
 
 </resources>

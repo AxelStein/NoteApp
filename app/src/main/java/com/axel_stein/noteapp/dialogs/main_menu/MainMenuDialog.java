@@ -183,7 +183,7 @@ public class MainMenuDialog extends BottomSheetDialogFragment {
 
                         items.add(new PrimaryItem()
                                 .fromId(ID_ARCHIVED)
-                                .fromTitle(R.string.action_archived)
+                                .fromTitle(R.string.action_archive)
                                 .fromIcon(R.drawable.ic_archive_24dp));
                         items.add(new PrimaryItem()
                                 .fromId(ID_TRASH)
