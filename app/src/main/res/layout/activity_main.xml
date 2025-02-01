@@ -43,6 +43,29 @@
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider"/>
 
+                <LinearLayout
+                    android:id="@+id/adProposal"
+                    android:clickable="true"
+                    android:layout_gravity="bottom"
+                    android:background="#eee"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:drawablePadding="16dp"
+                        android:drawableStart="@drawable/baseline_closed_caption_disabled_24"
+                        android:textSize="16sp"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:paddingHorizontal="16dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/disable_ads"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"/>
+
+                </LinearLayout>
+
             </com.google.android.material.appbar.AppBarLayout>
 
             <FrameLayout

@@ -1,6 +1,7 @@
 package com.axel_stein.noteapp.base;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
+import com.axel_stein.noteapp.settings.SettingsActivity;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -39,9 +41,19 @@ public class BaseActivity extends AppCompatActivity {
     protected void setupAds() {
         AdView adView = findViewById(R.id.adView);
         View adDivider = findViewById(R.id.adDivider);
+        View adProposal = findViewById(R.id.adProposal);
         if (adView == null) return;
 
         if (mAppSettings.adsEnabled()) {
+            if (adProposal != null) {
+                adProposal.setVisibility(mAppSettings.adProposalEnabled() ? View.VISIBLE : View.GONE);
+                adProposal.setOnClickListener(v -> {
+                    mAppSettings.setAdProposalEnabled(false);
+                    adProposal.setVisibility(View.GONE);
+                    startActivity(new Intent(this, SettingsActivity.class));
+                });
+            }
+
             adView.setVisibility(View.VISIBLE);
             if (adDivider != null) {
                 adDivider.setVisibility(View.VISIBLE);
@@ -51,6 +63,9 @@ public class BaseActivity extends AppCompatActivity {
                     .build()
             );
         } else {
+            if (adProposal != null) {
+                adProposal.setVisibility(View.GONE);
+            }
             adView.setVisibility(View.GONE);
             if (adDivider != null) {
                 adDivider.setVisibility(View.GONE);

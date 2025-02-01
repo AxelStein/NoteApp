@@ -8,6 +8,8 @@ import com.axel_stein.domain.repository.SettingsRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.TimeUnit;
+
 public class AppSettingsRepository implements SettingsRepository {
     public static final String BACKUP_FILE_NAME = "backup.json";
     private static final String PREF_DRIVE_AUTO_SYNC = "PREF_DRIVE_AUTO_SYNC";
@@ -18,6 +20,8 @@ public class AppSettingsRepository implements SettingsRepository {
     private static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
     private static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
     private static final String PREFS_ADS_ENABLED = "PREFS_ADS_ENABLED";
+    private static final String PREFS_AD_PROPOSAL_ENABLED = "PREFS_AD_PROPOSAL_ENABLED";
+    private static final String PREFS_AD_PROPOSAL_DISMISSED = "PREFS_AD_PROPOSAL_DISMISSED";
 
     public static final int SWIPE_ACTION_NONE = 0;
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
@@ -110,6 +114,15 @@ public class AppSettingsRepository implements SettingsRepository {
 
     public boolean nightModeEnabled() {
         return mPreferences.getBoolean(PREF_NIGHT_MODE, false);
+    }
+
+    public void setAdProposalEnabled(boolean enable) {
+        mPreferences.edit().putBoolean(PREFS_AD_PROPOSAL_ENABLED, enable).commit();
+        mPreferences.edit().putLong(PREFS_AD_PROPOSAL_DISMISSED, System.currentTimeMillis()).commit();
+    }
+
+    public boolean adProposalEnabled() {
+        return mPreferences.getBoolean(PREFS_AD_PROPOSAL_ENABLED, true);
     }
 
     public void setAdsEnabled(boolean enable) {

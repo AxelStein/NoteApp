@@ -152,6 +152,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void showMessage(String msg) {
+        if (msg == null || msg.isEmpty()) return;
         View v = getView();
         if (v != null) {
             Snackbar.make(v, msg, Snackbar.LENGTH_SHORT).show();
