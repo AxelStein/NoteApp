@@ -135,17 +135,19 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                     .setProductList(products)
                     .build(),
                 (billingResult, list) -> {
-                    ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParams = ImmutableList.of(
-                        BillingFlowParams.ProductDetailsParams.newBuilder()
-                            .setProductDetails(list.get(0))
-                            .build()
-                    );
+                    if (!list.isEmpty()) {
+                        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParams = ImmutableList.of(
+                            BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(list.get(0))
+                                .build()
+                        );
 
-                    BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                        .setProductDetailsParamsList(productDetailsParams)
-                        .build();
+                        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                            .setProductDetailsParamsList(productDetailsParams)
+                            .build();
 
-                    billingClient.launchBillingFlow(activity, billingFlowParams);
+                        billingClient.launchBillingFlow(activity, billingFlowParams);
+                    }
                 }
             );
         });

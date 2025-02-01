@@ -84,9 +84,6 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
     @Inject
     ImportBackupInteractor mImportBackupInteractor;
 
-    @Inject
-    AppSettingsRepository mSettings;
-
     private BottomAppBar mAppBar;
     private FloatingActionButton mFabCreateNote;
     private TextView mTextViewTitle;
@@ -100,7 +97,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
         EventBusHelper.subscribe(this);
         setContentView(R.layout.activity_main);
 
-        if (mSettings.autoSyncEnabled()) {
+        if (mAppSettings.autoSyncEnabled()) {
             Constraints constraints = new Constraints.Builder()
                     .setRequiresBatteryNotLow(true)
                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -136,7 +133,9 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
             mSelectedItemId = savedInstanceState.getString(BUNDLE_SELECTED_ITEM_ID);
         }
 
-        MobileAds.initialize(this);
+        if (mAppSettings.adsEnabled()) {
+            MobileAds.initialize(this);
+        }
 
         setupAds();
     }
