@@ -129,11 +129,7 @@ public class UserActivity extends BaseActivity implements ConfirmDialog.OnConfir
         mTextLastSync = findViewById(R.id.text_last_sync);
         updateLastSyncTime();
 
-        AdView adView = findViewById(R.id.adView);
-        adView.loadAd(
-            new AdRequest.Builder()
-                .build()
-        );
+        setupAds();
     }
 
     @Subscribe

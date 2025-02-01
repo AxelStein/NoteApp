@@ -138,11 +138,7 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
 
         MobileAds.initialize(this);
 
-        AdView adView = findViewById(R.id.adView);
-        adView.loadAd(
-            new AdRequest.Builder()
-                .build()
-        );
+        setupAds();
     }
 
     @Override

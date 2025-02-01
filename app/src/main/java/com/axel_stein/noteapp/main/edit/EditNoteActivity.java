@@ -371,11 +371,7 @@ public class EditNoteActivity extends BaseActivity implements SelectNotebookDial
             }
         });
 
-        AdView adView = findViewById(R.id.adView);
-        adView.loadAd(
-            new AdRequest.Builder()
-                .build()
-        );
+        setupAds();
     }
 
     /*

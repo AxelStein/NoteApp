@@ -17,6 +17,7 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final String PREF_SHOW_NOTES_CONTENT = "PREF_SHOW_NOTES_CONTENT";
     private static final String PREF_SWIPE_LEFT_ACTION = "PREF_SWIPE_LEFT_ACTION";
     private static final String PREF_SWIPE_RIGHT_ACTION = "PREF_SWIPE_RIGHT_ACTION";
+    private static final String PREFS_ADS_ENABLED = "PREFS_ADS_ENABLED";
 
     public static final int SWIPE_ACTION_NONE = 0;
     public static final int SWIPE_ACTION_TRASH_RESTORE = 1;
@@ -109,6 +110,14 @@ public class AppSettingsRepository implements SettingsRepository {
 
     public boolean nightModeEnabled() {
         return mPreferences.getBoolean(PREF_NIGHT_MODE, false);
+    }
+
+    public void setAdsEnabled(boolean enable) {
+        mPreferences.edit().putBoolean(PREFS_ADS_ENABLED, enable).commit();
+    }
+
+    public boolean adsEnabled() {
+        return mPreferences.getBoolean(PREFS_ADS_ENABLED, true);
     }
 
     private void setPrefFontSize(String size) {

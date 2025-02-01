@@ -5,6 +5,26 @@
     app:iconSpaceReserved="false">
 
     <PreferenceCategory
+        android:key="purchases_category"
+        app:iconSpaceReserved="false"
+        app:allowDividerBelow="false"
+        app:allowDividerAbove="false"
+        android:title="@string/purchases">
+
+        <Preference
+            android:key="disable_ads"
+            android:summary="@string/disable_ads_summary"
+            android:title="@string/disable_ads"
+            app:iconSpaceReserved="false"/>
+
+        <Preference
+            android:key="restore_purchases"
+            android:title="@string/restore_purchases"
+            app:iconSpaceReserved="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:iconSpaceReserved="false"
         app:allowDividerBelow="false"
         app:allowDividerAbove="false"

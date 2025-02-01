@@ -2,6 +2,7 @@ package com.axel_stein.noteapp.settings;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -13,10 +14,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
+import com.axel_stein.data.AppSettingsRepository;
+import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.dialogs.LoadingDialog;
 import com.axel_stein.noteapp.utils.FileUtil;
@@ -28,6 +32,8 @@ import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
 import static com.axel_stein.noteapp.utils.ObjectUtil.checkNotNull;
 
+import javax.inject.Inject;
+
 @SuppressLint("CheckResult")
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, SettingsContract.View {
     private static final int REQUEST_CODE_PICK_FILE = 110;
@@ -35,19 +41,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     private final SettingsPresenter mPresenter = new SettingsPresenter();
     private LoadingDialog mDialog;
 
+    @Inject
+    public AppSettingsRepository mAppSettings;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.e("TAG", String.format("mAppSettings=%s", mAppSettings));
+
         setRetainInstance(true);
-        checkNotNull(getActivity());
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(requireActivity()).registerOnSharedPreferenceChangeListener(this);
         mPresenter.onCreate(getActivity());
     }
 
     @Override
     public void onDestroy() {
-        checkNotNull(getActivity());
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).unregisterOnSharedPreferenceChangeListener(this);
+        mPresenter.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(requireActivity()).unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
     }
 
@@ -65,7 +76,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        App.getAppComponent().inject(this);
+
         setPreferencesFromResource(R.xml.settings, null);
+
+        Preference pref = findPreference("purchases_category");
+        if (pref != null) {
+            pref.setVisible(mAppSettings.adsEnabled());
+        }
     }
 
     @Override
@@ -82,8 +100,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void startExportFileActivity(File file) {
-        checkNotNull(getContext());
-        Uri fileUri = FileProvider.getUriForFile(getContext(), "com.axel_stein.noteapp.fileprovider", file);
+        Context context = requireContext();
+        Uri fileUri = FileProvider.getUriForFile(context, "com.axel_stein.noteapp.fileprovider", file);
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
@@ -94,7 +112,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         // Workaround for Android bug.
         // grantUriPermission also needed for KITKAT,
         // see https://code.google.com/p/android/issues/detail?id=76683
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
             startActivity(intent);
         } else {
             Log.e("TAG", "Export: no activity found");
@@ -133,9 +151,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     @Override
+    public void showMessage(String msg) {
+        View v = getView();
+        if (v != null) {
+            Snackbar.make(v, msg, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void startRateAppActivity() {
-        checkNotNull(getContext());
-        final String packageName = getContext().getPackageName();
+        final String packageName = requireContext().getPackageName();
 
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
@@ -163,8 +188,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                 return;
             }
 
-            checkNotNull(getContext());
-            ContentResolver cr = getContext().getContentResolver();
+            ContentResolver cr = requireContext().getContentResolver();
             Uri uri = data.getData();
             if (uri == null) {
                 Log.e("TAG", "data.getData() = null");

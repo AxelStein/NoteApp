@@ -217,6 +217,7 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/adDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         app:dividerColor="#eee"

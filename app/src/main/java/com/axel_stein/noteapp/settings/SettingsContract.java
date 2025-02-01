@@ -16,6 +16,7 @@ public interface SettingsContract {
         void showImportDialog();
         void dismissImportDialog();
         void showMessage(int msg);
+        void showMessage(String msg);
         void startRateAppActivity();
         void setAppVersion(String version);
     }
@@ -27,6 +28,7 @@ public interface SettingsContract {
         void onPreferenceChanged(SharedPreferences sharedPreferences, String s);
         void onPreferenceClick(String key);
         void onFileImport(String backup);
+        void onDestroy();
     }
 
 }

@@ -163,5 +163,11 @@
     <string name="repeat_mode_month">Every month</string>
     <string name="repeat_mode_year">Every year</string>
     <string name="repeat_every">Every</string>
+    <string name="disable_ads">Disable ads</string>
+    <string name="disable_ads_summary">Disable ads forever and enjoy ad-free experience!</string>
+    <string name="restore_purchases">Restore purchases</string>
+    <string name="purchases">Purchases</string>
+    <string name="no_purchases_found">No purchases found</string>
+    <string name="ads_disabled">Ads disabled!</string>
 
 </resources>

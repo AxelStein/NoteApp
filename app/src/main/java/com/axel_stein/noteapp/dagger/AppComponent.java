@@ -27,6 +27,7 @@ import com.axel_stein.noteapp.main.list.presenters.StarredNotesPresenter;
 import com.axel_stein.noteapp.main.list.presenters.TrashNotesPresenter;
 import com.axel_stein.noteapp.reminder.ReminderReceiver;
 import com.axel_stein.noteapp.reminder.ReminderService;
+import com.axel_stein.noteapp.settings.SettingsFragment;
 import com.axel_stein.noteapp.settings.SettingsPresenter;
 
 import javax.inject.Singleton;
@@ -98,4 +99,5 @@ public interface AppComponent {
 
     void inject(ReminderReceiver receiver);
 
+    void inject(SettingsFragment settingsFragment);
 }

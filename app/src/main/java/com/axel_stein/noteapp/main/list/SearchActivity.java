@@ -159,11 +159,7 @@ public class SearchActivity extends BaseActivity {
 
         ViewUtil.setVisible(mEditSearch.length() > 0, mButtonClear);
 
-        AdView adView = findViewById(R.id.adView);
-        adView.loadAd(
-            new AdRequest.Builder()
-                .build()
-        );
+        setupAds();
     }
 
     @Override

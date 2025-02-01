@@ -2,18 +2,24 @@ package com.axel_stein.noteapp.settings;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
+import com.axel_stein.data.AppSettingsRepository;
+import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.base.BaseActivity;
+import com.axel_stein.noteapp.dagger.AppComponent;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.Subscribe;
+
+import javax.inject.Inject;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -30,11 +36,7 @@ public class SettingsActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        AdView adView = findViewById(R.id.adView);
-        adView.loadAd(
-            new AdRequest.Builder()
-                .build()
-        );
+        setupAds();
     }
 
     @Subscribe

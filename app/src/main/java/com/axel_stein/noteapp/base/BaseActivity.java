@@ -3,6 +3,7 @@ package com.axel_stein.noteapp.base;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,8 @@ import androidx.fragment.app.FragmentManager;
 import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.noteapp.App;
 import com.axel_stein.noteapp.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import javax.inject.Inject;
 
@@ -19,7 +22,7 @@ import javax.inject.Inject;
 public class BaseActivity extends AppCompatActivity {
 
     @Inject
-    AppSettingsRepository mAppSettings;
+    public AppSettingsRepository mAppSettings;
 
     protected boolean mNightMode;
 
@@ -31,6 +34,28 @@ public class BaseActivity extends AppCompatActivity {
         setTheme(mNightMode ? R.style.AppThemeDark : R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
+    }
+
+    protected void setupAds() {
+        AdView adView = findViewById(R.id.adView);
+        View adDivider = findViewById(R.id.adDivider);
+        if (adView == null) return;
+
+        if (mAppSettings.adsEnabled()) {
+            adView.setVisibility(View.VISIBLE);
+            if (adDivider != null) {
+                adDivider.setVisibility(View.VISIBLE);
+            }
+            adView.loadAd(
+                new AdRequest.Builder()
+                    .build()
+            );
+        } else {
+            adView.setVisibility(View.GONE);
+            if (adDivider != null) {
+                adDivider.setVisibility(View.GONE);
+            }
+        }
     }
 
     protected void setFragment(@Nullable Fragment fragment, String tag) {

@@ -209,11 +209,7 @@ public class AddReminderActivity extends BaseActivity {
                     }
                 });
 
-        AdView adView = findViewById(R.id.adView);
-        adView.loadAd(
-            new AdRequest.Builder()
-                .build()
-        );
+        setupAds();
     }
 
     private void showSelectRepeatModeDialog() {
