@@ -14,6 +14,8 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
@@ -194,7 +196,16 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             .setListener((billingResult, purchases) -> {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     if (purchases != null && !purchases.isEmpty()) {
-                        hideAds();
+                        ConsumeParams consumeParams = ConsumeParams.newBuilder()
+                            .setPurchaseToken(purchases.get(0).getPurchaseToken())
+                            .build();
+                        billingClient.consumeAsync(consumeParams, (result, purchaseToken) -> {
+                            if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                                hideAds();
+                            } else if (mView != null) {
+                                mView.showMessage(result.getDebugMessage());
+                            }
+                        });
                     }
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
                     // Handle an error caused by a user canceling the purchase flow.
