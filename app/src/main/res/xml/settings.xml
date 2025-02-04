@@ -18,8 +18,9 @@
             app:iconSpaceReserved="false"/>
 
         <Preference
-            android:key="restore_purchases"
-            android:title="@string/restore_purchases"
+            android:key="revoke_purchase"
+            android:title="Revoke purchase"
+            app:isPreferenceVisible="false"
             app:iconSpaceReserved="false"/>
 
     </PreferenceCategory>

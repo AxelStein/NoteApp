@@ -20,8 +20,10 @@ import com.google.android.gms.ads.AdView;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 @SuppressLint("Registered")
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements AppSettingsRepository.OnEnableAdsListener {
 
     @Inject
     public AppSettingsRepository mAppSettings;
@@ -36,15 +38,29 @@ public class BaseActivity extends AppCompatActivity {
         setTheme(mNightMode ? R.style.AppThemeDark : R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
+
+        mAppSettings.addOnEnableAdsListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAppSettings.removeOnEnableAdsListener(this);
     }
 
     protected void setupAds() {
+        enableAds(mAppSettings.adsEnabled());
+    }
+
+    private void enableAds(boolean enable) {
         AdView adView = findViewById(R.id.adView);
         View adDivider = findViewById(R.id.adDivider);
         View adProposal = findViewById(R.id.adProposal);
         if (adView == null) return;
 
-        if (mAppSettings.adsEnabled()) {
+        Timber.d("enableAds=%s", enable);
+
+        if (enable) {
             if (adProposal != null) {
                 adProposal.setVisibility(mAppSettings.adProposalEnabled() ? View.VISIBLE : View.GONE);
                 adProposal.setOnClickListener(v -> {
@@ -116,4 +132,8 @@ public class BaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onEnableAds(boolean enable) {
+        enableAds(enable);
+    }
 }

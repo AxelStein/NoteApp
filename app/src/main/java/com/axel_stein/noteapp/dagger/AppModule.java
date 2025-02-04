@@ -9,6 +9,7 @@ import com.axel_stein.data.note.SqlNoteRepository;
 import com.axel_stein.data.notebook.SqlNotebookRepository;
 import com.axel_stein.data.reminder.SqlReminderRepository;
 import com.axel_stein.noteapp.App;
+import com.axel_stein.noteapp.BillingManager;
 import com.axel_stein.noteapp.google_drive.DriveServiceHelper;
 import com.axel_stein.noteapp.reminder.AndroidNotificationTray;
 import com.axel_stein.noteapp.reminder.ReminderScheduler;
@@ -24,6 +25,12 @@ public class AppModule {
 
     public AppModule(App app) {
         mApp = app;
+    }
+
+    @Provides
+    @Singleton
+    BillingManager provideBillingManager(App app, AppSettingsRepository settings) {
+        return new BillingManager(app, settings);
     }
 
     @Provides
@@ -60,6 +67,7 @@ public class AppModule {
     }
 
     @Provides
+    @Singleton
     AppSettingsRepository provideSettings(App app) {
         return new AppSettingsRepository(PreferenceManager.getDefaultSharedPreferences(app));
     }

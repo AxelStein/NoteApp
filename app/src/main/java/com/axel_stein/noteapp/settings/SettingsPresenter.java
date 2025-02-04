@@ -26,6 +26,8 @@ import com.axel_stein.data.AppSettingsRepository;
 import com.axel_stein.domain.interactor.backup.CreateBackupInteractor;
 import com.axel_stein.domain.interactor.backup.ImportBackupInteractor;
 import com.axel_stein.noteapp.App;
+import com.axel_stein.noteapp.BillingManager;
+import com.axel_stein.noteapp.BuildConfig;
 import com.axel_stein.noteapp.EventBusHelper;
 import com.axel_stein.noteapp.R;
 import com.axel_stein.noteapp.main.MainActivity;
@@ -62,11 +64,12 @@ public class SettingsPresenter implements SettingsContract.Presenter {
     @Inject
     AppSettingsRepository mSettings;
 
+    @Inject
+    BillingManager billingManager;
+
     private @Nullable View mView;
     private @Nullable Context mContext;
-    private @Nullable BillingClient billingClient;
     private @Nullable FragmentActivity activity;
-    private boolean billingConnection;
 
     @Override
     public void onCreate(FragmentActivity activity) {
@@ -113,139 +116,17 @@ public class SettingsPresenter implements SettingsContract.Presenter {
                 break;
 
             case "disable_ads":
-                disableAds();
+                billingManager.purchase(activity, BillingManager.PRODUCT_DISABLE_ADS);
                 break;
 
-            case "restore_purchases":
-                restorePurchase();
+            case "revoke_purchase":
+                billingManager.revoke();
                 break;
-        }
-    }
-
-    private void disableAds() {
-        getBillingClient(client -> {
-            ArrayList<QueryProductDetailsParams.Product> products = new ArrayList<>();
-            products.add(
-                QueryProductDetailsParams.Product.newBuilder()
-                    .setProductId("no_ads")
-                    .setProductType(BillingClient.ProductType.INAPP)
-                    .build()
-            );
-
-            billingClient.queryProductDetailsAsync(
-                QueryProductDetailsParams.newBuilder()
-                    .setProductList(products)
-                    .build(),
-                (billingResult, list) -> {
-                    if (!list.isEmpty()) {
-                        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParams = ImmutableList.of(
-                            BillingFlowParams.ProductDetailsParams.newBuilder()
-                                .setProductDetails(list.get(0))
-                                .build()
-                        );
-
-                        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                            .setProductDetailsParamsList(productDetailsParams)
-                            .build();
-
-                        billingClient.launchBillingFlow(activity, billingFlowParams);
-                    }
+            case "app_version":
+                if (BuildConfig.DEBUG) {
+                    billingManager.print(mContext);
                 }
-            );
-        });
-    }
-
-    private void restorePurchase() {
-        getBillingClient(client -> client.queryPurchasesAsync(
-            QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build(),
-            (billingResult, list) -> {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    if (list.isEmpty()) {
-                        if (mView != null) {
-                            mView.showMessage(R.string.no_purchases_found);
-                        }
-                    } else {
-                        hideAds();
-                    }
-                } else if (mView != null) {
-                    mView.showMessage(billingResult.getDebugMessage());
-                }
-            }
-        ));
-    }
-
-    private void getBillingClient(BillingClientReadyCallback callback) {
-        if (billingClient != null) {
-            callback.onBillingClientReady(billingClient);
-            return;
-        }
-        if (billingConnection) {
-            return;
-        }
-        billingConnection = true;
-
-        BillingClient client = BillingClient.newBuilder(mContext)
-            .enablePendingPurchases(
-                PendingPurchasesParams
-                    .newBuilder()
-                    .enableOneTimeProducts()
-                    .build()
-            )
-            .setListener((billingResult, purchases) -> {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    if (purchases != null && !purchases.isEmpty()) {
-                        ConsumeParams consumeParams = ConsumeParams.newBuilder()
-                            .setPurchaseToken(purchases.get(0).getPurchaseToken())
-                            .build();
-                        billingClient.consumeAsync(consumeParams, (result, purchaseToken) -> {
-                            if (result.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                                hideAds();
-                            } else if (mView != null) {
-                                mView.showMessage(result.getDebugMessage());
-                            }
-                        });
-                    }
-                } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
-                    // Handle an error caused by a user canceling the purchase flow.
-                } else if (mView != null) {
-                    mView.showMessage(billingResult.getDebugMessage());
-                }
-            })
-            .build();
-        client.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingServiceDisconnected() {
-                billingConnection = false;
-                billingClient = null;
-            }
-
-            @Override
-            public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
-                billingConnection = false;
-
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    billingClient = client;
-                    callback.onBillingClientReady(client);
-                } else if (mView != null) {
-                    mView.showMessage(billingResult.getDebugMessage());
-                }
-            }
-        });
-    }
-
-    private void hideAds() {
-        mSettings.setAdsEnabled(false);
-        if (mView != null) {
-            mView.showMessage(R.string.ads_disabled);
-            if (activity != null) {
-                activity.startActivity(
-                    new Intent(activity, MainActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK)
-                );
-                Runtime.getRuntime().exit(0);
-            }
+                break;
         }
     }
 

@@ -2,13 +2,17 @@ package com.axel_stein.data;
 
 import android.content.SharedPreferences;
 
+import androidx.annotation.Nullable;
+
 import com.axel_stein.domain.model.NoteOrder;
 import com.axel_stein.domain.repository.SettingsRepository;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.TimeUnit;
+import java.util.HashSet;
+
+import timber.log.Timber;
 
 public class AppSettingsRepository implements SettingsRepository {
     public static final String BACKUP_FILE_NAME = "backup.json";
@@ -29,10 +33,25 @@ public class AppSettingsRepository implements SettingsRepository {
     public static final int SWIPE_ACTION_STAR = 3;
     public static final int SWIPE_ACTION_ARCHIVE = 4;
 
+    public interface OnEnableAdsListener {
+        void onEnableAds(boolean enable);
+    }
+
     private final SharedPreferences mPreferences;
+    private final HashSet<OnEnableAdsListener> enableAdsListeners = new HashSet<>();
 
     public AppSettingsRepository(SharedPreferences preferences) {
         mPreferences = preferences;
+    }
+
+    public void addOnEnableAdsListener(@Nullable OnEnableAdsListener listener) {
+        if (listener == null) return;
+        enableAdsListeners.add(listener);
+    }
+
+    public void removeOnEnableAdsListener(@Nullable OnEnableAdsListener listener) {
+        if (listener == null) return;
+        enableAdsListeners.remove(listener);
     }
 
     @Override
@@ -127,6 +146,9 @@ public class AppSettingsRepository implements SettingsRepository {
 
     public void setAdsEnabled(boolean enable) {
         mPreferences.edit().putBoolean(PREFS_ADS_ENABLED, enable).commit();
+        for (OnEnableAdsListener listener : enableAdsListeners) {
+            listener.onEnableAds(enable);
+        }
     }
 
     public boolean adsEnabled() {

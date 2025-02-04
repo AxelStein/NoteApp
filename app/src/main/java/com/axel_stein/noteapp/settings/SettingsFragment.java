@@ -48,8 +48,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.e("TAG", String.format("mAppSettings=%s", mAppSettings));
-
         setRetainInstance(true);
         PreferenceManager.getDefaultSharedPreferences(requireActivity()).registerOnSharedPreferenceChangeListener(this);
         mPresenter.onCreate(getActivity());
@@ -82,7 +80,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         Preference pref = findPreference("purchases_category");
         if (pref != null) {
-            pref.setVisible(mAppSettings.adsEnabled());
+            // pref.setVisible(mAppSettings.adsEnabled());
         }
     }
 

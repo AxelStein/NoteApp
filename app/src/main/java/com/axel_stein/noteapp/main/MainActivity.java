@@ -133,10 +133,6 @@ public class MainActivity extends BaseActivity implements MainMenuDialog.OnMenuI
             mSelectedItemId = savedInstanceState.getString(BUNDLE_SELECTED_ITEM_ID);
         }
 
-        if (mAppSettings.adsEnabled()) {
-            MobileAds.initialize(this);
-        }
-
         setupAds();
     }
 
