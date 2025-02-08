@@ -109,12 +109,13 @@ public class Note implements Cloneable, Serializable {
         this.content = content;
     }
 
+    @NonNull
     public DateTime getModifiedDate() {
-        return modifiedDate;
+        return modifiedDate == null ? DateTime.now() : modifiedDate;
     }
 
-    public void setModifiedDate(DateTime modifiedDate) {
-        this.modifiedDate = modifiedDate;
+    public void setModifiedDate(@Nullable DateTime modifiedDate) {
+        this.modifiedDate = modifiedDate == null ? DateTime.now() : modifiedDate;
     }
 
     public void setPinned(boolean pinned) {
@@ -126,11 +127,11 @@ public class Note implements Cloneable, Serializable {
     }
 
     public DateTime getTrashedDate() {
-        return trashedDate;
+        return trashedDate == null ? DateTime.now() : trashedDate;
     }
 
     public void setTrashedDate(DateTime trashedDate) {
-        this.trashedDate = trashedDate;
+        this.trashedDate = trashedDate == null ? DateTime.now() : trashedDate;
     }
 
     public boolean isStarred() {
